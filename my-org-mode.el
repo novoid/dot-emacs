@@ -34,13 +34,13 @@
 ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
 ;; Get appointments for today
 (when (my-system-is-gary)
-  (defun org-agenda-to-appt ()
+  (defun my-org-agenda-to-appt ()
     (interactive)
     (setq appt-time-msg-list nil)
     (let ((org-deadline-warning-days 0))    ;; will be automatic in org 5.23
 	(org-agenda-to-appt)))
   ;; Run once, activate and schedule refresh
-  (org-agenda-to-appt)
+  (my-org-agenda-to-appt)
   (appt-activate t)
   (run-at-time "24:01" nil 'org-agenda-to-appt)
   ;; 5 minute warnings

@@ -8,7 +8,7 @@
 
 ;; ######################################################
 ;;; rest of the (common) configuration
-(load "~/.emacs.d/vk-common.el")
+(load "~/.emacs.d/my-common.el")
 
 
 ;; ######################################################

@@ -10,7 +10,7 @@ which I want to keep separate on each host. The rest of the
 configuration is identical on all of my hosts and included in the
 host-specific ".emacs" file.
 
-So far, I do have "vk-common.el" and "vk-org-mode.el" separated. This
+So far, I do have "my-common.el" and "my-org-mode.el" separated. This
 is because my [[http://Orgmode.org][Org-mode]] configuration is pretty huge. I do think to
 combine both in future using [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][Emacs Initialization with Babel]].
 
