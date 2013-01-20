@@ -7,7 +7,7 @@
 
 ;; ######################################################
 ;;; rest of the (common) configuration
-(load "~/.emacs.d/my-common.el")
+(load "~/.emacs.d/main.el")
 
 ;; ######################################################
 ;; http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes

@@ -590,7 +590,7 @@
   (require 'org) 
 
   ;; load Org-mode specific settings:
-  (my-load-local-el "my-org-mode.el")
+  (my-load-local-el "org-mode.el")
 
   )
 

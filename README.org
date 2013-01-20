@@ -5,19 +5,18 @@
 In my $HOME, there is a symlink from
 "~/.emacs.d/dot-emacs-HOSTNAME.el" to "~/.emacs".
 
-My ".emacs" files are very minimal. This relates to custom-set-variables
-which I want to keep separate on each host. The rest of the
-configuration is identical on all of my hosts and included in the
-host-specific ".emacs" file.
+My ".emacs" files are very minimal. Each ".emacs" holds
+custom-set-variables which I want to keep separate on each host. And
+then it includes the host-independent "main.el" configuration file.
 
-So far, I do have "my-common.el" and "my-org-mode.el" separated. This
-is because my [[http://Orgmode.org][Org-mode]] configuration is pretty huge. I do think to
-combine both in future using [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][Emacs Initialization with Babel]].
+So far, I still separate "main.el" and "org-mode.el". This is because
+my [[http://Orgmode.org][Org-mode]] configuration is pretty huge. However, I plan to combine
+both using [[http://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][Emacs Initialization with Babel]].
 
 Please take a look at my ".gitignore" file that contains some things I
-did *not* add to this git repository for a variety of reasons. Most
-important here is the directory "contrib" which holds a number of
-external packages.
+did *not* add to this git repository for a variety of reasons but are
+necessary for my configuration. Most important here is the directory
+"contrib" which holds a number of external packages:
 
 - Currently (2013-01-20), this directory holds:
   - [[https://github.com/sellout/emacs-color-theme-solarized][emacs-color-theme-solarized]]/
