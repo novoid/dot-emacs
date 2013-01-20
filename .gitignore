@@ -1,0 +1,8 @@
+*.elc
+auto-save-list
+ac-comphist.dat
+.org-id-locations
+tmp
+snippets
+contrib
+compile-el-files.tmp
