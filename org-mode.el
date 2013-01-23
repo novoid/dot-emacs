@@ -260,9 +260,11 @@
 
 (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
+
+;; CANCELED -> ARCHIVE: http://article.gmane.org/gmane.emacs.orgmode/64852
 (setq org-todo-state-tags-triggers
       (quote (("CANCELLED"
-               ("CANCELLED" . t))
+               ("ARCHIVE" . t))
               ("WAITING"
                ("WAITING" . t))
               (done
