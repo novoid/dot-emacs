@@ -562,6 +562,7 @@
                             ("nonComputer" . ?n)
                             ("Kommunikation" . ?k)
                             ("Besorgung" . ?B)
+                            ("public" . ?p)
                             )))
 
 ; Allow setting single tags without the menu
