@@ -375,53 +375,6 @@
 ;;               ((org-agenda-overriding-header "Notes")))
 
 	      ;; 2012-12-07 ideas from: http://doc.norang.ca/org-mode.html#CustomAgendaViews
-              ("o" "overview Agenda" (
-               (agenda ""
-		       nil )
-;diabled by nil above;			((org-agenda-skip-function '(my-skip-tag "reward"))
-;diabled by nil above;			 (org-agenda-overriding-header "Agenda without rewards: ")))
-                (tags "+TODO=\"DONE\"+CLOSED>=\"<today>\""
-		      (
-		       (org-agenda-overriding-header "DONE today")
-		       ))
-;diabled;                (tags "+reward"
-;diabled;                           (
-;diabled;			    (org-agenda-overriding-header "Rewards")
-;diabled;                            ;(org-agenda-skip-function 'bh/skip-non-stuck-projects))
-;diabled;                            ;(org-agenda-todo-ignore-scheduled 'future)
-;diabled;                            ;(org-agenda-todo-ignore-deadlines 'future)
-;diabled;			   )
-;diabled;			   )
-;too slow - dont need;                (tags-todo "-CANCELLED/!"
-;too slow - dont need;                           ((org-agenda-overriding-header "Stuck Projects")
-;too slow - dont need;                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
-;slow;                (tags-todo "-CANCELLED+WAITING/!"
-;slow;                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
-;slow;                            (org-agenda-skip-function 'bh/skip-stuck-projects)
-;slow;                            (org-tags-match-list-sublevels nil)
-;slow;                            (org-agenda-todo-ignore-scheduled 'future)
-;slow;                            (org-agenda-todo-ignore-deadlines 'future)
-;slow;			    ))
-;;                (tags "REFILE"
-;;                      ((org-agenda-overriding-header "Tasks to Refile")
-;;                       (org-tags-match-list-sublevels nil)))
-;;                (tags "-REFILE/"
-;;                      ((org-agenda-overriding-header "Tasks to Archive")
-;;                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
-;;                       (org-tags-match-list-sublevels nil)))
-;;                (tags-todo "-HOLD-CANCELLED/!"
-;;                           ((org-agenda-overriding-header "Projects")
-;;                            (org-agenda-skip-function 'bh/skip-non-projects)
-;;                            (org-agenda-sorting-strategy
-;;                             '(category-keep))))
-		)
-               nil)
-
-	      ;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
-              (" " "events only" agenda ""
-	       (
-		(org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
-		))
 
 ;use agenda and / RET instead;              ("i" "important tasks (-reward)" agenda ""
 ;use agenda and / RET instead;	       (
@@ -487,10 +440,58 @@
 		(org-agenda-overriding-header "home tasks")
 		))
 
-	      ("x" "Borrowed"
-	       ((agenda ""
-			((org-agenda-skip-function 'tag-without-done-or-canceled)
-			 (org-agenda-overriding-header "Fun: ")))))
+	      ;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
+              ("E" "events only" agenda ""
+	       (
+		(org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
+		))
+
+              ("o" "overview Agenda" (
+               (agenda ""
+		       nil )
+;diabled by nil above;			((org-agenda-skip-function '(my-skip-tag "reward"))
+;diabled by nil above;			 (org-agenda-overriding-header "Agenda without rewards: ")))
+                (tags "+TODO=\"DONE\"+CLOSED>=\"<today>\""
+		      (
+		       (org-agenda-overriding-header "DONE today")
+		       ))
+;diabled;                (tags "+reward"
+;diabled;                           (
+;diabled;			    (org-agenda-overriding-header "Rewards")
+;diabled;                            ;(org-agenda-skip-function 'bh/skip-non-stuck-projects))
+;diabled;                            ;(org-agenda-todo-ignore-scheduled 'future)
+;diabled;                            ;(org-agenda-todo-ignore-deadlines 'future)
+;diabled;			   )
+;diabled;			   )
+;too slow - dont need;                (tags-todo "-CANCELLED/!"
+;too slow - dont need;                           ((org-agenda-overriding-header "Stuck Projects")
+;too slow - dont need;                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
+;slow;                (tags-todo "-CANCELLED+WAITING/!"
+;slow;                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+;slow;                            (org-agenda-skip-function 'bh/skip-stuck-projects)
+;slow;                            (org-tags-match-list-sublevels nil)
+;slow;                            (org-agenda-todo-ignore-scheduled 'future)
+;slow;                            (org-agenda-todo-ignore-deadlines 'future)
+;slow;			    ))
+;;                (tags "REFILE"
+;;                      ((org-agenda-overriding-header "Tasks to Refile")
+;;                       (org-tags-match-list-sublevels nil)))
+;;                (tags "-REFILE/"
+;;                      ((org-agenda-overriding-header "Tasks to Archive")
+;;                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+;;                       (org-tags-match-list-sublevels nil)))
+;;                (tags-todo "-HOLD-CANCELLED/!"
+;;                           ((org-agenda-overriding-header "Projects")
+;;                            (org-agenda-skip-function 'bh/skip-non-projects)
+;;                            (org-agenda-sorting-strategy
+;;                             '(category-keep))))
+		)
+               nil)
+
+;;disabled;; 	      ("x" "Borrowed"
+;;disabled;; 	       ((agenda ""
+;;disabled;; 			((org-agenda-skip-function 'tag-without-done-or-canceled)
+;;disabled;; 			 (org-agenda-overriding-header "Fun: ")))))
 
 	      ("X" "calfw" open-calfw-agenda-org)
 
