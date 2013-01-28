@@ -130,7 +130,7 @@
 (defun my-system-is-blanche ()
 (interactive)
 "Return true if the system we are running on is blanche"
-(string-equal system-name "blanche")
+(or (string-equal system-name "blanche") (string-equal system-name "blanche.lan"))
 )
 (defun my-system-is-grmlvrs ()
 (interactive)
