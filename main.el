@@ -815,6 +815,14 @@
 (global-set-key (kbd "ESC <down>") 'move-line-down)
 
 
+;; ######################################################
+;; joining lines
+;; http://whattheemacsd.com//key-bindings.el-03.html
+(global-set-key (kbd "C-c j")
+            (lambda ()
+                  (interactive)
+                  (join-line -1)))
+
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
