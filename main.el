@@ -864,6 +864,26 @@
       )
 
 
+;; ######################################################
+;; magit
+;;disabled;; (require 'magit)
+;;disabled;; 
+;;disabled;; ;; full screen magit-status
+;;disabled;; ;; http://whattheemacsd.com//setup-magit.el-01.html
+;;disabled;; (defadvice magit-status (around magit-fullscreen activate)
+;;disabled;;   (window-configuration-to-register :magit-fullscreen)
+;;disabled;;   ad-do-it
+;;disabled;;   (delete-other-windows))
+;;disabled;; 
+;;disabled;; (defun magit-quit-session ()
+;;disabled;;   "Restores the previous window configuration and kills the magit buffer"
+;;disabled;;   (interactive)
+;;disabled;;   (kill-buffer)
+;;disabled;;   (jump-to-register :magit-fullscreen))
+;;disabled;; 
+;;disabled;; (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+
+
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
