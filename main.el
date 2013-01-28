@@ -1,4 +1,12 @@
+
+;; ######################################################
+;; about defining keys
+;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
+
+
+;; ######################################################
 (server-start)
+
 
 ;; ######################################################
 ;;; von: http://www.zonix.de/html40/linux/emacsgnus.html
@@ -783,8 +791,28 @@
 (add-hook 'emacs-startup-hook 'delete-other-windows t)
 
 
+;; ######################################################
+;; switching lines
+;; http://whattheemacsd.com//editing-defuns.el-02.html
+(defun move-line-down ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines 1))
+    (forward-line)
+    (move-to-column col)))
 
+(defun move-line-up ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines -1))
+    (move-to-column col)))
 
+(global-set-key (kbd "ESC <up>") 'move-line-up)
+(global-set-key (kbd "ESC <down>") 'move-line-down)
 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
