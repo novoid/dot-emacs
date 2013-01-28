@@ -554,7 +554,7 @@
 ;; boxquote
 (my-load-local-el "contrib/boxquote.el")
 (global-set-key "\C-cq" 'boxquote-region)
-(global-set-key "\C-cw" 'boxquote-title)
+(global-set-key "\C-cQ" 'boxquote-title)
 
 
 ;; ######################################################
@@ -794,7 +794,7 @@
 ;; ######################################################
 ;; switching lines
 ;; http://whattheemacsd.com//editing-defuns.el-02.html
-(defun move-line-down ()
+(defun my-move-line-down ()
   (interactive)
   (let ((col (current-column)))
     (save-excursion
@@ -803,7 +803,7 @@
     (forward-line)
     (move-to-column col)))
 
-(defun move-line-up ()
+(defun my-move-line-up ()
   (interactive)
   (let ((col (current-column)))
     (save-excursion
@@ -811,17 +811,58 @@
       (transpose-lines -1))
     (move-to-column col)))
 
-(global-set-key (kbd "ESC <up>") 'move-line-up)
-(global-set-key (kbd "ESC <down>") 'move-line-down)
+(global-set-key (kbd "ESC <up>") 'my-move-line-up)
+(global-set-key (kbd "ESC <down>") 'my-move-line-down)
 
 
 ;; ######################################################
-;; joining lines
+;; joining lines: C-c j
 ;; http://whattheemacsd.com//key-bindings.el-03.html
 (global-set-key (kbd "C-c j")
             (lambda ()
                   (interactive)
                   (join-line -1)))
+
+
+;; ######################################################
+;; web-jump: C-c w
+;; http://www.emacswiki.org/emacs/WebJump
+;; http://www.neilvandyke.org/webjump/
+;; https://github.com/thefury/site-lisp/blob/master/dotemacs.el
+;; http://whattheemacsd.com//my-misc.el-01.html (Urban Dictionary)
+(require 'webjump)
+(global-set-key (kbd "C-c w") 'webjump)
+(setq webjump-sites ;(append   ;; append instead of overwrite
+      '(
+	;; ------------------------------------------------------------------
+	("Emacs Lisp List" . "anc.ed.ac.uk/~stephen/emacs/ell.html")
+	("Ohio State Emacs Lisp Archive" .
+	 [simple-query "www.cis.ohio-state.edu/emacs-lisp/"
+		       "neutral.verbum.org/search?q=" "&archive=archive"])
+	("PGP Key Server" .
+	 [simple-query "pgp.mit.edu"
+		       "pgp.mit.edu:11371/pks/lookup?op=index&search=" ""])
+	;; my own jumps
+	("Org-mode Docu" . "http://orgmode.org/org.html")
+	("Org-mode ML" .
+	 [simple-query "orgmode.org"
+		       "http://search.gmane.org/?group=gmane.emacs.orgmode&query=" ""])
+	("Debian Bug Number" .
+	 [simple-query "www.debian.org/Bugs/"
+		       "bugs.debian.org/cgi-bin/bugreport.cgi?bug="
+		       ""])
+	("EmacsWiki" . 
+	 [simple-query "www.emacswiki.org/cgi-bin/wiki.pl"
+		       "www.emacswiki.org/cgi-bin/wiki.pl?search="
+		       "&dosearch=1"])
+	("Google" .
+	 [simple-query "www.google.at" "www.google.at/search?q=" ""])
+	("IMDB" .
+	 [simple-query "www.imdb.com" "www.imdb.com/Find?select=All&for=" ""])
+	;; ------------------------------------------------------------------
+	) webjump-sample-sites ;)  ;; append instead of overwrite
+      )
+
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
