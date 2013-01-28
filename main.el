@@ -843,8 +843,8 @@
 	 [simple-query "pgp.mit.edu"
 		       "pgp.mit.edu:11371/pks/lookup?op=index&search=" ""])
 	;; my own jumps
-	("Org-mode Docu" . "http://orgmode.org/org.html")
-	("Org-mode ML" .
+	("Org-mode docu" . "http://orgmode.org/org.html")
+	("Org-mode mailinglist" .
 	 [simple-query "orgmode.org"
 		       "http://search.gmane.org/?group=gmane.emacs.orgmode&query=" ""])
 	("Debian Bug Number" .
