@@ -15,15 +15,15 @@
 ;; change active timestamp to inactive and cancel event
 ;; in the agenda:
 (fset 'my-agenda-cancel-event-and-set-to-inactive
-      (lambda (&optional arg) "Keyboard macro." 
-	(interactive "p") 
+      (lambda (&optional arg) "Keyboard macro."
+	(interactive "p")
 	(kmacro-exec-ring-item (quote ([return S-up 3 20 99] 0 "%d")) arg)
 	)
       )
 ;; outside of agenda:
 (fset 'my-cancel-event-and-set-to-inactive
-      (lambda (&optional arg) "Keyboard macro." 
-	(interactive "p") 
+      (lambda (&optional arg) "Keyboard macro."
+	(interactive "p")
 	(kmacro-exec-ring-item (quote ([5 18 62 13 S-up 3 20 99] 0 "%d")) arg)
 	)
       )
@@ -52,8 +52,8 @@
   (setq appt-display-format 'window)
   (setq appt-disp-window-function (function appt-disp-window))
   (defun appt-disp-window (min-to-app new-time msg)
-    (save-window-excursion 
-	(shell-command 
+    (save-window-excursion
+	(shell-command
 	 (concat "/usr/bin/zenity --info --title='Appointment' --text='" msg "' &") nil nil)
 	)
     )
@@ -71,7 +71,7 @@
 ;; https://github.com/kiwanami/emacs-calfw/issues/18
 ;; 2013-01-16: does not work (yet?)
 (defun open-calfw-agenda-org(&rest args)
-  (let 
+  (let
 	(
 	 ;; do not duplicate deadlines
 	 (org-deadline-warning-days 0)
@@ -376,7 +376,7 @@
 
 	      ;; 2012-12-07 ideas from: http://doc.norang.ca/org-mode.html#CustomAgendaViews
               ("o" "overview Agenda" (
-               (agenda "" 
+               (agenda ""
 		       nil )
 ;diabled by nil above;			((org-agenda-skip-function '(my-skip-tag "reward"))
 ;diabled by nil above;			 (org-agenda-overriding-header "Agenda without rewards: ")))
@@ -428,6 +428,18 @@
 ;use agenda and / RET instead;		(org-agenda-skip-function '(my-skip-tag "reward"))
 ;use agenda and / RET instead;;		(org-agenda-skip-function '(my-skip-tag "lp"))
 ;use agenda and / RET instead;		))
+
+	      ("p" "events Prio [#A]"
+	       ((agenda "+PRIORITY=\"A\""
+			((org-agenda-ndays 31)
+			 (org-agenda-time-grid nil)
+			 (org-agenda-entry-types '(:timestamp :sexp))
+			 (org-agenda-skip-function
+			  '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]")))
+			;; (
+			;;  (org-agenda-skip-function 'tag-without-done-or-canceled)
+			;;  )
+			)))
 
               ("r" "reward tasks" (
 	       (tags-todo "reward/!STARTED"
@@ -482,11 +494,6 @@
 
 	      ("X" "calfw" open-calfw-agenda-org)
 
-	      ("P" "events Prio [#A]"
-	       ((agenda "+PRIORITY=\"A\""
-			(
-			 (org-agenda-skip-function 'tag-without-done-or-canceled)
-			 ))))
 
 ;2012-12-10 deactivated;	      ("c" . "custom searches") ; description for "c" prefix
 ;2012-12-10 deactivated;              ("cr" "rewards" agenda "+reward"
@@ -1476,7 +1483,7 @@ Null prefix argument turns off the mode."
 ;;disabled; ;;; and end point of the entry and does a regexp search. It also
 ;;disabled; ;;; checks if the category of the entry is in an exclude list and
 ;;disabled; ;;; returns either t or nil to skip or include the entry.
-;;disabled; 
+;;disabled;
 ;;disabled; (defun org-mycal-export-limit ()
 ;;disabled;   "Limit the export to items that have a date, time and a range. Also exclude certain categories."
 ;;disabled;   (setq org-tst-regexp "<\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} ... [0-9]\\{2\\}:[0-9]\\{2\\}[^\r\n>]*?\\)>")
@@ -1496,12 +1503,12 @@ Null prefix argument turns off the mode."
 ;;disabled;     (setq mycatp (member mycategory org-export-exclude-category))
 ;;disabled;     ; return t if ok, nil when not ok
 ;;disabled;     (if (and myresult (not mycatp)) t nil)))
-;;disabled; 
+;;disabled;
 ;;disabled; ;;; activate filter and call export function
 ;;disabled; (defun org-mycal-export ()
 ;;disabled;   (let ((org-icalendar-verify-function 'org-mycal-export-limit))
 ;;disabled;     (org-export-icalendar-combine-agenda-files)))
-;;disabled; 
+;;disabled;
 
 
 ;; ######################################################
@@ -1819,11 +1826,11 @@ Null prefix argument turns off the mode."
 ; ;; https://lists.gnu.org/archive/html/emacs-orgmode/2007-03/msg00179.html
 ; (setq org-fontify-done-headline t)
 ; (custom-set-faces
-;  '(org-done ((t (:foreground "PaleGreen"   
+;  '(org-done ((t (:foreground "PaleGreen"
 ;                  :weight normal
 ;                  :strike-through t))))
-;  '(org-headline-done 
-;             ((((class color) (min-colors 16) (background dark)) 
+;  '(org-headline-done
+;             ((((class color) (min-colors 16) (background dark))
 ;                (:foreground "LightSalmon" :strike-through t)))))
 
 
