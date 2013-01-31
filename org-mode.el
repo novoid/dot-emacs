@@ -1053,7 +1053,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
 
-(require 'org-protocol)
 
 
 (setq require-final-newline nil)
@@ -1541,8 +1540,20 @@ Null prefix argument turns off the mode."
   "Exports monthly Org-mode agenda to agenda.ics file"
   (interactive)
   (org-agenda-list nil nil 60)
-  (org-agenda-write "~/share/all/org-mode/agenda.ics")
-)
+  (org-agenda-write "~/share/all/org-mode/org-export.ics")
+  (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
+  (setq icspath "~/share/all/org-mode/")
+  (shell-command-to-string (concat 
+			    scriptpath "postprocess_Org-mode_iCal_export.py "
+			    "-i " icspath "org-export.ics "
+			    "-o " icspath "agenda.ics "
+			    "--overwrite"
+			    )
+			   )
+  (when (my-system-is-gary)
+    (shell-command-to-string "/home/vk/bin/vk-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
+    )
+  )
 
 ;; ######################################################
 ;; http://orgmode.org/Changes.html -> New option org-catch-invisible-edits
@@ -1833,6 +1844,12 @@ Null prefix argument turns off the mode."
 ;  '(org-headline-done
 ;             ((((class color) (min-colors 16) (background dark))
 ;                (:foreground "LightSalmon" :strike-through t)))))
+
+
+;; ######################################################
+;; managing bookmarks with Org-mode
+;; http://orgmode.org/worg/org-contrib/org-protocol.html
+(require 'org-protocol)
 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
