@@ -1574,8 +1574,8 @@ Null prefix argument turns off the mode."
 
 ;; ######################################################
 ;; using alternative LaTeX exporter
-(require 'org-export)
-(require 'org-e-latex)
+;(require 'org-export)
+;(require 'org-e-latex)
 ;; invoke: M-x org-export-dispatch
 
 ;; ######################################################

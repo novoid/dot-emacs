@@ -28,6 +28,6 @@
   ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
  '(org-contacts-files "~/share/all/org-mode/contacts.org")
- '(safe-local-variable-values (quote ((eval flyspell-mode 1) (eval ispell-change-dictionary "en_US")))))
+ '(safe-local-variable-values (quote ((eval ispell-change-dictionary "de_AT") (eval flyspell-mode 1) (eval ispell-change-dictionary "en_US")))))
 
 

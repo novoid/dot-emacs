@@ -567,19 +567,10 @@
 ;; ######################################################
 ;; yasnippet
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
+(my-load-local-el "contrib/yasnippet/yasnippet.el")
+(require 'yasnippet)
 (setq yas/root-directory "~/.emacs.d/snippets")
-(when (my-system-is-gary)
-  (require 'yasnippet)
-  (yas/load-directory yas/root-directory)
-  )
-(when (my-system-is-blanche)
-  (my-load-local-el "contrib/yasnippet.el")
-  ;(require 'yasnippet)
-  (yas/load-directory yas/root-directory)
-  )
-;(when (my-system-is-grmlvrs)
-;  (my-load-local-el "contrib/yasnippet.el")
-;  )
+(yas/load-directory yas/root-directory)
 
 
 ;; ######################################################

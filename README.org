@@ -22,9 +22,9 @@ necessary for my configuration. Most important here is the directory
   - [[https://github.com/sellout/emacs-color-theme-solarized][emacs-color-theme-solarized]]/
   - [[http://Orgmode.org][org-mode]]/
   - [[http://www.dr-qubit.org/git/undo-tree.git][undo-tree]]/
+  - [[https://github.com/capitaomorte/yasnippet][yasnippet/]]
   - [[http://www.davep.org/emacs/#boxquote.el][boxquote.el]]
   - [[http://www.emacswiki.org/emacs/wc.el][wc.el]]
-  - [[http://code.google.com/p/yasnippet/][yasnippet.el]]
 - Also in this directory but deactivated or not used by me:
   - [[https://github.com/kiwanami/emacs-calfw][calfw]]/
   - [[https://code.google.com/p/emacs-open-resource/source/browse/trunk/open-resource.el?r%3D2][emacs-open-resource-read-only]]/
