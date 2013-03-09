@@ -82,12 +82,13 @@
 
 
 (setq org-agenda-files (append (quote (
+			       "~/share/all/org-mode/phd.org"
+;			       "~/share/all/org-mode/test-phd.org"
 			       "~/share/all/org-mode/misc.org"
 			       "~/share/all/org-mode/tagstore.org"
 			       "~/share/all/org-mode/IST.org"
 			       "~/share/all/org-mode/contacts.org"
 			       "~/share/all/org-mode/postdoc.org"
-			       "~/share/all/org-mode/phd.org"
 			       "~/share/all/org-mode/foodandbeverages.org"
 			       "~/share/all/org-mode/hardware.org"
 			       "~/share/all/org-mode/notes.org"
@@ -96,8 +97,7 @@
 			       "~/src/lazyblorg/dev/lazyblorg.org"
 			       )
 				      )
-			       (file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
-;			       (file-expand-wildcards "~/share/all/org-mode/memacs/git/*.org")
+;			       (file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
 			       )
       )
 
@@ -1540,20 +1540,20 @@ Null prefix argument turns off the mode."
 (defun my-export-agenda()
   "Exports monthly Org-mode agenda to agenda.ics file"
   (interactive)
-  (org-agenda-list nil nil 60)
-  (org-agenda-write "~/share/all/org-mode/org-export.ics")
-  (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
-  (setq icspath "~/share/all/org-mode/")
-  (shell-command-to-string (concat 
-			    scriptpath "postprocess_Org-mode_iCal_export.py "
-			    "-i " icspath "org-export.ics "
-			    "-o " icspath "agenda.ics "
-			    "--overwrite"
-			    )
-			   )
-  (when (my-system-is-gary)
-    (shell-command-to-string "/home/vk/bin/vk-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
-    )
+  (org-agenda-list nil nil 6)
+  (org-agenda-write "~/share/all/org-mode/test-org-export.ics")
+;tmp;  (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
+;tmp;  (setq icspath "~/share/all/org-mode/")
+;tmp;  (shell-command-to-string (concat 
+;tmp;			    scriptpath "postprocess_Org-mode_iCal_export.py "
+;tmp;			    "-i " icspath "org-export.ics "
+;tmp;			    "-o " icspath "agenda.ics "
+;tmp;			    "--overwrite"
+;tmp;			    )
+;tmp;			   )
+;tmp;  (when (my-system-is-gary)
+;tmp;    (shell-command-to-string "/home/vk/bin/vk-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
+;tmp;    )
   )
 
 ;; ######################################################
@@ -1852,5 +1852,12 @@ Null prefix argument turns off the mode."
 ;; http://orgmode.org/worg/org-contrib/org-protocol.html
 (require 'org-protocol)
 
+
+;; ######################################################
+;; org-favtable
+(require 'org-favtable)
+(setq org-favtable-id "my-favtable")
+(global-set-key (kbd "C-+") 'org-favtable)
+ 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
