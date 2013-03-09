@@ -875,6 +875,15 @@
 ;;disabled;; (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 
+;; ######################################################
+;; http://www.emacswiki.org/emacs-es/RecentFiles
+;; recently files
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
