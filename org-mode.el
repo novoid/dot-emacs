@@ -1209,7 +1209,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	    (?n . (concat "*** PDF Annotations: [[notes:%l][%l-notes.pdf]]\n:PROPERTIES:\n:CREATED: "
 			  "<" (substring (format-time-string (org-time-stamp-format t t)) 1 -1) ">"
 			  "\n:ID: %l-notes\n:END:\n\n"
-			  "\#+begin_src sh :results output\n"
+			  "\#+begin_src sh :results output :eval no-export\n"
 			  "${HOME}/bin/vkextract_annotations_to_orgmode_snippet.sh %l\n"
                           "#+end_src"))
 	    ))))
@@ -1542,18 +1542,18 @@ Null prefix argument turns off the mode."
   (interactive)
   (org-agenda-list nil nil 6)
   (org-agenda-write "~/share/all/org-mode/test-org-export.ics")
-;tmp;  (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
-;tmp;  (setq icspath "~/share/all/org-mode/")
-;tmp;  (shell-command-to-string (concat 
-;tmp;			    scriptpath "postprocess_Org-mode_iCal_export.py "
-;tmp;			    "-i " icspath "org-export.ics "
-;tmp;			    "-o " icspath "agenda.ics "
-;tmp;			    "--overwrite"
-;tmp;			    )
-;tmp;			   )
-;tmp;  (when (my-system-is-gary)
-;tmp;    (shell-command-to-string "/home/vk/bin/vk-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
-;tmp;    )
+  (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
+  (setq icspath "~/share/all/org-mode/")
+  (shell-command-to-string (concat 
+			    scriptpath "postprocess_Org-mode_iCal_export.py "
+			    "-i " icspath "org-export.ics "
+			    "-o " icspath "agenda.ics "
+			    "--overwrite"
+			    )
+			   )
+  (when (my-system-is-gary)
+    (shell-command-to-string "/home/vk/bin/vk-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
+    )
   )
 
 ;; ######################################################
