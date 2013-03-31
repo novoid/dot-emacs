@@ -1341,6 +1341,7 @@ Null prefix argument turns off the mode."
 	("xh" "xlog hometrainer" table-line (id "xlog-hometrainer") "| %T |  |  |  |")
 	("xb" "xlog Bettwäsche" table-line (id "xlog-bettwaesche-id") "| %T |  |  |  |  |")
 	("xg" "xlog Gewicht" table-line (id "xlog-gewicht") "| %T |  |")
+	("xr" "Reinigung Geschirrspüler" table-line (id "xlog-Geschirrspuelerreinigung") "| %T |")
 	("xp" "Pollenallergie Symptome" table-line (id "ad5f7363-e280-4566-912d-1fb5699725da") "| %T |")
 	("xt" "Pollenallergie Tabletteneinnahme" table-line (id "b718be27a93a35207bac9b18ec390cc3") "| %T |")
 	("xG" "elmex grün" table-line (id "d705cdf9-40e5-4677-9662-e0e17d05798f") "| %T |")
@@ -1540,7 +1541,7 @@ Null prefix argument turns off the mode."
 (defun my-export-agenda()
   "Exports monthly Org-mode agenda to agenda.ics file"
   (interactive)
-  (org-agenda-list nil nil 6)
+  (org-agenda-list nil nil 60)
   (org-agenda-write "~/share/all/org-mode/test-org-export.ics")
   (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
   (setq icspath "~/share/all/org-mode/")
@@ -1858,6 +1859,20 @@ Null prefix argument turns off the mode."
 (require 'org-favtable)
 (setq org-favtable-id "my-favtable")
 (global-set-key (kbd "C-+") 'org-favtable)
- 
+
+;; ######################################################
+;; org-feed - aggregating RSS feeds in news.org file:
+; (setq org-feed-alist
+;       '(
+; 	("heise"
+;          "http://www.heise.de/newsticker/heise.rdf"
+;          "~/share/all/org-mode/news.org" "heise")
+; 	("Dilbert"
+;          "http://feeds.feedburner.com/DilbertDailyStrip"
+;          "~/share/all/org-mode/news.org" "Dilbert")
+; 	)
+;       )
+
+
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
