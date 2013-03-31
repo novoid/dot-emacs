@@ -37,6 +37,18 @@
 (define-prefix-command 'my-map)
 (global-set-key (kbd "C-,") 'my-map)
 
+;; ######################################################
+;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+;; font sizes:
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
+;; Magit status
+(global-set-key "\C-cv" 'magit-status)
+;; MISC
+(global-set-key "\C-cr"  'eval-region)
+(global-set-key [home] 'beginning-of-buffer)
+(global-set-key [end]  'end-of-buffer)
+
 
 ;; ######################################################
 ;; from http://www.yak.net/fqa/124.html
@@ -882,6 +894,14 @@
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+
+;; ######################################################
+;; http://emacswiki.org/emacs/ImenuMode
+;; jump to definitions in local buffer
+(imenu-add-to-menubar imenu)
+;; Jump to a definition in the current file. (This is awesome.)
+(global-set-key (kbd "C-x C-i") 'ido-imenu)
 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
