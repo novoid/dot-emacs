@@ -40,14 +40,15 @@
 ;; ######################################################
 ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
 ;; font sizes:
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "<f5>") 'text-scale-decrease)
+(global-set-key (kbd "<f6>") 'text-scale-increase)
 ;; Magit status
 (global-set-key "\C-cv" 'magit-status)
 ;; MISC
 (global-set-key "\C-cr"  'eval-region)
 (global-set-key [home] 'beginning-of-buffer)
 (global-set-key [end]  'end-of-buffer)
+;(global-set-key "\C-xrk"  'kill-rectangle)
 
 
 ;; ######################################################
@@ -55,6 +56,7 @@
 ;(global-unset-key "\C-p")
 ;; (global-set-key "\C-pl" 'goto-line)
 (global-set-key "\C-cg" 'goto-line)
+(global-set-key (kbd "<f7>") 'goto-line)
 ;; Ersetzt durch C-pg:
 ;;(global-set-key "\C-xl" 'goto-line)
 
@@ -751,9 +753,9 @@
 
 ;; ######################################################
 ;; http://code.google.com/p/emacs-open-resource/
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
-(require 'open-resource)
-(global-set-key "\C-cr" 'open-resource)
+; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
+; (require 'open-resource)
+; (global-set-key "\C-cr" 'open-resource)
 
 
 ;; ######################################################
@@ -869,22 +871,22 @@
 
 ;; ######################################################
 ;; magit
-;;disabled;; (require 'magit)
-;;disabled;; 
-;;disabled;; ;; full screen magit-status
-;;disabled;; ;; http://whattheemacsd.com//setup-magit.el-01.html
-;;disabled;; (defadvice magit-status (around magit-fullscreen activate)
-;;disabled;;   (window-configuration-to-register :magit-fullscreen)
-;;disabled;;   ad-do-it
-;;disabled;;   (delete-other-windows))
-;;disabled;; 
-;;disabled;; (defun magit-quit-session ()
-;;disabled;;   "Restores the previous window configuration and kills the magit buffer"
-;;disabled;;   (interactive)
-;;disabled;;   (kill-buffer)
-;;disabled;;   (jump-to-register :magit-fullscreen))
-;;disabled;; 
-;;disabled;; (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+(require 'magit)
+
+;; full screen magit-status
+;; http://whattheemacsd.com//setup-magit.el-01.html
+(defadvice magit-status (around magit-fullscreen activate)
+  (window-configuration-to-register :magit-fullscreen)
+  ad-do-it
+  (delete-other-windows))
+
+(defun magit-quit-session ()
+  "Restores the previous window configuration and kills the magit buffer"
+  (interactive)
+  (kill-buffer)
+  (jump-to-register :magit-fullscreen))
+
+(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 
 ;; ######################################################
@@ -899,7 +901,7 @@
 ;; ######################################################
 ;; http://emacswiki.org/emacs/ImenuMode
 ;; jump to definitions in local buffer
-(imenu-add-to-menubar imenu)
+;(imenu-add-to-menubar imenu)
 ;; Jump to a definition in the current file. (This is awesome.)
 ;(global-set-key (kbd "C-x C-i") 'ido-imenu)
 
