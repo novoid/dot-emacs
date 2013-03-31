@@ -44,11 +44,15 @@
 (global-set-key (kbd "<f6>") 'text-scale-increase)
 ;; Magit status
 (global-set-key "\C-cv" 'magit-status)
-;; MISC
-(global-set-key "\C-cr"  'eval-region)
 (global-set-key [home] 'beginning-of-buffer)
 (global-set-key [end]  'end-of-buffer)
 ;(global-set-key "\C-xrk"  'kill-rectangle)
+
+;; ######################################################
+;; coping with ELISP code
+(global-set-key "\C-cr"  'eval-region)
+(global-set-key "\C-cel"  'find-library)
+(global-set-key "\C-cef"  'find-function-at-point)
 
 
 ;; ######################################################
@@ -544,8 +548,12 @@
 ;(setq ispell-dictionary "german-new8")
 ;(setq ispell-dictionary "german-new8")
 ;(setq ispell-local-dictionary "german-new8")
-(global-set-key "\C-cf" 'flyspell-mode)
-(global-set-key "\C-cl" 'my-toggle-ispell-language)
+(global-set-key "\C-cfm" 'flyspell-mode)
+(global-set-key "\C-cfr" 'flyspell-region)
+(global-set-key "\C-cfl" 'my-toggle-ispell-language)
+(global-set-key "\C-cfn" 'flyspell-goto-next-error)
+(global-set-key "\C-cff" 'flyspell-correct-word-before-point)
+
 
 ;; http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
 ;; modes for programming languages; check spelling only in comments/strings
