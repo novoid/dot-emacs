@@ -901,7 +901,7 @@
 ;; jump to definitions in local buffer
 (imenu-add-to-menubar imenu)
 ;; Jump to a definition in the current file. (This is awesome.)
-(global-set-key (kbd "C-x C-i") 'ido-imenu)
+;(global-set-key (kbd "C-x C-i") 'ido-imenu)
 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
