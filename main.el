@@ -22,6 +22,14 @@
 
 
 ;; ######################################################
+;; use-package of John Wiegley
+;; https://github.com/jwiegley/use-package
+(my-load-local-el "contrib/use-package/bind-key.el")
+(my-load-local-el "contrib/use-package/use-package.el")
+(require 'use-package)
+
+
+;; ######################################################
 ;; Activate UTF-8 mode:
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -831,7 +839,7 @@
 ;; ######################################################
 ;; joining lines: C-c j
 ;; http://whattheemacsd.com//key-bindings.el-03.html
-(global-set-key (kbd "C-c j")
+(global-set-key (kbd "C-c j") ;; join-line
             (lambda ()
                   (interactive)
                   (join-line -1)))
@@ -912,6 +920,23 @@
 ;(imenu-add-to-menubar imenu)
 ;; Jump to a definition in the current file. (This is awesome.)
 ;(global-set-key (kbd "C-x C-i") 'ido-imenu)
+
+
+;; ######################################################
+;; paredit
+;; (el-file copied directly from J. Wiegleys dot-emacs repos)
+(my-load-local-el "contrib/paredit.el")
+(autoload 'enable-paredit-mode "paredit"
+  "Turn on pseudo-structural editing of Lisp code."
+  t)
+;;;   (add-hook M-mode-hook 'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook (lambda () (paredit-mode +1)))
+(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
+(eval-after-load 'paredit
+  '(progn
+  (define-key paredit-mode-map (kbd ")") 'paredit-close-round-and-newline)
+  (define-key paredit-mode-map (kbd "M-)") 'paredit-close-round)
+  ))
 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
