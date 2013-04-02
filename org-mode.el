@@ -153,12 +153,14 @@
             ;; It expands the files in the directories individually
             (org-defkey org-mode-map "\C-c["    'undefined)
             (org-defkey org-mode-map "\C-c]"    'undefined)
-            (local-set-key (kbd "C-c M-o") 'bh/mail-subtree)))
+;            (local-set-key (kbd "C-c M-o") 'bh/mail-subtree)
+	    )
+	  )
 
 ;(setq org-agenda-files (quote ("~/misc_documents/org-mode")))
 
 ;; Custom Key Bindings
-(global-set-key (kbd "<f12>") 'org-agenda)
+;(global-set-key (kbd "<f12>") 'org-agenda)
 ;(global-set-key (kbd "<f5>") 'bh/org-todo)
 ;(global-set-key (kbd "<S-f5>") 'bh/widen)
 ;(global-set-key (kbd "<f7>") 'bh/set-truncate-lines)
@@ -167,7 +169,7 @@
 ;(global-set-key (kbd "<f9> c") 'calendar)
 ;(global-set-key (kbd "<f9> f") 'boxquote-insert-file)
 ;(global-set-key (kbd "<f9> g") 'gnus)
-(global-set-key (kbd "<f8>") 'bh/hide-other)
+;(global-set-key (kbd "<f8>") 'bh/hide-other)
 
 (defun bh/hide-other ()
   (interactive)
@@ -219,21 +221,21 @@
 ;;   (interactive)
 ;;   (untabify (point-min) (point-max)))
 ;;
-(global-set-key (kbd "<f9> v") 'visible-mode)
-(global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
-(global-set-key (kbd "C-<f9>") 'previous-buffer)
-(global-set-key (kbd "C-x n r") 'narrow-to-region)
-(global-set-key (kbd "C-<f10>") 'next-buffer)
+;(global-set-key (kbd "<f9> v") 'visible-mode)
+;(global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
+;(global-set-key (kbd "C-<f9>") 'previous-buffer)
+;(global-set-key (kbd "C-x n r") 'narrow-to-region)
+;(global-set-key (kbd "C-<f10>") 'next-buffer)
 ;; (global-set-key (kbd "<f11>") 'org-clock-goto)
 ;; (global-set-key (kbd "C-<f11>") 'org-clock-in)
-(global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
+;(global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
 ;; (global-set-key (kbd "M-<f11>") 'org-resolve-clocks)
 ;;(global-set-key (kbd "C-M-r") 'org-capture)
-(global-set-key (kbd "M-<f9>") (lambda ()
-                                 (interactive)
-                                 (unless (buffer-modified-p)
-                                   (kill-buffer (current-buffer)))
-                                 (delete-frame)))
+;(global-set-key (kbd "M-<f9>") (lambda ()
+;                                 (interactive)
+;                                 (unless (buffer-modified-p)
+;                                   (kill-buffer (current-buffer)))
+;                                 (delete-frame)))
 
 (setq org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
 ;;                                (sequence "OPEN(O!)" "|" "CLOSED(C!)")
@@ -746,19 +748,19 @@
 
 
 
-(global-set-key (kbd "<f5>") 'bh/org-todo)
-
-(defun bh/org-todo ()
-  (interactive)
-  (org-narrow-to-subtree)
-  (org-show-todo-tree nil))
-
-(global-set-key (kbd "<S-f5>") 'bh/widen)
-
-(defun bh/widen ()
-  (interactive)
-  (widen)
-  (org-reveal))
+; (global-set-key (kbd "<f5>") 'bh/org-todo)
+; 
+; (defun bh/org-todo ()
+;   (interactive)
+;   (org-narrow-to-subtree)
+;   (org-show-todo-tree nil))
+; 
+; (global-set-key (kbd "<S-f5>") 'bh/widen)
+; 
+; (defun bh/widen ()
+;   (interactive)
+;   (widen)
+;   (org-reveal))
 
 
 
@@ -1063,7 +1065,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (interactive)
   (org-insert-time-stamp nil t t nil nil nil))
 
-(global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
+;(global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
 
 
 
