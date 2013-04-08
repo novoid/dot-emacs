@@ -39,38 +39,46 @@
 
 
 ;; ######################################################
-;; 2011-04-20: defining C-j as my own prefix:
+;; 2011-04-20: defining «C-c ,» as my own prefix:
 ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
+;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
 ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
+(global-unset-key "\C-c,")
 (define-prefix-command 'my-map)
-(global-set-key (kbd "C-,") 'my-map)
+(global-set-key (kbd "C-c ,") 'my-map)
+
+;; NOTE:
+;; tried to use «C-,» but I could not make it work:
+;; C-, used by flyspell: (define-key map [(control ?\,)] 'flyspell-goto-next-error)
+;; (global-unset-key [(control ?\,)])
+;; (global-unset-key "\C-,")
+;;does not work;; (global-unset-key "\C-,")
+;;does not work;; (defvar my-map (make-keymap)
+;;does not work;;      "Keymap for local bindings and functions, prefixed by (^,)")
+;;does not work;; (define-key global-map "\C-," 'my-keymap-prefix)
+;;does not work;; (fset 'my-keymap-prefix my-map)
+
 
 ;; ######################################################
 ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
 ;; font sizes:
-(global-set-key (kbd "<f5>") 'text-scale-decrease)
-(global-set-key (kbd "<f6>") 'text-scale-increase)
+(define-key my-map "-" 'text-scale-decrease)
+(define-key my-map "+" 'text-scale-increase)
+(define-key my-map "=" 'text-scale-increase);; because "+" needs "S-=" and I might forget shift
 ;; Magit status
-(global-set-key "\C-cv" 'magit-status)
+(define-key my-map "v" 'magit-status)
 (global-set-key [home] 'beginning-of-buffer)
 (global-set-key [end]  'end-of-buffer)
-;(global-set-key "\C-xrk"  'kill-rectangle)
+
+(define-key my-map "g" 'goto-line)
 
 ;; ######################################################
 ;; coping with ELISP code
-(global-set-key "\C-cr"  'eval-region)
-(global-set-key "\C-cel"  'find-library)
-(global-set-key "\C-cef"  'find-function-at-point)
+(define-key my-map "er" 'eval-region)
+(define-key my-map "el" 'find-library)
+(define-key my-map "ef" 'find-function-at-point)
 
 
-;; ######################################################
-;; from http://www.yak.net/fqa/124.html
-;(global-unset-key "\C-p")
-;; (global-set-key "\C-pl" 'goto-line)
-(global-set-key "\C-cg" 'goto-line)
-(global-set-key (kbd "<f7>") 'goto-line)
-;; Ersetzt durch C-pg:
-;;(global-set-key "\C-xl" 'goto-line)
 
 ;; ######################################################
 ;; Toggle between split windows and a single window
@@ -88,7 +96,7 @@
   ;(my-iswitchb-close)
   )
 
-(define-key global-map (kbd "C-1") 'my-toggle-windows-split)
+(define-key my-map "s" 'my-toggle-windows-split)
 
 
 ;; ######################################################
@@ -556,11 +564,12 @@
 ;(setq ispell-dictionary "german-new8")
 ;(setq ispell-dictionary "german-new8")
 ;(setq ispell-local-dictionary "german-new8")
-(global-set-key "\C-cfm" 'flyspell-mode)
-(global-set-key "\C-cfr" 'flyspell-region)
-(global-set-key "\C-cfl" 'my-toggle-ispell-language)
-(global-set-key "\C-cfn" 'flyspell-goto-next-error)
-(global-set-key "\C-cff" 'flyspell-correct-word-before-point)
+(define-key my-map "fm" 'flyspell-mode)
+(define-key my-map "fr" 'flyspell-region)
+(define-key my-map "fl" 'my-toggle-ispell-language)
+(define-key my-map "ft" 'my-toggle-ispell-language);; can't remember if l(anguage) or t(oggle)
+(define-key my-map "fn" 'flyspell-goto-next-error)
+(define-key my-map "ff" 'flyspell-correct-word-before-point)
 
 
 ;; http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
@@ -583,8 +592,8 @@
 ;; ######################################################
 ;; boxquote
 (my-load-local-el "contrib/boxquote.el")
-(global-set-key "\C-cq" 'boxquote-region)
-(global-set-key "\C-cQ" 'boxquote-title)
+(define-key my-map "q" 'boxquote-region)
+(define-key my-map "Q" 'boxquote-title)
 
 
 ;; ######################################################
@@ -680,7 +689,7 @@
         (setq my-toggle-color-theme-state t)
         (color-theme-solarized-dark))))
 
-(global-set-key "\C-cs" 'my-toggle-color-theme)
+(define-key my-map "c" 'my-toggle-color-theme)
 
 
 
@@ -832,14 +841,14 @@
       (transpose-lines -1))
     (move-to-column col)))
 
-(global-set-key (kbd "ESC <up>") 'my-move-line-up)
-(global-set-key (kbd "ESC <down>") 'my-move-line-down)
+(define-key my-map (kbd "<up>") 'my-move-line-up)
+(define-key my-map (kbd "<down>") 'my-move-line-down)
 
 
 ;; ######################################################
-;; joining lines: C-c j
+;; joining lines: C-c , j
 ;; http://whattheemacsd.com//key-bindings.el-03.html
-(global-set-key (kbd "C-c j") ;; join-line
+(define-key my-map "j" ;; join-line
             (lambda ()
                   (interactive)
                   (join-line -1)))
@@ -852,7 +861,7 @@
 ;; https://github.com/thefury/site-lisp/blob/master/dotemacs.el
 ;; http://whattheemacsd.com//my-misc.el-01.html (Urban Dictionary)
 (require 'webjump)
-(global-set-key (kbd "C-c w") 'webjump)
+(define-key my-map "w" 'webjump)
 (setq webjump-sites ;(append   ;; append instead of overwrite
       '(
 	;; ------------------------------------------------------------------
@@ -911,7 +920,7 @@
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
-(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(define-key my-map "r" 'recentf-open-files)
 
 
 ;; ######################################################

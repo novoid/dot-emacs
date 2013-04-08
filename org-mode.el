@@ -1820,7 +1820,7 @@ Null prefix argument turns off the mode."
     (insert (format-time-string "%Y-%m-%d" (current-time)))
     )
   )
-(global-set-key "\C-ct" 'my-insert-timestamp)
+(define-key my-map "t" 'my-insert-timestamp)
 
 ;; 2012-12-23: C-j d ... datestamp
 (defun my-insert-datestamp()
@@ -1834,7 +1834,7 @@ Null prefix argument turns off the mode."
     (insert (format-time-string "%Y-%m-%d" (current-time)))
     )
   )
-(global-set-key "\C-cd" 'my-insert-datestamp)
+(define-key my-map "d" 'my-insert-datestamp)
 
 
 ; ;; ######################################################
