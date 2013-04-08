@@ -1797,45 +1797,6 @@ Null prefix argument turns off the mode."
        (concat "-" tag)))
 (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
 
-;; ######################################################
-;; 2011-04-20: C-j t ... timestamp
-;;       http://www.sabren.net/articles/emacs.php3
-;;       http://www.gnu.org/software/emacs/manual/html_node/emacs/Date-Display-Format.html
-;; COMBINED WITH:
-;; 2012-12-09:
-;; From: Russell Adams <RLAdams@AdamsInfoServ.Com>
-;;       Newsgroups: gmane.emacs.orgmode
-;;       Subject: Re: Using org-mode for laboratory notes.
-;;       Date: Wed, 19 Sep 2012 12:08:21 -0500
-;;       Message-ID: <20120919170820.GC31853@cardamom.adamsinfoserv.com>
-;; Insert immediate timestamp
-(defun my-insert-timestamp()
-  "Insert the current time in yyyy-mm-dd format."
-  (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-	(org-insert-time-stamp nil t nil)
-	(insert " ")
-	)
-    (insert (format-time-string "%Y-%m-%d" (current-time)))
-    )
-  )
-(define-key my-map "t" 'my-insert-timestamp)
-
-;; 2012-12-23: C-j d ... datestamp
-(defun my-insert-datestamp()
-  "Insert the current date in yyyy-mm-dd format."
-  (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-	(org-insert-time-stamp nil nil nil)
-	(insert " ")
-	)
-    (insert (format-time-string "%Y-%m-%d" (current-time)))
-    )
-  )
-(define-key my-map "d" 'my-insert-datestamp)
-
 
 ; ;; ######################################################
 ; ;; change font for DONE tasks
