@@ -97,7 +97,7 @@
 			       "~/src/lazyblorg/dev/lazyblorg.org"
 			       )
 				      )
-;			       (file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
+			       (file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
 			       )
       )
 
@@ -1240,7 +1240,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	("pdf" . "~/archive/library/%s.pdf")
 	("notes" . "~/archive/library/%s-notes.pdf")
 	("contact" . "~/share/all/org-mode/contacts.org::/\*.*%s/")
-	("vktsfile" . "~/share/all/org-mode/memacs/files.org_archive::/\*.*%s/")
+	("tsfile" . "~/share/all/org-mode/memacs/files.org_archive::/\*.*%s/")
 	("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
 	("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
 	("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
@@ -1544,7 +1544,7 @@ Null prefix argument turns off the mode."
   "Exports monthly Org-mode agenda to agenda.ics file"
   (interactive)
   (org-agenda-list nil nil 60)
-  (org-agenda-write "~/share/all/org-mode/test-org-export.ics")
+  (org-agenda-write "~/share/all/org-mode/org-export.ics")
   (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
   (setq icspath "~/share/all/org-mode/")
   (shell-command-to-string (concat 
@@ -1580,6 +1580,18 @@ Null prefix argument turns off the mode."
 ;(require 'org-export)
 ;(require 'org-e-latex)
 ;; invoke: M-x org-export-dispatch
+
+
+;; ######################################################
+;; http://orgmode.org/worg/exporters/beamer/ox-beamer.html
+;; new LaTeX exporter: beamer
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+             '("beamer"
+               "\\documentclass\[presentation\]\{beamer\}"
+               ("\\section\{%s\}" . "\\section*\{%s\}")
+               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
 
 ;; ######################################################
 ;; adding ACM export class format
