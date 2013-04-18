@@ -221,6 +221,24 @@
 ;; recently files
 (define-key my-map "r" 'recentf-open-files)
 
+
+;; ######################################################
+;; command log mode
+;; https://github.com/lewang/command-log-mode
+(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
+(require 'command-log-mode)
+(add-hook 'LaTeX-mode-hook 'command-log-mode)
+
+;; (defun my-start-command-log-mode()
+;;   "load the command-log mode and start it."
+;;   (interactive "*")
+;;   ;; M-x clm/open-command-log-buffer
+;;   (clm/open-command-log-buffer)
+;; )
+
+(define-key my-map "k" 'clm/open-command-log-buffer)
+
+
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
