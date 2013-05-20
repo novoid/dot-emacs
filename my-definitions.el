@@ -201,6 +201,19 @@
   )
 (define-key my-map "t" 'my-insert-timestamp)
 
+(defun my-insert-timestamp-inactive()
+  "Insert the current time in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+	(org-insert-time-stamp nil t t)
+	(insert " ")
+	)
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+  )
+(define-key my-map "T" 'my-insert-timestamp-inactive)
+
 ;; 2012-12-23: C-j d ... datestamp
 (defun my-insert-datestamp()
   "Insert the current date in yyyy-mm-dd format."
@@ -215,6 +228,18 @@
   )
 (define-key my-map "d" 'my-insert-datestamp)
 
+(defun my-insert-datestamp-inactive()
+  "Insert the current date in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+	(org-insert-time-stamp nil nil t)
+	(insert " ")
+	)
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+  )
+(define-key my-map "D" 'my-insert-datestamp-inactive)
 
 
 ;; ######################################################

@@ -1299,7 +1299,13 @@ Null prefix argument turns off the mode."
 ;; contact management with org-contacts
 ;; http://julien.danjou.info/org-contacts.html
 (require 'org-contacts)
-(custom-set-variables '(org-contacts-files "~/share/all/org-mode/contacts.org"))
+(custom-set-variables 
+ '(org-contacts-files "~/share/all/org-mode/contacts.org")
+ '(org-contacts-address-property "CITY")
+ '(org-contacts-birthday-property "BORN")
+ '(org-contacts-icon-property "PHOTOGRAPH")
+ )
+
 
 ;; ######################################################
 ;; templates for capturing C-c c
@@ -1849,5 +1855,9 @@ Null prefix argument turns off the mode."
 ;       )
 
 
+;; ######################################################
+;; adding Org-mode docu
+(require 'info)
+(add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
