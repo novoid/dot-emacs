@@ -1140,8 +1140,13 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-mobile-directory "~/share/all/org-mode/mobile-org/")
 (setq org-directory "~/share/all/org-mode")
 (setq org-mobile-inbox-for-pull "~/share/all/org-mode/inbox.org")
-(setq org-mobile-force-id-on-agenda-items nil)
-'(org-mobile-files (quote ("/Volumes/moe/data/share/all/org-mode/contacts.org" "/Volumes/moe/data/share/all/org-mode/hardware.org" )))
+(setq org-mobile-force-id-on-agenda-items nil) ;; do not generate IDs for all headings
+(setq org-mobile-files (quote 
+		    (
+		     "/Volumes/moe/data/share/all/org-mode/misc.org" 
+		     "/Volumes/moe/data/share/all/org-mode/contacts.org" 
+		     "/Volumes/moe/data/share/all/org-mode/hardware.org" 
+		     )))
 
 
 ;;; http://orgmode.org/worg/org-hacks.html#sec-1_3
@@ -1174,7 +1179,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-agenda-log-mode-items (quote (state)))
 
 ;;; http://orgmode.org/worg/org-faq.html
-(setq org-agenda-skip-additional-timestamps-same-entry t)
+;(setq org-agenda-skip-additional-timestamps-same-entry t)
+(setq org-agenda-skip-additional-timestamps-same-entry nil)
 
 ;;; open agenda in same buffer, full size
 (setq org-agenda-window-setup 'current-window)
