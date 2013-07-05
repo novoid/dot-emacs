@@ -818,9 +818,9 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;; ######################################################
 ;; ert - for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
-(my-load-local-el "contrib/cl-lib.el")
-(my-load-local-el "contrib/ert.el")
-(my-load-local-el "contrib/ert-x.el")
+; (my-load-local-el "contrib/cl-lib.el")
+; (my-load-local-el "contrib/ert.el")
+; (my-load-local-el "contrib/ert-x.el")
 
 
 ;; ######################################################

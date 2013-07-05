@@ -709,6 +709,7 @@
    (R . t)
    (emacs-lisp . t)
    (ditaa . t)
+   (dot . t)
    ))
 
 
