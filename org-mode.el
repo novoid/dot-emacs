@@ -1361,6 +1361,7 @@ Null prefix argument turns off the mode."
 	("xt" "Pollenallergie Tabletteneinnahme" table-line (id "b718be27a93a35207bac9b18ec390cc3") "| %T |")
 	("xG" "elmex grün" table-line (id "d705cdf9-40e5-4677-9662-e0e17d05798f") "| %T |")
 	("xR" "elmex rot" table-line (id "fbd9be0e-5077-4ba9-89eb-6041f945991a") "| %T |")
+	("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
 	("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
 	("xx" "xlogtest" table-line (file+headline "~/share/all/org-mode/misc.org" "xlogtest2012-06-17") "| %T |")
       )
@@ -1588,67 +1589,67 @@ Null prefix argument turns off the mode."
 (setq org-src-fontify-natively t)
 
 
-;; ######################################################
-;; using alternative LaTeX exporter
-;(require 'org-export)
-;(require 'org-e-latex)
-;; invoke: M-x org-export-dispatch
+;; ;; ######################################################
+;; ;; using alternative LaTeX exporter
+;; ;(require 'org-export)
+;; ;(require 'org-e-latex)
+;; ;; invoke: M-x org-export-dispatch
+;; 
+;; 
+;; ;; ######################################################
+;; ;; http://orgmode.org/worg/exporters/beamer/ox-beamer.html
+;; ;; new LaTeX exporter: beamer
+;; (require 'ox-latex)
+;; (add-to-list 'org-latex-classes
+;;              '("beamer"
+;;                "\\documentclass\[presentation\]\{beamer\}"
+;;                ("\\section\{%s\}" . "\\section*\{%s\}")
+;;                ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+;;                ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+;; 
+;; ;; ######################################################
+;; ;; adding ACM export class format
+;; ;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
+;; (unless (boundp 'org-export-latex-classes)
+;;   (setq org-export-latex-classes nil))
+;; (add-to-list 'org-export-latex-classes
+;;              '("article"
+;;                "\\documentclass{article}"
+;;                ("\\section{%s}" . "\\section*{%s}")))
+;; 
+;; (add-to-list 'org-export-latex-classes
+;;           '("koma-article"
+;;              "\\documentclass{scrartcl}
+;;              [NO-DEFAULT-PACKAGES]
+;;              [EXTRA]"
+;;              ("\\section{%s}" . "\\section*{%s}")
+;;              ("\\subsection{%s}" . "\\subsection*{%s}")
+;;              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;              ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;              ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;; 
+;; (add-to-list 'org-export-latex-classes
+;;           '("ACM"
+;;              "\\documentclass{acm_proc_article-sp}
+;;              [NO-DEFAULT-PACKAGES]
+;;              [EXTRA]"
+;;              ("\\section{%s}" . "\\section*{%s}")
+;;              ("\\subsection{%s}" . "\\subsection*{%s}")
+;;              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+;;              ("\\paragraph{%s}" . "\\paragraph*{%s}")
+;;              ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;; 
 
-
-;; ######################################################
-;; http://orgmode.org/worg/exporters/beamer/ox-beamer.html
-;; new LaTeX exporter: beamer
-(require 'ox-latex)
-(add-to-list 'org-latex-classes
-             '("beamer"
-               "\\documentclass\[presentation\]\{beamer\}"
-               ("\\section\{%s\}" . "\\section*\{%s\}")
-               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-
-;; ######################################################
-;; adding ACM export class format
-;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
-(unless (boundp 'org-export-latex-classes)
-  (setq org-export-latex-classes nil))
-(add-to-list 'org-export-latex-classes
-             '("article"
-               "\\documentclass{article}"
-               ("\\section{%s}" . "\\section*{%s}")))
-
-(add-to-list 'org-export-latex-classes
-          '("koma-article"
-             "\\documentclass{scrartcl}
-             [NO-DEFAULT-PACKAGES]
-             [EXTRA]"
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-(add-to-list 'org-export-latex-classes
-          '("ACM"
-             "\\documentclass{acm_proc_article-sp}
-             [NO-DEFAULT-PACKAGES]
-             [EXTRA]"
-             ("\\section{%s}" . "\\section*{%s}")
-             ("\\subsection{%s}" . "\\subsection*{%s}")
-             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-
-;; ######################################################
-;; adding TUGRAZ letter export class format
-;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
-(add-to-list 'org-export-latex-classes
-             '("TUGRAZletter"
-               "\\documentclass{scrlttr2}
-                \\usepackage{tugrazletter}
-                [NO-DEFAULT-PACKAGES]
-                [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")))
+;; ;; ######################################################
+;; ;; adding TUGRAZ letter export class format
+;; ;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
+;; (add-to-list 'org-export-latex-classes
+;;              '("TUGRAZletter"
+;;                "\\documentclass{scrlttr2}
+;;                 \\usepackage{tugrazletter}
+;;                 [NO-DEFAULT-PACKAGES]
+;;                 [EXTRA]"
+;;                ("\\section{%s}" . "\\section*{%s}")))
 
 
 ;; ######################################################
