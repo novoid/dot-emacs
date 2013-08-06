@@ -83,6 +83,7 @@
 
 (setq org-agenda-files (append (quote (
 			       "~/share/all/org-mode/phd.org"
+			       "~/share/all/org-mode/infonova.org"
 ;			       "~/share/all/org-mode/test-phd.org"
 			       "~/share/all/org-mode/misc.org"
 			       "~/share/all/org-mode/tagstore.org"
@@ -1325,13 +1326,11 @@ Null prefix argument turns off the mode."
 	 "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	 "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	("i" "IST Templates")
-	("is" "IST shorts" entry (file+headline "~/share/all/org-mode/IST.org" "shorts")
+	("i" "infonova Templates")
+	("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
 	 "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	("ie" "IST event" entry (file+headline "~/share/all/org-mode/IST.org" "Events")
+	("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
 	 "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	("ii" "IST isst" entry (file+headline "~/share/all/org-mode/IST.org" "Events")
-	 "* %? IST isst: \n:PROPERTIES:\n:CREATED: %U\n:END:\n\n- [[contact:Ingo Pill][Ingo Pill]]\n- [[contact:Thomas Quartisch][Thomas Quartisch]]\n\n" :empty-lines 1)
 	("p" "PhD Templates")
 	("ps" "PhD shorts" entry (file+headline "~/share/all/org-mode/phd.org" "shorts")
 	 "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
