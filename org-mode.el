@@ -714,19 +714,10 @@
    ))
 
 
-
-;old;(setq org-babel-load-languages (quote ((emacs-lisp . t)
-;old;                                       (dot . t)
-;old;                                       (R . t)
-;old;                                       (clojure . t)
-;old;                                       (ledger . t)
-;old;                                       (org . t))))
-
 ;;; Do not prompt to confirm evaluation
 ;;; This may be dangerous - make sure you understand the consequences
 ;;; of setting this -- see the docstring for details
 (setq org-confirm-babel-evaluate nil)
-
 
 
 
