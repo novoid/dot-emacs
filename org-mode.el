@@ -935,78 +935,45 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
 
-
-
 ;(add-to-list 'load-path (expand-file-name "~/misc_documents/org-mode-mode/contrib/lisp"))
 
 (require 'org-checklist)
 
 
-
-
 (setq org-enforce-todo-dependencies t)
-
-
-
 
 (setq org-hide-leading-stars nil)
 
-
-
-
 (setq org-startup-indented t)
-
-
 
 ;;; http://orgmode.org/worg/org-faq.html
 (setq org-blank-before-new-entry (quote ((heading . t)
                                          (plain-list-item . nil))))
 
-
-
 (setq org-insert-heading-respect-content nil)
 
-
-
 (setq org-reverse-note-order nil)
-
-
 
 (setq org-show-following-heading t)
 (setq org-show-hierarchy-above t)
 (setq org-show-siblings nil)
 
-
-
-
 (setq org-special-ctrl-a/e t)
 (setq org-special-ctrl-k t)
 (setq org-yank-adjusted-subtrees t)
 
-
-
-
 (setq org-deadline-warning-days 1)
 
-
-
 (setq org-table-export-default-format "orgtbl-to-csv")
-
-
 
 ;; (setq org-link-frame-setup ((vm . vm-visit-folder)
 ;;                             (gnus . org-gnus-no-new-news)
 ;;                             (file . find-file-other-window)))
 
-
-
-
 (setq org-log-done (quote time))
 (setq org-log-into-drawer t)
 (setq org-log-redeadline (quote note))
 (setq org-log-reschedule (quote time))
-
-
 
 
 ; Enable habit tracking (and a bunch of other modules)
@@ -1030,8 +997,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-crypt-key "2704CA24")
 
 
-
-
 (setq org-use-speed-commands t)
 (setq org-speed-commands-user (quote (("0" . delete-window)
                                       ("1" . delete-other-windows)
@@ -1045,8 +1010,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
                                       ("c" . self-insert-command)
                                       ("C" . self-insert-command)
                                       ("J" . org-clock-goto))))
-
-
 
 
 
@@ -1087,27 +1050,16 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (setq org-remove-highlights-with-change nil)
 
-
-
 (setq org-read-date-prefer-future nil)
-
-
-
 
 (setq org-list-demote-modify-bullet (quote (("+" . "-")
                                             ("*" . "-")
                                             ("1." . "-")
                                             ("1)" . "-"))))
 
-
-
-
 (setq split-width-threshold 9999)
 
-
-
-
-;;; http://orgmode.org/org.html
+;;; http://orgmode.org/org.html show blocked tasks in agenda in gray color
 (setq org-agenda-dim-blocked-tasks t)
 
 ;;; automatically change to DONE when all children are done
