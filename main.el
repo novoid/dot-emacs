@@ -535,7 +535,7 @@
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 
   ;;(require 'org-install) ;; vk 2012-11-20 this line is obsolete
-  (require 'org) 
+;  (require 'org) 
 
   ;; load Org-mode specific settings:
   (my-load-local-el "org-mode.el")

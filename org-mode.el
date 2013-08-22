@@ -699,20 +699,32 @@
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 ;; active Babel languages
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (python . t)
-   (ruby . t)
-   (gnuplot . t)
-   (sh . t)
-   (org . t)
-   (R . t)
-   (emacs-lisp . t)
-   (ditaa . t)
-   (dot . t)
-   ))
-
+;;(org-babel-do-load-languages
+;; 'org-babel-load-languages
+;; '(
+;;   (python . t)
+;;   (ruby . t)
+;;   (gnuplot . t)
+;;   (sh . t)
+;;   (org . t)
+;;   (R . t)
+;;   (emacs-lisp . t)
+;;   (ditaa . t)
+;;   (dot . t)
+;;   ))
+(setq org-babel-load-languages
+      (quote (
+	      (python . t)
+	      (ruby . t)
+	      (html . t)
+	      (gnuplot . t)
+	      (sh . t)
+	      (org . t)
+	      (R . t)
+	      (emacs-lisp . t)
+	      (ditaa . t)
+	      (dot . t)
+	      )))
 
 ;;; Do not prompt to confirm evaluation
 ;;; This may be dangerous - make sure you understand the consequences
@@ -742,14 +754,14 @@
 
 
 ; (global-set-key (kbd "<f5>") 'bh/org-todo)
-; 
+;
 ; (defun bh/org-todo ()
 ;   (interactive)
 ;   (org-narrow-to-subtree)
 ;   (org-show-todo-tree nil))
-; 
+;
 ; (global-set-key (kbd "<S-f5>") 'bh/widen)
-; 
+;
 ; (defun bh/widen ()
 ;   (interactive)
 ;   (widen)
@@ -1086,11 +1098,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-directory "~/share/all/org-mode")
 (setq org-mobile-inbox-for-pull "~/share/all/org-mode/inbox.org")
 (setq org-mobile-force-id-on-agenda-items nil) ;; do not generate IDs for all headings
-(setq org-mobile-files (quote 
+(setq org-mobile-files (quote
 		    (
-		     "/Volumes/moe/data/share/all/org-mode/misc.org" 
-		     "/Volumes/moe/data/share/all/org-mode/contacts.org" 
-		     "/Volumes/moe/data/share/all/org-mode/hardware.org" 
+		     "/Volumes/moe/data/share/all/org-mode/misc.org"
+		     "/Volumes/moe/data/share/all/org-mode/contacts.org"
+		     "/Volumes/moe/data/share/all/org-mode/hardware.org"
 		     )))
 
 
@@ -1208,7 +1220,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;; encrypting whole files:
 ;; http://orgmode.org/worg/org-tutorials/encrypting-files.html
 (require 'epa-file)
-(epa-file-enable)
+;(epa-file-enable) ;; 2013-08-22: already enabled (somewhere)
 
 ;; http://anirudhs.chaosnet.org/blog/2005.01.21.html
 ;; disabling auto-save for sensitive files
@@ -1250,7 +1262,7 @@ Null prefix argument turns off the mode."
 ;; contact management with org-contacts
 ;; http://julien.danjou.info/org-contacts.html
 (require 'org-contacts)
-(custom-set-variables 
+(custom-set-variables
  '(org-contacts-files "~/share/all/org-mode/contacts.org")
  '(org-contacts-address-property "CITY")
  '(org-contacts-birthday-property "BORN")
@@ -1503,7 +1515,7 @@ Null prefix argument turns off the mode."
   (org-agenda-write "~/share/all/org-mode/org-export.ics")
   (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
   (setq icspath "~/share/all/org-mode/")
-  (shell-command-to-string (concat 
+  (shell-command-to-string (concat
 			    scriptpath "postprocess_Org-mode_iCal_export.py "
 			    "-i " icspath "org-export.ics "
 			    "-o " icspath "agenda.ics "
@@ -1536,8 +1548,8 @@ Null prefix argument turns off the mode."
 ;; ;(require 'org-export)
 ;; ;(require 'org-e-latex)
 ;; ;; invoke: M-x org-export-dispatch
-;; 
-;; 
+;;
+;;
 ;; ;; ######################################################
 ;; ;; http://orgmode.org/worg/exporters/beamer/ox-beamer.html
 ;; ;; new LaTeX exporter: beamer
@@ -1548,7 +1560,7 @@ Null prefix argument turns off the mode."
 ;;                ("\\section\{%s\}" . "\\section*\{%s\}")
 ;;                ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
 ;;                ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-;; 
+;;
 ;; ;; ######################################################
 ;; ;; adding ACM export class format
 ;; ;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
@@ -1558,7 +1570,7 @@ Null prefix argument turns off the mode."
 ;;              '("article"
 ;;                "\\documentclass{article}"
 ;;                ("\\section{%s}" . "\\section*{%s}")))
-;; 
+;;
 ;; (add-to-list 'org-export-latex-classes
 ;;           '("koma-article"
 ;;              "\\documentclass{scrartcl}
@@ -1569,7 +1581,7 @@ Null prefix argument turns off the mode."
 ;;              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 ;;              ("\\paragraph{%s}" . "\\paragraph*{%s}")
 ;;              ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-;; 
+;;
 ;; (add-to-list 'org-export-latex-classes
 ;;           '("ACM"
 ;;              "\\documentclass{acm_proc_article-sp}
@@ -1580,7 +1592,7 @@ Null prefix argument turns off the mode."
 ;;              ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
 ;;              ("\\paragraph{%s}" . "\\paragraph*{%s}")
 ;;              ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-;; 
+;;
 
 ;; ;; ######################################################
 ;; ;; adding TUGRAZ letter export class format
@@ -1809,5 +1821,21 @@ Null prefix argument turns off the mode."
 ;; adding Org-mode docu
 (require 'info)
 (add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
+
+;; ######################################################
+;;; 2013-08-22:
+;;; From: Suvayu Ali <fatkasuvayu+linux@gmail.com>
+;;; Newsgroups: gmane.emacs.orgmode
+;;; Subject: Re: Editing HTML blocks: no special environment to edit here
+;;; docu: http://orgmode.org/worg/exporters/ox-overview.html and http://orgmode.org/worg/org-8.0.html
+(require 'ox-html)
+(require 'ox-latex)
+(require 'ox-koma-letter)
+(require 'ox-beamer)
+(require 'ox-ascii)
+;(require 'ox-odt)
+(require 'ox-freemind)
+(require 'ox-taskjuggler)
+
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
