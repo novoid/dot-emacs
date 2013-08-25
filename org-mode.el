@@ -699,33 +699,33 @@
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 ;; active Babel languages
-;;(org-babel-do-load-languages
-;; 'org-babel-load-languages
-;; '(
-;;   (python . t)
-;;   (ruby . t)
-;;   (gnuplot . t)
-;;   (sh . t)
-;;   (org . t)
-;;   (R . t)
-;;   (emacs-lisp . t)
-;;   (ditaa . t)
-;;   (dot . t)
-;;   ))
-(setq org-babel-load-languages
-      (quote (
-	      (python . t)
-	      (ruby . t)
-	      (html . t)
-	      (gnuplot . t)
-	      (sh . t)
-	      (org . t)
-	      (R . t)
-	      (emacs-lisp . t)
-	      (ditaa . t)
-	      (dot . t)
-	      )))
-
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (python . t)
+   (ruby . t)
+   (gnuplot . t)
+   (sh . t)
+   (org . t)
+   (R . t)
+   (emacs-lisp . t)
+   (ditaa . t)
+   (dot . t)
+   ))
+;;(setq org-babel-load-languages
+;;      (quote (
+;;	      (python . t)
+;;	      (ruby . t)
+;;	      (html . t)
+;;	      (gnuplot . t)
+;;	      (sh . t)
+;;	      (org . t)
+;;	      (R . t)
+;;	      (emacs-lisp . t)
+;;	      (ditaa . t)
+;;	      (dot . t)
+;;	      )))
+;;
 ;;; Do not prompt to confirm evaluation
 ;;; This may be dangerous - make sure you understand the consequences
 ;;; of setting this -- see the docstring for details
