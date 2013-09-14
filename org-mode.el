@@ -33,7 +33,7 @@
 ;; For org appointment reminders
 ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
 ;; Get appointments for today
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
   (defun my-org-agenda-to-appt ()
     (interactive)
     (setq appt-time-msg-list nil)
@@ -563,10 +563,11 @@
                             ("fitness" . ?f)
 			    (:startgroup)
                             ("@ALW" . ?a)
-                            ("@TUG" . ?t)
+                            ("@Infonova" . ?i)
                             ("@Stadt" . ?s)
                             ("@out_of_town" . ?o)
                             ("@Ebreichsdorf" . ?e)
+                            ("@TUG" . ?t)
                             (:endgroup)
 			    (:startgroup)
                             ("private" . ?p)
@@ -954,7 +955,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (setq org-enforce-todo-dependencies t)
 
-(setq org-hide-leading-stars nil)
+(setq org-hide-leading-stars t)
 
 (setq org-startup-indented t)
 
@@ -1837,5 +1838,10 @@ Null prefix argument turns off the mode."
 (require 'ox-freemind)
 (require 'ox-taskjuggler)
 
+;; ######################################################
+;;; 2013-09-13:
+;;; From: Release Notes v8.1
+;;; http://orgmode.org/worg/agenda-optimization.html
+(setq org-agenda-ignore-drawer-properties '(effort appt category))
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

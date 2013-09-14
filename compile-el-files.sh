@@ -14,6 +14,6 @@ for file in contrib/*.el;do echo "(byte-compile-file \"/home/vk/.emacs.d/$file\"
 
 /usr/bin/emacs -batch -l ${FILE_WITH_EL_FILES} -kill && \
 cd contrib/org-mode/ && \
-make clean && make
+make clean && make && make autoloads && make doc
 
 #end

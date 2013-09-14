@@ -107,6 +107,14 @@
 "Return true if the system we are running on is grmlvrs"
 (string-equal system-name "grmlvrs")
 )
+(defun my-system-is-powerplant ()
+(interactive)
+"Return true if the system we are running on is powerplant"
+(or 
+ (string-equal system-name "powerplant")
+ (string-equal system-name "powerplant.lan")
+ )
+)
 
 ;; example:
 ;; (when (my-system-is-gary)
@@ -146,7 +154,7 @@
   (set-face-attribute 'default (selected-frame) :height 100)
   ) 
 ;; increase fonts on gary by default
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
   (my-increase-fontsize)
   )
 
@@ -162,7 +170,7 @@
 
 ;; ######################################################
 ;; Python-specific things only installed on gary:
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
 
   ;; ######################################################
   ;; http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
@@ -188,7 +196,7 @@
 
 ;; ######################################################
 ;; LaTeX
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
 
 
   ;; ######################################################
@@ -296,7 +304,7 @@
   ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
   ;; CDLaTeX - more LaTeX functionality
   ;; http://orgmode.org/org.html#CDLaTeX-mode
-  (when (my-system-is-gary)
+  (when (or (my-system-is-gary) (my-system-is-powerplant))
     (my-load-local-el "contrib/cdlatex.el")
     )
   
@@ -325,7 +333,7 @@
 (when (my-system-is-blanche)
   (setq org-ditaa-jar-path "~/data/hosts/blanche/config/ditaa.jar")
   )
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
   )
 
@@ -355,7 +363,7 @@
 
 ;; ######################################################
 ;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
   (setq browse-url-browser-function 'browse-url-generic
 	;;      browse-url-generic-program "/usr/bin/google-chrome")
 	browse-url-generic-program "/usr/bin/firefox")
@@ -508,7 +516,7 @@
 
 ;; ######################################################
 ;; tabbar
-(when (my-system-is-gary)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
     (my-load-local-el "contrib/tabbar.el")
   )
 
@@ -525,17 +533,20 @@
 ;; ######################################################
 ;; org-mode
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
-(when (or (my-system-is-gary) (my-system-is-blanche))
+(when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplant))
 
   ;; set paths to manually installed Org-mode (from git)
-  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp")
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/org-mode/lisp"))
+  ;(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp")
+  ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/org-mode/lisp"))
 
+  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
+  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
+  
   ;; assign file extensions to Org-mode
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 
   ;;(require 'org-install) ;; vk 2012-11-20 this line is obsolete
-;  (require 'org) 
+  (require 'org) 
 
   ;; load Org-mode specific settings:
   (my-load-local-el "org-mode.el")
@@ -734,23 +745,24 @@
 
 ;; ######################################################
 ;; magit
-(require 'magit)
+(when (or (my-system-is-gary) (my-system-is-powerplant))
+  (require 'magit)
 
-;; full screen magit-status
-;; http://whattheemacsd.com//setup-magit.el-01.html
-(defadvice magit-status (around magit-fullscreen activate)
-  (window-configuration-to-register :magit-fullscreen)
-  ad-do-it
-  (delete-other-windows))
-
-(defun magit-quit-session ()
-  "Restores the previous window configuration and kills the magit buffer"
-  (interactive)
-  (kill-buffer)
-  (jump-to-register :magit-fullscreen))
-
-(define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
-
+  ;; full screen magit-status
+  ;; http://whattheemacsd.com//setup-magit.el-01.html
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+  
+  (defun magit-quit-session ()
+    "Restores the previous window configuration and kills the magit buffer"
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
+  
+  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+)  
 
 ;; ######################################################
 ;; http://www.emacswiki.org/emacs-es/RecentFiles
