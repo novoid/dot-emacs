@@ -1209,6 +1209,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
 	("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
 	("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
+	("ipd" . "http://product.infonova.at/jira/browse/IPD-%s")
+	("IPD" . "http://product.infonova.at/jira/browse/IPD-%s")
 	))
 
 ;; tries to format a new BibTeX entry according to own format
@@ -1287,6 +1289,8 @@ Null prefix argument turns off the mode."
 	 "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
 	 "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	("ii" "infonova IPD" entry (file+headline "~/share/all/org-mode/infonova.org" "IPDs")
+	 "* IPD-%?: \n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	("p" "PhD Templates")
 	("ps" "PhD shorts" entry (file+headline "~/share/all/org-mode/phd.org" "shorts")
 	 "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
@@ -1843,5 +1847,56 @@ Null prefix argument turns off the mode."
 ;;; From: Release Notes v8.1
 ;;; http://orgmode.org/worg/agenda-optimization.html
 (setq org-agenda-ignore-drawer-properties '(effort appt category))
+
+
+;; ######################################################
+;;; 2013-10-11
+;;; From: http://orgmode.org/worg/org-hacks.html#sec-1-4-3
+;;; calculating with dates and times:
+;;;     | Date             | Start | Lunch |  Back |   End |  Sum |
+;;;     |------------------+-------+-------+-------+-------+------|
+;;;     | [2011-03-01 Tue] |  8:00 | 12:00 | 12:30 | 18:15 | 9:45 |
+;;;     #+TBLFM: $6='(with-time t (+ (- $5 $4) (- $3 $2)))
+
+(defun org-time-string-to-seconds (s)
+  "Convert a string HH:MM:SS to a number of seconds."
+  (cond
+   ((and (stringp s)
+         (string-match "\\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)" s))
+    (let ((hour (string-to-number (match-string 1 s)))
+          (min (string-to-number (match-string 2 s)))
+          (sec (string-to-number (match-string 3 s))))
+      (+ (* hour 3600) (* min 60) sec)))
+   ((and (stringp s)
+         (string-match "\\([0-9]+\\):\\([0-9]+\\)" s))
+    (let ((min (string-to-number (match-string 1 s)))
+          (sec (string-to-number (match-string 2 s))))
+      (+ (* min 60) sec)))
+   ((stringp s) (string-to-number s))
+   (t s)))
+
+(defun org-time-seconds-to-string (secs)
+  "Convert a number of seconds to a time string."
+  (cond ((>= secs 3600) (format-seconds "%h:%.2m:%.2s" secs))
+        ((>= secs 60) (format-seconds "%m:%.2s" secs))
+        (t (format-seconds "%s" secs))))
+
+(defmacro with-time (time-output-p &rest exprs)
+  "Evaluate an org-table formula, converting all fields that look
+like time data to integer seconds.  If TIME-OUTPUT-P then return
+the result as a time value."
+  (list
+   (if time-output-p 'org-time-seconds-to-string 'identity)
+   (cons 'progn
+         (mapcar
+          (lambda (expr)
+            `,(cons (car expr)
+                    (mapcar
+                     (lambda (el)
+                       (if (listp el)
+                           (list 'with-time nil el)
+                         (org-time-string-to-seconds el)))
+                     (cdr expr))))
+          `,@exprs))))
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
