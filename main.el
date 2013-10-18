@@ -551,6 +551,13 @@
   ;; load Org-mode specific settings:
   (my-load-local-el "org-mode.el")
 
+  ;; ######################################################
+  ;; import iCal to Org-mode
+  ;; http://ozymandias.dk/emacs/org-import-calendar.el
+  ;; https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el
+  (my-load-local-el "contrib/org-import-calendar.el")
+  (require 'org-import-icalendar)
+
   )
 
 
@@ -833,6 +840,19 @@ point reaches the beginning or end of the buffer, stop there."
 ; (my-load-local-el "contrib/cl-lib.el")
 ; (my-load-local-el "contrib/ert.el")
 ; (my-load-local-el "contrib/ert-x.el")
+
+
+;; ######################################################
+;; ediff from command line
+;; http://www.emacswiki.org/emacs/EdiffMode
+;; Usage: emacs -diff file1 file2
+(defun command-line-diff (switch)
+  (let ((file1 (pop command-line-args-left))
+	(file2 (pop command-line-args-left)))
+;    (ediff file1 file2)))
+    (ediff-merge-files file1 file2)))
+    
+(add-to-list 'command-switch-alist '("diff" . command-line-diff))
 
 
 ;; ######################################################
