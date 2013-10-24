@@ -4,6 +4,7 @@
 (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
 (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
 (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
+(my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
 
 
 ;; ######################################################

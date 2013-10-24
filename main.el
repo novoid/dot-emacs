@@ -856,6 +856,17 @@ point reaches the beginning or end of the buffer, stop there."
 
 
 ;; ######################################################
+;; editing Confluence wiki pages (up to Confluence 3.x)
+;; https://code.google.com/p/confluence-el/
+;; M-x confluence-get-page
+(when (my-system-is-powerplant)
+  (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
+  (require 'confluence)
+  (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
+  (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
+)
+
+;; ######################################################
 ;; load my functions and key-map definitions (is always last!)
 (my-load-local-el "my-definitions.el")
 
