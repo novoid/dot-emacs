@@ -1805,9 +1805,9 @@ Null prefix argument turns off the mode."
 
 ;; ######################################################
 ;; org-favtable
-(require 'org-favtable)
-(setq org-favtable-id "my-favtable")
-(global-set-key (kbd "C-+") 'org-favtable)
+;deactivated; (require 'org-favtable)
+;deactivated; (setq org-favtable-id "my-favtable")
+;deactivated; (global-set-key (kbd "C-+") 'org-favtable)
 
 ;; ######################################################
 ;; org-feed - aggregating RSS feeds in news.org file:

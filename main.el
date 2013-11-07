@@ -864,6 +864,14 @@ point reaches the beginning or end of the buffer, stop there."
   (require 'confluence)
   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
   (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
+
+  (dolist (hook '(confluence-mode-hook))
+    (add-hook hook (lambda () 
+		     (flyspell-mode 1)
+		     (ispell-change-dictionary "en_GB")
+		     (flyspell-buffer)
+		     ))
+    )
 )
 
 ;; ######################################################
