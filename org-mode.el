@@ -1141,6 +1141,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;(setq org-agenda-skip-additional-timestamps-same-entry t)
 (setq org-agenda-skip-additional-timestamps-same-entry nil)
 
+;;; 2013-11-13 from Bastien (Org-ML)
+;; do not search for time in heading when displaying a date-stamp
+(setq org-agenda-search-headline-for-time nil)
+
 ;;; open agenda in same buffer, full size
 (setq org-agenda-window-setup 'current-window)
 
