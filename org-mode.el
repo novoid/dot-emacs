@@ -1210,6 +1210,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	("notes" . "~/archive/library/%s-notes.pdf")
 	("contact" . "~/share/all/org-mode/contacts.org::/\*.*%s/")
 	("tsfile" . "~/share/all/org-mode/memacs/files.org_archive::/\*.*%s/")
+	("ifile" . "~/share/all/org-mode/memacs/ifiles.org_archive::/\*.*%s/")
 	("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
 	("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
 	("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
