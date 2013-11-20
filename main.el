@@ -467,28 +467,49 @@
   (interactive)
   (ispell-change-dictionary "de_AT"))
 
-(defun my-ispell-set-english()
- "switch ispell language to english"
+(defun my-ispell-set-USenglish()
+ "switch ispell language to US english"
  (interactive)
  (ispell-change-dictionary "en_US"))
+
+(defun my-ispell-set-GBenglish()
+ "switch ispell language to british english"
+ (interactive)
+ (ispell-change-dictionary "en_GB"))
 
 (defvar my-toggle-ispell-english-deutsch nil
  "state of english/ngerman toggle. t means english, nil means ngerman")
 (make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
 
-(defun my-toggle-ispell-language ()
-  "Toggle ispell-language between english and ngerman"
-  (interactive)
-  (cond (my-toggle-ispell-english-deutsch
-	 (setq my-toggle-ispell-english-deutsch nil)
-	 (my-ispell-set-deutsch)
-	 )
-	(t
-	 (setq my-toggle-ispell-english-deutsch t)
-	 (my-ispell-set-english)
-	 )
-	)
-  )
+;; use british english on powerplant and US english on all other machines:
+(if (my-system-is-powerplant)
+    (defun my-toggle-ispell-language ()
+      "Toggle ispell-language between british english and ngerman"
+      (interactive)
+      (cond (my-toggle-ispell-english-deutsch
+	     (setq my-toggle-ispell-english-deutsch nil)
+	     (my-ispell-set-deutsch)
+	     )
+	    (t
+	     (setq my-toggle-ispell-english-deutsch t)
+	     (my-ispell-set-GBenglish)
+	     )
+	    )
+      )
+  (defun my-toggle-ispell-language ()
+    "Toggle ispell-language between english and ngerman"
+    (interactive)
+    (cond (my-toggle-ispell-english-deutsch
+	   (setq my-toggle-ispell-english-deutsch nil)
+	   (my-ispell-set-deutsch)
+	   )
+	  (t
+	   (setq my-toggle-ispell-english-deutsch t)
+	   (my-ispell-set-USenglish)
+	   )
+	  )
+    )
+)
 
 ;(add-hook 'post-mode-hook
 ;         '(lambda ()
@@ -855,11 +876,12 @@ point reaches the beginning or end of the buffer, stop there."
 (add-to-list 'command-switch-alist '("diff" . command-line-diff))
 
 
-;; ######################################################
-;; editing Confluence wiki pages (up to Confluence 3.x)
-;; https://code.google.com/p/confluence-el/
-;; M-x confluence-get-page
 (when (my-system-is-powerplant)
+
+  ;; ######################################################
+  ;; editing Confluence wiki pages (up to Confluence 3.x)
+  ;; https://code.google.com/p/confluence-el/
+  ;; M-x confluence-get-page
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
   (require 'confluence)
   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
@@ -872,7 +894,48 @@ point reaches the beginning or end of the buffer, stop there."
 		     (flyspell-buffer)
 		     ))
     )
+
+  (defun vk-open-as-confluence-page ()
+    "Takes current line from \"]] \" to end and opens its Confluence page in IR6 space"
+    (interactive)
+    (save-excursion
+      (beginning-of-line)
+      (search-forward "]] " (point-at-eol))
+      (setq start-pos (point))
+      (end-of-line)
+      (setq end-pos (point))
+      (setq myname (buffer-substring start-pos end-pos))
+                                          ;(message "Hi: [%s]" myname)
+      (confluence-get-page myname "IR6")
+      )
+    )
+
+
+
+  ;; ######################################################
+  ;; use mail-mode for email or usenet postings:
+  (add-to-list 'auto-mode-alist '("\\.\\(mail\\|email\\|posting\\)$" . mail-mode))
+  (dolist (hook '(mail-mode-hook))
+    (add-hook hook (lambda () 
+		     (mail-mode-auto-fill)
+		     (auto-fill-mode 1)
+		     (flyspell-mode 1)
+		     (ispell-change-dictionary "de_AT")
+		     (flyspell-buffer)
+		     ))
+    )
+
+  ;; http://www.emacswiki.org/emacs/MailMode
+  (add-hook 'mail-mode-hook
+	    (lambda ()
+	      (font-lock-add-keywords nil
+				      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
+					 (0 'mail-multiply-quoted-text-face))
+					("^[ \t]*>[ \t]*>.*$"
+					 (0 'mail-double-quoted-text-face))))))
+
 )
+
 
 ;; ######################################################
 ;; load my functions and key-map definitions (is always last!)

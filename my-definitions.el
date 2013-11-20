@@ -264,6 +264,10 @@
 (define-key my-map "k" 'clm/open-command-log-buffer)
 
 
+(when (my-system-is-powerplant)
+  (define-key my-map "C" 'vk-open-as-confluence-page)
+)
+
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
