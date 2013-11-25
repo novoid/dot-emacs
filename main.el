@@ -897,7 +897,7 @@ point reaches the beginning or end of the buffer, stop there."
     )
 
   (defun vk-open-as-confluence-page ()
-    "Takes current line from \"]] \" to end and opens its Confluence page in IR6 space"
+    "Takes current line from \"]] \" to end marked with at least two spaces and opens its Confluence page in IR6 space"
     (interactive)
     (save-excursion
       (beginning-of-line)
@@ -905,8 +905,13 @@ point reaches the beginning or end of the buffer, stop there."
       (setq start-pos (point))
       (end-of-line)
       (setq end-pos (point))
-      (setq myname (buffer-substring start-pos end-pos))
-                                          ;(message "Hi: [%s]" myname)
+      (setq myname 
+	    (replace-regexp-in-string "  .+$"
+				      ""
+				      (buffer-substring start-pos end-pos)
+	     )
+	    )
+      ;(message "Hi: [%s]" myname)
       (confluence-get-page myname "IR6")
       )
     )
@@ -937,6 +942,22 @@ point reaches the beginning or end of the buffer, stop there."
 
 )
 
+;; ######################################################
+;; http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
+(defun xml-pretty-print-region (begin end)
+  "Pretty format XML markup in region. You need to have nxml-mode
+http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+this.  The function inserts linebreaks to separate tags that have
+nothing but whitespace between them.  It then indents the markup
+by using nxml's indentation rules."
+  (interactive "r")
+  (save-excursion
+      (nxml-mode)
+      (goto-char begin)
+      (while (search-forward-regexp "\>[ \\t]*\<" nil t) 
+        (backward-char) (insert "\n"))
+      (indent-region begin end))
+    (message "Ah, much better!"))
 
 ;; ######################################################
 ;; load my functions and key-map definitions (is always last!)
