@@ -122,9 +122,6 @@
 
 
 
-(setq org-contacts-files "~/share/all/org-mode/contacts.org")
-
-
 ;;; http://doc.norang.ca/org-mode.html
 ;;;
 ;;; Org Mode
