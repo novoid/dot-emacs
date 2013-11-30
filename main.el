@@ -115,6 +115,11 @@
  (string-equal system-name "powerplant.lan")
  )
 )
+(defun my-system-is-powerplantwin ()
+(interactive)
+"Return true if the system we are running on is powerplant"
+(string-equal system-name "ATGRZ4043268B")
+)
 
 ;; example:
 ;; (when (my-system-is-gary)
@@ -141,6 +146,21 @@
 
 
 ;; ######################################################
+;; setting path so that Emacs finds aspell and such
+(when (my-system-is-powerplantwin)
+  ;(setenv "PATH"
+  ;               (concat (getenv "PATH")
+  ;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
+  (setq exec-path (append exec-path
+			  '("C:/Program Files (x86)/Aspell/bin" 
+			   ; "/usr/local/texlive/2010/bin/x86_64-darwin"
+			   ; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
+			    )))
+  ;(add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
+  )
+
+
+;; ######################################################
 ;; 2011-04-20: increase/set font size
 ;; http://www.emacswiki.org/emacs/SetFonts
 (defun my-increase-fontsize ()
@@ -154,7 +174,7 @@
   (set-face-attribute 'default (selected-frame) :height 100)
   ) 
 ;; increase fonts on gary by default
-(when (or (my-system-is-gary) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-powerplant) (my-system-is-powerplantwin))
   (my-increase-fontsize)
   )
 
@@ -490,7 +510,7 @@
 (make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
 
 ;; use british english on powerplant and US english on all other machines:
-(if (my-system-is-powerplant)
+(if (or (my-system-is-powerplant) (my-system-is-powerplantwin))
     (defun my-toggle-ispell-language ()
       "Toggle ispell-language between british english and ngerman"
       (interactive)
@@ -563,7 +583,7 @@
 ;; ######################################################
 ;; org-mode
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
-(when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplant) (my-system-is-powerplantwin))
 
   ;; set paths to manually installed Org-mode (from git)
   ;(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp")
@@ -626,27 +646,28 @@
 ;; ######################################################
 ;; https://github.com/sellout/emacs-color-theme-solarized
 ;; Solarized Color Theme
-;; 2. Add the `emacs-color-theme-solarized` directory to your Emacs `load-path`.
-(add-to-list 'load-path "~/.emacs.d/contrib/emacs-color-theme-solarized/")
-;; 3. Add `(require 'color-theme-solarized)` to your Emacs init file (usually `~/.emacs`).
-(require 'color-theme-solarized)
-;; 4. Use the usual [color-theme] mechanism to select one of the Solarized themes, or `M-x color-theme-solarized-[light|dark]`.
-(color-theme-solarized-light)
+(unless (my-system-is-powerplantwin)
+  ;; 2. Add the `emacs-color-theme-solarized` directory to your Emacs `load-path`.
+  (add-to-list 'load-path "~/.emacs.d/contrib/emacs-color-theme-solarized/")
+  ;; 3. Add `(require 'color-theme-solarized)` to your Emacs init file (usually `~/.emacs`).
+  (require 'color-theme-solarized)
+  ;; 4. Use the usual [color-theme] mechanism to select one of the Solarized themes, or `M-x color-theme-solarized-[light|dark]`.
+  (color-theme-solarized-light)
 
-(defvar my-toggle-color-theme-state nil
- "state of color-theme toggle. t means dark, nil means light")
-(make-variable-buffer-local 'my-toggle-color-theme-state)
+  (defvar my-toggle-color-theme-state nil
+    "state of color-theme toggle. t means dark, nil means light")
+  (make-variable-buffer-local 'my-toggle-color-theme-state)
 
-(defun my-toggle-color-theme ()
- "Toggle color-theme between color-theme-solarized-dark and color-theme-solarized-light"
- (interactive)
- (cond (my-toggle-color-theme-state
- (setq my-toggle-color-theme-state nil)
-        (color-theme-solarized-light))
-       (t
-        (setq my-toggle-color-theme-state t)
-        (color-theme-solarized-dark))))
-
+  (defun my-toggle-color-theme ()
+    "Toggle color-theme between color-theme-solarized-dark and color-theme-solarized-light"
+    (interactive)
+    (cond (my-toggle-color-theme-state
+	   (setq my-toggle-color-theme-state nil)
+	   (color-theme-solarized-light))
+	  (t
+	   (setq my-toggle-color-theme-state t)
+	   (color-theme-solarized-dark))))
+  )
 
 
 
@@ -885,7 +906,7 @@ point reaches the beginning or end of the buffer, stop there."
 (add-to-list 'command-switch-alist '("diff" . command-line-diff))
 
 
-(when (my-system-is-powerplant)
+(when (or (my-system-is-powerplant) (my-system-is-powerplantwin))
 
   ;; ######################################################
   ;; editing Confluence wiki pages (up to Confluence 3.x)
@@ -935,7 +956,7 @@ point reaches the beginning or end of the buffer, stop there."
 		     (mail-mode-auto-fill)
 		     (auto-fill-mode 1)
 		     (flyspell-mode 1)
-		     (ispell-change-dictionary "de_AT")
+		     (ispell-change-dictionary "german8")
 		     (flyspell-buffer)
 		     ))
     )
