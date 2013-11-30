@@ -912,7 +912,8 @@ point reaches the beginning or end of the buffer, stop there."
 	     )
 	    )
       ;(message "Hi: [%s]" myname)
-      (confluence-get-page myname "IR6")
+      ;(confluence-get-page myname "IR6")
+      (confluence-get-page myname)
       )
     )
 
