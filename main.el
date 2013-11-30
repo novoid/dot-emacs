@@ -460,22 +460,30 @@
 
 (autoload 'flyspell-mode "flyspell" "On-the-fly ispell." t)
 (setq flyspell-issue-welcome-flag nil)
-(setq flyspell-default-dictionary "de_AT")
+(setq flyspell-default-dictionary "german8")
+
+;; http://stackoverflow.com/questions/15346723/emacs-and-ispell-error-loading-german8
+(eval-after-load "ispell"
+  '(add-to-list 'ispell-dictionary-alist
+                '("german8"
+                   "[A-zA-ZäöüßÄÖÜ]" "[^a-zA-ZäöüßÄÖÜ]" "[']" t
+                  ("-C" "-d" "de_DE-neu.multi")
+                  "~latin1" iso-8859-1)))
 
 (defun my-ispell-set-deutsch()
- "switch ispell language to deutsch"
+ "switch ispell language to Deutsch"
   (interactive)
-  (ispell-change-dictionary "de_AT"))
+  (ispell-change-dictionary "german8"))
 
 (defun my-ispell-set-USenglish()
- "switch ispell language to US english"
+ "switch ispell language to US English"
  (interactive)
- (ispell-change-dictionary "en_US"))
+ (ispell-change-dictionary "american"))
 
 (defun my-ispell-set-GBenglish()
- "switch ispell language to british english"
+ "switch ispell language to British English"
  (interactive)
- (ispell-change-dictionary "en_GB"))
+ (ispell-change-dictionary "british"))
 
 (defvar my-toggle-ispell-english-deutsch nil
  "state of english/ngerman toggle. t means english, nil means ngerman")
