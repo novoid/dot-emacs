@@ -22,7 +22,7 @@
  '(org-contacts-birthday-property "BORN")
  '(org-contacts-files "~/share/all/org-mode/contacts.org")
  '(org-contacts-icon-property "PHOTOGRAPH")
- '(safe-local-variable-values (quote ((eval ispell-change-dictionary "de_AT") (eval ispell-change-dictionary "en_US") (eval flyspell-mode 1)))))
+ '(safe-local-variable-values (quote ((eval ispell-change-dictionary "american") (eval ispell-change-dictionary "german8") (flyspell-default-dictionary . "german8") (eval ispell-change-dictionary "de_AT") (eval ispell-change-dictionary "en_US") (eval flyspell-mode 1)))))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.

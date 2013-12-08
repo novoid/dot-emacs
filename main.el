@@ -490,6 +490,8 @@
                   ("-C" "-d" "de_DE-neu.multi")
                   "~latin1" iso-8859-1)))
 
+
+
 (defun my-ispell-set-deutsch()
  "switch ispell language to Deutsch"
   (interactive)
@@ -920,7 +922,7 @@ point reaches the beginning or end of the buffer, stop there."
   (dolist (hook '(confluence-mode-hook))
     (add-hook hook (lambda () 
 		     (flyspell-mode 1)
-		     (ispell-change-dictionary "en_GB")
+		     (ispell-change-dictionary "british")
 		     (flyspell-buffer)
 		     ))
     )
@@ -947,6 +949,16 @@ point reaches the beginning or end of the buffer, stop there."
     )
 
 
+  ;; ######################################################
+  ;; editing Outlook emails in Emacs
+  ;; http://www.emacswiki.org/emacs/MsOutlook
+ (my-load-local-el "contrib/outlookedit.el")
+ (require 'outlookedit)
+
+  (defvar mno-get-outlook-body
+    "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
+  (defvar mno-put-outlook-body
+    "cscript //B //Job:putMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
 
   ;; ######################################################
   ;; use mail-mode for email or usenet postings:
@@ -997,5 +1009,5 @@ by using nxml's indentation rules."
 
 ;; Local Variables:
 ;; eval: (flyspell-mode 1)
-;; eval: (ispell-change-dictionary "en_US")
+;; eval: (ispell-change-dictionary "american")
 ;; End:

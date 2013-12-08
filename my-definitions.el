@@ -264,13 +264,16 @@
 (define-key my-map "k" 'clm/open-command-log-buffer)
 
 
-(when (my-system-is-powerplant)
+(when (or (my-system-is-powerplant) (my-system-is-powerplantwin))
   (define-key my-map "C" 'vk-open-as-confluence-page)
+  (define-key my-map "oe" 'mno-edit-outlook-message)
+  (define-key my-map "os" 'mno-save-outlook-message)
 )
+
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
 ;; eval: (flyspell-mode 1)
-;; eval: (ispell-change-dictionary "en_US")
+;; eval: (ispell-change-dictionary "american")
 ;; End:

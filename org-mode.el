@@ -81,27 +81,53 @@
     )
   )
 
-
-(setq org-agenda-files (append (quote (
-			       "~/share/all/org-mode/phd.org"
-			       "~/share/all/org-mode/infonova.org"
-;			       "~/share/all/org-mode/test-phd.org"
-			       "~/share/all/org-mode/misc.org"
-			       "~/share/all/org-mode/tagstore.org"
-			       "~/share/all/org-mode/IST.org"
-			       "~/share/all/org-mode/contacts.org"
-			       "~/share/all/org-mode/postdoc.org"
-			       "~/share/all/org-mode/foodandbeverages.org"
-			       "~/share/all/org-mode/hardware.org"
-			       "~/share/all/org-mode/notes.org"
-			       "~/share/all/org-mode/movies.org"
-			       "~/share/all/org-mode/references.org"
-			       "~/src/lazyblorg/dev/lazyblorg.org"
-			       )
-				      )
-			       (file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
-			       )
-      )
+(if (my-system-is-powerplantwin)
+  (setq org-agenda-files (append (quote (
+					 "c:/Users/karl.voit/share/all/org-mode/phd.org"
+					 "c:/Users/karl.voit/share/all/org-mode/infonova.org"
+					 "c:/Users/karl.voit/share/all/org-mode/misc.org"
+					 "c:/Users/karl.voit/share/all/org-mode/tagstore.org"
+					 "c:/Users/karl.voit/share/all/org-mode/IST.org"
+					 "c:/Users/karl.voit/share/all/org-mode/contacts.org"
+					 "c:/Users/karl.voit/share/all/org-mode/postdoc.org"
+					 ;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
+					 "c:/Users/karl.voit/share/all/org-mode/hardware.org"
+					 "c:/Users/karl.voit/share/all/org-mode/notes.org"
+					 ;"c:/Users/karl.voit/share/all/org-mode/movies.org"
+					 "c:/Users/karl.voit/share/all/org-mode/references.org"
+					 ;"c:/Users/karl.voit/src/lazyblorg/dev/lazyblorg.org"
+					 "c:/Users/karl.voit/share/all/org-mode/memacs/error.org"
+					 "c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
+					 "c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
+					 "c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
+					 "c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
+					 "c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
+					 )
+					)
+				 ;(file-expand-wildcards "c:/Users/karl.voit/share/all/org-mode/memacs/*.org")
+				 )
+	)
+  (setq org-agenda-files (append (quote (
+					 "~/share/all/org-mode/phd.org"
+					 "~/share/all/org-mode/infonova.org"
+					;			       "~/share/all/org-mode/test-phd.org"
+					 "~/share/all/org-mode/misc.org"
+					 "~/share/all/org-mode/tagstore.org"
+					 "~/share/all/org-mode/IST.org"
+					 "~/share/all/org-mode/contacts.org"
+					 "~/share/all/org-mode/postdoc.org"
+					 "~/share/all/org-mode/foodandbeverages.org"
+					 "~/share/all/org-mode/hardware.org"
+					 "~/share/all/org-mode/notes.org"
+					 "~/share/all/org-mode/movies.org"
+					 "~/share/all/org-mode/references.org"
+					 "~/src/lazyblorg/dev/lazyblorg.org"
+					 )
+					)
+				 ;(file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
+				 )
+	)
+  )
 
 ;; (setq org-agenda-files (quote (
 ;; 			       "~/share/all/org-mode/misc.org"

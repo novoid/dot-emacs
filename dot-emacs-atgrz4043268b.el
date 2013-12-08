@@ -7,7 +7,7 @@
 
 ;; ######################################################
 ;;; rest of the (common) configuration
-(load "~/.emacs.d/main.el")
+(load "C:/Users/karl.voit/.emacs.d/main.el")
 
 ;; ######################################################
 ;; http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
@@ -31,6 +31,7 @@
  '(org-contacts-address-property "CITY")
  '(org-contacts-birthday-property "BORN")
  '(org-contacts-files "~/share/all/org-mode/contacts.org")
- '(org-contacts-icon-property "PHOTOGRAPH"))
+ '(org-contacts-icon-property "PHOTOGRAPH")
+ '(safe-local-variable-values (quote ((eval ispell-change-dictionary "german8") (flyspell-default-dictionary . "german8") (eval ispell-change-dictionary "american") (eval ispell-change-dictionary "british")))))
 
 
