@@ -271,6 +271,17 @@
 )
 
 
+;OLD;; ######################################################
+;OLD;; fix bad paste for Windows 7 -> underlying issue was fixed via (set-selection-coding-system 'iso-latin-1-dos) -> not needed any more
+;OLD;(when (my-system-is-powerplantwin)
+;OLD;  (define-key my-map "p" (lambda ()
+;OLD;                  (interactive)
+;OLD;                  (recode-region (region-beginning) (region-end) 'latin-1 'utf-8)
+;OLD;		  )
+;OLD;    )
+;OLD;  )
+
+
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Local Variables:
