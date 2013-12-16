@@ -28,6 +28,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#2e3436" "#a40000" "#4e9a06" "#c4a000" "#204a87" "#5c3566" "#729fcf" "#eeeeec"])
  '(custom-enabled-themes (quote (tsdh-light)))
+ '(custom-safe-themes (quote ("0d553fda3eaa6ba8d831aabbb389d6ae0b32f1c83769296ee74d7140493be2f1" default)))
  '(org-contacts-address-property "CITY")
  '(org-contacts-birthday-property "BORN")
  '(org-contacts-files "~/share/all/org-mode/contacts.org")

@@ -1040,7 +1040,21 @@ by using nxml's indentation rules."
 )
 
 
+;; ######################################################
+;; initializing MELPA
+(when (my-system-is-powerplantwin)
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+			   ("melpa" . "http://melpa.milkbox.net/packages/")))
+  (package-initialize)
+)
 
+
+;; ######################################################
+;; Emacs 24 theme
+;; https://github.com/mswift42/soft-stone-theme
+;disabled; (when (my-system-is-powerplantwin)
+;disabled;   (load-theme 'soft-stone)
+;disabled; )
 
 ;; ######################################################
 ;; load my functions and key-map definitions (is always last!)
