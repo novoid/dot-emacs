@@ -1547,13 +1547,14 @@ Null prefix argument turns off the mode."
   "Exports monthly Org-mode agenda to agenda.ics file"
   (interactive)
   (org-agenda-list nil nil 60)
-  (org-agenda-write "~/share/all/org-mode/org-export.ics")
+;  (org-agenda-list nil nil 15)
+  (org-agenda-write "~/share/all/org-mode/agenda-export-raw.ics")
   (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
   (setq icspath "~/share/all/org-mode/")
   (shell-command-to-string (concat
 			    scriptpath "postprocess_Org-mode_iCal_export.py "
-			    "-i " icspath "org-export.ics "
-			    "-o " icspath "agenda.ics "
+			    "-i " icspath "agenda-export-raw.ics "
+			    "-o " icspath "agenda-export-postprocessed.ics "
 			    "--overwrite "
 			    "--remove-summary-timestamp"
 			    )
