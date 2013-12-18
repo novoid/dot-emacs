@@ -1546,8 +1546,9 @@ Null prefix argument turns off the mode."
 (defun my-export-agenda()
   "Exports monthly Org-mode agenda to agenda.ics file"
   (interactive)
+  (save-some-buffers)
   (org-agenda-list nil nil 60)
-;  (org-agenda-list nil nil 15)
+;test;  (org-agenda-list nil nil 15)
   (org-agenda-write "~/share/all/org-mode/agenda-export-raw.ics")
   (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
   (setq icspath "~/share/all/org-mode/")
@@ -1559,10 +1560,11 @@ Null prefix argument turns off the mode."
 			    "--remove-summary-timestamp"
 			    )
 			   )
-  (when (my-system-is-gary)
-    (shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
+  (if (my-system-is-gary)
+      (shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
+    (message "Please do sync using unison!")
     )
-  )
+)
 
 ;; ######################################################
 ;; http://orgmode.org/Changes.html -> New option org-catch-invisible-edits
