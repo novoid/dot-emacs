@@ -959,23 +959,21 @@ point reaches the beginning or end of the buffer, stop there."
     )
 
   (defun vk-open-as-confluence-page ()
-    "Takes current line from \"]] \" to end marked with at least two spaces and opens its Confluence page in IR6 space"
+    "Takes current line (delimited by brackets, two spaces or pipe) and opens it as Confluence page in IR6 space"
     (interactive)
     (save-excursion
-      (beginning-of-line)
-      (search-forward "]] " (point-at-eol))
+      (re-search-backward "\\(\\] \\|  \\|\* \\|| \\)")  ;; search for "] " or "  " or "| "
+      (forward-char)
+      (forward-char)
       (setq start-pos (point))
-      (end-of-line)
+      (re-search-forward "\\( \\[\\|  \\| |\\)")  ;; search for " [" or "  " or " |"
+      (backward-char)
+      (backward-char)
       (setq end-pos (point))
-      (setq myname 
-	    (replace-regexp-in-string "  .+$"
-				      ""
-				      (buffer-substring start-pos end-pos)
-	     )
-	    )
-      ;(message "Hi: [%s]" myname)
-      ;(confluence-get-page myname "IR6")
-      (confluence-get-page myname)
+      (setq myname (buffer-substring start-pos end-pos))
+      ;(message "Confluence page name: [%s]" myname)
+      (confluence-get-page myname "IR6")
+      ;(confluence-get-page myname)
       )
     )
 
