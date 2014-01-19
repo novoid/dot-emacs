@@ -695,11 +695,11 @@ the same coding systems as Emacs."
 
   ;; ######################################################
   ;; fix broken mapping (because of prelude and so on)
-  (defun my-org-mode-hook ()
-    (define-key prelude-mode-map (kbd "C-c +") nil)
-    (define-key prelude-mode-map (kbd "C-c -") nil)
-    )
-  (add-hook 'org-mode-hook 'my-org-mode-hook)
+  ;;disabled;;2014-01-19;;(defun my-org-mode-hook ()
+  ;;disabled;;2014-01-19;;  (define-key prelude-mode-map (kbd "C-c +") nil)
+  ;;disabled;;2014-01-19;;  (define-key prelude-mode-map (kbd "C-c -") nil)
+  ;;disabled;;2014-01-19;;  )
+  ;;disabled;;2014-01-19;;(add-hook 'org-mode-hook 'my-org-mode-hook)
 
   ;; ######################################################
   ;; load Org-mode specific settings:
