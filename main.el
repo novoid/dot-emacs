@@ -2235,10 +2235,11 @@ Null prefix argument turns off the mode."
   ;; remembering positions
   (global-set-key (kbd "C-c %") 'org-mark-ring-push)
   (global-set-key (kbd "C-c <left>") 'org-mark-ring-goto)
+  (global-set-key (kbd "C-c <down>") 'org-mark-ring-push)
 
   ;; ######################################################
-  ;; Custom Link Completion
   ;; http://draketo.de/light/english/free-software/custom-link-completion-org-mode-25-lines-emacs
+  ;; Custom Link Completion
   (defun org-make-link (&rest strings);; see Org-mode posting/answer 2012-08-20
     "Concatenate STRINGS."
     (apply 'concat strings))
@@ -2826,7 +2827,7 @@ the result as a time value."
   ;; editing Confluence wiki pages (up to Confluence 3.x)
   ;; https://code.google.com/p/confluence-el/
   ;; M-x confluence-get-page
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
+  ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
   (require 'confluence)
   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
   (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
@@ -3252,13 +3253,8 @@ by using nxml's indentation rules."
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
- ;; Local Variables:
+
+;; Local Variables:
 ;; eval: (flyspell-mode 1)
 ;; eval: (ispell-change-dictionary "american")
 ;; End:
