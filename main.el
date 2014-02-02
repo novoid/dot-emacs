@@ -236,10 +236,10 @@ the same coding systems as Emacs."
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
-  ;(elpy-enable)
-  ;(elpy-use-ipython)
+  (elpy-enable)
+  (elpy-use-ipython)
 
-  (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+  ;;(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 
   ;; ######################################################
   ;; http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
@@ -562,7 +562,7 @@ the same coding systems as Emacs."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; flyspell.el <http://kaolin.unice.fr/~serrano/>
 
-					;(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
+;;(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
 ;;;(define-key global-map [(f10)] 'flyspell-mode)
 ;;;(set-default 'ispell-local-dictionary my-german-ispell-dictionary)
 
@@ -575,64 +575,88 @@ the same coding systems as Emacs."
 (setq flyspell-issue-welcome-flag nil)
 (setq flyspell-default-dictionary "german8")
 
-;; http://stackoverflow.com/questions/15346723/emacs-and-ispell-error-loading-german8
+;;old-method until 2014-01-26;; ;; http://stackoverflow.com/questions/15346723/emacs-and-ispell-error-loading-german8
+;;old-method until 2014-01-26;; (eval-after-load "ispell"
+;;old-method until 2014-01-26;;   '(add-to-list 'ispell-dictionary-alist
+;;old-method until 2014-01-26;; 		'("german8"
+;;old-method until 2014-01-26;; 		  "[A-zA-ZäöüßÄÖÜ]" "[^a-zA-ZäöüßÄÖÜ]" "[']" t
+;;old-method until 2014-01-26;; 		  ("-C" "-d" "de_DE-neu.multi")
+;;old-method until 2014-01-26;; 		  "~latin1" iso-8859-1)))
+;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;; (defun my-ispell-set-deutsch()
+;;old-method until 2014-01-26;;   "switch ispell language to Deutsch"
+;;old-method until 2014-01-26;;   (interactive)
+;;old-method until 2014-01-26;;   (ispell-change-dictionary "german8"))
+;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;; (defun my-ispell-set-USenglish()
+;;old-method until 2014-01-26;;   "switch ispell language to US English"
+;;old-method until 2014-01-26;;   (interactive)
+;;old-method until 2014-01-26;;   (ispell-change-dictionary "american"))
+;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;; (defun my-ispell-set-GBenglish()
+;;old-method until 2014-01-26;;   "switch ispell language to British English"
+;;old-method until 2014-01-26;;   (interactive)
+;;old-method until 2014-01-26;;   (ispell-change-dictionary "british"))
+;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;; (defvar my-toggle-ispell-english-deutsch nil
+;;old-method until 2014-01-26;;   "state of english/ngerman toggle. t means english, nil means ngerman")
+;;old-method until 2014-01-26;; (make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
+;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;; ;; use british english on powerplant and US english on all other machines:
+;;old-method until 2014-01-26;; (if (or (my-system-is-powerplant) (my-system-is-powerplantwin))
+;;old-method until 2014-01-26;;     (defun my-toggle-ispell-language ()
+;;old-method until 2014-01-26;;       "Toggle ispell-language between british english and ngerman"
+;;old-method until 2014-01-26;;       (interactive)
+;;old-method until 2014-01-26;;       (cond (my-toggle-ispell-english-deutsch
+;;old-method until 2014-01-26;; 	     (setq my-toggle-ispell-english-deutsch nil)
+;;old-method until 2014-01-26;; 	     (my-ispell-set-deutsch)
+;;old-method until 2014-01-26;; 	     )
+;;old-method until 2014-01-26;; 	    (t
+;;old-method until 2014-01-26;; 	     (setq my-toggle-ispell-english-deutsch t)
+;;old-method until 2014-01-26;; 	     (my-ispell-set-GBenglish)
+;;old-method until 2014-01-26;; 	     )
+;;old-method until 2014-01-26;; 	    )
+;;old-method until 2014-01-26;;       )
+;;old-method until 2014-01-26;;   (defun my-toggle-ispell-language ()
+;;old-method until 2014-01-26;;     "Toggle ispell-language between english and ngerman"
+;;old-method until 2014-01-26;;     (interactive)
+;;old-method until 2014-01-26;;     (cond (my-toggle-ispell-english-deutsch
+;;old-method until 2014-01-26;; 	   (setq my-toggle-ispell-english-deutsch nil)
+;;old-method until 2014-01-26;; 	   (my-ispell-set-deutsch)
+;;old-method until 2014-01-26;; 	   )
+;;old-method until 2014-01-26;; 	  (t
+;;old-method until 2014-01-26;; 	   (setq my-toggle-ispell-english-deutsch t)
+;;old-method until 2014-01-26;; 	   (my-ispell-set-USenglish)
+;;old-method until 2014-01-26;; 	   )
+;;old-method until 2014-01-26;; 	  )
+;;old-method until 2014-01-26;;     )
+;;old-method until 2014-01-26;;   )
+
+;; from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
 (eval-after-load "ispell"
   '(add-to-list 'ispell-dictionary-alist
-		'("german8"
-		  "[A-zA-ZäöüßÄÖÜ]" "[^a-zA-ZäöüßÄÖÜ]" "[']" t
-		  ("-C" "-d" "de_DE-neu.multi")
-		  "~latin1" iso-8859-1)))
+                '("german8"
+                   "[a-zA-ZäöüßÄÖÜ]" "[^a-zA-ZäöüßÄÖÜ]" "[']" t
+                  ("-C" "-d" "de_DE-neu.multi")
+                  "~latin1" iso-8859-1)))
 
-
-
-(defun my-ispell-set-deutsch()
-  "switch ispell language to Deutsch"
-  (interactive)
-  (ispell-change-dictionary "german8"))
-
-(defun my-ispell-set-USenglish()
-  "switch ispell language to US English"
-  (interactive)
-  (ispell-change-dictionary "american"))
-
-(defun my-ispell-set-GBenglish()
-  "switch ispell language to British English"
-  (interactive)
-  (ispell-change-dictionary "british"))
-
-(defvar my-toggle-ispell-english-deutsch nil
-  "state of english/ngerman toggle. t means english, nil means ngerman")
-(make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
-
-;; use british english on powerplant and US english on all other machines:
-(if (or (my-system-is-powerplant) (my-system-is-powerplantwin))
-    (defun my-toggle-ispell-language ()
-      "Toggle ispell-language between british english and ngerman"
-      (interactive)
-      (cond (my-toggle-ispell-english-deutsch
-	     (setq my-toggle-ispell-english-deutsch nil)
-	     (my-ispell-set-deutsch)
-	     )
-	    (t
-	     (setq my-toggle-ispell-english-deutsch t)
-	     (my-ispell-set-GBenglish)
-	     )
-	    )
-      )
-  (defun my-toggle-ispell-language ()
-    "Toggle ispell-language between english and ngerman"
-    (interactive)
-    (cond (my-toggle-ispell-english-deutsch
-	   (setq my-toggle-ispell-english-deutsch nil)
-	   (my-ispell-set-deutsch)
-	   )
-	  (t
-	   (setq my-toggle-ispell-english-deutsch t)
-	   (my-ispell-set-USenglish)
-	   )
-	  )
-    )
+(if (my-system-is-powerplantwin)
+    ;; use british english on powerplantwin:
+    (let ((langs '("german8" "british")))
+      (setq lang-ring (make-ring (length langs)))
+      (dolist (elem langs) (ring-insert lang-ring elem)))
+  ;; use american english on all other systems:
+  (let ((langs '("german8" "american")))
+    (setq lang-ring (make-ring (length langs)))
+    (dolist (elem langs) (ring-insert lang-ring elem)))
   )
+
+(defun my-toggle-ispell-language ()
+  (interactive)
+  (let ((lang (ring-ref lang-ring -1)))
+    (ring-insert lang-ring lang)
+    (ispell-change-dictionary lang)))
+
 
 ;;disabled;(add-hook 'post-mode-hook
 ;;disabled;         '(lambda ()
@@ -814,6 +838,9 @@ the same coding systems as Emacs."
 					     ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
 					     "c:/Users/karl.voit/share/all/org-mode/hardware.org"
 					     "c:/Users/karl.voit/share/all/org-mode/notes.org"
+					     "c:/Users/karl.voit/share/all/org-mode/outlook.org"
+					     "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
+					     "c:/Users/karl.voit/share/all/org-mode/public_voit_errors.org"
 					     ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
 					     "c:/Users/karl.voit/share/all/org-mode/references.org"
 					     ;;"c:/Users/karl.voit/src/lazyblorg/dev/lazyblorg.org"
@@ -843,6 +870,9 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/notes.org"
 					   "~/share/all/org-mode/movies.org"
 					   "~/share/all/org-mode/references.org"
+					   "~/share/all/org-mode/outlook.org"
+					   "~/share/all/org-mode/public_voit.org"
+					   "~/share/all/org-mode/public_voit_errors.org"
 					   "~/src/lazyblorg/dev/lazyblorg.org"
 					   )
 					  )
@@ -2593,6 +2623,7 @@ the result as a time value."
 (when (or (my-system-is-gary) (my-system-is-blanche))
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
   (require 'minimap)
+  (setq minimap-window-location 'right)
 )
 
 
@@ -2740,9 +2771,9 @@ the result as a time value."
 ;; ######################################################
 ;; http://www.emacswiki.org/emacs-es/RecentFiles
 ;; recently files
-;;disabled; (require 'recentf)
-;;disabled; (recentf-mode 1)
-;;disabled; (setq recentf-max-menu-items 25)
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
 
 
 
@@ -2936,6 +2967,37 @@ by using nxml's indentation rules."
 					;disabled;   (load-theme 'soft-stone)
 					;disabled; )
 
+;; ######################################################
+;; Windows Integration
+(when (my-system-is-powerplantwin)
+
+  ;; http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
+  ;; id:2014-01-31-cygwin-emacs
+  (if (file-directory-p "c:/cygwin64/bin")
+  (add-to-list 'exec-path "c:/cygwin64/bin"))
+
+  ;; http://www.emacswiki.org/emacs/RobertAdesamConfig
+  (setenv "PATH" 
+	  (concat 
+	   "c:\\cygwin64\\usr\\local\\bin" ";"
+	   "c:\\cygwin64\\bin" ";"
+	   (getenv "PATH")))
+  (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
+  ;; Adding cygwin mounts
+  ;(require 'cygwin-mount)
+  ;(cygwin-mount-activate)
+  ;; Adding cygwin bash shell
+  (setq shell-file-name "c:/cygwin64/bin/bash")
+  (setenv "SHELL" shell-file-name)
+  (setq explicit-shell-file-name shell-file-name)
+  (setq ediff-shell shell-file-name)
+  (setq explicit-shell-args '("--login" "-i"))
+  (setq w32-quote-process-args ?\") ;"
+
+  )
+
+
+
 
 
 
@@ -2982,10 +3044,10 @@ by using nxml's indentation rules."
 (define-key my-map "=" 'text-scale-increase);; because "+" needs "S-=" and I might forget shift
 ;; Magit status
 (define-key my-map "v" 'magit-status)
+(define-key my-map "g" 'magit-status)
 (global-set-key [home] 'beginning-of-buffer)
 (global-set-key [end]  'end-of-buffer)
 
-(define-key my-map "g" 'goto-line)
 (define-key my-map " " 'delete-trailing-whitespace)
 
 ;; ######################################################
@@ -3222,6 +3284,11 @@ by using nxml's indentation rules."
 
 (define-key my-map (kbd "<left>") 'org-mark-ring-goto)
 
+(define-key my-map (kbd ".") (lambda()  ;; open main.el
+			       (interactive)
+			       (find-file "~/.emacs.d/main.el")
+			       )
+  )
 
 ;;OLD;; ######################################################
 ;;OLD;; fix bad paste for Windows 7 -> underlying issue was fixed via (set-selection-coding-system 'iso-latin-1-dos) -> not needed any more
@@ -3232,7 +3299,6 @@ by using nxml's indentation rules."
 ;;OLD;		  )
 ;;OLD;    )
 ;;OLD;  )
-
 
 
 
