@@ -840,7 +840,7 @@ the same coding systems as Emacs."
 					     "c:/Users/karl.voit/share/all/org-mode/notes.org"
 					     "c:/Users/karl.voit/share/all/org-mode/outlook.org"
 					     "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
-					     "c:/Users/karl.voit/share/all/org-mode/public_voit_errors.org"
+					     "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
 					     ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
 					     "c:/Users/karl.voit/share/all/org-mode/references.org"
 					     ;;"c:/Users/karl.voit/src/lazyblorg/dev/lazyblorg.org"
@@ -872,7 +872,7 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/references.org"
 					   "~/share/all/org-mode/outlook.org"
 					   "~/share/all/org-mode/public_voit.org"
-					   "~/share/all/org-mode/public_voit_errors.org"
+					   "~/share/all/org-mode/errors_public_voit.org"
 					   "~/src/lazyblorg/dev/lazyblorg.org"
 					   )
 					  )
@@ -1850,7 +1850,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	  ("notes" . "~/archive/library/%s-notes.pdf")
 	  ("contact" . "~/share/all/org-mode/contacts.org::/\*.*%s/")
 	  ("tsfile" . "~/share/all/org-mode/memacs/files.org_archive::/\*.*%s/")
-	  ("ifile" . "~/share/all/org-mode/memacs/ifiles.org_archive::/\*.*%s/")
+	  ("ifile" . "~/org/memacs/ifiles.org::/\*.*%s/")
 	  ("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
 	  ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
 	  ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
@@ -2620,17 +2620,15 @@ the result as a time value."
 ;; ######################################################
 ;; http://www.emacswiki.org/emacs/MiniMap
 ;; MiniMap for Emacs
-(when (or (my-system-is-gary) (my-system-is-blanche))
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
-  (require 'minimap)
-  (setq minimap-window-location 'right)
-)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
+(require 'minimap)
+(setq minimap-window-location 'right)
 
 
-  ;; ######################################################
-  ;; http://www.neilvandyke.org/erin-twiki-emacs/
-  ;; TWiki syntax highlighting
-  ;;disabled; ;(require 'erin))
+;; ######################################################
+;; http://www.neilvandyke.org/erin-twiki-emacs/
+;; TWiki syntax highlighting
+;;disabled; ;(require 'erin))
 ;;disabled; (my-load-local-el "contrib/erin.el")
 
 
