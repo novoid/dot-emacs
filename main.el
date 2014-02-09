@@ -693,9 +693,10 @@ the same coding systems as Emacs."
 ;; yasnippet
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
+(add-hook 'org-mode-hook 'yas-minor-mode-on)
 (require 'yasnippet)
-(setq yas/root-directory "~/.emacs.d/snippets")
-(yas/load-directory yas/root-directory)
+(setq yas-root-directory "~/.emacs.d/snippets")
+(yas-load-directory yas-root-directory)
 (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 
 
@@ -2020,14 +2021,14 @@ Null prefix argument turns off the mode."
   ;;disabled;                    (lambda ()
   ;;disabled;                      (org-set-local 'yas/trigger-key [tab])
   ;;disabled;                      (define-key yas/keymap [tab] 'yas/next-field)))
-  (defun yas/org-very-safe-expand ()
-    (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+  (defun yas-org-very-safe-expand ()
+    (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
   (add-hook 'org-mode-hook
 	    (lambda ()
-	      (make-variable-buffer-local 'yas/trigger-key)
-	      (setq yas/trigger-key [tab])
-	      (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-	      (define-key yas/keymap [tab] 'yas/next-field)))
+	      (make-variable-buffer-local 'yas-trigger-key)
+	      (setq yas-trigger-key [tab])
+	      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+	      (define-key yas-keymap [tab] 'yas-next-field)))
 
   ;; ######################################################
   ;; opening image files with external viewer
@@ -2169,7 +2170,7 @@ Null prefix argument turns off the mode."
     (interactive)
     (save-some-buffers)
     (org-agenda-list nil nil 60)
-					;test;  (org-agenda-list nil nil 15)
+    ;;test;  (org-agenda-list nil nil 15)
     (org-agenda-write "~/share/all/org-mode/agenda-export-raw.ics")
     (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
     (setq icspath "~/share/all/org-mode/")
@@ -3000,7 +3001,14 @@ by using nxml's indentation rules."
   )
 
 
+;; ######################################################
+;; REST client    https://github.com/pashky/restclient.el
+(when (my-system-is-powerplantwin)
+  (my-load-local-el "contrib/restclient.el/json-reformat.el")
+  (my-load-local-el "contrib/restclient.el/restclient.el")
+  (require 'restclient)
 
+)
 
 
 
