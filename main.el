@@ -1125,6 +1125,18 @@ the same coding systems as Emacs."
 		  (org-agenda-overriding-header "home tasks")
 		  ))
 
+		;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
+		("." "Completed today"
+                 ((todo "TODO|DONE|CANCELED"
+                        ((org-agenda-skip-function
+                          '(org-agenda-skip-entry-if 'notregexp (format-time-string "CLOSED: \\[%Y-%m-%d")))))
+		  (org-agenda-sorting-strategy '(priority-down))))
+
+		;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
+		("W" "Closed within a week."
+		 tags "CLOSED>\"<-1w>\""
+		 ((org-agenda-sorting-strategy '(priority-down))))
+
 		;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
 		("E" "events only" agenda ""
 		 (
@@ -2021,14 +2033,14 @@ Null prefix argument turns off the mode."
   ;;disabled;                    (lambda ()
   ;;disabled;                      (org-set-local 'yas/trigger-key [tab])
   ;;disabled;                      (define-key yas/keymap [tab] 'yas/next-field)))
-  (defun yas-org-very-safe-expand ()
-    (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
-  (add-hook 'org-mode-hook
-	    (lambda ()
-	      (make-variable-buffer-local 'yas-trigger-key)
-	      (setq yas-trigger-key [tab])
-	      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
-	      (define-key yas-keymap [tab] 'yas-next-field)))
+;;(defun yas-org-very-safe-expand ()
+;;  (let ((yas-fallback-behavior 'return-nil)) (yas-expand)))
+;;(add-hook 'org-mode-hook
+;;	    (lambda ()
+;;	      (make-variable-buffer-local 'yas-trigger-key)
+;;	      (setq yas-trigger-key [tab])
+;;	      (add-to-list 'org-tab-first-hook 'yas-org-very-safe-expand)
+;;	      (define-key yas-keymap [tab] 'yas-next-field)))
 
   ;; ######################################################
   ;; opening image files with external viewer
@@ -3298,6 +3310,12 @@ by using nxml's indentation rules."
 (define-key my-map (kbd ".") (lambda()  ;; open main.el
 			       (interactive)
 			       (find-file "~/.emacs.d/main.el")
+			       )
+  )
+
+(define-key my-map (kbd "o") (lambda()
+			       (interactive)
+			       (find-file "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
 			       )
   )
 
