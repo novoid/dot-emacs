@@ -874,6 +874,7 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/outlook.org"
 					   "~/share/all/org-mode/public_voit.org"
 					   "~/share/all/org-mode/errors_public_voit.org"
+					   "~/share/all/org-mode/memacs/roylog.org"
 					   "~/src/lazyblorg/dev/lazyblorg.org"
 					   )
 					  )
