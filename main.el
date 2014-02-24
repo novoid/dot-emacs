@@ -2569,10 +2569,36 @@ the result as a time value."
 		       (cdr expr))))
 	    `,@exprs))))
 
+  (if (my-system-is-gary)
+      (defun my-lazyblorg-test()
+	"Saves current blog entry to file and invoke lazyblorg process with it"
+	(interactive)
+	(save-excursion
+	  (search-backward ":blog:");; search begin of current (previous) blog entry
+	  (beginning-of-line nil)
+	  (set-mark-command nil);; set mark
+	  (org-cycle);; close org-mode heading and sub-headings
+	  (next-line);; goto next org-mode heading (this should be next line after blog entry)
+	  (beginning-of-line nil)
+	  (let ((p (point));; copy region
+		(m (mark)))
+	    (if (< p m)
+		(kill-ring-save p m)
+	      (kill-ring-save m p)))
+	  (find-file "/tmp/lazyblorg-preview.org");; fixed temporary file (will be overwritten)
+	  (erase-buffer);; I told you!
+	  (yank);; paste region from above
+	  (save-buffer);; save to disk
+	  (kill-buffer "lazyblorg-preview.org");; destroy last evidence
+	  (previous-line);;
+	  (org-cycle);; close org-mode heading and sub-headings
+	  ;; invoke lazyblorg:
+	  (shell-command-to-string "/home/vk/src/lazyblorg/preview_blogentry.sh");; invoke shell script
+	  )
+	)
+    )
 
-
-
-  );; Org-mode
+  );; end-of-Org-mode
 
 
 
@@ -3023,6 +3049,10 @@ by using nxml's indentation rules."
 
 )
 
+;; ######################################################
+;; handle CamelCaseParts as distinct words
+;; http://ergoemacs.org/emacs/emacs_adv_tips.html
+(global-subword-mode 1) ; 1 for on, 0 for off
 
 
 
