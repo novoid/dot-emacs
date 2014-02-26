@@ -817,6 +817,24 @@ the same coding systems as Emacs."
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
     )
+  (when (my-system-is-gary)
+    (add-to-list 'org-agenda-category-icon-alist
+		 '(".*" '(space . (:width (18))))
+		 )
+    (add-to-list 'org-agenda-category-icon-alist
+		 '("contacts" "/usr/share/icons/oxygen/16x16/places/user-identity.png" nil nil :ascent center)
+		 ;;/usr/share/icons/gnome/16x16/emotes/face-smile.png
+		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		 '("public_voit" "/usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png" nil nil :ascent center)
+		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		 '("misc" "/usr/share/icons/oxygen/16x16/emblems/emblem-new.png" nil nil :ascent center)
+		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		 '("hardware" "/usr/share/icons/oxygen/16x16/devices/camera-photo.png" nil nil :ascent center)
+		  )
+    )
 
   ;; ######################################################
   ;; https://github.com/kiwanami/emacs-calfw
