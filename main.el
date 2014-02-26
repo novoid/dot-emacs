@@ -149,7 +149,7 @@ the same coding systems as Emacs."
   "Return true if the system we are running on is grmlvrs"
   (string-equal system-name "grmlvrs")
   )
-(defun my-system-is-powerplant ()
+(defun my-system-is-powerplantlinux ()
   (interactive)
   "Return true if the system we are running on is powerplant"
   (or
@@ -216,7 +216,7 @@ the same coding systems as Emacs."
   (set-face-attribute 'default (selected-frame) :height 100)
   )
 ;; increase fonts on gary by default
-(when (or (my-system-is-gary) (my-system-is-powerplant) (my-system-is-powerplantwin))
+(when (or (my-system-is-gary) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
   (my-increase-fontsize)
   )
 
@@ -232,7 +232,7 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; Python-specific things only installed on gary:
-(when (or (my-system-is-gary) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-powerplantwin))
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
@@ -290,7 +290,7 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; LaTeX
-(when (or (my-system-is-gary) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
 
 
   ;; ######################################################
@@ -398,7 +398,7 @@ the same coding systems as Emacs."
   ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
   ;; CDLaTeX - more LaTeX functionality
   ;; http://orgmode.org/org.html#CDLaTeX-mode
-  ;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplant))
+  ;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
   ;;disabled;  (my-load-local-el "contrib/cdlatex.el")
   ;;disabled;  )
 
@@ -446,7 +446,7 @@ the same coding systems as Emacs."
 (when (my-system-is-blanche)
   (setq org-ditaa-jar-path "~/data/hosts/blanche/config/ditaa.jar")
   )
-(when (or (my-system-is-gary) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
   )
 
@@ -476,7 +476,7 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-(when (or (my-system-is-gary) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
   (setq browse-url-browser-function 'browse-url-generic
 	;;      browse-url-generic-program "/usr/bin/google-chrome")
 	browse-url-generic-program "/usr/bin/firefox")
@@ -603,7 +603,7 @@ the same coding systems as Emacs."
 ;;old-method until 2014-01-26;; (make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
 ;;old-method until 2014-01-26;; 
 ;;old-method until 2014-01-26;; ;; use british english on powerplant and US english on all other machines:
-;;old-method until 2014-01-26;; (if (or (my-system-is-powerplant) (my-system-is-powerplantwin))
+;;old-method until 2014-01-26;; (if (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 ;;old-method until 2014-01-26;;     (defun my-toggle-ispell-language ()
 ;;old-method until 2014-01-26;;       "Toggle ispell-language between british english and ngerman"
 ;;old-method until 2014-01-26;;       (interactive)
@@ -684,7 +684,7 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; tabbar
-;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplant))
+;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
 ;;disabled;    (my-load-local-el "contrib/tabbar.el")
 ;;disabled;  )
 
@@ -701,9 +701,9 @@ the same coding systems as Emacs."
 
 
 ;; ######################################################
-;; org-mode:
+;; org-mode-begin:
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
-(when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplant) (my-system-is-powerplantwin))
+(when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
   ;; set paths to manually installed Org-mode (from git)
   ;;disabled;(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp")
@@ -779,7 +779,7 @@ the same coding systems as Emacs."
   ;; For org appointment reminders
   ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
   ;; Get appointments for today
-  (when (or (my-system-is-gary) (my-system-is-powerplant))
+  (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
     (defun my-org-agenda-to-appt ()
       (interactive)
       (setq appt-time-msg-list nil)
@@ -803,6 +803,19 @@ the same coding systems as Emacs."
 	 (concat "/usr/bin/zenity --info --title='Appointment' --text='" msg "' &") nil nil)
 	)
       )
+    )
+
+  ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
+  (when (my-system-is-powerplantwin)
+    (add-to-list 'org-agenda-category-icon-alist
+		 '(".*" '(space . (:width (18))))
+		 )
+    (add-to-list 'org-agenda-category-icon-alist
+		  '("infonova" "C:/Users/karl.voit/infonova/R6-logo_18x12.jpg" nil nil :ascent center)
+		  )
+    ;;(add-to-list 'org-agenda-category-icon-alist
+    ;;		 '("misc" '(space . (:width (18))))
+    ;;		 )
     )
 
   ;; ######################################################
@@ -2792,7 +2805,7 @@ the result as a time value."
 
 ;; ######################################################
 ;; magit
-(when (or (my-system-is-gary) (my-system-is-powerplant))
+(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
   (require 'magit)
 
   ;; full screen magit-status
@@ -2895,7 +2908,7 @@ the result as a time value."
 (add-to-list 'command-switch-alist '("diff" . command-line-diff))
 
 
-(when (or (my-system-is-powerplant) (my-system-is-powerplantwin))
+(when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
   ;; ######################################################
   ;; editing Confluence wiki pages (up to Confluence 3.x)
@@ -3330,7 +3343,7 @@ by using nxml's indentation rules."
 (define-key my-map "k" 'clm/open-command-log-buffer)
 
 
-(when (or (my-system-is-powerplant) (my-system-is-powerplantwin))
+(when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
   (define-key my-map "C" 'vk-open-as-confluence-page)
   (define-key my-map "oe" 'mno-edit-outlook-message)
   (define-key my-map "os" 'mno-save-outlook-message)
