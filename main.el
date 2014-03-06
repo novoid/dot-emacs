@@ -98,8 +98,8 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; 2011-04-20: turn off backup files
-					;(defun turn-off-backup())
-					;disable backup
+;;(defun turn-off-backup())
+;;disable backup
 (setq backup-inhibited t)
 
 
@@ -806,6 +806,7 @@ the same coding systems as Emacs."
     )
 
   ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
+  (setq org-agenda-category-icon-alist nil)
   (when (my-system-is-powerplantwin)
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (18))))
@@ -980,6 +981,7 @@ the same coding systems as Emacs."
 		("STARTED"   :foreground "blue"         :weight bold)
 		("DONE"      :foreground "forest green" :weight bold)
 		("WAITING"   :foreground "orange"       :weight bold)
+		("TEAM"      :foreground "orange"       :weight bold)
 		("SOMEDAY"   :foreground "magenta"      :weight bold)
 		("CANCELLED" :foreground "forest green" :weight bold)
 		("QUOTE"     :foreground "red"          :weight bold)
@@ -1759,7 +1761,12 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq split-width-threshold 9999)
 
   ;; http://orgmode.org/org.html show blocked tasks in agenda in gray color
-  (setq org-agenda-dim-blocked-tasks t)
+  ;;disabled;(setq org-agenda-dim-blocked-tasks t)
+  ;; OR: hide blocked tasks completely:
+  ;; http://nflath.com/2010/03/org-mode-2/
+  ;; http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
+  (setq org-agenda-dim-blocked-tasks 'invisible)
+  
 
   ;; automatically change to DONE when all children are done
   ;; http://orgmode.org/org.html#Breaking-down-tasks
@@ -3037,9 +3044,9 @@ by using nxml's indentation rules."
 ;; ######################################################
 ;; Emacs 24 theme
 ;; https://github.com/mswift42/soft-stone-theme
-					;disabled; (when (my-system-is-powerplantwin)
-					;disabled;   (load-theme 'soft-stone)
-					;disabled; )
+;;disabled; (when (my-system-is-powerplantwin)
+;;disabled;   (load-theme 'soft-stone)
+;;disabled; )
 
 ;; ######################################################
 ;; Windows Integration
@@ -3084,6 +3091,28 @@ by using nxml's indentation rules."
 ;; handle CamelCaseParts as distinct words
 ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
 (global-subword-mode 1) ; 1 for on, 0 for off
+;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
+;; FIXXME: this is a test for getting it work independent of CamelCase words
+;; see id:2014-03-04-M-l-subword
+(global-set-key [M-l] 'downcase-word)
+(global-set-key [M-u] 'upcase-word)
+(global-set-key [M-c] 'capitalize-word)
+
+;; ######################################################
+;; automatically save more often within certain modes:
+;; http://www.emacswiki.org/emacs/AutoSave
+;; http://www.litchie.net/programs/real-auto-save.html
+;; ... installed 2014-03-05 via Marmalade
+(require 'real-auto-save)
+(add-hook 'org-mode-hook 'turn-on-real-auto-save)
+;; Auto save interval is 10 seconds by default. You can change it:
+(when (my-system-is-powerplantwin)
+  (setq real-auto-save-interval 10)
+)
+(when (my-system-is-gary)
+  (setq real-auto-save-interval 30)
+)
+
 
 
 
@@ -3196,7 +3225,7 @@ by using nxml's indentation rules."
 
 ;; ######################################################
 ;; Solarized Color Theme
-(define-key my-map "c" 'my-toggle-color-theme)
+;(define-key my-map "c" 'my-toggle-color-theme)
 
 
 
