@@ -205,6 +205,24 @@ the same coding systems as Emacs."
   )
 
 
+;; ######################################################
+;; ELISP-specific things
+
+;; ######################################################
+;; separate color for highlightning () brackets:
+;; http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
+(defface paren-face
+  '((((class color) (background dark))
+     (:foreground "grey30"))
+    (((class color) (background light))
+     (:foreground "grey60")))
+  "Face used to dim parentheses.")
+(defun egoge-dim-parens ()
+  (font-lock-add-keywords nil
+			  '(("(\\|)" . 'paren-face))))
+(add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
+
+
 
 ;; ######################################################
 ;; Python-specific things
