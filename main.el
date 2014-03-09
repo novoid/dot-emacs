@@ -21,6 +21,22 @@
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
 (add-hook 'write-file-hooks 'time-stamp)
 
+(when (>= emacs-major-version 24)
+  ;; ######################################################
+  ;; https://github.com/hadronzoo/theme-changer
+  ;; set color theme according to day-time:
+  ;;disabled;; (setq calendar-location-name "Graz, AT") 
+  ;;disabled;; (setq calendar-latitude 47.07)
+  ;;disabled;; (setq calendar-longitude 15.43)
+  ;;disabled;; (require 'theme-changer)
+  ;;disabled;; (change-theme 'whiteboard 'misterioso)  ;; day and night theme
+
+  ;; my favorite dark themes: misterioso, zenburn
+  ;; my favorite light themes: whiteboard, solarized-light
+  ;;setting manually: (load-theme 'misterioso t) ;; dark theme
+  (load-theme 'zenburn t) ;; dark theme
+  )
+
 ;; ######################################################
 ;; only one window on startup
 ;; http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
@@ -86,6 +102,20 @@ the same coding systems as Emacs."
       (setenv extra-env (symbol-name (ad-get-arg 0))))
     ad-do-it))
 
+
+;; ######################################################
+;; about defining keys
+;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
+
+
+;; ######################################################
+;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
+;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
+;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
+;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
+					;(global-unset-key "\C-c\C-,")
+(define-prefix-command 'my-map)
+(global-set-key (kbd "C-c C-,") 'my-map)
 
 
 
@@ -208,19 +238,19 @@ the same coding systems as Emacs."
 ;; ######################################################
 ;; ELISP-specific things
 
-;; ######################################################
-;; separate color for highlightning () brackets:
-;; http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
-(defface paren-face
-  '((((class color) (background dark))
-     (:foreground "grey30"))
-    (((class color) (background light))
-     (:foreground "grey60")))
-  "Face used to dim parentheses.")
-(defun egoge-dim-parens ()
-  (font-lock-add-keywords nil
-			  '(("(\\|)" . 'paren-face))))
-(add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
+;;disabled;; ;; ######################################################
+;;disabled;; ;; separate color for highlightning () brackets:
+;;disabled;; ;; http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
+;;disabled;; (defface paren-face
+;;disabled;;   '((((class color) (background dark))
+;;disabled;;      (:foreground "grey30"))
+;;disabled;;     (((class color) (background light))
+;;disabled;;      (:foreground "grey60")))
+;;disabled;;   "Face used to dim parentheses.")
+;;disabled;; (defun egoge-dim-parens ()
+;;disabled;;   (font-lock-add-keywords nil
+;;disabled;; 			  '(("(\\|)" . 'paren-face))))
+;;disabled;; (add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
 
 
 
@@ -625,6 +655,16 @@ the same coding systems as Emacs."
 (add-hook   'makefile-mode-hook 'flyspell-prog-mode)
 (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
 
+;; ######################################################
+;;(setq ispell-dictionary "german-new8")
+;;(setq ispell-dictionary "german-new8")
+;;(setq ispell-local-dictionary "german-new8")
+(define-key my-map "fm" 'flyspell-mode)
+(define-key my-map "fr" 'flyspell-region)
+(define-key my-map "fl" 'my-toggle-ispell-language)
+(define-key my-map "ft" 'my-toggle-ispell-language);; can't remember if l(anguage) or t(oggle)
+(define-key my-map "fn" 'flyspell-goto-next-error)
+(define-key my-map "ff" 'flyspell-correct-word-before-point)
 
 
 
@@ -645,6 +685,7 @@ the same coding systems as Emacs."
 (setq yas-root-directory "~/.emacs.d/snippets")
 (yas-load-directory yas-root-directory)
 (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
+
 
 
 ;; ######################################################
@@ -801,8 +842,8 @@ the same coding systems as Emacs."
 	)
   (setq org-todo-keyword-faces
 	(quote (("TODO"      :foreground "red"          :weight bold)
-		("NEXT"      :foreground "blue"         :weight bold)
-		("STARTED"   :foreground "blue"         :weight bold)
+		("NEXT"      :foreground "lightblue"         :weight bold)
+		("STARTED"   :foreground "lightblue"         :weight bold)
 		("DONE"      :foreground "forest green" :weight bold)
 		("WAITING"   :foreground "orange"       :weight bold)
 		("TEAM"      :foreground "orange"       :weight bold)
@@ -899,6 +940,114 @@ the same coding systems as Emacs."
 				   )
 	  )
     )
+
+
+  ;; ######################################################
+  ;; replaces URL with Org-mode link including description
+  ;; see id:2014-03-09-inbox-to-bookmarks
+  (defun my-www-get-page-title (url)
+    "retrieve title of web page.
+from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
+    (let ((title))
+      (with-current-buffer (url-retrieve-synchronously url)
+	(goto-char (point-min))
+	(re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
+	(setq title (match-string 1))
+	(goto-char (point-min))
+	(re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
+	(decode-coding-string title (intern (match-string 1)))))
+    )
+  (defun my-url-linkify ()
+    "Make URL at cursor point into an Org-mode link.
+If there's a text selection, use the text selection as input.
+
+Example: http://example.com/xyz.htm
+becomes
+\[\[http://example.com/xyz.htm\]\[Source example.com\]\]
+
+Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
+    (interactive)
+    (let (resultLinkStr bds p1 p2 domainName)
+      ;; get the boundary of URL or text selection
+      (if (region-active-p)
+	  (setq bds (cons (region-beginning) (region-end)) )
+	(setq bds (bounds-of-thing-at-point 'url))
+	)
+      ;; set URL
+      (setq p1 (car bds))
+      (setq p2 (cdr bds))
+      (let (
+	    (url (buffer-substring-no-properties p1 p2))
+	    )
+	;; retrieve title
+	(let ((title (my-www-get-page-title url)))
+	  (message (concat "title is: " title))
+	  ;;(setq url (replace-regexp-in-string "&" "&amp;" url))
+	  (let ((resultLinkStr (concat "[[" url "][" title "]]")))
+	    ;; delete url and insert the link
+	    (delete-region p1 p2)
+	    (insert resultLinkStr)
+	    )
+	  )
+	)
+      )
+    )
+
+  (define-key my-map "u" 'my-url-linkify)
+
+  
+  ;; ######################################################
+  ;; smart moving bookmark headings from inbox to notes.org
+  ;; see id:2014-03-09-inbox-to-bookmarks
+  (defun my-save-bookmark()
+    "removes NEXT/Bookmark, (NOT YET: FIXXME: retrieves title), 
+move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging process"
+    (interactive)
+    (save-excursion
+      ;; get myself to the beginning of the current heading:
+      ;;(outline-previous-visible-heading 1)  ;; jump to previous heading
+      ;;(outline-next-visible-heading 1)      ;; jumps to beginning of the current (interesting) heading
+      (beginning-of-line)                   ;; jump to beginning of line
+      (let ((mybegin (point)))              ;; mark beginning of line as start point
+	(outline-next-visible-heading 1)    ;; jumps to EOF if it is the last entry
+	(save-restriction 
+	  (narrow-to-region mybegin (point))  ;; ignore everything outside of region
+	  ;; search/replace unwanted keywords at the beginning:
+	  (goto-char (point-min))
+	  (while (search-forward "* NEXT Bookmark " nil t) (replace-match "* " nil t))
+	  (goto-char (point-min))
+	  (while (search-forward "* NEXT " nil t) (replace-match "* " nil t))
+	  (goto-char (point-min))
+	  (while (search-forward "* Bookmark " nil t) (replace-match "* " nil t))
+	  (goto-char (point-min))
+	  ;; insert second asterisk (modify to second level heading)
+	  (insert "*")
+	  ;; move time-stamp to properties-drawer:
+	  (search-forward-regexp "^\\[20")  ;; jump to second line (with time-stamp) via search
+	  (beginning-of-line)
+	  (insert ":PROPERTIES:")
+	  (newline)
+	  (beginning-of-line)
+	  (insert ":CREATED:  ") 
+	  (end-of-line)
+	  (newline)
+	  (insert ":END:")
+	  ;; move region to end of notes.org
+	  (kill-region mybegin (point)) ;; kill region to kill-ring
+	  (switch-to-buffer "notes.org")
+	  (end-of-buffer)
+	  (newline)
+	  (yank)
+	  ;; add tags
+	  (outline-previous-visible-heading 1)  ;; jump to heading
+	  (org-set-tags-command)
+	  )
+	)
+      )
+    )
+
+  (define-key my-map "b" 'my-save-bookmark)
+
 
   ;; ######################################################
   ;; 2012-12-09 From: Memnon Anon <gegendosenfleisch@googlemail.com>
@@ -1477,7 +1626,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-agenda-category-icon-alist nil)
   (when (my-system-is-powerplantwin)
     (add-to-list 'org-agenda-category-icon-alist
-		 '(".*" '(space . (:width (18))))
+		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
 		  '("infonova" "C:/Users/karl.voit/infonova/R6-logo_18x12.jpg" nil nil :ascent center)
@@ -1488,7 +1637,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     )
   (when (my-system-is-gary)
     (add-to-list 'org-agenda-category-icon-alist
-		 '(".*" '(space . (:width (18))))
+		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
 		 '("contacts" "/usr/share/icons/oxygen/16x16/places/user-identity.png" nil nil :ascent center)
@@ -2697,20 +2846,6 @@ by using nxml's indentation rules."
 
 
 
-;; ######################################################
-;; about defining keys
-;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
-
-
-;; ######################################################
-;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
-;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
-;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
-;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
-					;(global-unset-key "\C-c\C-,")
-(define-prefix-command 'my-map)
-(global-set-key (kbd "C-c C-,") 'my-map)
-
 
 ;; ######################################################
 ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
@@ -2729,8 +2864,8 @@ by using nxml's indentation rules."
 ;; ######################################################
 ;; coping with ELISP code
 (define-key my-map "er" 'eval-region)
-(define-key my-map "el" 'find-library)
-(define-key my-map "ef" 'find-function-at-point)
+;; disabled ;;(define-key my-map "el" 'find-library)
+;; disabled ;;(define-key my-map "ef" 'find-function-at-point)
 
 
 
@@ -2760,16 +2895,6 @@ by using nxml's indentation rules."
 (global-set-key [S-right] 'forward-word)
 
 
-;; ######################################################
-;;(setq ispell-dictionary "german-new8")
-;;(setq ispell-dictionary "german-new8")
-;;(setq ispell-local-dictionary "german-new8")
-(define-key my-map "fm" 'flyspell-mode)
-(define-key my-map "fr" 'flyspell-region)
-(define-key my-map "fl" 'my-toggle-ispell-language)
-(define-key my-map "ft" 'my-toggle-ispell-language);; can't remember if l(anguage) or t(oggle)
-(define-key my-map "fn" 'flyspell-goto-next-error)
-(define-key my-map "ff" 'flyspell-correct-word-before-point)
 
 
 ;; ######################################################
