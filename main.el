@@ -945,6 +945,7 @@ the same coding systems as Emacs."
   ;; ######################################################
   ;; replaces URL with Org-mode link including description
   ;; see id:2014-03-09-inbox-to-bookmarks
+  ;; 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
   (defun my-www-get-page-title (url)
     "retrieve title of web page.
 from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
@@ -1706,6 +1707,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("e" "Event" entry (file+headline "~/share/all/org-mode/misc.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("b" "Bookmark" entry (file+headline "~/share/all/org-mode/notes.org" "Bookmarks")
+	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 	  ("i" "infonova Templates")
@@ -1730,7 +1733,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	  ;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("te" "tagstore event" entry (file+headline "~/share/all/org-mode/tagstore.org" "Events")
 	  ;; "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("b" "Besorgung" entry (file+headline "~/share/all/org-mode/hardware.org" "Besorgungen")
+	  ("B" "Besorgung" entry (file+headline "~/share/all/org-mode/hardware.org" "Besorgungen")
 	   "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("C" "Clipboard" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
 	  ;; "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
@@ -3085,6 +3088,10 @@ by using nxml's indentation rules."
 			       )
   )
 
+
+;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
+(define-key my-map "[" (lambda () (interactive) (org-cycle t)))
+(define-key my-map "]" (lambda () (interactive) (org-cycle)))
 
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
