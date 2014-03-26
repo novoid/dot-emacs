@@ -550,7 +550,13 @@ the same coding systems as Emacs."
 
 ;;(autoload 'flyspell-mode "flyspell" "On-the-fly ispell." t)
 (setq flyspell-issue-welcome-flag nil)
-(setq flyspell-default-dictionary "german8")
+
+(when (my-system-is-powerplantwin)
+  (setq flyspell-default-dictionary "german8")
+)
+(when (my-system-is-gary)
+  (setq flyspell-default-dictionary "de_AT")
+)
 
 ;;old-method until 2014-01-26;; ;; http://stackoverflow.com/questions/15346723/emacs-and-ispell-error-loading-german8
 ;;old-method until 2014-01-26;; (eval-after-load "ispell"
@@ -627,6 +633,16 @@ the same coding systems as Emacs."
     (setq lang-ring (make-ring (length langs)))
     (dolist (elem langs) (ring-insert lang-ring elem)))
   )
+(if (my-system-is-gary)
+    ;; use US english on powerplantwin:
+    (let ((langs '("de_AT" "en_US")))
+      (setq lang-ring (make-ring (length langs)))
+      (dolist (elem langs) (ring-insert lang-ring elem)))
+  ;; use american english on all other systems:
+  (let ((langs '("german8" "american")))
+    (setq lang-ring (make-ring (length langs)))
+    (dolist (elem langs) (ring-insert lang-ring elem)))
+  )
 
 (defun my-toggle-ispell-language ()
   (interactive)
@@ -644,16 +660,16 @@ the same coding systems as Emacs."
 
 ;; http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
 ;; modes for programming languages; check spelling only in comments/strings
-(add-hook          'c-mode-hook 'flyspell-prog-mode)
-(add-hook         'sh-mode-hook 'flyspell-prog-mode)
-(add-hook        'c++-mode-hook 'flyspell-prog-mode)
-(add-hook       'ruby-mode-hook 'flyspell-prog-mode)
-(add-hook      'cperl-mode-hook 'flyspell-prog-mode)
-(add-hook     'python-mode-hook 'flyspell-prog-mode)
-(add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
-(add-hook   'autotest-mode-hook 'flyspell-prog-mode)
-(add-hook   'makefile-mode-hook 'flyspell-prog-mode)
-(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook          'c-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook         'sh-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook        'c++-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook       'ruby-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook      'cperl-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook     'python-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook   'autotest-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook   'makefile-mode-hook 'flyspell-prog-mode)
+;;disabled;(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
 
 ;; ######################################################
 ;;(setq ispell-dictionary "german-new8")
@@ -753,7 +769,7 @@ the same coding systems as Emacs."
 	      ;;disabled;            (org-set-local 'yas/trigger-key [tab])
 	      ;;disabled;            (define-key yas/keymap [tab] 'yas/next-field-group)
 	      ;; flyspell mode for spell checking everywhere
-	      (flyspell-mode 1)
+	      ;;disabled; (flyspell-mode 1)
 	      ;; auto-fill mode on
 	      (auto-fill-mode 1)))
 
@@ -1686,7 +1702,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	      ;;disabled;            (org-set-local 'yas/trigger-key [tab])
 	      ;;disabled;            (define-key yas/keymap [tab] 'yas/next-field)
 	      ;; flyspell mode for spell checking everywhere
-	      (flyspell-mode 1)
+	      ;;disabled; (flyspell-mode 1)
 	      ;; Undefine C-c [ and C-c ] since this breaks my org-agenda files when directories are include
 	      ;; It expands the files in the directories individually
 	      (org-defkey org-mode-map "\C-c["    'undefined)
@@ -1701,6 +1717,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (define-key global-map "\C-cc" 'org-capture)
   ;; ######################################################
   ;; templates:  http://orgmode.org/org.html#Capture-templates
+  ;; elements:   http://orgmode.org/org.html#Template-elements
   (setq org-capture-templates
 	'(
 	  ("s" "shorts-todo" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
@@ -1709,6 +1726,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("b" "Bookmark" entry (file+headline "~/share/all/org-mode/notes.org" "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("p" "public voit" entry (file+headline "~/share/all/org-mode/public_voit.org" "Blogbeiträge")
+	   "* %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 	  ("i" "infonova Templates")
@@ -1873,11 +1892,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; ######################################################
   ;; automatically change to DONE when all children are done
   ;; http://orgmode.org/org.html#Breaking-down-tasks
-  (defun org-summary-todo (n-done n-not-done)
-    "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states)   ; turn off logging
-      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+  ;;deactivated because WAITING got changed to TODO;; (defun org-summary-todo (n-done n-not-done)
+  ;;deactivated because WAITING got changed to TODO;;   "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  ;;deactivated because WAITING got changed to TODO;;   (let (org-log-done org-log-states)   ; turn off logging
+  ;;deactivated because WAITING got changed to TODO;;     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  ;;deactivated because WAITING got changed to TODO;; (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   ;; statistic cookies count ALL subtasks not only direkt ones
   (setq org-hierarchical-todo-statistics t)
 
