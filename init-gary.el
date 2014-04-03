@@ -33,10 +33,8 @@
  '(org-contacts-icon-property "PHOTOGRAPH")
  '(safe-local-variable-values
    (quote
-    ((DISABLEDmode . flyspell)
-     (reftex-default-bibliography quote
+    ((reftex-default-bibliography quote
 				  ("~/archive/library"))
-     (DISABLEDispell-local-dictionary . "german8")
      (flyspell-default-dictionary . "en_US")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "german8")

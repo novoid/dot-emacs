@@ -906,6 +906,7 @@ the same coding systems as Emacs."
 					     "c:/Users/karl.voit/share/all/org-mode/r6-stories.org"
 					     "c:/Users/karl.voit/share/all/org-mode/infonova.org"
 					     "c:/Users/karl.voit/share/all/org-mode/misc.org"
+					     "c:/Users/karl.voit/share/all/org-mode/hausbau.org"
 					     "c:/Users/karl.voit/share/all/org-mode/tagstore.org"
 					     "c:/Users/karl.voit/share/all/org-mode/ist.org"
 					     "c:/Users/karl.voit/share/all/org-mode/contacts.org"
@@ -913,7 +914,6 @@ the same coding systems as Emacs."
 					     ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
 					     "c:/Users/karl.voit/share/all/org-mode/hardware.org"
 					     "c:/Users/karl.voit/share/all/org-mode/notes.org"
-					     "c:/Users/karl.voit/share/all/org-mode/outlook.org"
 					     "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
 					     "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
 					     ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
@@ -936,6 +936,7 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/infonova.org"
 					   ;;			       "~/share/all/org-mode/test-phd.org"
 					   "~/share/all/org-mode/misc.org"
+					   "~/share/all/org-mode/hausbau.org"
 					   "~/share/all/org-mode/tagstore.org"
 					   "~/share/all/org-mode/ist.org"
 					   "~/share/all/org-mode/contacts.org"
@@ -945,7 +946,6 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/notes.org"
 					   "~/share/all/org-mode/movies.org"
 					   "~/share/all/org-mode/references.org"
-					   "~/share/all/org-mode/outlook.org"
 					   "~/share/all/org-mode/public_voit.org"
 					   "~/share/all/org-mode/errors_public_voit.org"
 					   "~/share/all/org-mode/memacs/roylog.org"
@@ -1196,13 +1196,13 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 		;;disabled;		(org-agenda-overriding-header "rewards: TODO or SOMEDAY")
 		;;disabled;		))
 
-		("b" "borrowed" tags "+borrowed"
+		("B" "borrowed" tags "+borrowed"
 		 (
 		  (org-agenda-overriding-header "borrowed or lend")
 		  (org-agenda-skip-function 'tag-without-done-or-canceled)
 		  ))
 
-		("B" "Besorgungen" tags "+Besorgung"
+		("$" "Besorgungen" tags "+Besorgung"
 		 (
 		  (org-agenda-overriding-header "Besorgungen")
 		  (org-agenda-skip-function 'tag-without-done-or-canceled)
@@ -1214,6 +1214,11 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 		  ))
 
 		("h" "home @ALW" tags-todo "+@ALW"
+		 (
+		  (org-agenda-overriding-header "home tasks")
+		  ))
+
+		("b" "Breitenweg @BWG" tags-todo "+@BWG"
 		 (
 		  (org-agenda-overriding-header "home tasks")
 		  ))
@@ -1669,6 +1674,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (add-to-list 'org-agenda-category-icon-alist
 		 '("hardware" "/usr/share/icons/oxygen/16x16/devices/camera-photo.png" nil nil :ascent center)
 		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		 '("hausbau" "/usr/share/icons/oxygen/16x16/actions/go-home.png" nil nil :ascent center)
+		  )
     )
 
   ;; ######################################################
@@ -1730,6 +1738,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
+	  ("h" "Hausbau")
+	  ("hs" "Hausbau shorts" entry (file+headline "~/share/all/org-mode/hausbau.org" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("he" "Hausbau event" entry (file+headline "~/share/all/org-mode/hausbau.org" "Events")
+	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("i" "infonova Templates")
 	  ("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
@@ -1808,6 +1821,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      ("fitness" . ?f)
 			      (:startgroup)
 			      ("@ALW" . ?a)
+			      ("@BWG" . ?a)
 			      ("@Infonova" . ?i)
 			      ("@Stadt" . ?s)
 			      ("@out_of_town" . ?o)
@@ -3132,6 +3146,4 @@ by using nxml's indentation rules."
      (flyspell-default-dictionary . "german8")))))
 
 ;; Local Variables:
-;; eval: (flyspell-mode 1)
-;; eval: (ispell-change-dictionary "american")
 ;; End:
