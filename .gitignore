@@ -8,3 +8,4 @@ contrib
 compile-el-files.tmp
 elpa
 init.el
+/url/cookies
