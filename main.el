@@ -836,7 +836,8 @@ the same coding systems as Emacs."
   ;;      Date: Sat, 28 Jan 2012 10:06:08 -0700
   ;;      Message-ID: <87ipjv92pr.fsf@gmx.com>
   ;; syntax highlighting in source code:
-  (setq org-src-fontify-natively t)
+  ;; 2014-04-04: set to nil in order to avoid performance issues!
+  (setq org-src-fontify-natively nil)
 
   
   (require 'ox-html)
