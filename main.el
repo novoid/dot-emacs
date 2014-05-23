@@ -1735,7 +1735,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	  ("b" "Bookmark" entry (file+headline "~/share/all/org-mode/notes.org" "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("p" "public voit" entry (file+headline "~/share/all/org-mode/public_voit.org" "Blogbeiträge")
-	   "* %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
+	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 	  ("h" "Hausbau")
