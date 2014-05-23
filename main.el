@@ -260,8 +260,10 @@ the same coding systems as Emacs."
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
-  (elpy-enable)
-  (elpy-use-ipython)
+  (when (my-system-is-gary)
+    (elpy-enable)
+    (elpy-use-ipython)
+    )
 
   (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 
