@@ -1936,7 +1936,12 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			   "~/share/all/org-mode/contacts.org"
 			   "~/share/all/org-mode/hardware.org"
 			   )))
-
+  (defun my-mobile-org-import ()
+    "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
+    (interactive "P")
+    (org-mobile-pull)
+    (find-file "~/org/inbox.org")
+    )
 
   ;; ######################################################
   ;; http://orgmode.org/worg/org-hacks.html#sec-1_3
@@ -3126,6 +3131,7 @@ by using nxml's indentation rules."
 (define-key my-map "[" (lambda () (interactive) (org-cycle t)))
 (define-key my-map "]" (lambda () (interactive) (org-cycle)))
 
+(define-key my-map "i" (lambda () (interactive) (my-mobile-org-import)))
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
