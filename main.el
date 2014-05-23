@@ -1878,6 +1878,24 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-show-entry-below (quote ((default))))
 
 
+  ;; From: Xebar Saram <zeltakc@gmail.com>
+  ;; Newsgroups: gmane.emacs.orgmode
+  ;; Subject: Cool trick on how to eval bash/zsh babel blocks in emacs
+  ;; Date: Mon, 21 Apr 2014 21:40:14 +0300
+  ;; Message-ID: <CAOQHXPrbTP9JVBBQU0dDd9EeCnSBEFejxddWs=geCyDvvmM3Sw@mail.gmail.com>
+  (defadvice org-babel-execute:sh (around sacha activate)
+    (if (assoc-default :term (ad-get-arg 1) nil)
+      (let ((buffer (or explicit-shell-file-name (getenv "ESHELL") (getenv "SHELL")
+  		      "/bin/sh")))
+        (with-current-buffer buffer
+          (insert (org-babel-expand-body:generic
+               body params (org-babel-variable-assignments:sh params)))
+          (term-send-input))
+        (pop-to-buffer buffer)
+        )
+      ad-do-it)
+    )
+
 
   ;; ######################################################
   (require 'org-checklist)
