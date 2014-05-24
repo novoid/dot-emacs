@@ -21,6 +21,10 @@
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
 (add-hook 'write-file-hooks 'time-stamp)
 
+;; 2014-05-24: flat mode-line styling from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
+(set-face-attribute 'mode-line nil :box nil)
+(set-face-attribute 'mode-line-inactive nil :box nil)
+
 (when (>= emacs-major-version 24)
   ;; ######################################################
   ;; https://github.com/hadronzoo/theme-changer
@@ -933,6 +937,7 @@ the same coding systems as Emacs."
 				     ;;(file-expand-wildcards "c:/Users/karl.voit/share/all/org-mode/memacs/*.org")
 				     )
 	    )
+    
     (setq org-agenda-files (append (quote (
 					   "~/share/all/org-mode/phd.org"
 					   "~/share/all/org-mode/r6-stories.org"
@@ -958,6 +963,7 @@ the same coding systems as Emacs."
 				   ;;(file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
 				   )
 	  )
+    
     )
 
 
@@ -1454,8 +1460,10 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
     (interactive)
     (save-some-buffers)
     (org-agenda-list nil nil 60)
+    (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
     (org-agenda-write "~/share/all/org-mode/agenda-export-raw.ics")
+    (message "after org-agenda-write")
     (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
     (setq icspath "~/share/all/org-mode/")
     (shell-command-to-string (concat
@@ -1466,6 +1474,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 			      "--remove-summary-timestamp"
 			      )
 			     )
+    (message "after shell-command-to-string")
     (if (my-system-is-gary)
 	(shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
       (message "Please do sync using unison!")
@@ -1877,24 +1886,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; http://orgmode.org/manual/Sparse-trees.html#index-org_002dshow_002dentry_002dbelow-179
   (setq org-show-entry-below (quote ((default))))
 
-
-  ;; From: Xebar Saram <zeltakc@gmail.com>
-  ;; Newsgroups: gmane.emacs.orgmode
-  ;; Subject: Cool trick on how to eval bash/zsh babel blocks in emacs
-  ;; Date: Mon, 21 Apr 2014 21:40:14 +0300
-  ;; Message-ID: <CAOQHXPrbTP9JVBBQU0dDd9EeCnSBEFejxddWs=geCyDvvmM3Sw@mail.gmail.com>
-  (defadvice org-babel-execute:sh (around sacha activate)
-    (if (assoc-default :term (ad-get-arg 1) nil)
-      (let ((buffer (or explicit-shell-file-name (getenv "ESHELL") (getenv "SHELL")
-  		      "/bin/sh")))
-        (with-current-buffer buffer
-          (insert (org-babel-expand-body:generic
-               body params (org-babel-variable-assignments:sh params)))
-          (term-send-input))
-        (pop-to-buffer buffer)
-        )
-      ad-do-it)
-    )
 
 
   ;; ######################################################
