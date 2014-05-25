@@ -1906,7 +1906,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (org-crypt-use-before-save-magic)
   (setq org-tags-exclude-from-inheritance (quote ("crypt")))
   ;; GPG key to use for encryption
-  (setq org-crypt-key "2704CA24")
+  (setq org-crypt-key "8A614641")
 
 
   ;;disabled;; (defun bh/insert-inactive-timestamp ()
