@@ -1,4 +1,5 @@
 ;; ######################################################
+(message "######### loading main.el ...")
 ;; personalize prelude
 ;; from: http://batsov.com/prelude/
 ;(load-theme 'solarized-light t)
@@ -311,6 +312,9 @@ the same coding systems as Emacs."
   (autoload 'pylookup-update "pylookup"
     "Run pylookup-update and create the database at `pylookup-db-file'." t)
 
+  (define-key my-map "p" 'pylookup-lookup)
+
+  
   )
 
 
@@ -2103,7 +2107,8 @@ Null prefix argument turns off the mode."
   ;; disabling auto-save for gpg file extension
   (setq auto-mode-alist
 	(append '(("\\.gpg$" . sensitive-mode))
-		auto-mode-alist))
+		auto-mode-alist)
+	)
 
   ;; do not ask for disabling auto-save
   (setq org-crypt-disable-auto-save nil)
@@ -3163,5 +3168,6 @@ by using nxml's indentation rules."
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))
 
+(message "######### finished loading main.el.")
 ;; Local Variables:
 ;; End:
