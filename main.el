@@ -1458,6 +1458,24 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
   ;;
   (setq org-agenda-cmp-user-defined 'bh/agenda-sort)
 
+
+  ;; ######################################################
+  (defun my-buffer-exists (bufname) 
+    (not (eq nil (get-buffer bufname)))
+    )
+  
+  ;; ######################################################
+  ;; 2014-06-03: switch to open Agenda or open new one:
+  (defun my-org-agenda () 
+    "Opens the already opened agenda or opens new one instead"
+    (interactive)
+    (if (my-buffer-exists "*Org Agenda*")
+	(switch-to-buffer "*Org Agenda*")
+      (org-agenda-list)
+      )
+    )
+  (define-key my-map "a" 'my-org-agenda)
+
   ;; ######################################################
   (defun my-export-agenda()
     "Exports monthly Org-mode agenda to agenda.ics file"
