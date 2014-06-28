@@ -1789,7 +1789,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("ir" "infonova Templates")
+	  ("ir" "r6 Templates")
 	  ("irs" "infonova R6 shorts" entry (file+headline "~/share/all/org-mode/r6-stories.org" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("ire" "infonova R6 event" entry (file+headline "~/share/all/org-mode/r6-stories.org" "Events")
