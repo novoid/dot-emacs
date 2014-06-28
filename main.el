@@ -2917,6 +2917,14 @@ by using nxml's indentation rules."
   (setq real-auto-save-interval 30)
 )
 
+;; ######################################################
+;; A speed reading mode for Emacs.
+;; The algorithm is taken from OpenSpritz
+;; https://github.com/zk-phi/spray
+;; ... installed 2014-06-13 via manual download from github (for testing)
+(my-load-local-el "contrib/spray/spray.el")
+(require 'spray)
+(define-key my-map "S" 'spray-mode)
 
 
 
