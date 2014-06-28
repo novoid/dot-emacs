@@ -185,7 +185,7 @@ the same coding systems as Emacs."
 (defun my-system-is-powerplantwin ()
   (interactive)
   "Return true if the system we are running on is powerplant"
-  (string-equal system-name "ATGRZ4043268B")
+  (string-equal system-name "ATGRZ4043268X")
   )
 
 
@@ -1447,8 +1447,11 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
   ;;        (800 1000 1200 1400 1600 1800 2000)))
 
   ;; Display tags farther right
-					;(setq org-agenda-tags-column -102)
-  (setq org-agenda-tags-column -120)
+  ;;(setq org-agenda-tags-column -102)
+  (if (my-system-is-powerplantwin)
+      (setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
+    (setq org-agenda-tags-column -120)
+    )
 
 
   ;; ######################################################
