@@ -262,7 +262,6 @@ the same coding systems as Emacs."
 ;;disabled;; (add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
 
 
-
 ;; ######################################################
 ;; Python-specific things
 (when (or (my-system-is-gary) (my-system-is-powerplantwin))
@@ -2716,7 +2715,7 @@ the result as a time value."
 
 
 ;; ######################################################
-;; magit
+;; magit or git-specific things
 (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
   (require 'magit)
 
@@ -2734,6 +2733,19 @@ the result as a time value."
     (jump-to-register :magit-fullscreen))
 
   (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+
+
+  ;; ######################################################
+  ;; smeargle - Highlighting Regions by Last Updated Time
+  ;; https://github.com/syohex/emacs-smeargle/
+  ;; M-x smeargle  -  Highlight regions by last updated time.
+  ;; M-x smeargle-age  -  Highlight regions by age of changes.
+  ;; M-x smeargle-clear  - Clear overlays in current buffer
+  (my-load-local-el "contrib/emacs-smeargle/smeargle.el")
+  ;(require 'spray)
+  (define-key my-map "c" 'smeargle)
+
+  
   )
 
 
