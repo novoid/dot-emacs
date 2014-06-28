@@ -1483,6 +1483,21 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
   (define-key my-map "a" 'my-org-agenda)
 
   ;; ######################################################
+  ;; 2014-06-28: Memacs org-agenda shortcut
+  (defun my-memacs-org-agenda () 
+    "Opens an org-agenda with activated archive"
+    (interactive)
+    (org-agenda-list)
+    ;;(call-interactively 'org-agenda-log-mode)
+    (org-agenda-log-mode '(4))
+    (call-interactively 'org-agenda-archives-mode)
+    (org-agenda-archives-mode 'files)
+    )
+  (define-key my-map "m" 'my-memacs-org-agenda)
+  (global-set-key "\C-cm" 'my-memacs-org-agenda)
+
+  
+  ;; ######################################################
   (defun my-export-agenda()
     "Exports monthly Org-mode agenda to agenda.ics file"
     (interactive)
