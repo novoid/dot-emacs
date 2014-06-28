@@ -22,6 +22,10 @@
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
 (add-hook 'write-file-hooks 'time-stamp)
 
+;; http://www.emacswiki.org/emacs/sylecn
+;;show nothing in *scratch* when started
+(setq initial-scratch-message nil)
+
 ;; 2014-05-24: flat mode-line styling from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)
