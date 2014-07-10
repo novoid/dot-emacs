@@ -927,6 +927,7 @@ the same coding systems as Emacs."
 					     "c:/Users/karl.voit/share/all/org-mode/postdoc.org"
 					     ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
 					     "c:/Users/karl.voit/share/all/org-mode/hardware.org"
+					     "c:/Users/karl.voit/share/all/org-mode/fhsp.org"
 					     "c:/Users/karl.voit/share/all/org-mode/notes.org"
 					     "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
 					     "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
@@ -963,6 +964,7 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/references.org"
 					   "~/share/all/org-mode/public_voit.org"
 					   "~/share/all/org-mode/errors_public_voit.org"
+					   "~/share/all/org-mode/fhsp.org"
 					   "~/share/all/org-mode/memacs/roylog.org"
 					   "~/src/lazyblorg/dev/lazyblorg.org"
 					   )
@@ -1807,6 +1809,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	  ("irs" "infonova R6 shorts" entry (file+headline "~/share/all/org-mode/r6-stories.org" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("ire" "infonova R6 event" entry (file+headline "~/share/all/org-mode/r6-stories.org" "Events")
+	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("f" "FH St. Pölten")
+	  ("fs" "FH shorts" entry (file+headline "~/share/all/org-mode/fhsp.org" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("fe" "FH event" entry (file+headline "~/share/all/org-mode/fhsp.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("ii" "infonova IPD" entry (file+headline "~/share/all/org-mode/infonova.org" "IPDs")
 	  ;; "* IPD-%?: \n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
