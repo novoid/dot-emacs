@@ -2977,6 +2977,14 @@ by using nxml's indentation rules."
 (define-key my-map "S" 'spray-mode)
 
 
+;; ######################################################
+;; https://github.com/zenozeng/yafolding.el
+;; Folding based on identation
+(my-load-local-el "contrib/yafolding.el/yafolding.el")
+(add-to-list 'auto-mode-alist '("\\.xml$" . yafolding-mode))
+(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
+(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
+(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
 
 
 
