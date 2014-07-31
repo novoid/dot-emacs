@@ -21,6 +21,7 @@
 (setq calendar-week-start-day 1);; set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
 (add-hook 'write-file-hooks 'time-stamp)
+(setq large-file-warning-threshold 100000000);; set warning of opening large files to 100MB
 
 ;; http://www.emacswiki.org/emacs/sylecn
 ;;show nothing in *scratch* when started
