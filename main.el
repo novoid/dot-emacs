@@ -152,35 +152,29 @@ the same coding systems as Emacs."
 
 ;; Check if system is Darwin/Mac OS X
 (defun my-system-type-is-darwin ()
-  (interactive)
   "Return true if system is darwin-based (Mac OS X)"
   (string-equal system-type "darwin")
   )
 
 ;; Check if system is GNU/Linux
 (defun my-system-type-is-gnu ()
-  (interactive)
   "Return true if system is GNU/Linux-based"
   (string-equal system-type "gnu/linux")
   )
 
 (defun my-system-is-gary ()
-  (interactive)
   "Return true if the system we are running on is gary"
   (string-equal system-name "gary")
   )
 (defun my-system-is-blanche ()
-  (interactive)
   "Return true if the system we are running on is blanche"
   (or (string-equal system-name "blanche") (string-equal system-name "blanche.lan"))
   )
 (defun my-system-is-grmlvrs ()
-  (interactive)
   "Return true if the system we are running on is grmlvrs"
   (string-equal system-name "grmlvrs")
   )
 (defun my-system-is-powerplantlinux ()
-  (interactive)
   "Return true if the system we are running on is powerplant"
   (or
    (string-equal system-name "powerplant")
@@ -188,7 +182,6 @@ the same coding systems as Emacs."
    )
   )
 (defun my-system-is-powerplantwin ()
-  (interactive)
   "Return true if the system we are running on is powerplant"
   (string-equal system-name "ATGRZ4043268X")
   )
