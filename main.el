@@ -1,4 +1,4 @@
-;; ######################################################
+<;; ######################################################
 (message "######### loading main.el ...")
 ;; personalize prelude
 ;; from: http://batsov.com/prelude/
@@ -22,6 +22,9 @@
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
 (add-hook 'write-file-hooks 'time-stamp)
 (setq large-file-warning-threshold 100000000);; set warning of opening large files to 100MB
+(setq sentence-end-double-space nil);; do not add double space after periods
+(setq column-number-mode t);; show current column
+(setq debug-on-quit t);; show debug information on canceling endless loops and so forth
 
 ;; http://www.emacswiki.org/emacs/sylecn
 ;;show nothing in *scratch* when started
@@ -123,7 +126,8 @@ the same coding systems as Emacs."
 ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
 ;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
 ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
-					;(global-unset-key "\C-c\C-,")
+(global-unset-key "\C-c\C-,")
+;; same as: (global-unset-key (kbd "C-c C-,"))
 (define-prefix-command 'my-map)
 (global-set-key (kbd "C-c C-,") 'my-map)
 
@@ -275,6 +279,7 @@ the same coding systems as Emacs."
     )
 
   (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+  (add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
 
   ;; ######################################################
   ;; http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
