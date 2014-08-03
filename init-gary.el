@@ -5,9 +5,6 @@
 ;; License:       This file is licensed under the GPL v2.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; ######################################################
-;;; rest of the (common) configuration
-(load "~/.emacs.d/main.el")
 
 ;; ######################################################
 ;; http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
@@ -43,3 +40,6 @@
      (eval ispell-change-dictionary "en_US")
      (eval flyspell-mode 1)))))
 
+;; ######################################################
+;;; rest of the (common) configuration
+(load "~/.emacs.d/main.el")

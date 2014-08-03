@@ -1,4 +1,4 @@
-<;; ######################################################
+;; ######################################################
 (message "######### loading main.el ...")
 ;; personalize prelude
 ;; from: http://batsov.com/prelude/
@@ -126,7 +126,7 @@ the same coding systems as Emacs."
 ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
 ;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
 ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
-(global-unset-key "\C-c\C-,")
+(global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
 ;; same as: (global-unset-key (kbd "C-c C-,"))
 (define-prefix-command 'my-map)
 (global-set-key (kbd "C-c C-,") 'my-map)
