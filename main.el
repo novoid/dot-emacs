@@ -8,12 +8,7 @@
 ;  (guru-mode -1)
 ;  )
 ;(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
-;
-;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
-(setq package-user-dir "~/.emacs.d/elpa")
-(package-initialize)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (server-start)
 (tool-bar-mode -1) ;; hide icons
@@ -33,6 +28,10 @@
 ;; 2014-05-24: flat mode-line styling from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)
+
+(setq package-user-dir "~/.emacs.d/elpa")
+(package-initialize)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (when (>= emacs-major-version 24)
   ;; ######################################################
@@ -207,16 +206,21 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; setting path so that Emacs finds aspell and such
-(when (my-system-is-powerplantwin)
-  ;;disabled;(setenv "PATH"
-  ;;disabled;               (concat (getenv "PATH")
-  ;;disabled;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
-  (setq exec-path (append exec-path
-			  '("C:/Program Files (x86)/Aspell/bin"
-			    ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
-			    ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
-			    )))
-  ;;disabled;(add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
+(if (my-system-is-powerplantwin)
+    (
+     ;;disabled;(setenv "PATH"
+     ;;disabled;               (concat (getenv "PATH")
+     ;;disabled;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
+     ;;disabled;; (setq exec-path (append exec-path
+     ;;disabled;; 			     '("C:/Program Files (x86)/Aspell/bin"
+     ;;disabled;; 			       ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
+     ;;disabled;; 			       ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
+     ;;disabled;; 			       )))
+     ;;disabled;(add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
+     )
+  (
+   ;; on all other systems:
+   )
   )
 
 
