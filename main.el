@@ -1069,6 +1069,12 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 	  (goto-char (point-min))
 	  (while (search-forward "* Bookmark " nil t) (replace-match "* " nil t))
 	  (goto-char (point-min))
+	  (while (search-forward "//m.heise.de" nil t) (replace-match "//heise.de" nil t));; remove mobile heise URL
+	  (goto-char (point-min))
+	  (while (search-forward "/from/atom10?wt_mc=rss.ho.beitrag.atom" nil t);; remove heise RSS tags
+	    (replace-match "" nil t)
+	    )
+	  (goto-char (point-min))
 	  ;; insert second asterisk (modify to second level heading)
 	  (insert "*")
 	  ;; move time-stamp to properties-drawer:
