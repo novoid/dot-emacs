@@ -129,6 +129,7 @@ the same coding systems as Emacs."
 ;; same as: (global-unset-key (kbd "C-c C-,"))
 (define-prefix-command 'my-map)
 (global-set-key (kbd "C-c C-,") 'my-map)
+(global-set-key (kbd "C-c ,") 'my-map)
 
 
 
@@ -745,6 +746,10 @@ the same coding systems as Emacs."
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cb" 'org-iswitchb)
+
+  ;; unset C-c , (org-priority) because I get confused when I mistype C-c C-,
+  ;;(global-unset-key (kbd "C-c ,"))
+  (global-set-key (kbd "C-c ,") 'my-map)
 
   ;; ######################################################
   ;; remembering positions
