@@ -1955,6 +1955,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
      (emacs-lisp . t)
      (ditaa . t)
      (dot . t)
+     (sql . t)
      ))
 
   ;; Do not prompt to confirm evaluation
@@ -2947,7 +2948,7 @@ by using nxml's indentation rules."
 
 ;; ######################################################
 ;; REST client    https://github.com/pashky/restclient.el
-(when (my-system-is-powerplantwin)
+(when (or (my-system-is-gary) (my-system-is-powerplantwin))
   (my-load-local-el "contrib/restclient.el/json-reformat.el")
   (my-load-local-el "contrib/restclient.el/restclient.el")
   (require 'restclient)
