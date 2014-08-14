@@ -3006,161 +3006,163 @@ by using nxml's indentation rules."
 ;; thanks to Bastien; adopted to my requirements
 ;; https://gist.github.com/bzg/8578998
 
-(defvar my-toggle-naked-emacs-status nil
-  "state of fullscreen/naked Emacs mode. t means fullscreen, nil means normal")
-(make-variable-buffer-local 'my-toggle-naked-emacs-status)
+(when (my-system-is-gary)
 
-;; See http://bzg.fr/emacs-hide-mode-line.html
-(defvar-local hidden-mode-line-mode nil)
-(defvar-local hide-mode-line nil)
+  (defvar my-toggle-naked-emacs-status nil
+    "state of fullscreen/naked Emacs mode. t means fullscreen, nil means normal")
+  (make-variable-buffer-local 'my-toggle-naked-emacs-status)
 
-(define-minor-mode hidden-mode-line-mode
-  "Minor mode to hide the mode-line in the current buffer."
-  :init-value nil
-  :global nil
-  :variable hidden-mode-line-mode
-  :group 'editing-basics
-  (if hidden-mode-line-mode
-      (setq hide-mode-line mode-line-format
-            mode-line-format nil)
-    (setq mode-line-format hide-mode-line
-          hide-mode-line nil))
-  (force-mode-line-update)
-  ;; Apparently force-mode-line-update is not always enough to
-  ;; redisplay the mode-line
-  (redraw-display)
-  (when (and (called-interactively-p 'interactive)
-             hidden-mode-line-mode)
-    (run-with-idle-timer
-     0 nil 'message
-     (concat "Hidden Mode Line Mode enabled.  "
-             "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
+  ;; See http://bzg.fr/emacs-hide-mode-line.html
+  (defvar-local hidden-mode-line-mode nil)
+  (defvar-local hide-mode-line nil)
 
-;; A small minor mode to use a big fringe
-(defvar bzg-big-fringe-mode nil)
-(define-minor-mode bzg-big-fringe-mode
-  "Minor mode to hide the mode-line in the current buffer."
-  :init-value nil
-  :global t
-  :variable bzg-big-fringe-mode
-  :group 'editing-basics
-  (if (not bzg-big-fringe-mode)
-      (set-fringe-style nil)
-    (set-fringe-mode
-     (/ (- (frame-pixel-width)
-           (* 100 (frame-char-width)))
-        3)
-     )
-    ))
+  (define-minor-mode hidden-mode-line-mode
+    "Minor mode to hide the mode-line in the current buffer."
+    :init-value nil
+    :global nil
+    :variable hidden-mode-line-mode
+    :group 'editing-basics
+    (if hidden-mode-line-mode
+	(setq hide-mode-line mode-line-format
+	      mode-line-format nil)
+      (setq mode-line-format hide-mode-line
+	    hide-mode-line nil))
+    (force-mode-line-update)
+    ;; Apparently force-mode-line-update is not always enough to
+    ;; redisplay the mode-line
+    (redraw-display)
+    (when (and (called-interactively-p 'interactive)
+	       hidden-mode-line-mode)
+      (run-with-idle-timer
+       0 nil 'message
+       (concat "Hidden Mode Line Mode enabled.  "
+	       "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
 
-;; Command to toggle the display of the mode-line as a header
-(defvar-local header-line-format nil)
-(defun mode-line-in-header ()
-  (interactive)
-  (if (not header-line-format)
-      (setq header-line-format mode-line-format
-            mode-line-format nil)
-    (setq mode-line-format header-line-format
-          header-line-format nil))
-  (set-window-buffer nil (current-buffer)))
+  ;; A small minor mode to use a big fringe
+  (defvar bzg-big-fringe-mode nil)
+  (define-minor-mode bzg-big-fringe-mode
+    "Minor mode to hide the mode-line in the current buffer."
+    :init-value nil
+    :global t
+    :variable bzg-big-fringe-mode
+    :group 'editing-basics
+    (if (not bzg-big-fringe-mode)
+	(set-fringe-style nil)
+      (set-fringe-mode
+       (/ (- (frame-pixel-width)
+	     (* 100 (frame-char-width)))
+	  3)
+       )
+      ))
 
-(defun my-toggle-naked-emacs ()
-  "Toggle fullscreen/naked Emacs and normal Emacs"
-  (interactive)
-  (cond (my-toggle-naked-emacs-status
-	 ;; make it naked!
-	 
-	 (setq my-toggle-naked-emacs-status nil)
-	 ;; Prevent the cursor from blinking
-	 (blink-cursor-mode 0)
-	 ;; Don't let Emacs hurt your ears
-	 (setq visible-bell t)
+  ;; Command to toggle the display of the mode-line as a header
+  (defvar-local header-line-format nil)
+  (defun mode-line-in-header ()
+    (interactive)
+    (if (not header-line-format)
+	(setq header-line-format mode-line-format
+	      mode-line-format nil)
+      (setq mode-line-format header-line-format
+	    header-line-format nil))
+    (set-window-buffer nil (current-buffer)))
 
-	 ;; This is bound to f11 in Emacs 24.4
-	 (toggle-frame-fullscreen) 
-	 ;; ;; Who use the bar to scroll?
-	 ;; (scroll-bar-mode 0)
+  (defun my-toggle-naked-emacs ()
+    "Toggle fullscreen/naked Emacs and normal Emacs"
+    (interactive)
+    (cond (my-toggle-naked-emacs-status
+	   ;; make it naked!
+	   
+	   (setq my-toggle-naked-emacs-status nil)
+	   ;; Prevent the cursor from blinking
+	   (blink-cursor-mode 0)
+	   ;; Don't let Emacs hurt your ears
+	   (setq visible-bell t)
 
-	 (menu-bar-mode 0)
+	   ;; This is bound to f11 in Emacs 24.4
+	   (toggle-frame-fullscreen) 
+	   ;; ;; Who use the bar to scroll?
+	   ;; (scroll-bar-mode 0)
 
-	 ;; You can also set the initial frame parameters
-	 ;; (setq initial-frame-alist
-	 ;;       '((menu-bar-lines . 0)
-	 ;;         (tool-bar-lines . 0)))
+	   (menu-bar-mode 0)
 
-	 ;; Activate hidden-mode-line-mode
-	 (hidden-mode-line-mode 1)
+	   ;; You can also set the initial frame parameters
+	   ;; (setq initial-frame-alist
+	   ;;       '((menu-bar-lines . 0)
+	   ;;         (tool-bar-lines . 0)))
 
-	 ;; If you want to hide the mode-line in all new buffers
-	 ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+	   ;; Activate hidden-mode-line-mode
+	   (hidden-mode-line-mode 1)
 
-	 ;; Alternatively, you can paint your mode-line in White but then
-	 ;; you'll have to manually paint it in black again
-	 ;; (custom-set-faces
-	 ;;  '(mode-line-highlight ((t nil)))
-	 ;;  '(mode-line ((t (:foreground "white" :background "white"))))
-	 ;;  '(mode-line-inactive ((t (:background "white" :foreground "white")))))
+	   ;; If you want to hide the mode-line in all new buffers
+	   ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
 
-	 ;; reset fringe with:
-	 ;; (set-fringe-mode nil)
+	   ;; Alternatively, you can paint your mode-line in White but then
+	   ;; you'll have to manually paint it in black again
+	   ;; (custom-set-faces
+	   ;;  '(mode-line-highlight ((t nil)))
+	   ;;  '(mode-line ((t (:foreground "white" :background "white"))))
+	   ;;  '(mode-line-inactive ((t (:background "white" :foreground "white")))))
 
-	 ;; Now activate this global minor mode
-	 (bzg-big-fringe-mode 1)
+	   ;; reset fringe with:
+	   ;; (set-fringe-mode nil)
 
-	 ;; To activate the fringe by default and deactivate it when windows
-	 ;; are split vertically, uncomment this:
-	 ;; (add-hook 'window-configuration-change-hook
-	 ;;           (lambda ()
-	 ;;             (if (delq nil
-	 ;;                       (let ((fw (frame-width)))
-	 ;;                         (mapcar (lambda(w) (< (window-width w) fw))
-	 ;;                                 (window-list))))
-	 ;;                 (bzg-big-fringe-mode 0)
-	 ;;               (bzg-big-fringe-mode 1))))
+	   ;; Now activate this global minor mode
+	   (bzg-big-fringe-mode 1)
 
-	 ;; Use a minimal cursor
-	 ;; (setq cursor-type 'hbar)
+	   ;; To activate the fringe by default and deactivate it when windows
+	   ;; are split vertically, uncomment this:
+	   ;; (add-hook 'window-configuration-change-hook
+	   ;;           (lambda ()
+	   ;;             (if (delq nil
+	   ;;                       (let ((fw (frame-width)))
+	   ;;                         (mapcar (lambda(w) (< (window-width w) fw))
+	   ;;                                 (window-list))))
+	   ;;                 (bzg-big-fringe-mode 0)
+	   ;;               (bzg-big-fringe-mode 1))))
 
-	 ;; ;; Get rid of the indicators in the fringe
-	 ;; (mapcar (lambda(fb) (set-fringe-bitmap-face fb 'org-hide))
-	 ;;         fringe-bitmaps)
-	 ;; 
-	 ;; ;; Set the color of the fringe
-	 ;; (custom-set-faces
-	 ;;  '(fringe ((t (:background "white")))))
-	 ;; 
-	 ;; (custom-set-faces
-	 ;;   '(default ((t (:background "black" :foreground "grey"))))
-	 ;;   '(fringe ((t (:background "black")))))
+	   ;; Use a minimal cursor
+	   ;; (setq cursor-type 'hbar)
 
-	 ;;(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
-	 (define-key my-map "h" 'mode-line-in-header)
+	   ;; ;; Get rid of the indicators in the fringe
+	   ;; (mapcar (lambda(fb) (set-fringe-bitmap-face fb 'org-hide))
+	   ;;         fringe-bitmaps)
+	   ;; 
+	   ;; ;; Set the color of the fringe
+	   ;; (custom-set-faces
+	   ;;  '(fringe ((t (:background "white")))))
+	   ;; 
+	   ;; (custom-set-faces
+	   ;;   '(default ((t (:background "black" :foreground "grey"))))
+	   ;;   '(fringe ((t (:background "black")))))
 
-	 (message "Enjoy your concentration!")
-	 
-	 )
-	(t
-	 ;; normal mode
-	 (setq my-toggle-naked-emacs-status t)
+	   ;;(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
+	   (define-key my-map "h" 'mode-line-in-header)
 
-	 (blink-cursor-mode t)
-	 (setq visible-bell nil)
-	 (toggle-frame-fullscreen) 
-	 (scroll-bar-mode 1)
-	 (menu-bar-mode 1)
-	 (hidden-mode-line-mode nil)
+	   (message "Enjoy your concentration!")
+	   
+	   )
+	  (t
+	   ;; normal mode
+	   (setq my-toggle-naked-emacs-status t)
 
-	 ;; If you want to hide the mode-line in all new buffers
-	 ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+	   (blink-cursor-mode t)
+	   (setq visible-bell nil)
+	   (toggle-frame-fullscreen) 
+	   (scroll-bar-mode 1)
+	   (menu-bar-mode 1)
+	   (hidden-mode-line-mode nil)
 
-	 (bzg-big-fringe-mode nil)
-	 (set-fringe-mode nil)
+	   ;; If you want to hide the mode-line in all new buffers
+	   ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
 
-	 (message "See everything.")
-	 )
-	)
-  )
+	   (bzg-big-fringe-mode nil)
+	   (set-fringe-mode nil)
 
+	   (message "See everything.")
+	   )
+	  )
+    )
+)
 
 
 
@@ -3183,8 +3185,10 @@ by using nxml's indentation rules."
 
 (define-key my-map " " 'delete-trailing-whitespace)
 
-(global-set-key [f12] 'my-toggle-naked-emacs)
-
+(when (my-system-is-gary)
+  (global-set-key [f12] 'my-toggle-naked-emacs)
+)
+  
 ;; ######################################################
 ;; coping with ELISP code
 (define-key my-map "er" 'eval-region)
