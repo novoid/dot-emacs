@@ -972,6 +972,7 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/references.org"
 					   "~/share/all/org-mode/public_voit.org"
 					   "~/share/all/org-mode/errors_public_voit.org"
+					   "~/share/all/org-mode/errors_orgmode_commits.org"
 					   "~/share/all/org-mode/fhsp.org"
 					   "~/src/lazyblorg/dev/lazyblorg.org"
 					   "~/share/all/org-mode/memacs/roylog.org"
@@ -1219,6 +1220,14 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 			  ;;  )
 			  )))
 
+		("1" "1 month"
+		 ((agenda "1 month"
+			  ((org-agenda-ndays 31)
+			   (org-agenda-time-grid nil)
+			   (org-agenda-entry-types '(:timestamp :sexp))
+			   )
+			  )))
+
 		("r" "reward tasks" (
 				     (tags-todo "reward/!STARTED"
 						(
@@ -1270,23 +1279,24 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 		  (org-agenda-overriding-header "home tasks")
 		  ))
 
-		;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
-		("." "Completed today"
-                 ((todo "TODO|DONE|CANCELED"
-                        ((org-agenda-skip-function
-                          '(org-agenda-skip-entry-if 'notregexp (format-time-string "CLOSED: \\[%Y-%m-%d")))))
-		  (org-agenda-sorting-strategy '(priority-down))))
+		;; disabled 2014-08-17 because of error ;;;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
+		;; disabled 2014-08-17 because of error ;;("." "Completed today"
+                ;; disabled 2014-08-17 because of error ;; ((todo "TODO|DONE|CANCELED"
+                ;; disabled 2014-08-17 because of error ;;        ((org-agenda-skip-function
+                ;; disabled 2014-08-17 because of error ;;          '(org-agenda-skip-entry-if 'notregexp (format-time-string "CLOSED: \\[%Y-%m-%d")))))
+		;; disabled 2014-08-17 because of error ;;  (org-agenda-sorting-strategy '(priority-down)))
+		;; disabled 2014-08-17 because of error ;; )
 
 		;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
 		("W" "Closed within a week."
 		 tags "CLOSED>\"<-1w>\""
 		 ((org-agenda-sorting-strategy '(priority-down))))
 
-		;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
-		("E" "events only" agenda ""
-		 (
-		  (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
-		  ))
+		;; disabled 2014-08-17 ;;          ;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
+		;; disabled 2014-08-17 ;;          ("E" "events only" agenda ""
+		;; disabled 2014-08-17 ;;           (
+		;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
+		;; disabled 2014-08-17 ;;            ))
 
 		("o" "overview Agenda" (
 					(agenda ""
@@ -2018,16 +2028,16 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; ######################################################
   ;; http://orgmode.org/org.html#MobileOrg
   ;; directory where to store MobileOrg-files
-  (setq org-mobile-directory "~/share/all/org-mode/mobile-org/")
   (setq org-directory "~/share/all/org-mode")
+  (setq org-mobile-directory "~/share/all/org-mode/mobile-org/")
   (setq org-mobile-inbox-for-pull "~/share/all/org-mode/inbox.org")
   (setq org-mobile-force-id-on-agenda-items nil) ;; do not generate IDs for all headings
-  (setq org-mobile-files (quote
-			  (
-			   "~/share/all/org-mode/misc.org"
-			   "~/share/all/org-mode/contacts.org"
-			   "~/share/all/org-mode/hardware.org"
-			   )))
+  ;; not needed ;; (setq org-mobile-files (quote
+  ;; not needed ;; 			  (
+  ;; not needed ;; 			   "~/share/all/org-mode/misc.org"
+  ;; not needed ;; 			   "~/share/all/org-mode/contacts.org"
+  ;; not needed ;; 			   "~/share/all/org-mode/hardware.org"
+  ;; not needed ;; 			   )))
   (defun my-mobile-org-import ()
     "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
     (interactive "P")
