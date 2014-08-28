@@ -3208,6 +3208,13 @@ The app is chosen from your OS's preference."
        ((string-equal system-type "gnu/linux")
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
 
+;; ######################################################
+;; https://github.com/browse-kill-ring/browse-kill-ring
+;; browse-kill-ring
+(browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
+
+
+
 
 
 
