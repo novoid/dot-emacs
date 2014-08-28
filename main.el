@@ -1345,7 +1345,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 		;;disabled;;			((org-agenda-skip-function 'tag-without-done-or-canceled)
 		;;disabled;;			 (org-agenda-overriding-header "Fun: ")))))
 
-		("X" "calfw" open-calfw-agenda-org)
+		;;disabled 2014-08-17;; ("X" "calfw" open-calfw-agenda-org)
 
 		;;2012-12-10 deactivated;	      ("c" . "custom searches") ; description for "c" prefix
 		;;2012-12-10 deactivated;              ("cr" "rewards" agenda "+reward"
