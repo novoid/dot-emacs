@@ -1847,6 +1847,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("he" "Hausbau event" entry (file+headline "~/share/all/org-mode/hausbau.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("ha" "Hausbau Ausgaben" table-line (file+headline "~/share/all/org-mode/hausbau.org" "getätigte Ausgaben") "| %t | %? ||||")
 	  ("i" "infonova Templates")
 	  ("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
