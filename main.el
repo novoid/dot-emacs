@@ -1488,14 +1488,16 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 
   ;; Display tags farther right
   ;;(setq org-agenda-tags-column -102)
+  (setq org-tags-column -101); for powerplantwin 23" TFT turned 90
+					; degrees; should *not* differ between
+					; systems! Otherwise Org-files gets
+					; re-formatted after switching system
   (if (my-system-is-powerplantwin)
       (progn
 	(setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
-	(setq org-tags-column -101);; for 23" TFT turned 90 degrees
 	)
     (progn
       (setq org-agenda-tags-column -120)
-      (setq org-tags-column -120)
       )
     )
 
