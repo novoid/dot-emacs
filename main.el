@@ -3482,6 +3482,7 @@ The app is chosen from your OS's preference."
 (define-key my-map "]" (lambda () (interactive) (org-cycle)))
 
 (define-key my-map "i" (lambda () (interactive) (my-mobile-org-import)))
+(define-key my-map "I" (lambda () (interactive) (org-mobile-push)))
 
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
