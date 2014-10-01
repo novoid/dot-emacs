@@ -208,17 +208,17 @@ the same coding systems as Emacs."
 ;; ######################################################
 ;; setting path so that Emacs finds aspell and such
 (if (my-system-is-powerplantwin)
-    (
+
      ;;disabled;(setenv "PATH"
      ;;disabled;               (concat (getenv "PATH")
      ;;disabled;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
-     ;;disabled;; (setq exec-path (append exec-path
-     ;;disabled;; 			     '("C:/Program Files (x86)/Aspell/bin"
-     ;;disabled;; 			       ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
-     ;;disabled;; 			       ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
-     ;;disabled;; 			       )))
+     (setq exec-path (append exec-path
+      			     '("C:/Program Files (x86)/Aspell/bin"
+      			       ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
+      			       ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
+      			       )))
      ;;disabled;(add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
-     )
+
   (
    ;; on all other systems:
    )
