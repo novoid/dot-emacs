@@ -879,9 +879,9 @@ the same coding systems as Emacs."
 			   )
 	)
   (setq org-todo-keyword-faces
-	(quote (("TODO"      :foreground "red"          :weight bold)
-		("NEXT"      :foreground "lightblue"         :weight bold)
-		("STARTED"   :foreground "lightblue"         :weight bold)
+	(quote (("TODO"      :foreground "lightblue"    :weight bold)
+		("NEXT"      :foreground "red"          :weight bold)
+		("STARTED"   :foreground "red"          :weight bold)
 		("DONE"      :foreground "forest green" :weight bold)
 		("WAITING"   :foreground "orange"       :weight bold)
 		("TEAM"      :foreground "orange"       :weight bold)
