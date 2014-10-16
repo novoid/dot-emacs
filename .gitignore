@@ -9,3 +9,5 @@ compile-el-files.tmp
 elpa
 init.el
 /url/cookies
+/saved-desktops/.emacs.desktop
+/image-dired/*
