@@ -2,6 +2,10 @@
 
 ;; ######################################################
 (message "######### loading main.el ...")
+
+;; #############################################################################
+;; * General settings
+
 ;; personalize prelude
 ;; from: http://batsov.com/prelude/
 ;(load-theme 'solarized-light t)
@@ -10,10 +14,6 @@
 ;  (guru-mode -1)
 ;  )
 ;(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
-
-
-;; #############################################################################
-;; * General settings
 
 (server-start)
 (tool-bar-mode -1) ;; hide icons
@@ -3115,8 +3115,8 @@ by using nxml's indentation rules."
 ;; ** REST
 ;; REST client    https://github.com/pashky/restclient.el
 (when (or (my-system-is-gary) (my-system-is-powerplantwin))
-  (my-load-local-el "contrib/restclient.el/json-reformat.el")
-  (my-load-local-el "contrib/restclient.el/restclient.el")
+  (my-load-local-el "contrib/restclient/json-reformat.el")
+  (my-load-local-el "contrib/restclient/restclient.el")
   (require 'restclient)
 
 )
@@ -3153,7 +3153,7 @@ by using nxml's indentation rules."
 ;; ** yafolding
 ;; https://github.com/zenozeng/yafolding.el
 ;; Folding based on identation
-(my-load-local-el "contrib/yafolding.el/yafolding.el")
+(my-load-local-el "contrib/yafolding/yafolding.el")
 (add-to-list 'auto-mode-alist '("\\.xml$" . yafolding-mode))
 (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
 (global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
