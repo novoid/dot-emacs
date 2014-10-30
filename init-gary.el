@@ -32,13 +32,10 @@
    (quote
     ((reftex-default-bibliography quote
 				  ("~/archive/library"))
-     (flyspell-default-dictionary . "en_US")
-     (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "german8")
-     (flyspell-default-dictionary . "german8")
-     (eval ispell-change-dictionary "de_AT")
+     (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
-     (eval flyspell-mode 1)))))
+     (flyspell-default-dictionary . "german8")))))
 
 ;; ######################################################
 ;;; rest of the (common) configuration

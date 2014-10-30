@@ -1,10 +1,10 @@
-;; -*- orgstruct-heading-prefix-regexp: ";; " -*-
+;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
 
 ;; ######################################################
 (message "######### loading main.el ...")
 
 ;; #############################################################################
-;; * General settings
+;;* General settings
 
 ;; personalize prelude
 ;; from: http://batsov.com/prelude/
@@ -72,7 +72,7 @@
 
 
 ;; #############################################################################
-;; * Themes
+;;* Themes
 
 (when (>= emacs-major-version 24)
   ;; ######################################################
@@ -92,7 +92,7 @@
 
 
 ;; #############################################################################
-;; * my-PATHS
+;;* my-PATHS
 
 
 ;; von: http://www.zonix.de/html40/linux/emacsgnus.html
@@ -108,7 +108,7 @@
 
 
 ;; #############################################################################
-;; * UTF-8 and codings
+;;* UTF-8 and codings
 
 ;; Activate UTF-8 mode:
 (setq locale-coding-system 'utf-8)
@@ -152,7 +152,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * my-map
+;;* my-map
 
 
 ;; about defining keys
@@ -171,7 +171,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * my-system-is-FOOBAR
+;;* my-system-is-FOOBAR
 
 ;; Emacs config switch depending on hostname or operating system
 ;; https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
@@ -227,7 +227,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * system-specific paths and keys
+;;* system-specific paths and keys
 
 
 ;; http://www.emacswiki.org/emacs/MacOSTweaks#toc13
@@ -285,7 +285,7 @@ the same coding systems as Emacs."
 
 
 ;; ######################################################
-;; ** Cygwin (Windows)
+;;** Cygwin (Windows)
 (when (my-system-is-powerplantwin)
 
   ;; http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
@@ -316,7 +316,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * font size
+;;* font size
 
 ;; 2011-04-20: increase/set font size
 ;; http://www.emacswiki.org/emacs/SetFonts
@@ -339,7 +339,7 @@ the same coding systems as Emacs."
   )
 
 ;; #############################################################################
-;; * Elisp
+;;* Elisp
 
 
 ;;disabled;; ;; ######################################################
@@ -357,7 +357,7 @@ the same coding systems as Emacs."
 ;;disabled;; (add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
 
 ;; #############################################################################
-;; * Python
+;;* Python
 
 (when (or (my-system-is-gary) (my-system-is-powerplantwin))
 
@@ -418,7 +418,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * LaTeX
+;;* LaTeX
 
 (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
 
@@ -564,7 +564,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * OS X: mdfind (disabled)
+;;* OS X: mdfind (disabled)
 
 
 ;;disabled;; ;; ######################################################
@@ -588,7 +588,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * system-specific browse-url-browser
+;;* system-specific browse-url-browser
 
 ;; ######################################################
 ;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
@@ -627,7 +627,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * flyspell
+;;* flyspell
 
 
 
@@ -790,7 +790,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * tabbar (disabled)
+;;* tabbar (disabled)
 
 
 ;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
@@ -799,7 +799,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * yasnippet
+;;* yasnippet
 
 
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
@@ -812,14 +812,25 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;; * Org-mode (FIXXME: further headings)
+;;* Org-mode (FIXXME: further headings)
 ;; org-mode-begin:
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
 (when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
 (setq org-babel-safe-header-args nil);; 2014-10-29 test
   
-;; ** load MISC contrib packages
+;;** load Org and misc contrib packages
+
+  ;; set paths to manually installed Org-mode (from git)
+  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
+  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
+
+  ;; assign file extensions to Org-mode
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+
+  ;;(require 'org-install) ;; vk 2012-11-20 this line is obsolete
+  (require 'org)
+
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
@@ -849,21 +860,8 @@ the same coding systems as Emacs."
 
 
   
-;; ** general Org-mode settings
+;;** general Org-mode settings
   
-  ;; set paths to manually installed Org-mode (from git)
-  ;;disabled;(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp")
-  ;;disabled;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/org-mode/lisp"))
-
-  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
-  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
-
-  ;; assign file extensions to Org-mode
-  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-
-  ;;(require 'org-install) ;; vk 2012-11-20 this line is obsolete
-  (require 'org)
-
   ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
 (add-hook 'org-mode-hook 'yas-minor-mode-on)
@@ -988,7 +986,7 @@ the same coding systems as Emacs."
 
 
   
-;; ** general key bindings
+;;** general key bindings
 
   ;; http://doc.norang.ca/org-mode.html
   ;;
@@ -1032,7 +1030,7 @@ the same coding systems as Emacs."
   ;;disabled;;2014-01-19;;  )
   ;;disabled;;2014-01-19;;(add-hook 'org-mode-hook 'my-org-mode-hook)
 
-;; ** org-mode-hook
+;;** org-mode-hook
 
   (add-hook 'org-mode-hook
 	    (lambda ()
@@ -1073,7 +1071,7 @@ the same coding systems as Emacs."
 			       ) org-file-apps ))))
 
   
-;; ** exporter
+;;** exporter
   
   (require 'ox-html)
   (require 'ox-latex)
@@ -1084,7 +1082,7 @@ the same coding systems as Emacs."
   (require 'ox-freemind)
   (require 'ox-taskjuggler)
 
-;; ** TODO keywords + faces
+;;** TODO keywords + faces
   
   ;; ######################################################
   ;; define keywords:
@@ -1150,7 +1148,7 @@ the same coding systems as Emacs."
 
 
 
-;; ** agenda files
+;;** agenda files
   (if (my-system-is-powerplantwin)
       (setq org-agenda-files (append (quote (
 					     "c:/Users/karl.voit/share/all/org-mode/phd.org"
@@ -1230,7 +1228,7 @@ the same coding systems as Emacs."
 
 
   ;; ######################################################
-;; ** my-url-linkify (my-map u)
+;;** my-url-linkify (my-map u)
   ;; replaces URL with Org-mode link including description
   ;; see id:2014-03-09-inbox-to-bookmarks
   ;; 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
@@ -1286,7 +1284,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
 
 
   ;; ######################################################
-;; ** bookmarks (my-map b)
+;;** bookmarks (my-map b)
   ;; smart moving bookmark headings from inbox to notes.org
   ;; see id:2014-03-09-inbox-to-bookmarks
   (defun my-save-bookmark()
@@ -1345,7 +1343,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
   (define-key my-map "b" 'my-save-bookmark)
 
   
-;; ** misc agenda helper functions
+;;** misc agenda helper functions
   
   ;; ######################################################
   ;; 2012-12-09 From: Memnon Anon <gegendosenfleisch@googlemail.com>
@@ -1558,7 +1556,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     )
   
 
-;; ** org-agenda-custom-commands
+;;** org-agenda-custom-commands
   (setq org-agenda-custom-commands
 	(quote (
 
@@ -1752,7 +1750,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		)))
 
   
-;; ** agenda settings
+;;** agenda settings
   
   ;; Compact the block agenda view
   (setq org-agenda-compact-blocks t)
@@ -1879,7 +1877,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled; (setq org-agenda-sticky t)
 
 
-;; ** my-org-agenda (my-map a)
+;;** my-org-agenda (my-map a)
   
   ;; ######################################################
   ;; 2014-06-03: switch to open Agenda or open new one:
@@ -1893,7 +1891,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     )
   (define-key my-map "a" 'my-org-agenda)
 
-;; ** my-memacs-org-agenda (my-map m)
+;;** my-memacs-org-agenda (my-map m)
   
   ;; ######################################################
   ;; 2014-06-28: Memacs org-agenda shortcut
@@ -1910,7 +1908,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (global-set-key "\C-cm" 'my-memacs-org-agenda)
 
 
-;; ** my-export-agenda
+;;** my-export-agenda
   ;; ######################################################
   (defun my-export-agenda()
     "Exports monthly Org-mode agenda to agenda.ics file"
@@ -1937,7 +1935,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
       (message "Please do sync using unison!")
       )
     )
-;; ** Org-contacts
+;;** Org-contacts
   ;; set org-contacts defaults that differ from standard
   (setq org-contacts-address-property "CITY")
   (setq org-contacts-birthday-property "BORN")
@@ -1958,7 +1956,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   
   ;; ######################################################
-;; ** my-0d
+;;** my-0d
   ;; on an agenda entry: add "-0d" to deadline
   (fset 'my-0d
 	[return ?\C-s ?> left ?  ?- ?0 ?d ?\C-x ?b return down])
@@ -1983,7 +1981,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled;; 	)
 
 
-;; ** my-org-agenda-to-appt (disabled)
+;;** my-org-agenda-to-appt (disabled)
   ;;disabled;; ;; ######################################################
   ;;disabled;; ;; For org appointment reminders
   ;;disabled;; ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
@@ -2014,7 +2012,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled;;     )
   ;;disabled;;   )
 
-;; ** icons (categories)
+;;** icons (categories)
   
   ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
   (setq org-agenda-category-icon-alist nil)
@@ -2051,7 +2049,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		  )
     )
 
-;; ** calfw (disabled)
+;;** calfw (disabled)
   ;; ######################################################
   ;; https://github.com/kiwanami/emacs-calfw
   ;; A calendar framework for Emacs
@@ -2075,7 +2073,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
   ;; ######################################################
-;; ** capture
+;;** capture
   ;; capture:    http://orgmode.org/org.html#Setting-up-capture
   (setq org-default-notes-file "~/share/all/org-mode/inbox.org")
   (define-key global-map "\C-cc" 'org-capture)
@@ -2153,7 +2151,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	)
 
   
-;; ** org-tag-alist
+;;** org-tag-alist
   ;; Tags with fast selection keys
   ;; http://orgmode.org/org.html#Setting-tags
   (setq org-tag-alist (quote (
@@ -2189,7 +2187,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   
   ;; ######################################################
-;; ** babel
+;;** babel
 
 
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -2219,7 +2217,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-show-entry-below (quote ((default))))
 
 
-;; ** habits
+;;** habits
   ;; ######################################################
   ;; Enable habit tracking (and a bunch of other modules)
   (setq org-modules (quote (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-jsinfo org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
@@ -2229,7 +2227,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-habit-graph-column 50)
 
 
-;; ** org-crypt
+;;** org-crypt
 
   (when (my-system-is-gary)
     (require 'org-crypt)
@@ -2290,7 +2288,7 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;; ** Org-Mobile
+;;** Org-Mobile
   ;; http://orgmode.org/org.html#MobileOrg
   ;; directory where to store MobileOrg-files
   (setq org-directory "~/share/all/org-mode")
@@ -2312,7 +2310,7 @@ Null prefix argument turns off the mode."
 
   
   ;; ######################################################
-;; ** preserve top level node and tags when archiving
+;;** preserve top level node and tags when archiving
   ;; http://orgmode.org/worg/org-hacks.html#sec-1_3
   (defun my-org-inherited-no-file-tags ()
     (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
@@ -2338,7 +2336,7 @@ Null prefix argument turns off the mode."
 	  (org-set-tags-to tags)))))
 
 
-;; ** org-link
+;;** org-link
   (setq org-link-abbrev-alist
 	'(
 	  ("bib" . "~/archive/library/%s.bib")
@@ -2425,8 +2423,8 @@ Null prefix argument turns off the mode."
 
   ;; ######################################################
   
-;; ** iCal
-;; *** iCal -> Org (disabled)
+;;** iCal
+;;*** iCal -> Org (disabled)
   ;;disabled;; ;; ######################################################
   ;;disabled;; ;; import iCal to Org-mode
   ;;disabled;; ;; http://ozymandias.dk/emacs/org-import-calendar.el
@@ -2437,7 +2435,7 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;; *** Austrian Holidays
+;;*** Austrian Holidays
   ;; from: http://paste.lisp.org/display/96464
   ;; ~/Notes/holidays.el
   (require 'holidays)
@@ -2471,7 +2469,7 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;; *** org-agenda-exporter-settings
+;;*** org-agenda-exporter-settings
   ;; customizing the agenda export of C-x C-w
   ;; http://orgmode.org/manual/Exporting-Agenda-Views.html
   (setq org-agenda-exporter-settings
@@ -2481,19 +2479,19 @@ Null prefix argument turns off the mode."
 	  (htmlize-output-type 'css)))
 
   ;; ######################################################
-;; *** time-zone for iCal
+;;*** time-zone for iCal
   ;; setting timezone in order to get a correct iCal export
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-05/msg00134.html
   (setq org-icalendar-timezone "Europe/Vienna")
 
   ;; ######################################################
-;; *** setting destination file for iCal export
+;;*** setting destination file for iCal export
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-05/msg00163.html
   ;; http://orgmode.org/worg/org-tutorials/org-google-sync.html
   ;;disabled; does not work
   ;;disabled;(setq org-combined-agenda-icalendar-file "~/public_html/orgmodevk478.ics")
 
-;; *** org-mycal-export-limit (disabled)
+;;*** org-mycal-export-limit (disabled)
   ;; ######################################################
   ;;disabled;; ;; define filter. The filter is called on each entry in the agenda.
   ;;disabled;; ;; It defines a regexp to search for two timestamps, gets the start
@@ -2526,20 +2524,20 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;; *** org-mode export of calendar events to Google
+;;*** org-mode export of calendar events to Google
   ;; http://orgmode.org/worg/org-tutorials/org-google-sync.html
 
-;; *** define categories that should be excluded
+;;*** define categories that should be excluded
   (setq org-export-exclude-category (list "google" "private"))
 
 
   ;; ######################################################
-;; *** ignore :noexport: entries in iCal-export
+;;*** ignore :noexport: entries in iCal-export
   ;; http://comments.gmane.org/gmane.emacs.orgmode/36415
   (setq org-icalendar-honor-noexport-tag t)
 
   ;; ######################################################
-;; *** add tags to iCal-export
+;;*** add tags to iCal-export
   ;; http://comments.gmane.org/gmane.emacs.orgmode/19148
   (setq org-icalendar-categories (quote (all-tags category)))
   ;;disabled;  '(org-icalendar-include-body 1000)
@@ -2553,7 +2551,7 @@ Null prefix argument turns off the mode."
 
 
   ;; ;; ######################################################
-;; ** using alternative LaTeX exporter (disabled)
+;;** using alternative LaTeX exporter (disabled)
   ;; ;(require 'org-export)
   ;; ;(require 'org-e-latex)
   ;; ;; invoke: M-x org-export-dispatch
@@ -2605,7 +2603,7 @@ Null prefix argument turns off the mode."
 
 
   
-;; ** LaTeX-classes: scrartcl, scrartclsmall, ...
+;;** LaTeX-classes: scrartcl, scrartclsmall, ...
   
   ;; ######################################################
   ;; http://orgmode.org/org.html#Header-and-sectioning
@@ -2637,7 +2635,7 @@ Null prefix argument turns off the mode."
   ;;                ("\\section{%s}" . "\\section*{%s}")))
 
 
-;; ** images
+;;** images
 
   ;; ######################################################
   ;; From: Bastien <bzg@altern.org>
@@ -2661,7 +2659,7 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;; ** org-feed RSS (disabled)
+;;** org-feed RSS (disabled)
   ;; org-feed - aggregating RSS feeds in news.org file:
   ;;disabled; (setq org-feed-alist
   ;;disabled;       '(
@@ -2677,12 +2675,12 @@ Null prefix argument turns off the mode."
   
 
   ;; ######################################################
-;; ** Org-mode docu
+;;** Org-mode docu
   (require 'info)
   (add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
 
 
-;; ** Reference handling
+;;** Reference handling
 
   ;; ######################################################
   ;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
@@ -2732,7 +2730,7 @@ Null prefix argument turns off the mode."
     (org-open-link-from-string (format "[[ref:%s]]" (reftex-citation t))))
 
 
-;; ** calculating with dates and times
+;;** calculating with dates and times
   
   ;; ######################################################
   ;; 2013-10-11
@@ -2785,7 +2783,7 @@ the result as a time value."
 	    `,@exprs))))
 
   
-;; ** my-lazyblorg-test
+;;** my-lazyblorg-test
   (if (my-system-is-gary)
       (defun my-lazyblorg-test()
 	"Saves current blog entry to file and invoke lazyblorg process with it"
@@ -2819,17 +2817,17 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; * misc modes
+;;* misc modes
 
 ;; #############################################################################
-;; ** post-mode (disabled)
+;;** post-mode (disabled)
 ;;disabled;; (setq post-variable-signature-source "~/daten/nobackup/funnies/good_sigs/allsigs.txt")
 ;;disabled;; (setq post-signature-directory "~/daten/nobackup/funnies/good_sigs/")
 
 
 
 ;; #############################################################################
-;; ** Markdown
+;;** Markdown
 ;; http://ikiwiki.info/tips/Emacs_and_markdown/
 (autoload 'markdown-mode "markdown-mode")
 (add-to-list 'auto-mode-alist '("\\.mdwn" . markdown-mode))
@@ -2841,7 +2839,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; ** MiniMap
+;;** MiniMap
 ;; http://www.emacswiki.org/emacs/MiniMap
 ;; MiniMap for Emacs
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
@@ -2850,7 +2848,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; ** TWiki (disabled)
+;;** TWiki (disabled)
 ;; http://www.neilvandyke.org/erin-twiki-emacs/
 ;; TWiki syntax highlighting
 ;;disabled; ;(require 'erin))
@@ -2858,7 +2856,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; ** Twitter (disabled)
+;;** Twitter (disabled)
 
 
 ;; ######################################################
@@ -2912,7 +2910,7 @@ the result as a time value."
 ;;disabled;
 
 ;; #############################################################################
-;; ** UndoTree
+;;** UndoTree
 ;; http://www.emacswiki.org/emacs/UndoTree
 (when (or (my-system-is-gary) (my-system-is-blanche))
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/undo-tree"))
@@ -2921,14 +2919,14 @@ the result as a time value."
   )
 
 ;; #############################################################################
-;; ** open-resource (disabled)
+;;** open-resource (disabled)
 ;; http://code.google.com/p/emacs-open-resource/
 ;;disabled; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
 ;;disabled; (require 'open-resource)
 ;;disabled; (global-set-key "\C-cr" 'open-resource)
 
 ;; #############################################################################
-;; ** whitespace-mode + style
+;;** whitespace-mode + style
 ;; from Twitter 2012-05-22: @emacs_knight
 (when (or (my-system-is-gary) (my-system-is-blanche))
   (whitespace-mode)
@@ -2937,7 +2935,7 @@ the result as a time value."
   )
 
 ;; #############################################################################
-;; ** (e)diff
+;;** (e)diff
 ;; ediff from command line
 ;; http://www.emacswiki.org/emacs/EdiffMode
 ;; Usage: emacs -diff file1 file2
@@ -2950,14 +2948,14 @@ the result as a time value."
 (add-to-list 'command-switch-alist '("diff" . command-line-diff))
 
 ;; #############################################################################
-;; ** counting words
+;;** counting words
 ;; http://www.emacswiki.org/emacs/WordCount
 ;; http://www.emacswiki.org/emacs/wc.el
 (my-load-local-el "contrib/wc.el")
 
 
 ;; #############################################################################
-;; ** magit
+;;** magit
 
 (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
   (require 'magit)
@@ -2979,7 +2977,7 @@ the result as a time value."
 
   
   ;; #############################################################################
-;; ** git: highlight regions by last updated time (my-map c)
+;;** git: highlight regions by last updated time (my-map c)
 
   ;; smeargle - Highlighting Regions by Last Updated Time
   ;; https://github.com/syohex/emacs-smeargle/
@@ -2994,7 +2992,7 @@ the result as a time value."
   )
 
 ;; #############################################################################
-;; ** recent files
+;;** recent files
 ;; http://www.emacswiki.org/emacs-es/RecentFiles
 ;; recently files
 (require 'recentf)
@@ -3003,7 +3001,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; ** ert (disabled)
+;;** ert (disabled)
 ;; for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
 ;;disabled;; (my-load-local-el "contrib/cl-lib.el")
 ;;disabled;; (my-load-local-el "contrib/ert.el")
@@ -3011,7 +3009,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; ** Confluence
+;;** Confluence
 
 (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
@@ -3052,7 +3050,7 @@ the result as a time value."
     )
 
 ;; #############################################################################
-;; ** Outlook
+;;** Outlook
 
   
   ;; ######################################################
@@ -3092,7 +3090,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;; ** xml-prettyprint-region
+;;** xml-prettyprint-region
 ;; http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
 (defun xml-pretty-print-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -3112,7 +3110,7 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;; ** REST
+;;** REST
 ;; REST client    https://github.com/pashky/restclient.el
 (when (or (my-system-is-gary) (my-system-is-powerplantwin))
   (my-load-local-el "contrib/restclient/json-reformat.el")
@@ -3123,7 +3121,7 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;; ** auto-save (disabled)
+;;** auto-save (disabled)
 ;; automatically save more often within certain modes:
 ;; http://www.emacswiki.org/emacs/AutoSave
 ;; http://www.litchie.net/programs/real-auto-save.html
@@ -3139,7 +3137,7 @@ by using nxml's indentation rules."
 ;)
 
 ;; #############################################################################
-;; ** spray (speed-reading; my-map S)
+;;** spray (speed-reading; my-map S)
 ;; A speed reading mode for Emacs.
 ;; The algorithm is taken from OpenSpritz
 ;; https://github.com/zk-phi/spray
@@ -3150,7 +3148,7 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;; ** yafolding
+;;** yafolding
 ;; https://github.com/zenozeng/yafolding.el
 ;; Folding based on identation
 (my-load-local-el "contrib/yafolding/yafolding.el")
@@ -3161,7 +3159,7 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;; ** full screen Emacs   (F12)
+;;** full screen Emacs   (F12)
 ;; full-screen, naked Emacs without distractions
 ;; thanks to Bastien; adopted to my requirements
 ;; https://gist.github.com/bzg/8578998
@@ -3325,7 +3323,7 @@ by using nxml's indentation rules."
 )
 
 ;; #############################################################################
-;; ** my-open-in-external-app
+;;** my-open-in-external-app
 ;; http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
 ;; open dired file in external app (specified by the operating system)
 (defun my-open-in-external-app (&optional file)
@@ -3356,7 +3354,7 @@ The app is chosen from your OS's preference."
 
 
 ;; #############################################################################
-;; ** browse-kill-ring (M-y)
+;;** browse-kill-ring (M-y)
 ;; https://github.com/browse-kill-ring/browse-kill-ring
 ;; browse-kill-ring
 (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
@@ -3368,9 +3366,9 @@ The app is chosen from your OS's preference."
 
 
 ;; #############################################################################
-;; * Key bindings
+;;* Key bindings
 
-;; ** general navigation keys
+;;** general navigation keys
 (global-set-key [home] 'beginning-of-buffer)
 (global-set-key [end]  'end-of-buffer)
 
@@ -3381,32 +3379,32 @@ The app is chosen from your OS's preference."
 
 
 
-;; ** font size (my-map [=+-])
+;;** font size (my-map [=+-])
 ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
 ;; font sizes:
 (define-key my-map "-" 'text-scale-decrease)
 (define-key my-map "+" 'text-scale-increase)
 (define-key my-map "=" 'text-scale-increase);; because "+" needs "S-=" and I might forget shift
 
-;; ** Magit status (my-map g)
+;;** Magit status (my-map g)
 ;(define-key my-map "v" 'magit-status)
 (define-key my-map "g" 'magit-status)
 
-;; ** remove trailing whitespaces (my-map " ")
+;;** remove trailing whitespaces (my-map " ")
 (define-key my-map " " 'delete-trailing-whitespace)
 
-;; ** fullscreen (F12)
+;;** fullscreen (F12)
 (when (my-system-is-gary)
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
   
-;; ** Elisp
+;;** Elisp
 (define-key my-map "er" 'eval-region)
 ;; disabled ;;(define-key my-map "el" 'find-library)
 ;; disabled ;;(define-key my-map "ef" 'find-function-at-point)
 
 
-;; ** Toggle between split windows and a single window (my-map s)
+;;** Toggle between split windows and a single window (my-map s)
 ;; http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 (defun my-toggle-windows-split()
   "Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
@@ -3424,13 +3422,13 @@ The app is chosen from your OS's preference."
 (define-key my-map "s" 'my-toggle-windows-split)
 
 
-;; ** boxquote (my-map [qQ])
+;;** boxquote (my-map [qQ])
 ;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
 (define-key my-map "q" 'boxquote-region)
 (define-key my-map "Q" 'boxquote-title)
 
 
-;; ** switching lines (my-map <up/down>)
+;;** switching lines (my-map <up/down>)
 ;; http://whattheemacsd.com//editing-defuns.el-02.html
 (defun my-move-line-down ()
   (interactive)
@@ -3453,7 +3451,7 @@ The app is chosen from your OS's preference."
 (define-key my-map (kbd "<down>") 'my-move-line-down)
 
 
-;; ** joining lines: (my-map j)
+;;** joining lines: (my-map j)
 ;; http://whattheemacsd.com//key-bindings.el-03.html
 (define-key my-map "j" ;; join-line
   (lambda ()
@@ -3461,7 +3459,7 @@ The app is chosen from your OS's preference."
     (join-line -1)))
 
 
-;; ** web-jump (disabled)
+;;** web-jump (disabled)
 ;;disabled;; ;; ######################################################
 ;;disabled;; ;; web-jump: C-c w
 ;;disabled;; ;; http://www.emacswiki.org/emacs/WebJump
@@ -3502,7 +3500,7 @@ The app is chosen from your OS's preference."
 ;;disabled;; 	  )
 
 
-;; ** inserting time-stamps (my-map [dDtT])
+;;** inserting time-stamps (my-map [dDtT])
 ;; 2011-04-20: C-j t ... timestamp
 ;;       http://www.sabren.net/articles/emacs.php3
 ;;       http://www.gnu.org/software/emacs/manual/html_node/emacs/Date-Display-Format.html
@@ -3569,17 +3567,17 @@ The app is chosen from your OS's preference."
 
 
 
-;; ** recently files (my-map r)
+;;** recently files (my-map r)
 (define-key my-map "r" 'recentf-open-files)
 
 
-;; ** helm-do-grep (my-map G)
+;;** helm-do-grep (my-map G)
 ;; helm-do-grep to grep in current folder
 (define-key my-map "G" 'helm-do-grep)
 
 
 
-;; ** command log mode (my-map k)
+;;** command log mode (my-map k)
 ;; https://github.com/lewang/command-log-mode
 (my-load-local-el "contrib/command-log-mode/command-log-mode.el")
 (require 'command-log-mode)
@@ -3596,24 +3594,24 @@ The app is chosen from your OS's preference."
 
 
 
-;; ** Confluence/Outlook (disabled)
+;;** Confluence/Outlook (disabled)
 ;disabled; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 ;disabled;   (define-key my-map "C" 'vk-open-as-confluence-page)
 ;disabled;   (define-key my-map "oe" 'mno-edit-outlook-message)
 ;disabled;   (define-key my-map "os" 'mno-save-outlook-message)
 ;disabled;   )
 
-;; ** mark-ring-goto (my-map <left>)
+;;** mark-ring-goto (my-map <left>)
 (define-key my-map (kbd "<left>") 'org-mark-ring-goto)
 
-;; ** main.el (my-map .)
+;;** main.el (my-map .)
 (define-key my-map (kbd ".") (lambda()  ;; open main.el
 			       (interactive)
 			       (find-file "~/.emacs.d/main.el")
 			       )
   )
 
-;; ** org-mode teaser (my-map o)
+;;** org-mode teaser (my-map o)
 (define-key my-map (kbd "o") (lambda()
 			       (interactive)
 			       (find-file "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
@@ -3621,17 +3619,17 @@ The app is chosen from your OS's preference."
   )
 
 
-;; ** OrgStruct folding
+;;** OrgStruct folding
 ;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
 (define-key my-map "[" (lambda () (interactive) (org-cycle t)))
 (define-key my-map "]" (lambda () (interactive) (org-cycle)))
 
-;; ** Org-mobile import (my-map i)
+;;** Org-mobile import (my-map i)
 (define-key my-map "i" (lambda () (interactive) (my-mobile-org-import)))
-;; ** Org-mobile push (my-map I)
+;;** Org-mobile push (my-map I)
 (define-key my-map "I" (lambda () (interactive) (org-mobile-push)))
 
-;; * custom variables
+;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-set-variables
