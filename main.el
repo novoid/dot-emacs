@@ -836,28 +836,20 @@ the same coding systems as Emacs."
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
 
-  ;; ######################################################
   (require 'org-checklist)
 
-
-  ;; ######################################################
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
   ;; Expiry dates handling
   (require 'org-expiry)
 
-
-  ;; ######################################################
   ;; managing bookmarks with Org-mode
   ;; http://orgmode.org/worg/org-contrib/org-protocol.html
   (require 'org-protocol)
 
-
-  ;; ######################################################
   ;; org-favtable
   ;;deactivated; (require 'org-favtable)
   ;;deactivated; (setq org-favtable-id "my-favtable")
   ;;deactivated; (global-set-key (kbd "C-+") 'org-favtable)
-
 
   
 ;;** general Org-mode settings
@@ -866,7 +858,6 @@ the same coding systems as Emacs."
 ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
 (add-hook 'org-mode-hook 'yas-minor-mode-on)
 (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
-
 
   
   (setq org-hide-leading-stars t)
@@ -883,7 +874,7 @@ the same coding systems as Emacs."
   (setq org-table-export-default-format "orgtbl-to-csv")
   (setq org-log-done (quote time))
   (setq org-log-into-drawer t)
-  (setq org-log-redeadline (quote note))
+  (setq org-log-redeadline (quote note));; record when the deadline date of a tasks is modified
   (setq org-log-reschedule (quote time))
   (setq org-return-follows-link t)
   (setq org-remove-highlights-with-change nil)
@@ -892,7 +883,7 @@ the same coding systems as Emacs."
 					      ("*" . "-")
 					      ("1." . "-")
 					      ("1)" . "-"))))
-  (setq split-width-threshold 9999)
+  (setq split-width-threshold 9999);; Minimum width for splitting windows sensibly.
   (setq global-auto-revert-mode t)
   (setq require-final-newline nil)
 
