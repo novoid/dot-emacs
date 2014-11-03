@@ -3629,6 +3629,27 @@ The app is chosen from your OS's preference."
 ;;** Org-mobile push (my-map I)
 (define-key my-map "I" (lambda () (interactive) (org-mobile-push)))
 
+;;** Filter open Org-tasks by tag (my-map F)
+;; see id:2014-11-02-filter-org-tasks-by-tag
+
+(defun my-sparse-tree-with-tag-filter()
+  "asks for a tag and generates sparse tree for all open tasks in current Org buffer
+  that are associated with this tag"
+  (interactive "*")
+  (setq tag-for-filter 
+        (org-trim
+         (org-icompleting-read "Tags: "
+                               'org-tags-completion-function
+                               nil nil nil 'org-tags-history))
+        )
+  (org-occur
+   (concat "^\\*+ \\(NEXT\\|TODO\\|WAITING\\|STARTED\\) .+:"
+           tag-for-filter
+           ":")
+   )
+  )
+(define-key my-map "F" 'my-sparse-tree-with-tag-filter)
+
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
