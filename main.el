@@ -22,7 +22,7 @@
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
 (add-hook 'write-file-hooks 'time-stamp)
 (setq large-file-warning-threshold 100000000);; set warning of opening large files to 100MB
-(setq sentence-end-double-space nil);; do not add double space after periods
+(setq sentence-end-double-space nil);; do not add double space after periods http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/
 (setq column-number-mode t);; show current column
 (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
 
