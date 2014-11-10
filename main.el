@@ -3644,6 +3644,13 @@ The app is chosen from your OS's preference."
   )
 (define-key my-map "F" 'my-sparse-tree-with-tag-filter)
 
+;;** my-fix-drawer-order
+;; searches for :END: followed by :PROPERTIES: (assuming first drawer
+;; is :LOGBOOK: and toggles order of them
+(fset 'my-fix-drawer-order
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
+
+
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
