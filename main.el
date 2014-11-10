@@ -1233,7 +1233,10 @@ from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html
 	(setq title (match-string 1))
 	(goto-char (point-min))
 	(re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
-	(decode-coding-string title (intern (match-string 1)))))
+        (string-replace "&nbsp;" " "
+                        (decode-coding-string title (intern
+                        (match-string 1)))))
+      )
     )
   (defun my-url-linkify ()
     "Make URL at cursor point into an Org-mode link.
