@@ -887,6 +887,10 @@ the same coding systems as Emacs."
   (setq global-auto-revert-mode t)
   (setq require-final-newline nil)
 
+  ;; default state for repeating/recurring events 
+  ;; see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
+  (setq org-todo-repeat-to-state "NEXT")
+
   ;; http://orgmode.org/org.html show blocked tasks in agenda in gray color
   ;;disabled;(setq org-agenda-dim-blocked-tasks t)
   ;; OR: hide blocked tasks completely:
