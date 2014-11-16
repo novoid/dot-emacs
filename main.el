@@ -422,7 +422,7 @@ the same coding systems as Emacs."
 
 (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
 
-  (require 'tex-site)  ;; acticate AucTeX and set general preferences
+  (autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
   (setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
 
 
@@ -804,7 +804,7 @@ the same coding systems as Emacs."
 
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-(require 'yasnippet)
+(autoload 'yas-minor-mode "yasnippet")
 (setq yas-root-directory "~/.emacs.d/snippets")
 (yas-load-directory yas-root-directory)
 
@@ -812,7 +812,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;;* Org-mode (FIXXME: further headings)
+;;* Org-mode
 ;; org-mode-begin:
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
 (when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
@@ -829,27 +829,50 @@ the same coding systems as Emacs."
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 
   ;;(require 'org-install) ;; vk 2012-11-20 this line is obsolete
-  (require 'org)
+  ;; (require 'org);; 2014-11-16 according to
+  ;; http://orgmode.org/manual/Activation.html#Activation it is not
+  ;; necessary when auto-mode-alist is set
 
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
 
-  (require 'org-checklist)
+  (autoload 'org-checklist "org-checklist.el") 
 
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
   ;; Expiry dates handling
-  (require 'org-expiry)
+  (autoload 'org-expiry "org-expiry.el")
 
   ;; managing bookmarks with Org-mode
   ;; http://orgmode.org/worg/org-contrib/org-protocol.html
-  (require 'org-protocol)
+  (autoload 'org-protocol "org-protocol")
 
   ;; org-favtable
   ;;deactivated; (require 'org-favtable)
   ;;deactivated; (setq org-favtable-id "my-favtable")
   ;;deactivated; (global-set-key (kbd "C-+") 'org-favtable)
+
+  ;; Enable org modules
+  (setq org-modules (quote
+                     (org-bbdb org-bibtex
+                               org-crypt
+                               org-gnus
+                               org-id
+                               org-info
+                               org-habit
+                               org-inlinetask
+                               org-irc
+                               org-mew
+                               org-mhe
+                               org-protocol
+                               org-rmail
+                               org-vm
+                               org-wl
+                               org-w3m
+                               )
+                     )
+        )
 
   
 ;;** general Org-mode settings
@@ -1066,16 +1089,18 @@ the same coding systems as Emacs."
 			       ) org-file-apps ))))
 
   
-;;** exporter
-  
-  (require 'ox-html)
-  (require 'ox-latex)
-  (require 'ox-koma-letter)
-  (require 'ox-beamer)
-  (require 'ox-ascii)
-  ;;(require 'ox-odt)
-  (require 'ox-freemind)
-  (require 'ox-taskjuggler)
+;;** exporters
+
+  ;(autoload 'ox-html "ox-html.el")
+  (require 'ox-html);; 2014-11-16 if replaced with autoload above, it
+                    ;; throws error: "Debugger entered--Lisp error: (void-variable org-latex-classes)"
+  (autoload 'ox-latex "ox-latex.el")
+  (autoload 'ox-koma-letter "ox-koma-letter.el")
+  ;;(autoload 'ox-beamer "ox-beamer.el")
+  (autoload 'ox-ascii "ox-ascii.el")
+  ;;(autoload 'ox-odt "ox-odt.el")
+  ;;(autoload 'ox-freemind "ox-freemind.el")
+  ;;(autoload 'ox-taskjuggler "ox-taskjuggler.el")
 
 ;;** TODO keywords + faces
   
@@ -1944,7 +1969,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; ######################################################
   ;; contact management with org-contacts
   ;; http://julien.danjou.info/org-contacts.html
-  (require 'org-contacts)
+  (autoload 'org-contacts "org-contacts.el")
   (custom-set-variables
    '(org-contacts-files "~/share/all/org-mode/contacts.org")
    '(org-contacts-address-property "CITY")
@@ -2217,8 +2242,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 ;;** habits
   ;; ######################################################
-  ;; Enable habit tracking (and a bunch of other modules)
-  (setq org-modules (quote (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-jsinfo org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
   ;; global STYLE property values for completion
   (setq org-global-properties (quote (("STYLE_ALL" . "habit"))))
   ;; position the habit graph on the agenda to the right of the default
@@ -2228,7 +2251,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;** org-crypt
 
   (when (my-system-is-gary)
-    (require 'org-crypt)
+    (require 'org-crypt)  ;; if replaced with autoload: Debugger entered--Lisp error: (void-function org-crypt-use-before-save-magic)
     ;; Encrypt all entries before saving
     (org-crypt-use-before-save-magic)
     (setq org-tags-exclude-from-inheritance (quote ("crypt")))
@@ -2239,7 +2262,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;; ######################################################
     ;; encrypting whole files:
     ;; http://orgmode.org/worg/org-tutorials/encrypting-files.html
-    (require 'epa-file)
+    (autoload 'epa-file "epa-file.el")
     ;;(epa-file-enable) ;; 2013-08-22: already enabled (somewhere)
 
 
@@ -2436,7 +2459,7 @@ Null prefix argument turns off the mode."
 ;;*** Austrian Holidays
   ;; from: http://paste.lisp.org/display/96464
   ;; ~/Notes/holidays.el
-  (require 'holidays)
+  (autoload 'holidays "holidays.el")
   (setq holiday-austria-holidays '((holiday-fixed  1  1 "Neujahr (frei)")
 				   (holiday-fixed  1  6 "Heilige Drei Könige (frei)")
 				   (holiday-easter-etc 1 "Ostermontag (frei)")
@@ -2674,7 +2697,7 @@ Null prefix argument turns off the mode."
 
   ;; ######################################################
 ;;** Org-mode docu
-  (require 'info)
+  (autoload 'info "info.el")
   (add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
 
 
@@ -2841,7 +2864,7 @@ the result as a time value."
 ;; http://www.emacswiki.org/emacs/MiniMap
 ;; MiniMap for Emacs
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
-(require 'minimap)
+(autoload 'minimap "minimap.el")
 (setq minimap-window-location 'right)
 
 
@@ -2912,7 +2935,7 @@ the result as a time value."
 ;; http://www.emacswiki.org/emacs/UndoTree
 (when (or (my-system-is-gary) (my-system-is-blanche))
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/undo-tree"))
-  (require 'undo-tree)
+  (autoload 'undo-tree "undo-tree.el")
   (global-undo-tree-mode)
   )
 
@@ -2956,7 +2979,7 @@ the result as a time value."
 ;;** magit
 
 (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
-  (require 'magit)
+  (require 'magit) ;; if replaced with autoload: Debugger entered--Lisp error: (void-variable magit-status-mode-map)
 
   ;; full screen magit-status
   ;; http://whattheemacsd.com//setup-magit.el-01.html
@@ -2983,7 +3006,6 @@ the result as a time value."
   ;; M-x smeargle-age  -  Highlight regions by age of changes.
   ;; M-x smeargle-clear  - Clear overlays in current buffer
   (my-load-local-el "contrib/emacs-smeargle/smeargle.el")
-  ;(require 'spray)
   (define-key my-map "c" 'smeargle)
 
   
@@ -2993,7 +3015,7 @@ the result as a time value."
 ;;** recent files
 ;; http://www.emacswiki.org/emacs-es/RecentFiles
 ;; recently files
-(require 'recentf)
+(autoload 'recentf "recentf.el")
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 
@@ -3113,7 +3135,8 @@ by using nxml's indentation rules."
 (when (or (my-system-is-gary) (my-system-is-powerplantwin))
   (my-load-local-el "contrib/restclient/json-reformat.el")
   (my-load-local-el "contrib/restclient/restclient.el")
-  (require 'restclient)
+  ;(require 'restclient)
+  (autoload 'restclient "restclient.el")
 
 )
 
@@ -3141,7 +3164,6 @@ by using nxml's indentation rules."
 ;; https://github.com/zk-phi/spray
 ;; ... installed 2014-06-13 via manual download from github (for testing)
 (my-load-local-el "contrib/spray/spray.el")
-(require 'spray)
 (define-key my-map "S" 'spray-mode)
 
 
@@ -3578,7 +3600,7 @@ The app is chosen from your OS's preference."
 ;;** command log mode (my-map k)
 ;; https://github.com/lewang/command-log-mode
 (my-load-local-el "contrib/command-log-mode/command-log-mode.el")
-(require 'command-log-mode)
+;(require 'command-log-mode)
 (add-hook 'LaTeX-mode-hook 'command-log-mode)
 
 ;; (defun my-start-command-log-mode()
@@ -3653,6 +3675,7 @@ The app is chosen from your OS's preference."
 ;; is :LOGBOOK: and toggles order of them
 (fset 'my-fix-drawer-order
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
+(define-key my-map "c" 'my-fix-drawer-order)
 
 
 ;;* custom variables
