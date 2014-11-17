@@ -3601,6 +3601,9 @@ The app is chosen from your OS's preference."
 ;; helm-do-grep to grep in current folder
 (define-key my-map "G" 'helm-do-grep)
 
+;;** helm-org-headlines (my-map H)
+(define-key my-map "H" 'helm-org-headlines)
+
 
 
 ;;** command log mode (my-map k)
