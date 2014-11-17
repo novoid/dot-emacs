@@ -808,7 +808,8 @@ the same coding systems as Emacs."
 
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-(autoload 'yas-minor-mode "yasnippet")
+;(autoload 'yas-minor-mode "yasnippet")
+(require 'yasnippet)
 (setq yas-root-directory "~/.emacs.d/snippets")
 (yas-load-directory yas-root-directory)
 
@@ -1098,10 +1099,10 @@ the same coding systems as Emacs."
   ;(autoload 'ox-html "ox-html.el")
   (require 'ox-html);; 2014-11-16 if replaced with autoload above, it
                     ;; throws error: "Debugger entered--Lisp error: (void-variable org-latex-classes)"
-  (autoload 'ox-latex "ox-latex.el")
-  (autoload 'ox-koma-letter "ox-koma-letter.el")
+  (require 'ox-latex)
+  (require 'ox-koma-letter)
   ;;(autoload 'ox-beamer "ox-beamer.el")
-  (autoload 'ox-ascii "ox-ascii.el")
+  (require 'ox-ascii)
   ;;(autoload 'ox-odt "ox-odt.el")
   ;;(autoload 'ox-freemind "ox-freemind.el")
   ;;(autoload 'ox-taskjuggler "ox-taskjuggler.el")
