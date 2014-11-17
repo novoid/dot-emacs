@@ -26,6 +26,10 @@
 (setq column-number-mode t);; show current column
 (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
 
+;; Prevent the cursor from blinking
+;(blink-cursor-mode 0)
+(set-cursor-color "IndianRed")
+
 ;; http://www.emacswiki.org/emacs/sylecn
 ;;show nothing in *scratch* when started
 (setq initial-scratch-message nil)
