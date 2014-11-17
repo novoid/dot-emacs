@@ -3383,7 +3383,9 @@ The app is chosen from your OS's preference."
 ;; browse-kill-ring
 (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
 
-
+;;** pdf-mode
+;; https://github.com/mishoo/pdf-mode.el
+;;2014-11-16 works but I disable it for now;; (my-load-local-el "contrib/pdf-mode/pdf-mode.el")
 
 
 
