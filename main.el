@@ -1779,6 +1779,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   
 ;;** agenda settings
+
+  ;; start Agenda in follow-mode:
+  ;(setq org-agenda-start-with-follow-mode t)
   
   ;; Compact the block agenda view
   (setq org-agenda-compact-blocks t)
