@@ -3661,7 +3661,41 @@ The app is chosen from your OS's preference."
 ;;** Org-mobile import (my-map i)
 (define-key my-map "i" (lambda () (interactive) (my-mobile-org-import)))
 ;;** Org-mobile push (my-map I)
-(define-key my-map "I" (lambda () (interactive) (org-mobile-push)))
+(define-key my-map "I" (lambda () (interactive)
+                         ;; save original agenda in temporary variable
+                         (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+                         ;; set agenda for MobileOrg (omit some agenda
+                         ;; views I do not need on my phone):
+                         (setq org-agenda-custom-commands
+                               (quote (
+                                       
+                                       ("1" "1 month"
+                                        ((agenda "1 month"
+                                                 ((org-agenda-ndays 31)
+                                                  (org-agenda-time-grid nil)
+                                                  (org-agenda-entry-types '(:timestamp :sexp))
+                                                  )
+                                                 )))
+
+                                       ("B" "borrowed" tags "+borrowed"
+                                        (
+                                         (org-agenda-overriding-header "borrowed or lend")
+                                         (org-agenda-skip-function 'tag-without-done-or-canceled)
+                                         ))
+
+                                       ("$" "Besorgungen" tags "+Besorgung"
+                                        (
+                                         (org-agenda-overriding-header "Besorgungen")
+                                         (org-agenda-skip-function 'tag-without-done-or-canceled)
+                                         ))
+
+                                       )))
+                         ;; generate MobileOrg export:
+                         (org-mobile-push)
+                         ;; restore previously saved agenda:
+                         (setq org-agenda-custom-commands ORIGSAVED-org-agenda-custom-commands)
+                         )
+  )
 
 ;;** Filter open Org-tasks by tag (my-map F)
 ;; see id:2014-11-02-filter-org-tasks-by-tag
