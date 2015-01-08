@@ -3146,7 +3146,7 @@ the result as a time value."
 
 
 ;; #############################################################################
-;;** xml-prettyprint-region
+;;** xml-prettyprint commands
 ;; http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
 (defun xml-pretty-print-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -3163,6 +3163,13 @@ by using nxml's indentation rules."
     (indent-region begin end))
   (message "Ah, much better!"))
 
+;;** my-xml-pretty-print
+(defun my-xml-pretty-print()
+  "mark whole buffer and call xml-pretty-print-region"
+  (interactive) 
+  (mark-whole-buffer)
+  (xml-pretty-print-region);; FIXXME: provide (begin end)
+  )
 
 
 ;; #############################################################################
