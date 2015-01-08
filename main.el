@@ -2257,6 +2257,22 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; http://orgmode.org/manual/Sparse-trees.html#index-org_002dshow_002dentry_002dbelow-179
   (setq org-show-entry-below (quote ((default))))
 
+  ;; see id:2014-12-21-org-screen
+  (my-load-local-el "contrib/org-mode/contrib/lisp/org-screen.el")
+  (my-load-local-el "contrib/org-mode/lisp/ob-screen.el")
+  (require 'org-screen)    ;; requires screen, terminal
+  (require 'ob-screen)    ;; requires screen, terminal
+  (defvar org-babel-default-header-args:screen
+    '(
+      (:results . "silent")
+      (:session . "default")
+      (:cmd . "/bin/zsh")
+      (:terminal . "/usr/bin/gnome-terminal"))
+    "Default arguments to use when running screen source blocks.")
+
+   ;; http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-in-org-mode-take-2/
+   (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
+
 
 ;;** habits
   ;; ######################################################
