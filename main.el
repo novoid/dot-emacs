@@ -3427,8 +3427,22 @@ The app is chosen from your OS's preference."
 ;;2014-11-16 works but I disable it for now;; (my-load-local-el "contrib/pdf-mode/pdf-mode.el")
 
 
+;;** guide-key
+;; via reddit -> https://github.com/kai2nenobu/guide-key
+(when (my-system-is-gary)
+  (require 'guide-key)
+  ;;(setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
+  (setq guide-key/guide-key-sequence '("C-c C-,"))
+  (guide-key-mode 1)  ; Enable guide-key-mode
+)
 
-
+;;** vcard-mode
+;; via https://github.com/dochang/vcard-mode
+(when (my-system-is-gary)
+  (my-load-local-el "contrib/vcard-mode/vcard-mode.el")
+  (autoload 'vcard-mode "vcard-mode" "Major mode for vCard files" t)
+  (add-to-list 'auto-mode-alist '("\\.vc\\(f\\|ard\\)\\'" . vcard-mode))
+)
 
 ;; #############################################################################
 ;;* Key bindings
