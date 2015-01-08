@@ -2898,9 +2898,10 @@ the result as a time value."
 ;;** MiniMap
 ;; http://www.emacswiki.org/emacs/MiniMap
 ;; MiniMap for Emacs
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
-(autoload 'minimap "minimap.el")
-(setq minimap-window-location 'right)
+;;deactivated;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
+;;deactivated;; ;;(autoload 'minimap "minimap.el")
+;;deactivated;; (require 'minimap.el)
+;;deactivated;; (setq minimap-window-location 'right)
 
 
 ;; #############################################################################
