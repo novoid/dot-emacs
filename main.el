@@ -3700,6 +3700,13 @@ The app is chosen from your OS's preference."
 			       )
   )
 
+;;** org-mode manual (my-map O)
+(define-key my-map (kbd "O") (lambda()
+			       (interactive)
+                               (info "(org)")
+			       )
+  )
+
 
 ;;** OrgStruct folding
 ;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
