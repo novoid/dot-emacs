@@ -880,15 +880,19 @@ the same coding systems as Emacs."
                      )
         )
 
-  
+
 ;;** general Org-mode settings
-  
+
+  ;; http://www.reddit.com/r/emacs/comments/2m4b7j/help_setting_orgmode_as_the_default_major_mode/
+  ;; 2014-12-07
+  (add-to-list 'auto-mode-alist '("'" . org-mode) t)
+
   ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
 (add-hook 'org-mode-hook 'yas-minor-mode-on)
 (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 
-  
+
   (setq org-hide-leading-stars t)
   (setq org-startup-indented t)
   (setq org-enforce-todo-dependencies t)
