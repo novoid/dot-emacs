@@ -83,7 +83,7 @@
   ;; ######################################################
   ;; https://github.com/hadronzoo/theme-changer
   ;; set color theme according to day-time:
-  ;;disabled;; (setq calendar-location-name "Graz, AT") 
+  ;;disabled;; (setq calendar-location-name "Graz, AT")
   ;;disabled;; (setq calendar-latitude 47.07)
   ;;disabled;; (setq calendar-longitude 15.43)
   ;;disabled;; (require 'theme-changer)
@@ -247,12 +247,12 @@ the same coding systems as Emacs."
 			    "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
 			    )))
   (add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
-  
+
   ;; 2011-04-20: allow typing of german umlauts in OS X by Alt-u followed by u,o,a,...
   (setq mac-option-modifier nil)
 
   (setq org-ditaa-jar-path "~/data/hosts/blanche/config/ditaa.jar")
-  
+
   ;; setting path to color-theme-mode.el from MacPorts
   (add-to-list 'load-path "/opt/local/share/emacs/site-lisp/color-theme-6.6.0")
   )
@@ -299,8 +299,8 @@ the same coding systems as Emacs."
   (add-to-list 'exec-path "c:/cygwin64/bin"))
 
   ;; http://www.emacswiki.org/emacs/RobertAdesamConfig
-  (setenv "PATH" 
-	  (concat 
+  (setenv "PATH"
+	  (concat
 	   "c:\\cygwin64\\usr\\local\\bin" ";"
 	   "c:\\cygwin64\\bin" ";"
 	   (getenv "PATH")))
@@ -418,7 +418,7 @@ the same coding systems as Emacs."
 
   (define-key my-map "p" 'pylookup-lookup)
 
-  
+
   )
 
 
@@ -552,7 +552,7 @@ the same coding systems as Emacs."
   ;;disabled;   (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
   ;;disabled; (add-hook 'org-mode-hook 'org-mode-reftex-setup)
 
-  
+
   ;; ######################################################
   ;; http://www.gnu.org/software/auctex/manual/reftex.html#SEC48
   ;; Specify my bibtex folder
@@ -674,26 +674,26 @@ the same coding systems as Emacs."
 ;;old-method until 2014-01-26;; 		  "[A-zA-ZäöüßÄÖÜ]" "[^a-zA-ZäöüßÄÖÜ]" "[']" t
 ;;old-method until 2014-01-26;; 		  ("-C" "-d" "de_DE-neu.multi")
 ;;old-method until 2014-01-26;; 		  "~latin1" iso-8859-1)))
-;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;;
 ;;old-method until 2014-01-26;; (defun my-ispell-set-deutsch()
 ;;old-method until 2014-01-26;;   "switch ispell language to Deutsch"
 ;;old-method until 2014-01-26;;   (interactive)
 ;;old-method until 2014-01-26;;   (ispell-change-dictionary "german8"))
-;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;;
 ;;old-method until 2014-01-26;; (defun my-ispell-set-USenglish()
 ;;old-method until 2014-01-26;;   "switch ispell language to US English"
 ;;old-method until 2014-01-26;;   (interactive)
 ;;old-method until 2014-01-26;;   (ispell-change-dictionary "american"))
-;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;;
 ;;old-method until 2014-01-26;; (defun my-ispell-set-GBenglish()
 ;;old-method until 2014-01-26;;   "switch ispell language to British English"
 ;;old-method until 2014-01-26;;   (interactive)
 ;;old-method until 2014-01-26;;   (ispell-change-dictionary "british"))
-;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;;
 ;;old-method until 2014-01-26;; (defvar my-toggle-ispell-english-deutsch nil
 ;;old-method until 2014-01-26;;   "state of english/ngerman toggle. t means english, nil means ngerman")
 ;;old-method until 2014-01-26;; (make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
-;;old-method until 2014-01-26;; 
+;;old-method until 2014-01-26;;
 ;;old-method until 2014-01-26;; ;; use british english on powerplant and US english on all other machines:
 ;;old-method until 2014-01-26;; (if (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 ;;old-method until 2014-01-26;;     (defun my-toggle-ispell-language ()
@@ -824,7 +824,7 @@ the same coding systems as Emacs."
 (when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
 (setq org-babel-safe-header-args nil);; 2014-10-29 test
-  
+
 ;;** load Org and misc contrib packages
 
   ;; set paths to manually installed Org-mode (from git)
@@ -844,7 +844,7 @@ the same coding systems as Emacs."
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
 
-  (autoload 'org-checklist "org-checklist.el") 
+  (autoload 'org-checklist "org-checklist.el")
 
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
   ;; Expiry dates handling
@@ -920,7 +920,7 @@ the same coding systems as Emacs."
   (setq global-auto-revert-mode t)
   (setq require-final-newline nil)
 
-  ;; default state for repeating/recurring events 
+  ;; default state for repeating/recurring events
   ;; see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
   (setq org-todo-repeat-to-state "NEXT")
 
@@ -930,7 +930,7 @@ the same coding systems as Emacs."
   ;; http://nflath.com/2010/03/org-mode-2/
   ;; http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
   (setq org-agenda-dim-blocked-tasks 'invisible)
-  
+
 
   ;; smart navigation
   (setq org-special-ctrl-a/e t)
@@ -961,7 +961,7 @@ the same coding systems as Emacs."
   (setq org-src-fontify-natively nil)
 
 
-  
+
   (setq org-completion-use-ido t);; Use IDO for target completion
 
   ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
@@ -1013,7 +1013,7 @@ the same coding systems as Emacs."
   ;; not checked yet: (setq org-expiry-handler-function 'org-expiry-archive-subtree)
 
 
-  
+
 ;;** general key bindings
 
   ;; http://doc.norang.ca/org-mode.html
@@ -1070,7 +1070,7 @@ the same coding systems as Emacs."
 	      ;;disabled; (flyspell-mode 1)
 	      ;; auto-fill mode on
 	      (auto-fill-mode 1)))
-  
+
   ;; ######################################################
   ;; Make TAB the yas trigger key in the org-mode-hook and enable flyspell mode and autofill
   (add-hook 'org-mode-hook
@@ -1098,7 +1098,7 @@ the same coding systems as Emacs."
 			       ("\\.tiff\\'" . default)
 			       ) org-file-apps ))))
 
-  
+
 ;;** exporters
 
   ;(autoload 'ox-html "ox-html.el")
@@ -1113,7 +1113,7 @@ the same coding systems as Emacs."
   ;;(autoload 'ox-taskjuggler "ox-taskjuggler.el")
 
 ;;** TODO keywords + faces
-  
+
   ;; ######################################################
   ;; define keywords:
   (setq org-todo-keywords (quote
@@ -1210,7 +1210,7 @@ the same coding systems as Emacs."
 				     ;;(file-expand-wildcards "c:/Users/karl.voit/share/all/org-mode/memacs/*.org")
 				     )
 	    )
-    
+
     (setq org-agenda-files (append (quote (
 					   "~/share/all/org-mode/phd.org"
 					   "~/share/all/org-mode/r6-stories.org"
@@ -1323,7 +1323,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
   ;; smart moving bookmark headings from inbox to notes.org
   ;; see id:2014-03-09-inbox-to-bookmarks
   (defun my-save-bookmark()
-    "removes NEXT/Bookmark, (NOT YET: FIXXME: retrieves title), 
+    "removes NEXT/Bookmark, (NOT YET: FIXXME: retrieves title),
 move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging process"
     (interactive)
     (save-excursion
@@ -1333,7 +1333,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
       (beginning-of-line)                   ;; jump to beginning of line
       (let ((mybegin (point)))              ;; mark beginning of line as start point
 	(outline-next-visible-heading 1)    ;; jumps to EOF if it is the last entry
-	(save-restriction 
+	(save-restriction
 	  (narrow-to-region mybegin (point))  ;; ignore everything outside of region
 	  ;; search/replace unwanted keywords at the beginning:
 	  (goto-char (point-min))
@@ -1357,7 +1357,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 	  (insert ":PROPERTIES:")
 	  (newline)
 	  (beginning-of-line)
-	  (insert ":CREATED:  ") 
+	  (insert ":CREATED:  ")
 	  (end-of-line)
 	  (newline)
 	  (insert ":END:")
@@ -1377,9 +1377,9 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 
   (define-key my-map "b" 'my-save-bookmark)
 
-  
+
 ;;** misc agenda helper functions
-  
+
   ;; ######################################################
   ;; 2012-12-09 From: Memnon Anon <gegendosenfleisch@googlemail.com>
   ;; Newsgroups: gmane.emacs.orgmode
@@ -1584,12 +1584,12 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
 
-  
+
   ;; ######################################################
-  (defun my-buffer-exists (bufname) 
+  (defun my-buffer-exists (bufname)
     (not (eq nil (get-buffer bufname)))
     )
-  
+
 
 ;;** org-agenda-custom-commands
   (setq org-agenda-custom-commands
@@ -1880,7 +1880,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;  Non-nil means skip timestamp line if same entry shows because of deadline.
   (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
 
-  
+
   ;; ######################################################
   ;;
   ;; Agenda sorting functions
@@ -1919,10 +1919,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
 ;;** my-org-agenda (my-map a)
-  
+
   ;; ######################################################
   ;; 2014-06-03: switch to open Agenda or open new one:
-  (defun my-org-agenda () 
+  (defun my-org-agenda ()
     "Opens the already opened agenda or opens new one instead"
     (interactive)
     (if (my-buffer-exists "*Org Agenda*")
@@ -1933,10 +1933,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (define-key my-map "a" 'my-org-agenda)
 
 ;;** my-memacs-org-agenda (my-map m)
-  
+
   ;; ######################################################
   ;; 2014-06-28: Memacs org-agenda shortcut
-  (defun my-memacs-org-agenda () 
+  (defun my-memacs-org-agenda ()
     "Opens an org-agenda with activated archive"
     (interactive)
     (org-agenda-list)
@@ -1995,14 +1995,14 @@ Late deadlines first, then scheduled, then non-late deadlines"
    '(org-contacts-icon-property "PHOTOGRAPH")
    )
 
-  
+
   ;; ######################################################
 ;;** my-0d
   ;; on an agenda entry: add "-0d" to deadline
   (fset 'my-0d
 	[return ?\C-s ?> left ?  ?- ?0 ?d ?\C-x ?b return down])
 
-  
+
 ;; change active timestamp to inactive and cancel event (disabled)
   ;;disabled;; ; ######################################################
   ;;disabled;; ; change active timestamp to inactive and cancel event
@@ -2054,7 +2054,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled;;   )
 
 ;;** icons (categories)
-  
+
   ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
   (setq org-agenda-category-icon-alist nil)
   (when (my-system-is-powerplantwin)
@@ -2226,7 +2226,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;(setq org-fast-tag-selection-single-key (quote expert))
 
 
-  
+
   ;; ######################################################
 ;;** babel
 
@@ -2336,8 +2336,8 @@ Null prefix argument turns off the mode."
 
     ;; do not ask for disabling auto-save
     (setq org-crypt-disable-auto-save nil)
-    
-    
+
+
     )
 
 
@@ -2363,7 +2363,7 @@ Null prefix argument turns off the mode."
     (find-file "~/org/inbox.org")
     )
 
-  
+
   ;; ######################################################
 ;;** preserve top level node and tags when archiving
   ;; http://orgmode.org/worg/org-hacks.html#sec-1-7-1
@@ -2375,7 +2375,7 @@ Null prefix argument turns off the mode."
                     (replace-regexp-in-string (concat tag ":") "" tags)))
             (append org-file-tags (when ltags (split-string ltags ":" t))))
       (if (string= ":" tags) nil tags)))
-  
+
   (defadvice org-archive-subtree (around my-org-archive-subtree-low-level activate)
     (let ((tags (my-org-inherited-no-file-tags))
           (org-archive-location
@@ -2478,7 +2478,7 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-  
+
 ;;** iCal
 ;;*** iCal -> Org (disabled)
   ;;disabled;; ;; ######################################################
@@ -2658,9 +2658,9 @@ Null prefix argument turns off the mode."
   ;;
 
 
-  
+
 ;;** LaTeX-classes: scrartcl, scrartclsmall, ...
-  
+
   ;; ######################################################
   ;; http://orgmode.org/org.html#Header-and-sectioning
   ;; customized LaTeX class
@@ -2728,7 +2728,7 @@ Null prefix argument turns off the mode."
   ;;disabled;	)
   ;;disabled;       )
 
-  
+
 
   ;; ######################################################
 ;;** Org-mode docu
@@ -2787,7 +2787,7 @@ Null prefix argument turns off the mode."
 
 
 ;;** calculating with dates and times
-  
+
   ;; ######################################################
   ;; 2013-10-11
   ;; From: http://orgmode.org/worg/org-hacks.html#sec-1-4-3
@@ -2838,7 +2838,7 @@ the result as a time value."
 		       (cdr expr))))
 	    `,@exprs))))
 
-  
+
 ;;** my-lazyblorg-test
   (if (my-system-is-gary)
       (defun my-lazyblorg-test()
@@ -3032,7 +3032,7 @@ the result as a time value."
 
   (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
-  
+
   ;; #############################################################################
 ;;** git: highlight regions by last updated time (my-map c)
 
@@ -3044,7 +3044,7 @@ the result as a time value."
   (my-load-local-el "contrib/emacs-smeargle/smeargle.el")
   (define-key my-map "c" 'smeargle)
 
-  
+
   )
 
 ;; #############################################################################
@@ -3108,7 +3108,7 @@ the result as a time value."
 ;; #############################################################################
 ;;** Outlook
 
-  
+
   ;; ######################################################
   ;; editing Outlook emails in Emacs
   ;; http://www.emacswiki.org/emacs/MsOutlook
@@ -3292,7 +3292,7 @@ by using nxml's indentation rules."
     (interactive)
     (cond (my-toggle-naked-emacs-status
 	   ;; make it naked!
-	   
+
 	   (setq my-toggle-naked-emacs-status nil)
 	   ;; Prevent the cursor from blinking
 	   (blink-cursor-mode 0)
@@ -3300,7 +3300,7 @@ by using nxml's indentation rules."
 	   (setq visible-bell t)
 
 	   ;; This is bound to f11 in Emacs 24.4
-	   (toggle-frame-fullscreen) 
+	   (toggle-frame-fullscreen)
 	   ;; ;; Who use the bar to scroll?
 	   ;; (scroll-bar-mode 0)
 
@@ -3347,11 +3347,11 @@ by using nxml's indentation rules."
 	   ;; ;; Get rid of the indicators in the fringe
 	   ;; (mapcar (lambda(fb) (set-fringe-bitmap-face fb 'org-hide))
 	   ;;         fringe-bitmaps)
-	   ;; 
+	   ;;
 	   ;; ;; Set the color of the fringe
 	   ;; (custom-set-faces
 	   ;;  '(fringe ((t (:background "white")))))
-	   ;; 
+	   ;;
 	   ;; (custom-set-faces
 	   ;;   '(default ((t (:background "black" :foreground "grey"))))
 	   ;;   '(fringe ((t (:background "black")))))
@@ -3360,7 +3360,7 @@ by using nxml's indentation rules."
 	   (define-key my-map "h" 'mode-line-in-header)
 
 	   (message "Enjoy your concentration!")
-	   
+
 	   )
 	  (t
 	   ;; normal mode
@@ -3368,7 +3368,7 @@ by using nxml's indentation rules."
 
 	   (blink-cursor-mode t)
 	   (setq visible-bell nil)
-	   (toggle-frame-fullscreen) 
+	   (toggle-frame-fullscreen)
 	   (scroll-bar-mode 1)
 	   (menu-bar-mode 1)
 	   (hidden-mode-line-mode nil)
@@ -3400,11 +3400,11 @@ The app is chosen from your OS's preference."
            ((string-equal major-mode "dired-mode") (dired-get-marked-files))
            ((not file) (list (buffer-file-name)))
            (file (list file)))))
-    
+
     (setq doIt (if (<= (length myFileList) 5)
                    t
                  (y-or-n-p "Open more than 5 files? ") ) )
-    
+
     (when doIt
       (cond
        ((string-equal system-type "windows-nt")
@@ -3476,7 +3476,7 @@ The app is chosen from your OS's preference."
 (when (my-system-is-gary)
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
-  
+
 ;;** Elisp
 (define-key my-map "er" 'eval-region)
 ;; disabled ;;(define-key my-map "el" 'find-library)
@@ -3714,7 +3714,9 @@ The app is chosen from your OS's preference."
 (define-key my-map "]" (lambda () (interactive) (org-cycle)))
 
 ;;** Org-mobile import (my-map i)
-(define-key my-map "i" (lambda () (interactive) (my-mobile-org-import)))
+(define-key my-map "i" (lambda ()
+                         """foobar"""
+                         (interactive) (my-mobile-org-import)))
 ;;** Org-mobile push (my-map I)
 (define-key my-map "I" (lambda () (interactive)
                          ;; save original agenda in temporary variable
@@ -3723,7 +3725,7 @@ The app is chosen from your OS's preference."
                          ;; views I do not need on my phone):
                          (setq org-agenda-custom-commands
                                (quote (
-                                       
+
                                        ("1" "1 month"
                                         ((agenda "1 month"
                                                  ((org-agenda-ndays 31)
@@ -3759,7 +3761,7 @@ The app is chosen from your OS's preference."
   "asks for a tag and generates sparse tree for all open tasks in current Org buffer
   that are associated with this tag"
   (interactive "*")
-  (setq tag-for-filter 
+  (setq tag-for-filter
         (org-trim
          (org-icompleting-read "Tags: "
                                'org-tags-completion-function
