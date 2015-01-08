@@ -2191,14 +2191,14 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	  )
 	)
 
-  
+
 ;;** org-tag-alist
   ;; Tags with fast selection keys
   ;; http://orgmode.org/org.html#Setting-tags
   (setq org-tag-alist (quote (
 			      ("Kommunikation" . ?k)
 			      ("Besorgung" . ?B)
-			      ("nonComputer" . ?n)
+			      ;;("nonComputer" . ?n)
 			      ("fitness" . ?f)
 			      (:startgroup)
 			      ("@ALW" . ?a)
@@ -2214,7 +2214,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      ("public" . ?P)
 			      (:endgroup)
 			      (:startgroup)
-			      ("bigRock" . ?b)
+			      ;;("bigRock" . ?b)
 			      ("MIT" . ?m)
 			      ("reward" . ?r)
 			      (:endgroup)
