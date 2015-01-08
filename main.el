@@ -2062,7 +2062,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-		  '("infonova" "C:/Users/karl.voit/infonova/R6-logo_18x12.jpg" nil nil :ascent center)
+		  '("infonova" "C:/Users/karl.voit/infonova/templates_logos/R6-logo_18x12.jpg" nil nil :ascent center)
 		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
