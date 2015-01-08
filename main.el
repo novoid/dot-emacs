@@ -3444,6 +3444,61 @@ The app is chosen from your OS's preference."
   (add-to-list 'auto-mode-alist '("\\.vc\\(f\\|ard\\)\\'" . vcard-mode))
 )
 
+;;* my helper functions
+
+;; #############################################################################
+;;** infonova functions for working hour calculation
+(defun my-minutes-of-hm-string(hm-string)
+  "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
+  (let (
+	;; minutes is the second element after splitting with ":"
+	(minutes (nth 1 (split-string hm-string ":")))
+	)
+    ;; if there is no second element, return "0" (instead of nil)
+    (if (eq minutes 'nil)
+	0
+      (string-to-number minutes)
+      )
+    )
+  )
+
+(defun my-hours-of-hm-string(hm-string)
+  "returns the hours of a string like 9:42 -> 9"
+  (string-to-number 
+   (car 
+    (split-string hm-string ":")
+    )
+   )
+)
+
+(defun my-percentage-of-hm-string-with-day(hm-string day)
+  "percentage of HH:MM when 8h30min (Mon-Thu) or 4h30min (Fri) are 100 percent"
+  (let (
+	(hours (my-hours-of-hm-string hm-string));; integer of hours from hm-string
+	(minutes (my-minutes-of-hm-string hm-string));; integer of minutes from hm-string
+        (norm-hour-minutes (cond 
+                            ((string= day "Mon") 8.5)
+                            ((string= day "Mo")  8.5)
+                            ((string= day "Tue") 8.5)
+                            ((string= day "Di")  8.5)
+                            ((string= day "Wed") 8.5)
+                            ((string= day "Mi")  8.5)
+                            ((string= day "Thu") 8.5)
+                            ((string= day "Do")  8.5)
+                            ((string= day "Fri") 4.5)
+                            ((string= day "Fr")  4.5)
+                            )
+                           )
+	)
+    ;;debug;;(message (concat "norm-hour-minutes for " day " is " (number-to-string norm-hour-minutes)))
+    (let (
+	  (hoursminutes (+ hours (/ minutes 60.00))) ;; 8h30min -> 8.5h
+	  )
+      (round (* 100 (/ hoursminutes norm-hour-minutes)));; hoursminutes in relation to norm-hoursminutes
+      )
+    )
+  )
+
 ;; #############################################################################
 ;;* Key bindings
 
