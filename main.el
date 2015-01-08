@@ -1784,12 +1784,15 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;;                (org-tags-match-list-sublevels 'indented)))
 		)))
 
-  
+
 ;;** agenda settings
 
   ;; start Agenda in follow-mode:
   ;(setq org-agenda-start-with-follow-mode t)
-  
+
+  ;; do not initialize agenda Org files when generating (only) agenda
+  (setq org-agenda-inhibit-startup t)
+
   ;; Compact the block agenda view
   (setq org-agenda-compact-blocks t)
 
