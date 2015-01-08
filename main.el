@@ -1241,19 +1241,21 @@ the same coding systems as Emacs."
 					   "~/share/all/org-mode/memacs/files.org"
 					   "~/share/all/org-mode/memacs/gcal.org"
 					   "~/share/all/org-mode/memacs/git.org"
-					   "~/share/all/org-mode/memacs/ifiles.org"
+					   ;;"~/share/all/org-mode/memacs/ifiles.org"
 					   "~/share/all/org-mode/memacs/mbox.org"
 					   "~/share/all/org-mode/memacs/news.org"
 					   "~/share/all/org-mode/memacs/phonecalls.org"
 					   "~/share/all/org-mode/memacs/sms.org"
 					   "~/share/all/org-mode/memacs/tweets.org"
 					   ;;"~/share/all/org-mode/memacs/www.org"
+					   "~/share/all/org-mode/memacs/movies.org"
+					   "~/share/all/org-mode/memacs/Filmliste.org"
 					   )
 					  )
 				   ;;(file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
 				   )
 	  )
-    
+
     )
 
 
