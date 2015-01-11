@@ -888,9 +888,9 @@ the same coding systems as Emacs."
   (add-to-list 'auto-mode-alist '("'" . org-mode) t)
 
   ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
-;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-(add-hook 'org-mode-hook 'yas-minor-mode-on)
-(setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
+  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
+  (add-hook 'org-mode-hook 'yas-minor-mode-on)
+  (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 
 
   (setq org-hide-leading-stars t)
@@ -2273,6 +2273,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
    ;; http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-in-org-mode-take-2/
    (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
 
+  (if (my-system-is-gary)
+      (setq org-babel-sh-command "~/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
+     )
 
 ;;** habits
   ;; ######################################################
