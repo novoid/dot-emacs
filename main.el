@@ -816,7 +816,12 @@ the same coding systems as Emacs."
 (setq yas-root-directory "~/.emacs.d/snippets")
 (yas-load-directory yas-root-directory)
 
-
+;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
+;; How to I use alternative keys, i.e. not TAB?
+;; see id:2015-02-01-yas-expand-not-TAB
+(define-key yas-minor-mode-map (kbd "<tab>") nil)
+(define-key yas-minor-mode-map (kbd "TAB") nil)
+(define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
 
 ;; #############################################################################
