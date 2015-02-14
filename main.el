@@ -154,6 +154,12 @@ the same coding systems as Emacs."
       (setenv extra-env (symbol-name (ad-get-arg 0))))
     ad-do-it))
 
+;; English time-stamps in Org-mode (instead of localized German ones):
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2011-10/msg01046.html
+;;   system locale to use for formatting time values (e.g., timestamps in
+;;   Org mode files)
+;; "en_US.utf8" did not work for the weekday in the agenda!
+(setq system-time-locale "C")
 
 
 ;; #############################################################################
