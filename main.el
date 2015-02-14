@@ -1615,6 +1615,20 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			  ;;  )
 			  )))
 
+		("n" "no TODO events +31d"
+		 ((agenda "no TODO events +31d"
+			  ((org-agenda-ndays 31)
+			   (org-agenda-time-grid nil)
+			   (org-agenda-entry-types '(:timestamp :sexp))
+			   (org-agenda-skip-function
+                            '(or
+                              (org-agenda-skip-entry-if 'todo 'any);; skip if any TODO state is found
+                              (my-skip-tag "lp")
+                              )
+                            )
+                           ;;(org-agenda-skip-function '(my-skip-tag "lp"))
+			  ))))
+
 		("1" "1 month"
 		 ((agenda "1 month"
 			  ((org-agenda-ndays 31)
