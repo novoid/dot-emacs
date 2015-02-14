@@ -3499,6 +3499,11 @@ The app is chosen from your OS's preference."
    )
 )
 
+;; EXAMPLE USAGE:
+;; | [2015-01-13 Di] | Tue | 08:53-17:23 |   |   | 8:30 | 8:30 | 100 | Product Development |       |
+;; |                 |     |             |   |   |      | korr |   % | Was                 | Notiz |
+;; #+TBLFM: $7=$6::$9=Product Development::$8 = '(my-percentage-of-hm-string-with-day $7 $2)
+
 (defun my-percentage-of-hm-string-with-day(hm-string day)
   "percentage of HH:MM when 8h30min (Mon-Thu) or 4h30min (Fri) are 100 percent"
   (let (
