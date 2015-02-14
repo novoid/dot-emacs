@@ -743,10 +743,6 @@ the same coding systems as Emacs."
     (let ((langs '("german8" "british")))
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
-  ;; use american english on all other systems:
-  (let ((langs '("german8" "american")))
-    (setq lang-ring (make-ring (length langs)))
-    (dolist (elem langs) (ring-insert lang-ring elem)))
   )
 (if (my-system-is-gary)
     ;; use US english on powerplantwin:
@@ -810,7 +806,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;;* yasnippet
+;;* yasnippet (F4)
 
 
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
@@ -2212,6 +2208,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      ("@Infonova" . ?i)
 			      ("@Stadt" . ?s)
 			      ("@out_of_town" . ?o)
+			      ("@FHStP" . ?F)
 			      ("@Ebreichsdorf" . ?e)
 			      ("@TUG" . ?t)
 			      (:endgroup)
@@ -3074,84 +3071,86 @@ the result as a time value."
 
 
 ;; #############################################################################
-;;** Confluence
+;;** Confluence (disabled)
 
-(when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-
-  ;; ######################################################
-  ;; editing Confluence wiki pages (up to Confluence 3.x)
-  ;; https://code.google.com/p/confluence-el/
-  ;; M-x confluence-get-page
-  ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
-  (require 'confluence)
-  (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
-  (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
-
-  (dolist (hook '(confluence-mode-hook))
-    (add-hook hook (lambda ()
-		     (flyspell-mode 1)
-		     (ispell-change-dictionary "british")
-		     (flyspell-buffer)
-		     ))
-    )
-
-  (defun vk-open-as-confluence-page ()
-    "Takes current line (delimited by brackets, two spaces or pipe) and opens it as Confluence page in IR6 space"
-    (interactive)
-    (save-excursion
-      (re-search-backward "\\(\\] \\|  \\|\* \\|| \\)")  ;; search for "] " or "  " or "| "
-      (forward-char)
-      (forward-char)
-      (setq start-pos (point))
-      (re-search-forward "\\( \\[\\|  \\| |\\)")  ;; search for " [" or "  " or " |"
-      (backward-char)
-      (backward-char)
-      (setq end-pos (point))
-      (setq myname (buffer-substring start-pos end-pos))
-					;(message "Confluence page name: [%s]" myname)
-      (confluence-get-page myname "IR6")
-					;(confluence-get-page myname)
-      )
-    )
+;;disabled 2015-01-23;; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;   ;; ######################################################
+;;disabled 2015-01-23;;   ;; editing Confluence wiki pages (up to Confluence 3.x)
+;;disabled 2015-01-23;;   ;; https://code.google.com/p/confluence-el/
+;;disabled 2015-01-23;;   ;; M-x confluence-get-page
+;;disabled 2015-01-23;;   ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
+;;disabled 2015-01-23;;   (require 'confluence)
+;;disabled 2015-01-23;;   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
+;;disabled 2015-01-23;;   (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
+;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;   (dolist (hook '(confluence-mode-hook))
+;;disabled 2015-01-23;;     (add-hook hook (lambda ()
+;;disabled 2015-01-23;; 		     (flyspell-mode 1)
+;;disabled 2015-01-23;; 		     (ispell-change-dictionary "british")
+;;disabled 2015-01-23;; 		     (flyspell-buffer)
+;;disabled 2015-01-23;; 		     ))
+;;disabled 2015-01-23;;     )
+;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;   (defun vk-open-as-confluence-page ()
+;;disabled 2015-01-23;;     "Takes current line (delimited by brackets, two spaces or pipe) and opens it as Confluence page in IR6 space"
+;;disabled 2015-01-23;;     (interactive)
+;;disabled 2015-01-23;;     (save-excursion
+;;disabled 2015-01-23;;       (re-search-backward "\\(\\] \\|  \\|\* \\|| \\)")  ;; search for "] " or "  " or "| "
+;;disabled 2015-01-23;;       (forward-char)
+;;disabled 2015-01-23;;       (forward-char)
+;;disabled 2015-01-23;;       (setq start-pos (point))
+;;disabled 2015-01-23;;       (re-search-forward "\\( \\[\\|  \\| |\\)")  ;; search for " [" or "  " or " |"
+;;disabled 2015-01-23;;       (backward-char)
+;;disabled 2015-01-23;;       (backward-char)
+;;disabled 2015-01-23;;       (setq end-pos (point))
+;;disabled 2015-01-23;;       (setq myname (buffer-substring start-pos end-pos))
+;;disabled 2015-01-23;; 					;(message "Confluence page name: [%s]" myname)
+;;disabled 2015-01-23;;       (confluence-get-page myname "IR6")
+;;disabled 2015-01-23;; 					;(confluence-get-page myname)
+;;disabled 2015-01-23;;       )
+;;disabled 2015-01-23;;     )
+;;disabled 2015-01-23;;  )
 
 ;; #############################################################################
-;;** Outlook
+;;** Outlook (disabled)
 
-
-  ;; ######################################################
-  ;; editing Outlook emails in Emacs
-  ;; http://www.emacswiki.org/emacs/MsOutlook
-  (my-load-local-el "contrib/outlookedit.el")
-  (require 'outlookedit)
-
-  (defvar mno-get-outlook-body
-    "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
-  (defvar mno-put-outlook-body
-    "cscript //B //Job:putMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
-
-  ;; ######################################################
-  ;; use mail-mode for email or usenet postings:
-  (add-to-list 'auto-mode-alist '("\\.\\(mail\\|email\\|posting\\)$" . mail-mode))
-  (dolist (hook '(mail-mode-hook))
-    (add-hook hook (lambda ()
-		     (mail-mode-auto-fill)
-		     (auto-fill-mode 1)
-		     (flyspell-mode 1)
-		     (ispell-change-dictionary "german8")
-		     (flyspell-buffer)
-		     ))
-    )
-
-  ;; http://www.emacswiki.org/emacs/MailMode
-  (add-hook 'mail-mode-hook
-	    (lambda ()
-	      (font-lock-add-keywords nil
-				      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
-					 (0 'mail-multiply-quoted-text-face))
-					("^[ \t]*>[ \t]*>.*$"
-					 (0 'mail-double-quoted-text-face))))))
-
-  )
+;;disabled 2015-01-23;; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;  ;; ######################################################
+;;disabled 2015-01-23;;  ;; editing Outlook emails in Emacs
+;;disabled 2015-01-23;;  ;; http://www.emacswiki.org/emacs/MsOutlook
+;;disabled 2015-01-23;;  (my-load-local-el "contrib/outlookedit.el")
+;;disabled 2015-01-23;;  (require 'outlookedit)
+;;disabled 2015-01-23;;
+;;disabled 2015-01-23;;  (defvar mno-get-outlook-body
+;;disabled 2015-01-23;;    "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
+;;disabled 2015-01-23;;  (defvar mno-put-outlook-body
+;;disabled 2015-01-23;;    "cscript //B //Job:putMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
+;;disabled 2015-01-23;;
+;;disabled 2015-01-23;;  ;; ######################################################
+;;disabled 2015-01-23;;  ;; use mail-mode for email or usenet postings:
+;;disabled 2015-01-23;;  (add-to-list 'auto-mode-alist '("\\.\\(mail\\|email\\|posting\\)$" . mail-mode))
+;;disabled 2015-01-23;;  (dolist (hook '(mail-mode-hook))
+;;disabled 2015-01-23;;    (add-hook hook (lambda ()
+;;disabled 2015-01-23;;		     (mail-mode-auto-fill)
+;;disabled 2015-01-23;;		     (auto-fill-mode 1)
+;;disabled 2015-01-23;;		     (flyspell-mode 1)
+;;disabled 2015-01-23;;		     (ispell-change-dictionary "german8")
+;;disabled 2015-01-23;;		     (flyspell-buffer)
+;;disabled 2015-01-23;;		     ))
+;;disabled 2015-01-23;;    )
+;;disabled 2015-01-23;;
+;;disabled 2015-01-23;;  ;; http://www.emacswiki.org/emacs/MailMode
+;;disabled 2015-01-23;;  (add-hook 'mail-mode-hook
+;;disabled 2015-01-23;;	    (lambda ()
+;;disabled 2015-01-23;;	      (font-lock-add-keywords nil
+;;disabled 2015-01-23;;				      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
+;;disabled 2015-01-23;;					 (0 'mail-multiply-quoted-text-face))
+;;disabled 2015-01-23;;					("^[ \t]*>[ \t]*>.*$"
+;;disabled 2015-01-23;;					 (0 'mail-double-quoted-text-face))))))
+;;disabled 2015-01-23;;
+;;disabled 2015-01-23;;  )
 
 
 ;; #############################################################################
@@ -3719,8 +3718,7 @@ The app is chosen from your OS's preference."
 (define-key my-map "G" 'helm-do-grep)
 
 ;;** helm-org-headlines (my-map H)
-(define-key my-map "H" 'helm-org-headlines)
-
+(define-key my-map "H" 'helm-org-agenda-files-headings)
 
 
 ;;** command log mode (my-map k)
@@ -3760,7 +3758,14 @@ The app is chosen from your OS's preference."
 ;;** org-mode teaser (my-map o)
 (define-key my-map (kbd "o") (lambda()
 			       (interactive)
-			       (find-file "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
+                               (when (my-system-is-gary)
+                                 (find-file
+                               "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
+                                 )
+                               (when (my-system-is-powerplantwin)
+                                 (find-file
+                               "c:/Users/karl.voit/fromweb/src/org-mode-workshop/featureshow/org-mode-teaser.org")
+                                 )
 			       )
   )
 
