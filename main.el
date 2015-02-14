@@ -850,6 +850,7 @@ the same coding systems as Emacs."
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
+  (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
 
   (autoload 'org-checklist "org-checklist.el")
 
