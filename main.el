@@ -1603,18 +1603,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-agenda-custom-commands
 	(quote (
 
-		("p" "events Prio [#A]"
-		 ((agenda "+PRIORITY=\"A\""
-			  ((org-agenda-ndays 31)
-			   (org-agenda-time-grid nil)
-			   (org-agenda-entry-types '(:timestamp :sexp))
-			   (org-agenda-skip-function
-			    '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]")))
-			  ;; (
-			  ;;  (org-agenda-skip-function 'tag-without-done-or-canceled)
-			  ;;  )
-			  )))
-
+		;; disabled 2014-08-17 ;;          ;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
+		;; disabled 2014-08-17 ;;          ("E" "events only" agenda ""
+		;; disabled 2014-08-17 ;;           (
+		;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
+		;; disabled 2014-08-17 ;;            ))
 		("n" "no TODO events +31d"
 		 ((agenda "no TODO events +31d"
 			  ((org-agenda-ndays 31)
@@ -1629,13 +1622,25 @@ Late deadlines first, then scheduled, then non-late deadlines"
                            ;;(org-agenda-skip-function '(my-skip-tag "lp"))
 			  ))))
 
-		("1" "1 month"
-		 ((agenda "1 month"
-			  ((org-agenda-ndays 31)
-			   (org-agenda-time-grid nil)
-			   (org-agenda-entry-types '(:timestamp :sexp))
-			   )
-			  )))
+		;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
+		;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ((org-agenda-ndays 31)
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	   (org-agenda-time-grid nil)
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	   (org-agenda-entry-types '(:timestamp :sexp))
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	   (org-agenda-skip-function
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	    '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]")))
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ;; (
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ;;  (org-agenda-skip-function 'tag-without-done-or-canceled)
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ;;  )
+		;; disabled 2015-02-15 - replaced by no TODO events ;; 	  )))
+
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; ("1" "1 month"
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;  ((agenda "1 month"
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	  ((org-agenda-ndays 31)
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	   (org-agenda-time-grid nil)
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	   (org-agenda-entry-types '(:timestamp :sexp))
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	   )
+		;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	  )))
 
 		("r" "reward tasks" (
 				     (tags-todo "reward/!STARTED"
@@ -1673,20 +1678,20 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		  (org-agenda-skip-function 'tag-without-done-or-canceled)
 		  ))
 
-		("O" "SOMEDAY" tags-todo "+TODO=\"SOMEDAY\""
-		 (
-		  (org-agenda-overriding-header "SOMEDAY is today! :-)")
-		  ))
-
-		("h" "home @ALW" tags-todo "+@ALW"
-		 (
-		  (org-agenda-overriding-header "home tasks")
-		  ))
-
-		("b" "Breitenweg @BWG" tags-todo "+@BWG"
-		 (
-		  (org-agenda-overriding-header "home tasks")
-		  ))
+		;; disabled 2015-02-15 - can filter by tag ;; ("O" "SOMEDAY" tags-todo "+TODO=\"SOMEDAY\""
+		;; disabled 2015-02-15 - can filter by tag ;;  (
+		;; disabled 2015-02-15 - can filter by tag ;;   (org-agenda-overriding-header "SOMEDAY is today! :-)")
+		;; disabled 2015-02-15 - can filter by tag ;;   ))
+                ;; disabled 2015-02-15 - can filter by tag ;; 
+		;; disabled 2015-02-15 - can filter by tag ;; ("h" "home @ALW" tags-todo "+@ALW"
+		;; disabled 2015-02-15 - can filter by tag ;;  (
+		;; disabled 2015-02-15 - can filter by tag ;;   (org-agenda-overriding-header "home tasks")
+		;; disabled 2015-02-15 - can filter by tag ;;   ))
+                ;; disabled 2015-02-15 - can filter by tag ;; 
+		;; disabled 2015-02-15 - can filter by tag ;; ("b" "Breitenweg @BWG" tags-todo "+@BWG"
+		;; disabled 2015-02-15 - can filter by tag ;;  (
+		;; disabled 2015-02-15 - can filter by tag ;;   (org-agenda-overriding-header "home tasks")
+		;; disabled 2015-02-15 - can filter by tag ;;   ))
 
 		;; disabled 2014-08-17 because of error ;;;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
 		;; disabled 2014-08-17 because of error ;;("." "Completed today"
@@ -1696,58 +1701,52 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;; disabled 2014-08-17 because of error ;;  (org-agenda-sorting-strategy '(priority-down)))
 		;; disabled 2014-08-17 because of error ;; )
 
-		;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
-		("W" "Closed within a week."
-		 tags "CLOSED>\"<-1w>\""
-		 ((org-agenda-sorting-strategy '(priority-down))))
+		;; disabled 2015-02-15 - don't use it any more ;; ;; 2014-02-18: from Org-mode ML Subject: Re: Get a list of tasks completed today
+		;; disabled 2015-02-15 - don't use it any more ;; ("W" "Closed within a week."
+		;; disabled 2015-02-15 - don't use it any more ;;  tags "CLOSED>\"<-1w>\""
+		;; disabled 2015-02-15 - don't use it any more ;;  ((org-agenda-sorting-strategy '(priority-down))))
 
-		;; disabled 2014-08-17 ;;          ;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
-		;; disabled 2014-08-17 ;;          ("E" "events only" agenda ""
-		;; disabled 2014-08-17 ;;           (
-		;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
-		;; disabled 2014-08-17 ;;            ))
-
-		("o" "overview Agenda" (
-					(agenda ""
-						nil )
-					;;diabled by nil above;			((org-agenda-skip-function '(my-skip-tag "reward"))
-					;;diabled by nil above;			 (org-agenda-overriding-header "Agenda without rewards: ")))
-					(tags "+TODO=\"DONE\"+CLOSED>=\"<today>\""
-					      (
-					       (org-agenda-overriding-header "DONE today")
-					       ))
-					;;diabled;                (tags "+reward"
-					;;diabled;                           (
-					;;diabled;			    (org-agenda-overriding-header "Rewards")
-					;;diabled;                            ;(org-agenda-skip-function 'bh/skip-non-stuck-projects))
-					;;diabled;                            ;(org-agenda-todo-ignore-scheduled 'future)
-					;;diabled;                            ;(org-agenda-todo-ignore-deadlines 'future)
-					;;diabled;			   )
-					;;diabled;			   )
-					;;too slow - dont need;                (tags-todo "-CANCELLED/!"
-					;;too slow - dont need;                           ((org-agenda-overriding-header "Stuck Projects")
-					;;too slow - dont need;                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
-					;;slow;                (tags-todo "-CANCELLED+WAITING/!"
-					;;slow;                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
-					;;slow;                            (org-agenda-skip-function 'bh/skip-stuck-projects)
-					;;slow;                            (org-tags-match-list-sublevels nil)
-					;;slow;                            (org-agenda-todo-ignore-scheduled 'future)
-					;;slow;                            (org-agenda-todo-ignore-deadlines 'future)
-					;;slow;			    ))
-					;;                (tags "REFILE"
-					;;                      ((org-agenda-overriding-header "Tasks to Refile")
-					;;                       (org-tags-match-list-sublevels nil)))
-					;;                (tags "-REFILE/"
-					;;                      ((org-agenda-overriding-header "Tasks to Archive")
-					;;                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
-					;;                       (org-tags-match-list-sublevels nil)))
-					;;                (tags-todo "-HOLD-CANCELLED/!"
-					;;                           ((org-agenda-overriding-header "Projects")
-					;;                            (org-agenda-skip-function 'bh/skip-non-projects)
-					;;                            (org-agenda-sorting-strategy
-					;;                             '(category-keep))))
-					)
-		 nil)
+		;; disabled 2015-02-15 - don't know what's for ;; ("o" "overview Agenda" (
+		;; disabled 2015-02-15 - don't know what's for ;; 			(agenda ""
+		;; disabled 2015-02-15 - don't know what's for ;; 				nil )
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled by nil above;			((org-agenda-skip-function '(my-skip-tag "reward"))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled by nil above;			 (org-agenda-overriding-header "Agenda without rewards: ")))
+		;; disabled 2015-02-15 - don't know what's for ;; 			(tags "+TODO=\"DONE\"+CLOSED>=\"<today>\""
+		;; disabled 2015-02-15 - don't know what's for ;; 			      (
+		;; disabled 2015-02-15 - don't know what's for ;; 			       (org-agenda-overriding-header "DONE today")
+		;; disabled 2015-02-15 - don't know what's for ;; 			       ))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                (tags "+reward"
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                           (
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;			    (org-agenda-overriding-header "Rewards")
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                            ;(org-agenda-skip-function 'bh/skip-non-stuck-projects))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                            ;(org-agenda-todo-ignore-scheduled 'future)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                            ;(org-agenda-todo-ignore-deadlines 'future)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;			   )
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;			   )
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;too slow - dont need;                (tags-todo "-CANCELLED/!"
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;too slow - dont need;                           ((org-agenda-overriding-header "Stuck Projects")
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;too slow - dont need;                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                (tags-todo "-CANCELLED+WAITING/!"
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-agenda-skip-function 'bh/skip-stuck-projects)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-tags-match-list-sublevels nil)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-agenda-todo-ignore-scheduled 'future)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-agenda-todo-ignore-deadlines 'future)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;			    ))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                (tags "REFILE"
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                      ((org-agenda-overriding-header "Tasks to Refile")
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                       (org-tags-match-list-sublevels nil)))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                (tags "-REFILE/"
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                      ((org-agenda-overriding-header "Tasks to Archive")
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                       (org-tags-match-list-sublevels nil)))
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                (tags-todo "-HOLD-CANCELLED/!"
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                           ((org-agenda-overriding-header "Projects")
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                            (org-agenda-skip-function 'bh/skip-non-projects)
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                            (org-agenda-sorting-strategy
+		;; disabled 2015-02-15 - don't know what's for ;; 			;;                             '(category-keep))))
+		;; disabled 2015-02-15 - don't know what's for ;; 			)
+		;; disabled 2015-02-15 - don't know what's for ;;  nil)
 
 		;;disabled;;	      ("x" "Borrowed"
 		;;disabled;;	       ((agenda ""
