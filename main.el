@@ -41,6 +41,8 @@
 
 (setq package-user-dir "~/.emacs.d/elpa")
 (package-initialize)
+;; http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
+;; MELPA packages are usually built automatically from a project's repository; the Gnu repository has stable releases that are explicitly submitted to it.
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 
@@ -2376,7 +2378,7 @@ Null prefix argument turns off the mode."
   (setq org-directory "~/share/all/org-mode")
   (setq org-mobile-directory "~/share/all/org-mode/mobile-org/")
   (setq org-mobile-inbox-for-pull "~/share/all/org-mode/inbox.org")
-  (setq org-mobile-force-id-on-agenda-items nil) ;; do not generate IDs for all headings
+  (setq org-mobile-force-id-on-agenda-items nil) ;; do not generate IDs for all headings: http://orgmode.org/manual/Pushing-to-MobileOrg.html
   ;; not needed ;; (setq org-mobile-files (quote
   ;; not needed ;; 			  (
   ;; not needed ;; 			   "~/share/all/org-mode/misc.org"
@@ -3399,7 +3401,7 @@ by using nxml's indentation rules."
 	   (setq visible-bell nil)
 	   (toggle-frame-fullscreen)
 	   (scroll-bar-mode 1)
-	   (menu-bar-mode 1)
+	   ;;(menu-bar-mode 1)
 	   (hidden-mode-line-mode nil)
 
 	   ;; If you want to hide the mode-line in all new buffers
