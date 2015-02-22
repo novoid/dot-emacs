@@ -1190,15 +1190,15 @@ the same coding systems as Emacs."
 ;;** agenda files
   (if (my-system-is-powerplantwin)
       (setq org-agenda-files (append (quote (
-					     "c:/Users/karl.voit/share/all/org-mode/phd.org"
+					     ;;"c:/Users/karl.voit/share/all/org-mode/phd.org";;moved to archive
 					     "c:/Users/karl.voit/share/all/org-mode/r6-stories.org"
 					     "c:/Users/karl.voit/share/all/org-mode/infonova.org"
 					     "c:/Users/karl.voit/share/all/org-mode/misc.org"
 					     "c:/Users/karl.voit/share/all/org-mode/bwg.org"
-					     "c:/Users/karl.voit/share/all/org-mode/tagstore.org"
-					     "c:/Users/karl.voit/share/all/org-mode/ist.org"
+					     ;;"c:/Users/karl.voit/share/all/org-mode/tagstore.org";;moved to archive
+					     ;;"c:/Users/karl.voit/share/all/org-mode/ist.org";;moved to archive
 					     "c:/Users/karl.voit/share/all/org-mode/contacts.org"
-					     "c:/Users/karl.voit/share/all/org-mode/postdoc.org"
+					     ;;"c:/Users/karl.voit/share/all/org-mode/postdoc.org";;moved to archive
 					     ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
 					     "c:/Users/karl.voit/share/all/org-mode/hardware.org"
 					     "c:/Users/karl.voit/share/all/org-mode/fhsp.org"
@@ -1221,16 +1221,17 @@ the same coding systems as Emacs."
 	    )
 
     (setq org-agenda-files (append (quote (
-					   "~/share/all/org-mode/phd.org"
+					   "~/share/all/org-mode/archive.org"
+					   ;;"~/share/all/org-mode/phd.org";;moved to archive
 					   "~/share/all/org-mode/r6-stories.org"
 					   "~/share/all/org-mode/infonova.org"
 					   ;;  "~/share/all/org-mode/test-phd.org"
 					   "~/share/all/org-mode/misc.org"
 					   "~/share/all/org-mode/bwg.org"
-					   "~/share/all/org-mode/tagstore.org"
-					   "~/share/all/org-mode/ist.org"
+					   ;;"~/share/all/org-mode/tagstore.org";;moved to archive
+					   ;;"~/share/all/org-mode/ist.org";;moved to archive
 					   "~/share/all/org-mode/contacts.org"
-					   "~/share/all/org-mode/postdoc.org"
+					   ;;"~/share/all/org-mode/postdoc.org";;moved to archive
 					   "~/share/all/org-mode/foodandbeverages.org"
 					   "~/share/all/org-mode/hardware.org"
 					   "~/share/all/org-mode/notes.org"
