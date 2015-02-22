@@ -3879,6 +3879,10 @@ The app is chosen from your OS's preference."
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
 (define-key my-map "c" 'my-fix-drawer-order)
 
+;;** hippie-expand (C-SPC)
+;; http://emacswiki.org/emacs/HippieExpand
+(global-set-key (kbd "C-SPC") 'hippie-expand)
+
 
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
