@@ -1,4 +1,4 @@
-;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
+;;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
 
 ;; ######################################################
 (message "######### loading main.el ...")
@@ -135,6 +135,8 @@
 ;; backwards compatibility as default-buffer-file-coding-system
 ;; is deprecated in 23.2.
 (if (boundp 'buffer-file-coding-system)
+    ;; NOTE: default-buffer-file-coding-system is obsolete; use
+    ;;       buffer-file-coding-system if found
     (setq-default buffer-file-coding-system 'utf-8)
   (setq default-buffer-file-coding-system 'utf-8))
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
@@ -796,6 +798,12 @@ the same coding systems as Emacs."
 (define-key my-map "fn" 'flyspell-goto-next-error)
 (define-key my-map "ff" 'flyspell-correct-word-before-point)
 
+
+;; #############################################################################
+;;* flycheck
+;; http://www.flycheck.org/en/latest/guide/quickstart.html
+
+(add-hook 'after-init-hook #'global-flycheck-mode) ; enable everywhere
 
 
 
