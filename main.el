@@ -2898,6 +2898,12 @@ the result as a time value."
 	)
     )
 
+;;** orgaggregate
+;; https://github.com/tbanel/orgaggregate
+
+(my-load-local-el "contrib/orgaggregate/orgtbl-aggregate.el")
+(my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
+
   );; end-of-Org-mode
 
 
