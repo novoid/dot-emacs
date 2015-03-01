@@ -441,6 +441,8 @@ the same coding systems as Emacs."
   (autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
   (setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
 
+  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill) ;; word-wrap in TeX files
+
 
   ;; ######################################################
   ;; synctex
