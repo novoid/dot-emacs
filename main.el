@@ -95,7 +95,8 @@
   ;; my favorite dark themes: misterioso, zenburn
   ;; my favorite light themes: whiteboard, solarized-light
   ;;setting manually: (load-theme 'misterioso t) ;; dark theme
-  (load-theme 'zenburn t) ;; dark theme
+  ;;(load-theme 'zenburn t) ;; dark theme
+  (load-theme 'wombat t) ;; dark theme
   )
 
 
