@@ -1134,6 +1134,16 @@ the same coding systems as Emacs."
   ;;(autoload 'ox-freemind "ox-freemind.el")
   ;;(autoload 'ox-taskjuggler "ox-taskjuggler.el")
 
+  ;; add bibtex to pdf export method:
+  ;; http://orgmode.org/worg/exporters/anno-bib-template-worg.html#sec-5
+  ;; see id:2015-03-21-org-reftex-export
+   (setq org-latex-pdf-process
+      '("pdflatex -interaction nonstopmode -output-directory %o %f"
+        "bibtex %b"
+        "pdflatex -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -interaction nonstopmode -output-directory %o %f"))
+
+
 ;;** TODO keywords + faces
 
   ;; ######################################################
@@ -2812,6 +2822,15 @@ Null prefix argument turns off the mode."
 	      ))))
     (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
     (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
+
+  ;; http://orgmode.org/worg/org-faq.html#using-reftex-in-org-mode
+  (defun org-mode-reftex-setup ()
+    (load-library "reftex")
+    (and (buffer-file-name)
+         (file-exists-p (buffer-file-name))
+         (reftex-parse-all))
+    (define-key org-mode-map (kbd "C-c )") 'reftex-citation))
+  (add-hook 'org-mode-hook 'org-mode-reftex-setup)
 
 					;(add-hook 'org-mode-hook 'org-mode-reftex-setup)
   (add-hook 'org-mode-hook
