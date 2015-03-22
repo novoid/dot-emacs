@@ -3926,6 +3926,12 @@ The app is chosen from your OS's preference."
 ;; could not make it work with C-/ - so I stick to M-/
 (global-set-key (kbd "M-/") 'hippie-expand)
 
+;;** neotree (f8)
+;; https://github.com/jaypei/emacs-neotree
+;; installed on 2015-03-22
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
