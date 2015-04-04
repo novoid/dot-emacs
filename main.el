@@ -406,7 +406,31 @@ the same coding systems as Emacs."
   ;; ######################################################
   ;; PyFlakes:
   (setq python-check-command "pyflakes")
-
+  
+  ;; ######################################################
+  ;; fix flymake (PEP8): ignore E501 (long lines)
+  ;; see id:2015-04-04-flymake and http://stackoverflow.com/a/1393590
+  ;; looks similar: http://people.cs.uct.ac.za/~ksmith/2011/better-python-flymake-integration-in-emacs.html
+  (when (load "flymake" t)
+    (defun flymake-pyflakes-init ()
+      (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                         'flymake-create-temp-inplace))
+             (local-file (file-relative-name
+                          temp-file
+                          (file-name-directory buffer-file-name))))
+        (list "~/bin/pycheckers"  (list local-file))))
+    (add-to-list 'flymake-allowed-file-name-masks
+                 '("\\.py\\'" flymake-pyflakes-init)))
+  
+  ;; ######################################################
+  ;; better flymake: http://stackoverflow.com/a/1621489
+  (add-hook 'python-mode-hook 
+      (lambda () 
+        (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
+        (local-set-key [f5] 'flymake-goto-prev-error)
+        (local-set-key [f6] 'flymake-goto-next-error)
+        ))
+  
 
   ;; ######################################################
   ;; pylookup: https://github.com/tsgates/pylookup
