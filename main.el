@@ -552,7 +552,7 @@ the same coding systems as Emacs."
   ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
-  (setq-default TeX-master nil)
+  ;(setq-default TeX-master nil);; 2015-03-22 deactivated because it doesn't seem to have any influence: id:2013-12-31-org-master-file
   (make-variable-buffer-local 'TeX-master) ;; I think this is need because the variable is not buffer local until Auctex is active
   ;;disabled; (defun org-mode-reftex-setup ()
   ;;disabled;   (setq TeX-master t)
@@ -575,7 +575,33 @@ the same coding systems as Emacs."
   ;; does not work :-(
   ;; tested with tagstore.org
 
-
+  ;; disabled 2015-03-22 because it did not help ;; ;; 2015-03-22 - see also id:2013-12-31-org-master-file
+  ;; disabled 2015-03-22 because it did not help ;; ;; http://www.emacswiki.org/emacs/AUCTeX
+  ;; disabled 2015-03-22 because it did not help ;; (defun guess-TeX-master (filename)
+  ;; disabled 2015-03-22 because it did not help ;;     "Guess the master file for FILENAME from currently open files according to their extension."
+  ;; disabled 2015-03-22 because it did not help ;;     (let ((candidate nil)
+  ;; disabled 2015-03-22 because it did not help ;;           (filename (file-name-nondirectory filename)))
+  ;; disabled 2015-03-22 because it did not help ;;       (save-excursion
+  ;; disabled 2015-03-22 because it did not help ;;         (dolist (buffer (buffer-list))
+  ;; disabled 2015-03-22 because it did not help ;;           (with-current-buffer buffer
+  ;; disabled 2015-03-22 because it did not help ;;             (let ((name (buffer-name))
+  ;; disabled 2015-03-22 because it did not help ;;                   (file buffer-file-name))
+  ;; disabled 2015-03-22 because it did not help ;;               ;(if (and file (string-match "\\.\(org\|tex\)$" file))
+  ;; disabled 2015-03-22 because it did not help ;;               (if (and file (string-match "\\.org$" file))
+  ;; disabled 2015-03-22 because it did not help ;;                   (progn
+  ;; disabled 2015-03-22 because it did not help ;;                     (goto-char (point-min))
+  ;; disabled 2015-03-22 because it did not help ;;                     (if (re-search-forward (concat "\\\\input{" filename "}") nil t)
+  ;; disabled 2015-03-22 because it did not help ;;                         (setq candidate file))
+  ;; disabled 2015-03-22 because it did not help ;;                     (if (re-search-forward (concat "\\\\include{" (file-name-sans-extension filename) "}") nil t)
+  ;; disabled 2015-03-22 because it did not help ;;                         (setq candidate file))))))))
+  ;; disabled 2015-03-22 because it did not help ;;       (if candidate
+  ;; disabled 2015-03-22 because it did not help ;;           (message "TeX master document: %s" (file-name-nondirectory candidate)))
+  ;; disabled 2015-03-22 because it did not help ;;       candidate))
+  ;; disabled 2015-03-22 because it did not help ;; 
+  ;; disabled 2015-03-22 because it did not help ;; ;; ONLY for special file modes with a recognized extension!
+  ;; disabled 2015-03-22 because it did not help ;; ;; Causes Lisp error (that's a afact) when used with buffers like *scratch* (that's my guess)
+  ;; disabled 2015-03-22 because it did not help ;; ;;(setq TeX-master (guess-TeX-master (buffer-file-name)))
+  
   );; end LaTeX settings
 
 
