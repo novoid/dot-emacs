@@ -820,7 +820,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;;* yasnippet (F4)
+;;* yasnippet
 
 
 ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
@@ -830,12 +830,12 @@ the same coding systems as Emacs."
 (setq yas-root-directory "~/.emacs.d/snippets")
 (yas-load-directory yas-root-directory)
 
-;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
-;; How to I use alternative keys, i.e. not TAB?
-;; see id:2015-02-01-yas-expand-not-TAB
-(define-key yas-minor-mode-map (kbd "<tab>") nil)
-(define-key yas-minor-mode-map (kbd "TAB") nil)
-(define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
+;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
+;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
+;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
+;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
 
 ;; #############################################################################
@@ -1142,6 +1142,17 @@ the same coding systems as Emacs."
         "bibtex %b"
         "pdflatex -interaction nonstopmode -output-directory %o %f"
         "pdflatex -interaction nonstopmode -output-directory %o %f"))
+
+
+  ;; disabled 2015-03-22 because it did not help ;; ;; ######################################################
+  ;; disabled 2015-03-22 because it did not help ;; ;; Guess the master file for FILENAME from currently open files according to their extension.
+  ;; disabled 2015-03-22 because it did not help ;; (add-hook 'org-mode-hook
+  ;; disabled 2015-03-22 because it did not help ;; 	    (lambda ()
+  ;; disabled 2015-03-22 because it did not help ;;             (setq TeX-master (guess-TeX-master (buffer-file-name)))
+  ;; disabled 2015-03-22 because it did not help ;; 	      (message (concat "set master file to: " buffer-file-name))
+  ;; disabled 2015-03-22 because it did not help ;; 	      )
+  ;; disabled 2015-03-22 because it did not help ;; 	    )
+
 
 
 ;;** TODO keywords + faces
