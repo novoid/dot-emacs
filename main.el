@@ -3700,7 +3700,7 @@ The app is chosen from your OS's preference."
 ;;* my helper functions
 
 ;; #############################################################################
-;;** infonova functions for working hour calculation
+;;** Infonova Functions for Working Hour Calculation
 (defun my-minutes-of-hm-string(hm-string)
   "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
   (let (
@@ -3756,6 +3756,44 @@ The app is chosen from your OS's preference."
       )
     )
   )
+
+;; #############################################################################
+;;** Proper English title capitalization of a marked region
+(defun my-title-capitalization (beg end)
+  "Proper English title capitalization of a marked region"
+  ;; - before: the presentation of this heading of my own from my keyboard and yet
+  ;; - after:  The Presentation of This Heading of My Own from My Keyboard and Yet
+  ;; - before: a a a a a a a a
+  ;; - after:  A a a a a a a A
+  (interactive "r")
+  (save-excursion
+    (let (
+	  (do-not-capitalize '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
+			       "from" "in" "into" "it" "next" "nor" "of" "off"
+			       "on" "onto" "or" "over" "past" "so" "the" "till"
+			       "to" "up" "yet" ))
+	  )
+      ;; go to begin of first word:
+      (goto-char beg)
+      (forward-word)
+      (backward-word)
+      ;; capitalize first word in any case:
+      (capitalize-word 1)
+      (forward-word)
+      (backward-word)
+      (while (< (point) end)
+	;; capitalize each word in between except it is list member:
+	(if (member (thing-at-point 'word t) do-not-capitalize)
+	    (forward-word)
+	  (capitalize-word 1) )
+	(forward-word)
+	(backward-word) )
+      ;; capitalize last word in any case:
+      (backward-word)
+      (capitalize-word 1)
+      )
+    ))
+
 
 ;; #############################################################################
 ;;* Key bindings
@@ -4094,12 +4132,15 @@ The app is chosen from your OS's preference."
   )
 (define-key my-map "F" 'my-sparse-tree-with-tag-filter)
 
-;;** my-fix-drawer-order
+;;** my-fix-drawer-order (my-map C)
 ;; searches for :END: followed by :PROPERTIES: (assuming first drawer
 ;; is :LOGBOOK: and toggles order of them
 (fset 'my-fix-drawer-order
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
-(define-key my-map "c" 'my-fix-drawer-order)
+(define-key my-map "C" 'my-fix-drawer-order)
+
+;;** my-proper-english-capitalization (my-map C)
+(define-key my-map "c" 'my-proper-english-capitalization)
 
 ;;** hippie-expand (M-/)
 ;; http://emacswiki.org/emacs/HippieExpand
