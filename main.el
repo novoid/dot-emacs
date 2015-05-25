@@ -2196,6 +2196,14 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      "--remove-summary-timestamp"
 			      )
 			     )
+    (shell-command-to-string (concat
+			      scriptpath "postprocess_Org-mode_iCal_export.py "
+			      "-i " icspath "agenda-export-raw.ics "
+			      "-o " icspath "agenda-export-freebusy.ics "
+			      "--overwrite "
+			      "--obfuscate"
+			      )
+			     )
     (message "after shell-command-to-string")
     (if (my-system-is-gary)
 	(shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
