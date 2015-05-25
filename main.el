@@ -1411,8 +1411,127 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
 
   (define-key my-map "u" 'my-url-linkify)
 
+;; ######################################################
+;;** my-insert-orgmode-url-from-clipboard (my-map U)
+  ;; inserts URL from clipboard and retrieves title as Org-mode link
+  ;; see id:2014-08-10-bookmarks-with-orgmode
+  ;; 2015-05-22: Via email arjan: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
-  ;; ######################################################
+  (defun straight-string (s)
+    ;; Spliting the string and then concatenating it back.
+    (mapconcat '(lambda (x) x) (split-string s) " "))
+  
+  (defun my-cliplink-format-and-trim-title (title)
+    (let (;; Table of replacements which make this title usable for
+          ;; org-link. Can be extended.
+          (replace-table '(("\\[" . "{")
+                           ("\\]" . "}")
+                           ("&mdash;" . "—")))
+          ;; Maximum length of the title.
+          (max-length 100)
+          ;; Removing redundant whitespaces from the title.
+          (result (straight-string title)))
+      ;; Applying every element of the replace-table.
+      (dolist (x replace-table)
+        (setq result (replace-regexp-in-string (car x) (cdr x) result)))
+      ;; Cutting off the title according to its maximum length.
+      (when (> (length result) max-length)
+        (setq result (concat (substring result 0 max-length) "...")))
+      ;; Returning result.
+      result))
+  
+  (defun extract-title-from-html (html)
+    (let (;; Start index of the title.
+          (start (string-match "<title>" html))
+          ;; End index of the title.
+          (end (string-match "</title>" html))
+          ;; Amount of characters to skip the openning title tag.
+          (chars-to-skip (length "<title>")))
+      ;; If title is found ...
+      (if (and start end (< start end))
+          ;; ... extract it and return.
+          (substring html (+ start chars-to-skip) end)
+        nil)))
+  
+  (defun cliplink-decode-content-and-return-orgmode-link-of-title (buffer url content)
+    (let* (;; Decoding the content from UTF-8.
+           (decoded-content (decode-coding-string content 'utf-8))
+           ;; Extrating and preparing the title.
+           (title (my-cliplink-format-and-trim-title
+                   (extract-title-from-html decoded-content))))
+      ;; Inserting org-link.
+      (with-current-buffer buffer
+        (insert (format "[[%s][%s]]" url title)))))
+  
+  (defun my-insert-orgmode-url-from-clipboard ()
+    ;; Of course, this function is interactive. :)
+    (interactive)
+    (let (;; Remembering the current buffer, 'cause it is a destination
+          ;; buffer we are inserting the org-link to.
+          (dest-buffer (current-buffer))
+          ;; Getting URL from the clipboard. Since it may contain
+          ;; some text properties we are using substring-no-properties
+          ;; function.
+          (url (substring-no-properties (current-kill 0))))
+      ;; Retrieving content by URL.
+      (url-retrieve
+       url
+       ;; Performing an action on the retrieved content.
+       `(lambda (s)
+          (cliplink-decode-content-and-return-orgmode-link-of-title ,dest-buffer ,url
+                            (buffer-string))))))
+
+  (define-key my-map "U" 'my-insert-orgmode-url-from-clipboard)
+
+
+;;** FIXXME: my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map FIXXME)
+  ;; inserts public voit URL from clipboard and jumps to its Org-mode heading
+  ;; 2015-05-23: adapted from: http://www.rexim.me/emacs-as-bookmark-manager-links.html
+
+  (defun extract-orgmodeid-from-html (html)
+    (let (;; Start index of the id.
+          (start (string-match "<meta name=\"orgmode-id\" content=\"" html))
+          ;; End index of the id.
+          (end (string-match "\" />" html))
+          ;; Amount of characters to skip the openning tag.
+          (chars-to-skip (length "<meta name=\"orgmode-id\" content=\"")))
+      ;; If id is found ...
+      (if (and start end (< start end))
+          ;; ... extract it and return.
+          (substring html (+ start chars-to-skip) end)
+        nil)))
+  
+  (defun my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard ()
+    ;; Retrieves an URL from the clipboard, gets its Org-mode source,
+    ;; extracts the ID of the article and jumps to its Org-mode heading
+    (interactive)
+    (let (;; Remembering the current buffer, 'cause it is a destination
+          ;; buffer we are inserting the org-link to.
+          (dest-buffer (current-buffer))
+          ;; Getting URL from the clipboard. Since it may contain
+          ;; some text properties we are using substring-no-properties
+          ;; function.
+          (url (substring-no-properties (current-kill 0))))
+      ;; Retrieving content by URL.
+      (url-retrieve
+       url
+       ;; Performing an action on the retrieved content.
+       `(lambda (s)
+          (let* (;; Decoding the content from UTF-8.
+                 (decoded-content (decode-coding-string (buffer-string) 'utf-8))
+                 ;; Extrating and preparing the ID.
+                 (orgmode-id 
+                  (extract-orgmodeid-from-html decoded-content)))
+            ;; FIXXME: this is taking forever, listing any doublicate ID in
+            ;; any Org-mode file :-(
+            ;;(org-open-link-from-string "id:2015-05-23-test")
+            )
+          )
+       )
+      ))
+
+
+;; ######################################################
 ;;** bookmarks (my-map b)
   ;; smart moving bookmark headings from inbox to notes.org
   ;; see id:2014-03-09-inbox-to-bookmarks
