@@ -857,7 +857,7 @@ the same coding systems as Emacs."
 ;; http://www.flycheck.org/en/latest/guide/quickstart.html
 
 (add-hook 'after-init-hook #'global-flycheck-mode) ; enable everywhere
-
+(setq flycheck-flake8-maximum-line-length 200); http://www.flycheck.org/manual/latest/Configuring-checkers.html#Configuring-checkers
 
 
 ;; #############################################################################
