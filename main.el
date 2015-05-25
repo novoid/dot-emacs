@@ -2634,7 +2634,7 @@ Null prefix argument turns off the mode."
   (setq org-link-abbrev-alist
 	'(
 	  ("bib" . "~/archive/library/%s.bib")
-	  ("ref" . "file:~/share/all/org-mode/references.org::/%s/")
+	  ("cite" . "file:~/share/all/org-mode/references.org::/%s/")
 					;	("mynotes" . "file:~/share/all/org-mode/references.org::%s")
 					;	("papers" . "~/archive/library/%s.pdf")
 	  ("photo" . "file:~/people/all_photographs/%s")
@@ -2974,7 +2974,7 @@ Null prefix argument turns off the mode."
   (add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
 
 
-;;** Reference handling
+;;** Reference handling (Reftex)
 
   ;; ######################################################
   ;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
@@ -2993,7 +2993,7 @@ Null prefix argument turns off the mode."
 					;add a custom reftex cite format to insert links
 	   (reftex-set-cite-format
 	    '((?b . "[[bib:%l][%l.bib]]")
-	      (?r . "[[ref:%l][%l]]")
+	      (?c . "[[cite:%l][%l]]")
 	      (?p . "[[pdf:%l][%l.pdf]]")
 	      (?a . "[[notes:%l][%l-notes.pdf]]")
 	      (?s . "[[pdf:%l-self][%l-self.pdf]]")
@@ -3011,26 +3011,24 @@ Null prefix argument turns off the mode."
     (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
     (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
 
-  ;; http://orgmode.org/worg/org-faq.html#using-reftex-in-org-mode
-  (defun org-mode-reftex-setup ()
-    (load-library "reftex")
-    (and (buffer-file-name)
-         (file-exists-p (buffer-file-name))
-         (reftex-parse-all))
-    (define-key org-mode-map (kbd "C-c )") 'reftex-citation))
-  (add-hook 'org-mode-hook 'org-mode-reftex-setup)
+  ;;disabled 2015-05-14 - double code from above?;; ;; http://orgmode.org/worg/org-faq.html#using-reftex-in-org-mode
+  ;;disabled 2015-05-14 - double code from above?;; (defun org-mode-reftex-setup ()
+  ;;disabled 2015-05-14 - double code from above?;;   (load-library "reftex")
+  ;;disabled 2015-05-14 - double code from above?;;   (and (buffer-file-name)
+  ;;disabled 2015-05-14 - double code from above?;;        (file-exists-p (buffer-file-name))
+  ;;disabled 2015-05-14 - double code from above?;;        (reftex-parse-all))
+  ;;disabled 2015-05-14 - double code from above?;;   (define-key org-mode-map (kbd "C-c )") 'reftex-citation))
+  ;;disabled 2015-05-14 - see id:2015-05-14-disable-orgmode-reftex-autoload;; (add-hook 'org-mode-hook 'org-mode-reftex-setup)
 
-					;(add-hook 'org-mode-hook 'org-mode-reftex-setup)
-  (add-hook 'org-mode-hook
-	    (lambda ()
-	      (if (member "CHECK_NEEDED" org-todo-keywords-1)
-		  (org-mode-reftex-setup))))
-
+  ;;disabled 2015-05-14 - I don't use CHECK_NEEDED;;(add-hook 'org-mode-hook
+  ;;disabled 2015-05-14 - I don't use CHECK_NEEDED;;          (lambda ()
+  ;;disabled 2015-05-14 - I don't use CHECK_NEEDED;;            (if (member "CHECK_NEEDED" org-todo-keywords-1)
+  ;;disabled 2015-05-14 - I don't use CHECK_NEEDED;;		  (org-mode-reftex-setup))))
 
   (defun org-mode-reftex-search ()
     ;;jump to the notes for the paper pointed to at from reftex search
     (interactive)
-    (org-open-link-from-string (format "[[ref:%s]]" (reftex-citation t))))
+    (org-open-link-from-string (format "[[cite:%s]]" (reftex-citation t))))
 
 
 ;;** calculating with dates and times
@@ -4119,6 +4117,12 @@ The app is chosen from your OS's preference."
 ;; installed on 2015-03-22
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
+
+;;** org-mode-reftex-setup (my-map R)
+;; see id:2015-05-14-disable-orgmode-reftex-autoload
+(define-key my-map (kbd "R") 'org-mode-reftex-setup)
+;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
+
 
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
