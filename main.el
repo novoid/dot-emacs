@@ -3758,7 +3758,7 @@ The app is chosen from your OS's preference."
   )
 
 ;; #############################################################################
-;;** Proper English title capitalization of a marked region
+;;** Proper English Title Capitalization of a Marked Region
 (defun my-title-capitalization (beg end)
   "Proper English title capitalization of a marked region"
   ;; - before: the presentation of this heading of my own from my keyboard and yet
@@ -4139,8 +4139,8 @@ The app is chosen from your OS's preference."
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
 (define-key my-map "C" 'my-fix-drawer-order)
 
-;;** my-proper-english-capitalization (my-map C)
-(define-key my-map "c" 'my-proper-english-capitalization)
+;;** my-title-capitalization (my-map C)
+(define-key my-map "c" 'my-title-capitalization)
 
 ;;** hippie-expand (M-/)
 ;; http://emacswiki.org/emacs/HippieExpand
