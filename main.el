@@ -457,7 +457,7 @@ the same coding systems as Emacs."
   (autoload 'pylookup-update "pylookup"
     "Run pylookup-update and create the database at `pylookup-db-file'." t)
 
-  (define-key my-map "p" 'pylookup-lookup)
+  (define-key my-map "P" 'pylookup-lookup)
 
 
   )
@@ -4187,6 +4187,28 @@ The app is chosen from your OS's preference."
 (define-key my-map (kbd "R") 'org-mode-reftex-setup)
 ;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
 
+;;** my-org-region-to-property (my-map p)
+;; see id:2015-05-28-ask-for-properties
+(defun my-org-region-to-property (&optional property)
+  (interactive)
+  ;; if no region is defined, do nothing
+  (if (use-region-p)
+      ;; if a region string is found, ask for a property and set property to
+      ;; the string in the region
+      (let ((val (replace-regexp-in-string 
+                  "\\`[ \t\n]*" ""
+                  (replace-regexp-in-string "[ \t\n]*\\'" "" 
+                                            (substring (buffer-string)
+                                                       (- (region-beginning) 1)
+                                                       (region-end))))
+                 )
+            ;; if none was stated by user, read property from user
+            (prop (or property
+                      (org-read-property-name))))
+        ;; set property
+        (org-set-property prop val))))
+
+(define-key my-map (kbd "p") 'my-org-region-to-property)
 
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
