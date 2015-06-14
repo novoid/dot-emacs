@@ -1363,6 +1363,7 @@ the same coding systems as Emacs."
   ;; replaces URL with Org-mode link including description
   ;; see id:2014-03-09-inbox-to-bookmarks
   ;; 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
+  ;; see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
   (defun my-www-get-page-title (url)
     "retrieve title of web page.
 from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
@@ -1374,8 +1375,11 @@ from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html
 	(goto-char (point-min))
 	(re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
         (string-replace "&nbsp;" " "
-                        (decode-coding-string title (intern
-                        (match-string 1)))))
+                        ;;(decode-coding-string title (intern (match-string 1)))
+                        ;; following line fixes charset issues from
+                        ;; previous line:
+                        (decode-coding-string title 'utf-8)
+                        ))
       )
     )
   (defun my-url-linkify ()
