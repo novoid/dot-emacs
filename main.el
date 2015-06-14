@@ -3771,6 +3771,14 @@ The app is chosen from your OS's preference."
 
 ;; #############################################################################
 ;;** Proper English Title Capitalization of a Marked Region
+(defvar my-do-not-capitalize-words '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
+                         "from" "in" "into" "it" "next" "nor" "of" "off"
+                         "on" "onto" "or" "over" "past" "so" "the" "till"
+                         "to" "up" "yet"
+                         "n" "t" "es" "s"
+                         "lazyblorg" "mutt" "TextSecure")
+  "Words that are not capitalized in titles.")
+
 (defun my-title-capitalization (beg end)
   "Proper English title capitalization of a marked region"
   ;; - before: the presentation of this heading of my own from my keyboard and yet
@@ -3779,33 +3787,36 @@ The app is chosen from your OS's preference."
   ;; - after:  A a a a a a a A
   (interactive "r")
   (save-excursion
-    (let (
-	  (do-not-capitalize '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
-			       "from" "in" "into" "it" "next" "nor" "of" "off"
-			       "on" "onto" "or" "over" "past" "so" "the" "till"
-			       "to" "up" "yet" ))
-	  )
-      ;; go to begin of first word:
-      (goto-char beg)
-      (forward-word)
-      (backward-word)
-      ;; capitalize first word in any case:
-      (capitalize-word 1)
-      (forward-word)
-      (backward-word)
-      (while (< (point) end)
-	;; capitalize each word in between except it is list member:
-	(if (member (thing-at-point 'word t) do-not-capitalize)
-	    (forward-word)
-	  (capitalize-word 1) )
-	(forward-word)
-	(backward-word) )
-      ;; capitalize last word in any case:
-      (backward-word)
-      (capitalize-word 1)
-      )
-    ))
+    ;; go to begin of first word:
+    (goto-char beg)
+    (capitalize-word 1)
+    (while (< (point) end)
+      (skip-syntax-forward "^w" end)
+      (let ((word (thing-at-point 'word t)))
+        (if (stringp word)
+            ;; capitalize each word in between except it is list member:
+            (if (member (downcase word) my-do-not-capitalize-words)
+                (downcase-word 1)
+              (capitalize-word 1)))))
+    ;; capitalize last word in any case:
+    (backward-word 1)
+    (if (and (>= (point) beg)
+             (not (member (or (thing-at-point 'word t) "s")
+                          '("n" "t" "es" "s"))))
+        (capitalize-word 1))))
 
+(ert-deftest my-title-capitalization ()
+  "Tests proper English title capitalization; FIXXME: doesn't work yet"
+  (should (string= (with-temp-buffer
+		     (insert "the presentation of this heading of my own from my keyboard and yet\n")
+		     (goto-char (point-min))
+		     (set-mark-command nil)
+		     (goto-char (point-max))
+		     ;(transient-mark-mode 1)
+		     (my-title-capitalization)
+		     (buffer-string))
+		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
+		   )))
 
 ;; #############################################################################
 ;;* Key bindings
