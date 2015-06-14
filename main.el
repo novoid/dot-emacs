@@ -2985,6 +2985,9 @@ Null prefix argument turns off the mode."
 
 ;;** Reference handling (Reftex)
 
+  ;; Default bibliography
+  (setq reftex-default-bibliography '("~/archive/library/references.bib"))
+
   ;; ######################################################
   ;; http://tincman.wordpress.com/2011/01/04/research-paper-management-with-emacs-org-mode-and-reftex/
   ;; org-mode and paper references
