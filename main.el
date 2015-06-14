@@ -92,11 +92,16 @@
   ;;disabled;; (require 'theme-changer)
   ;;disabled;; (change-theme 'whiteboard 'misterioso)  ;; day and night theme
 
-  ;; my favorite dark themes: misterioso, zenburn
-  ;; my favorite light themes: whiteboard, solarized-light
-  ;;setting manually: (load-theme 'misterioso t) ;; dark theme
-  ;;(load-theme 'zenburn t) ;; dark theme
+  ;; my favorite dark themes: misterioso, zenburn, material
   (load-theme 'wombat t) ;; dark theme
+  ;;   (load-theme 'misterioso t)
+  ;;   (load-theme 'zenburn t)
+  ;;   (load-theme 'material t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
+  ;;              issues with *bold* stuff in org-mode :-(
+  ;; my favorite light themes: leuven, whiteboard, solarized-light, 
+  ;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
+  ;;   (load-theme 'whiteboard t)
+  ;;   (load-theme 'solarized-light t)
   )
 
 
