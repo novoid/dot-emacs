@@ -2581,9 +2581,13 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-in-org-mode-take-2/
   (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
 
+  ;; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
   (if (my-system-is-gary-or-sherri)
-      (setq org-babel-sh-command "~/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
-     )
+    ;outdated: org-babel-sh-command was removed with org-mode v8.3:
+    ;outdated;  (setq org-babel-sh-command
+    ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
+    (setq shell-file-name "$HOME/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
+    )
 
 ;;** habits
   ;; ######################################################
