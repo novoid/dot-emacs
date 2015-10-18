@@ -16,7 +16,7 @@
 ;(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
 
 (server-start)
-(tool-bar-mode -1) ;; hide icons
+(if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
 (menu-bar-mode 0) ;; hide menu bar
 (setq backup-inhibited t);; 2011-04-20: turn off backup files
 (setq calendar-week-start-day 1);; set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
@@ -77,6 +77,14 @@
 (global-set-key [M-l] 'downcase-word)
 (global-set-key [M-u] 'upcase-word)
 (global-set-key [M-c] 'capitalize-word)
+
+
+;; ######################################################
+;; un-setting keys
+;;   \C-v   scroll up
+;;   \C-t   transpose-chars
+(dolist (key '("\C-v" "\C-t"))
+    (global-unset-key key))
 
 
 ;; #############################################################################
@@ -223,9 +231,28 @@ the same coding systems as Emacs."
   (string-equal system-type "gnu/linux")
   )
 
+(defun my-system-is-gary-or-sherri ()
+  "Return true if the system we are running on is gary or sherri"
+  (or 
+    (string-equal system-name "gary") 
+    (string-equal system-name "gary.lan") 
+    (string-equal system-name "sherri")
+    (string-equal system-name "sherri.lan")
+    )
+  )
+(defun my-system-is-sherri ()
+  "Return true if the system we are running on is gary or sherri"
+  (or 
+    (string-equal system-name "sherri")
+    (string-equal system-name "sherri.lan")
+    )
+  )
 (defun my-system-is-gary ()
-  "Return true if the system we are running on is gary"
-  (string-equal system-name "gary")
+  "Return true if the system we are running on is gary or sherri"
+  (or 
+    (string-equal system-name "gary") 
+    (string-equal system-name "gary.lan") 
+    )
   )
 (defun my-system-is-blanche ()
   "Return true if the system we are running on is blanche"
@@ -281,7 +308,7 @@ the same coding systems as Emacs."
   (set-selection-coding-system 'iso-latin-1-dos)
   )
 
-(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
   )
 
@@ -353,7 +380,7 @@ the same coding systems as Emacs."
   (set-face-attribute 'default (selected-frame) :height 100)
   )
 
-(when (or (my-system-is-gary) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
   (my-increase-fontsize);; increase fonts on some hosts by default
   )
 (when (my-system-is-blanche)
@@ -381,11 +408,11 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* Python
 
-(when (or (my-system-is-gary) (my-system-is-powerplantwin))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
-  (when (my-system-is-gary)
+  (when (my-system-is-gary-or-sherri)
     (elpy-enable)
     (elpy-use-ipython)
     )
@@ -466,7 +493,7 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* LaTeX
 
-(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
 
   (autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
   (setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
@@ -573,7 +600,7 @@ the same coding systems as Emacs."
   ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
   ;; CDLaTeX - more LaTeX functionality
   ;; http://orgmode.org/org.html#CDLaTeX-mode
-  ;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+  ;;disabled;(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
   ;;disabled;  (my-load-local-el "contrib/cdlatex.el")
   ;;disabled;  )
 
@@ -666,13 +693,23 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+(when (my-system-is-powerplantlinux)
   (setq browse-url-browser-function 'browse-url-generic
 	;;      browse-url-generic-program "/usr/bin/google-chrome")
 	browse-url-generic-program "/usr/bin/firefox")
   )
+(when (my-system-is-sherri)
+  (setq browse-url-browser-function 'browse-url-generic
+	;;browse-url-generic-program "~/bin/firefox-browser/firefox")
+	browse-url-generic-program "/usr/bin/iceweasel")
+  )
 (when (my-system-is-blanche)
   (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+  )
+(when (my-system-is-gary)
+  (setq browse-url-browser-function 'browse-url-generic
+	;;      browse-url-generic-program "/usr/bin/google-chrome")
+	browse-url-generic-program "/usr/bin/iceweasel")
   )
 ;; (setq browse-url-browser-function 'browse-url-generic
 ;; ;      browse-url-generic-program "/usr/bin/google-chrome")
@@ -732,7 +769,7 @@ the same coding systems as Emacs."
 (when (my-system-is-powerplantwin)
   (setq flyspell-default-dictionary "german8")
 )
-(when (my-system-is-gary)
+(when (my-system-is-gary-or-sherri)
   (setq flyspell-default-dictionary "de_AT")
 )
 
@@ -807,7 +844,7 @@ the same coding systems as Emacs."
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
   )
-(if (my-system-is-gary)
+(if (my-system-is-gary-or-sherri)
     ;; use US english on powerplantwin:
     (let ((langs '("de_AT" "en_US")))
       (setq lang-ring (make-ring (length langs)))
@@ -869,7 +906,7 @@ the same coding systems as Emacs."
 ;;* tabbar (disabled)
 
 
-;;disabled;(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+;;disabled;(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
 ;;disabled;    (my-load-local-el "contrib/tabbar.el")
 ;;disabled;  )
 
@@ -897,7 +934,7 @@ the same coding systems as Emacs."
 ;;* Org-mode
 ;; org-mode-begin:
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
-(when (or (my-system-is-gary) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
 (setq org-babel-safe-header-args nil);; 2014-10-29 test
 
@@ -1076,7 +1113,7 @@ the same coding systems as Emacs."
 
 
 
-    ;; ######################################################
+  ;; ######################################################
   ;(setq org-src-prevent-auto-filling t)
 
     ;; ######################################################
@@ -1085,11 +1122,13 @@ the same coding systems as Emacs."
   ;; http://orgmode.org/worg/agenda-optimization.html
   (setq org-agenda-ignore-drawer-properties '(effort appt category))
 
-;; automatically CREATED properties
+  ;; automatically CREATED properties
   (org-expiry-insinuate)
   ;; not checked yet: (setq org-expiry-handler-function 'org-expiry-archive-subtree)
 
-
+  ;; ######################################################
+  ;; checking org-mode syntax:
+  (require 'org-lint)
 
 ;;** general key bindings
 
@@ -1874,6 +1913,24 @@ Late deadlines first, then scheduled, then non-late deadlines"
 						 (org-agenda-overriding-header "rewards: SOMEDAY")
 						 ))
 				     ))
+		("i" "issues" (
+				     (tags-todo "issue/!STARTED"
+						(
+						 (org-agenda-overriding-header "issues: STARTED")
+						 ))
+				     (tags-todo "issue/!NEXT"
+						(
+						 (org-agenda-overriding-header "issues: NEXT")
+						 ))
+				     (tags-todo "issue/!TODO"
+						(
+						 (org-agenda-overriding-header "issues: TODO")
+						 ))
+				     (tags-todo "issue/!SOMEDAY"
+						(
+						 (org-agenda-overriding-header "issues: SOMEDAY")
+						 ))
+				     ))
 
 		;;disabled;              ("R" "grab reward" tags-todo "reward/!TODO|SOMEDAY"
 		;;disabled;	       (
@@ -2214,7 +2271,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      )
 			     )
     (message "after shell-command-to-string")
-    (if (my-system-is-gary)
+    (if (my-system-is-gary-or-sherri)
 	(shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
       (message "Please do sync using unison!")
       )
@@ -2270,7 +2327,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled;; ;; For org appointment reminders
   ;;disabled;; ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
   ;;disabled;; ;; Get appointments for today
-  ;;disabled;; (when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+  ;;disabled;; (when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
   ;;disabled;;   (defun my-org-agenda-to-appt ()
   ;;disabled;;     (interactive)
   ;;disabled;;     (setq appt-time-msg-list nil)
@@ -2311,7 +2368,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
     )
-  (when (my-system-is-gary)
+  (when (my-system-is-gary-or-sherri)
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
@@ -2376,6 +2433,13 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
+	  ("c" "computer")
+	  ("cs" "sherri" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Diverses" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("cg" "gary" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Diverses" "lenovo X200s (IST, 2009-01-??)" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("cb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Diverses" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("w" "Breitenweg")
 	  ("ws" "Breitenweg shorts" entry (file+headline "~/share/all/org-mode/bwg.org" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
@@ -2413,7 +2477,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("C" "Clipboard" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
 	  ;; "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	  ("c" "capture to inbox, refile later" entry (file "~/share/all/org-mode/inbox.org")
+	  ("I" "inbox, refile later" entry (file "~/share/all/org-mode/inbox.org")
 	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("m" "movie" entry (file+headline "~/share/all/org-mode/movies.org" "inbox")
 	  ;; "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
@@ -2439,19 +2503,18 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; Tags with fast selection keys
   ;; http://orgmode.org/org.html#Setting-tags
   (setq org-tag-alist (quote (
-			      ("Kommunikation" . ?k)
+			      ;;("Kommunikation" . ?k)
 			      ("Besorgung" . ?B)
 			      ;;("nonComputer" . ?n)
 			      ("fitness" . ?f)
 			      (:startgroup)
 			      ("@ALW" . ?a)
-			      ("@BWG" . ?a)
-			      ("@Infonova" . ?i)
-			      ("@Stadt" . ?s)
-			      ("@out_of_town" . ?o)
-			      ("@FHStP" . ?F)
-			      ("@Ebreichsdorf" . ?e)
-			      ("@TUG" . ?t)
+			      ("@BWG" . ?b)
+			      ;;("@Infonova" . ?i)
+			      ;;("@out_of_town" . ?o)
+			      ;;("@FHStP" . ?F)
+                              ;;("@Ebreichsdorf" . ?e)
+                              ;;("@TUG" . ?t)
 			      (:endgroup)
 			      (:startgroup)
 			      ("private" . ?p)
@@ -2460,6 +2523,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      (:startgroup)
 			      ;;("bigRock" . ?b)
 			      ("MIT" . ?m)
+			      ("lp" . ?l)
 			      ("reward" . ?r)
 			      (:endgroup)
 			      )))
@@ -2517,7 +2581,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-in-org-mode-take-2/
   (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
 
-  (if (my-system-is-gary)
+  (if (my-system-is-gary-or-sherri)
       (setq org-babel-sh-command "~/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
      )
 
@@ -2531,7 +2595,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 ;;** org-crypt
 
-  (when (my-system-is-gary)
+  (when (my-system-is-gary-or-sherri)
     (require 'org-crypt)  ;; if replaced with autoload: Debugger entered--Lisp error: (void-function org-crypt-use-before-save-magic)
     ;; Encrypt all entries before saving
     (org-crypt-use-before-save-magic)
@@ -3097,7 +3161,7 @@ the result as a time value."
 
 
 ;;** my-lazyblorg-test
-  (if (my-system-is-gary)
+  (if (my-system-is-gary-or-sherri)
       (defun my-lazyblorg-test()
 	"Saves current blog entry to file and invoke lazyblorg process with it"
 	(interactive)
@@ -3232,7 +3296,7 @@ the result as a time value."
 ;; #############################################################################
 ;;** UndoTree
 ;; http://www.emacswiki.org/emacs/UndoTree
-(when (or (my-system-is-gary) (my-system-is-blanche))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-blanche))
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/undo-tree"))
   (autoload 'undo-tree "undo-tree.el")
   (global-undo-tree-mode)
@@ -3248,7 +3312,7 @@ the result as a time value."
 ;; #############################################################################
 ;;** whitespace-mode + style
 ;; from Twitter 2012-05-22: @emacs_knight
-(when (or (my-system-is-gary) (my-system-is-blanche))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-blanche))
   (whitespace-mode)
   (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
   ;;(face trailing lines-tail) whitespace-line-column 80) ;; highlight long lines tails (setq whitespace-style
@@ -3277,7 +3341,7 @@ the result as a time value."
 ;; #############################################################################
 ;;** magit
 
-(when (or (my-system-is-gary) (my-system-is-powerplantlinux))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
   (require 'magit) ;; if replaced with autoload: Debugger entered--Lisp error: (void-variable magit-status-mode-map)
 
   ;; full screen magit-status
@@ -3440,7 +3504,7 @@ by using nxml's indentation rules."
 ;; #############################################################################
 ;;** REST
 ;; REST client    https://github.com/pashky/restclient.el
-(when (or (my-system-is-gary) (my-system-is-powerplantwin))
+(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
   (my-load-local-el "contrib/restclient/json-reformat.el")
   (my-load-local-el "contrib/restclient/restclient.el")
   ;(require 'restclient)
@@ -3461,7 +3525,7 @@ by using nxml's indentation rules."
 ;(when (my-system-is-powerplantwin)
 ;  (setq real-auto-save-interval 10)
 ;)
-;(when (my-system-is-gary)
+;(when (my-system-is-gary-or-sherri)
 ;  (setq real-auto-save-interval 30)
 ;)
 
@@ -3492,7 +3556,7 @@ by using nxml's indentation rules."
 ;; thanks to Bastien; adopted to my requirements
 ;; https://gist.github.com/bzg/8578998
 
-(when (my-system-is-gary)
+(when (my-system-is-gary-or-sherri)
 
   (defvar my-toggle-naked-emacs-status nil
     "state of fullscreen/naked Emacs mode. t means fullscreen, nil means normal")
@@ -3694,7 +3758,7 @@ The app is chosen from your OS's preference."
 
 ;;** guide-key
 ;; via reddit -> https://github.com/kai2nenobu/guide-key
-(when (my-system-is-gary)
+(when (my-system-is-gary-or-sherri)
   (require 'guide-key)
   ;;(setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
   (setq guide-key/guide-key-sequence '("C-c C-,"))
@@ -3703,10 +3767,26 @@ The app is chosen from your OS's preference."
 
 ;;** vcard-mode
 ;; via https://github.com/dochang/vcard-mode
-(when (my-system-is-gary)
+(when (my-system-is-gary-or-sherri)
   (my-load-local-el "contrib/vcard-mode/vcard-mode.el")
   (autoload 'vcard-mode "vcard-mode" "Major mode for vCard files" t)
   (add-to-list 'auto-mode-alist '("\\.vc\\(f\\|ard\\)\\'" . vcard-mode))
+)
+
+;;** sunrise-mode
+;; via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
+;;deactivated 2015-08-31;; (my-load-local-el "contrib/sunrise-commander/sunrise-commander.el")
+;;deactivated 2015-08-31;; (require 'sunrise-commander)
+;;deactivated 2015-08-31;; ;; 3) Choose some unused extension for files to be opened in Sunrise VIRTUAL
+;;deactivated 2015-08-31;; ;; mode and add it to `auto-mode-alist', e.g. if you want to name your virtual
+;;deactivated 2015-08-31;; ;; directories like *.svrm just add to your .emacs file a line like the
+;;deactivated 2015-08-31;; ;; following:
+;;deactivated 2015-08-31;; (add-to-list 'auto-mode-alist '("\\.srvm\\'" . sr-virtual-mode))
+
+;;** RAML-mode
+;; via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
+(when (my-system-is-powerplantwin)
+  (my-load-local-el "contrib/raml-mode/raml-mode.el")
 )
 
 ;;* my helper functions
@@ -3816,8 +3896,8 @@ The app is chosen from your OS's preference."
       (if (and (>= (point) beg)
                (not (member (or (thing-at-point 'word t) "s")
                             '("n" "t" "es" "s"))))
-          (capitalize-word 1)))))
-
+          (capitalize-word 1))))
+)
 
 (ert-deftest my-title-capitalization ()
   "Tests proper English title capitalization"
@@ -3861,7 +3941,7 @@ The app is chosen from your OS's preference."
 (define-key my-map " " 'delete-trailing-whitespace)
 
 ;;** fullscreen (F12)
-(when (my-system-is-gary)
+(when (my-system-is-gary-or-sherri)
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
 
@@ -4083,7 +4163,7 @@ The app is chosen from your OS's preference."
 ;;** org-mode teaser (my-map o)
 (define-key my-map (kbd "o") (lambda()
 			       (interactive)
-                               (when (my-system-is-gary)
+                               (when (my-system-is-gary-or-sherri)
                                  (find-file
                                "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
                                  )
@@ -4247,3 +4327,5 @@ The app is chosen from your OS's preference."
 ;; Local Variables:
 ;; eval: (orgstruct++-mode)
 ;; End:
+
+;;; main.el ends here

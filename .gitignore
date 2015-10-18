@@ -11,3 +11,5 @@ init.el
 /url/cookies
 /saved-desktops/.emacs.desktop
 /image-dired/*
+bookmarks
+recentf
