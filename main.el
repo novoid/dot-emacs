@@ -360,6 +360,9 @@ the same coding systems as Emacs."
   (setq explicit-shell-args '("--login" "-i"))
   (setq w32-quote-process-args ?\") ;"
 
+  ;; id:2015-11-02-tramp-windows-babel
+  (setq tramp-default-method "plink")
+
   )
 
 
