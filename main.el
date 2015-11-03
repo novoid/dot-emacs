@@ -3798,6 +3798,20 @@ The app is chosen from your OS's preference."
   (my-load-local-el "contrib/raml-mode/raml-mode.el")
 )
 
+;;** synonyms (my-map s)
+;; via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
+;; The file names are absolute, not relative, locations
+;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
+(setq synonyms-file        "~/.emacs.d/data/mthes10/mthesaur.txt")
+(setq synonyms-cache-file  "~/.emacs.d/data/vkcachefile")
+(require 'synonyms)
+
+(defun my-synonym-current-word ()
+  "Lookup synonyms for current word."
+  (interactive)
+  (synonyms-lookup (thing-at-point 'word) nil nil))
+
+
 ;;* my helper functions
 
 ;; #############################################################################
@@ -3975,8 +3989,10 @@ The app is chosen from your OS's preference."
 					;(my-iswitchb-close)
   )
 
-(define-key my-map "s" 'my-toggle-windows-split)
+;2015-11-03: deactivated for synonym (define-key my-map "s" 'my-toggle-windows-split)
 
+;;** my-synonym-current-word (mymap s)
+(define-key my-map "s" 'my-synonym-current-word)
 
 ;;** boxquote (my-map [qQ])
 ;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
