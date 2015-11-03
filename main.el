@@ -2591,7 +2591,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;outdated: org-babel-sh-command was removed with org-mode v8.3:
     ;outdated;  (setq org-babel-sh-command
     ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
-    (setq shell-file-name "$HOME/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
+    (setq shell-file-name "~/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
     )
 
 ;;** habits
