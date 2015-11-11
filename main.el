@@ -3919,7 +3919,8 @@ The app is chosen from your OS's preference."
       ;; go through the region, word by word:
       (while (< (point) end)
         (skip-syntax-forward "^w" end)
-        (let ((word (thing-at-point 'word t)))
+;;        (let ((word (thing-at-point 'word t)))
+        (let ((word (thing-at-point 'word)))
           (if (stringp word)
               ;; capitalize current word except it is list member:
               (if (member (downcase word) do-not-capitalize-words)
@@ -3928,7 +3929,8 @@ The app is chosen from your OS's preference."
       ;; capitalize last word in any case:
       (backward-word 1)
       (if (and (>= (point) beg)
-               (not (member (or (thing-at-point 'word t) "s")
+;;               (not (member (or (thing-at-point 'word t) "s")
+               (not (member (or (thing-at-point 'word) "s")
                             '("n" "t" "es" "s"))))
           (capitalize-word 1))))
 )
