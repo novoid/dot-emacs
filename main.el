@@ -189,15 +189,37 @@ the same coding systems as Emacs."
 ;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
 
 
-;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
-;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
-;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
-;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
-(global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
-;; same as: (global-unset-key (kbd "C-c C-,"))
-(define-prefix-command 'my-map)
-(global-set-key (kbd "C-c C-,") 'my-map)
-(global-set-key (kbd "C-c ,") 'my-map)
+;; 2015-11-10 replaced by bind-key ;; ;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
+;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
+;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
+;; 2015-11-10 replaced by bind-key ;; ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
+;; 2015-11-10 replaced by bind-key ;; (global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
+;; 2015-11-10 replaced by bind-key ;; ;; same as: (global-unset-key (kbd "C-c C-,"))
+;; 2015-11-10 replaced by bind-key ;; (define-prefix-command 'my-map)
+;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c C-,") 'my-map)
+;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c ,") 'my-map)
+
+
+;; https://github.com/jwiegley/dot-emacs/blob/master/init.el
+(require 'bind-key);; https://github.com/emacsattic/bind-key
+
+(bind-keys
+ :prefix-map my-map
+ :prefix-docstring "My own keyboard map"
+ :prefix "C-c C-,"
+ ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+ ("-" . text-scale-decrease)
+ ("+" . text-scale-increase)
+ ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget shift
+ )
+
+;; examples:
+;;   (bind-key "m w" #'mark-word my-map)
+;; or:
+;;   (bind-keys
+;;    :map my-map
+;;    ("f" . forward-char)
+;;    ("b" . backward-char))
 
 
 ;; #############################################################################
@@ -487,7 +509,7 @@ the same coding systems as Emacs."
   (autoload 'pylookup-update "pylookup"
     "Run pylookup-update and create the database at `pylookup-db-file'." t)
 
-  (define-key my-map "P" 'pylookup-lookup)
+  (bind-key "P" #'pylookup-lookup my-map)
 
 
   )
@@ -889,12 +911,12 @@ the same coding systems as Emacs."
 ;;(setq ispell-dictionary "german-new8")
 ;;(setq ispell-dictionary "german-new8")
 ;;(setq ispell-local-dictionary "german-new8")
-(define-key my-map "fm" 'flyspell-mode)
-(define-key my-map "fr" 'flyspell-region)
-(define-key my-map "fl" 'my-toggle-ispell-language)
-(define-key my-map "ft" 'my-toggle-ispell-language);; can't remember if l(anguage) or t(oggle)
-(define-key my-map "fn" 'flyspell-goto-next-error)
-(define-key my-map "ff" 'flyspell-correct-word-before-point)
+(bind-key "fm" #'flyspell-mode my-map)
+(bind-key "fr" #'flyspell-region my-map)
+(bind-key "fl" #'my-toggle-ispell-language my-map)
+(bind-key "ft" #'my-toggle-ispell-language my-map);; can't remember if l(anguage) or t(oggle)
+(bind-key "fn" #'flyspell-goto-next-error my-map)
+(bind-key "ff" #'flyspell-correct-word-before-point my-map)
 
 
 ;; #############################################################################
@@ -1467,7 +1489,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
       )
     )
 
-  (define-key my-map "u" 'my-url-linkify)
+  (bind-key "u" #'my-url-linkify my-map)
 
 ;; ######################################################
 ;;** my-insert-orgmode-url-from-clipboard (my-map U)
@@ -1539,7 +1561,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
           (cliplink-decode-content-and-return-orgmode-link-of-title ,dest-buffer ,url
                             (buffer-string))))))
 
-  (define-key my-map "U" 'my-insert-orgmode-url-from-clipboard)
+  (bind-key "U" #'my-insert-orgmode-url-from-clipboard my-map)
 
 
 ;;** FIXXME: my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map FIXXME)
@@ -1578,7 +1600,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
           (let* (;; Decoding the content from UTF-8.
                  (decoded-content (decode-coding-string (buffer-string) 'utf-8))
                  ;; Extrating and preparing the ID.
-                 (orgmode-id 
+                 (message
                   (extract-orgmodeid-from-html decoded-content)))
             ;; FIXXME: this is taking forever, listing any doublicate ID in
             ;; any Org-mode file :-(
@@ -1646,7 +1668,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
       )
     )
 
-  (define-key my-map "b" 'my-save-bookmark)
+  (bind-key "b" #'my-save-bookmark my-map)
 
 
 ;;** misc agenda helper functions
@@ -2232,7 +2254,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
       (org-agenda-list)
       )
     )
-  (define-key my-map "a" 'my-org-agenda)
+  (bind-key "a" #'my-org-agenda my-map)
+
 
 ;;** my-memacs-org-agenda (my-map m)
 
@@ -2247,7 +2270,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (call-interactively 'org-agenda-archives-mode)
     (org-agenda-archives-mode 'files)
     )
-  (define-key my-map "m" 'my-memacs-org-agenda)
+  ;;disabled because I needed "m";; (bind-key "m" #'my-memacs-org-agenda my-map)
   (global-set-key "\C-cm" 'my-memacs-org-agenda)
 
 
@@ -2549,7 +2572,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   ;; ######################################################
 ;;** babel
-
 
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
@@ -3389,7 +3411,7 @@ the result as a time value."
   ;; M-x smeargle-age  -  Highlight regions by age of changes.
   ;; M-x smeargle-clear  - Clear overlays in current buffer
   (my-load-local-el "contrib/emacs-smeargle/smeargle.el")
-  (define-key my-map "c" 'smeargle)
+  (bind-key "c" #'smeargle my-map)
 
 
   )
@@ -3556,7 +3578,7 @@ by using nxml's indentation rules."
 ;; https://github.com/zk-phi/spray
 ;; ... installed 2014-06-13 via manual download from github (for testing)
 (my-load-local-el "contrib/spray/spray.el")
-(define-key my-map "S" 'spray-mode)
+(bind-key "S" #'spray-mode my-map)
 
 
 ;; #############################################################################
@@ -3706,7 +3728,7 @@ by using nxml's indentation rules."
 	   ;;   '(fringe ((t (:background "black")))))
 
 	   ;;(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
-	   (define-key my-map "h" 'mode-line-in-header)
+	   (bind-key "h" #'mode-line-in-header my-map)
 
 	   (message "Enjoy your concentration!")
 
@@ -3961,20 +3983,12 @@ The app is chosen from your OS's preference."
 (global-set-key [S-right] 'forward-word)
 
 
-
-;;** font size (my-map [=+-])
-;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
-;; font sizes:
-(define-key my-map "-" 'text-scale-decrease)
-(define-key my-map "+" 'text-scale-increase)
-(define-key my-map "=" 'text-scale-increase);; because "+" needs "S-=" and I might forget shift
-
 ;;** Magit status (my-map g)
-;(define-key my-map "v" 'magit-status)
-(define-key my-map "g" 'magit-status)
+;(bind-key "v" #'magit-status my-map)
+(bind-key "g" #'magit-status my-map)
 
 ;;** remove trailing whitespaces (my-map " ")
-(define-key my-map " " 'delete-trailing-whitespace)
+(bind-key " " #'delete-trailing-whitespace my-map)
 
 ;;** fullscreen (F12)
 (when (my-system-is-gary-or-sherri)
@@ -3982,9 +3996,9 @@ The app is chosen from your OS's preference."
 )
 
 ;;** Elisp
-(define-key my-map "er" 'eval-region)
-;; disabled ;;(define-key my-map "el" 'find-library)
-;; disabled ;;(define-key my-map "ef" 'find-function-at-point)
+(bind-key "er" #'eval-region my-map)
+;; disabled ;;(bind-key "el" #'find-library my-map)
+;; disabled ;;(bind-key "ef" #'find-function-at-point my-map)
 
 
 ;;** Toggle between split windows and a single window (my-map s)
@@ -4002,15 +4016,15 @@ The app is chosen from your OS's preference."
 					;(my-iswitchb-close)
   )
 
-;2015-11-03: deactivated for synonym (define-key my-map "s" 'my-toggle-windows-split)
+;2015-11-03: deactivated for synonym (bind-key "s" #'my-toggle-windows-split my-map)
 
 ;;** my-synonym-current-word (mymap s)
-(define-key my-map "s" 'my-synonym-current-word)
+(bind-key "s" #'my-synonym-current-word my-map)
 
 ;;** boxquote (my-map [qQ])
 ;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
-(define-key my-map "q" 'boxquote-region)
-(define-key my-map "Q" 'boxquote-title)
+(bind-key "q" #'boxquote-region my-map)
+(bind-key "Q" #'boxquote-title my-map)
 
 
 ;;** switching lines (my-map <up/down>)
@@ -4032,17 +4046,21 @@ The app is chosen from your OS's preference."
       (transpose-lines -1))
     (move-to-column col)))
 
-(define-key my-map (kbd "<up>") 'my-move-line-up)
-(define-key my-map (kbd "<down>") 'my-move-line-down)
+(bind-key (kbd "<up>") #'my-move-line-up my-map)
+(bind-key (kbd "<down>") #'my-move-line-down my-map)
 
 
 ;;** joining lines: (my-map j)
 ;; http://whattheemacsd.com//key-bindings.el-03.html
-(define-key my-map "j" ;; join-line
+(bind-key "j" ;; join-line
   (lambda ()
     (interactive)
-    (join-line -1)))
+    (join-line -1))
+  my-map
+)
 
+
+(bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
 
 ;;** web-jump (disabled)
 ;;disabled;; ;; ######################################################
@@ -4052,7 +4070,7 @@ The app is chosen from your OS's preference."
 ;;disabled;; ;; https://github.com/thefury/site-lisp/blob/master/dotemacs.el
 ;;disabled;; ;; http://whattheemacsd.com//my-misc.el-01.html (Urban Dictionary)
 ;;disabled;; (require 'webjump)
-;;disabled;; (define-key my-map "w" 'webjump)
+;;disabled;; (bind-key "w" #'webjump my-map)
 ;;disabled;; (setq webjump-sites ;(append   ;; append instead of overwrite
 ;;disabled;;       '(
 ;;disabled;; 	;; ------------------------------------------------------------------
@@ -4108,7 +4126,7 @@ The app is chosen from your OS's preference."
     (insert (format-time-string "%Y-%m-%d" (current-time)))
     )
   )
-(define-key my-map "t" 'my-insert-timestamp)
+(bind-key "t" #'my-insert-timestamp my-map)
 
 (defun my-insert-timestamp-inactive()
   "Insert the current time in yyyy-mm-dd format."
@@ -4121,7 +4139,7 @@ The app is chosen from your OS's preference."
     (insert (format-time-string "%Y-%m-%d" (current-time)))
     )
   )
-(define-key my-map "T" 'my-insert-timestamp-inactive)
+(bind-key "T" #'my-insert-timestamp-inactive my-map)
 
 ;; 2012-12-23: C-j d ... datestamp
 (defun my-insert-datestamp()
@@ -4135,7 +4153,7 @@ The app is chosen from your OS's preference."
     (insert (format-time-string "%Y-%m-%d" (current-time)))
     )
   )
-(define-key my-map "d" 'my-insert-datestamp)
+(bind-key "d" #'my-insert-datestamp my-map)
 
 (defun my-insert-datestamp-inactive()
   "Insert the current date in yyyy-mm-dd format."
@@ -4148,20 +4166,20 @@ The app is chosen from your OS's preference."
     (insert (format-time-string "%Y-%m-%d" (current-time)))
     )
   )
-(define-key my-map "D" 'my-insert-datestamp-inactive)
+(bind-key "D" #'my-insert-datestamp-inactive my-map)
 
 
 
 ;;** recently files (my-map r)
-(define-key my-map "r" 'recentf-open-files)
+(bind-key "r" #'recentf-open-files my-map)
 
 
 ;;** helm-do-grep (my-map G)
 ;; helm-do-grep to grep in current folder
-(define-key my-map "G" 'helm-do-grep)
+(bind-key "G" #'helm-do-grep my-map)
 
 ;;** helm-org-headlines (my-map H)
-(define-key my-map "H" 'helm-org-agenda-files-headings)
+(bind-key "H" #'helm-org-agenda-files-headings my-map)
 
 
 ;;** command log mode (my-map k)
@@ -4177,29 +4195,31 @@ The app is chosen from your OS's preference."
 ;;   (clm/open-command-log-buffer)
 ;; )
 
-(define-key my-map "k" 'clm/open-command-log-buffer)
+(bind-key "k" #'clm/open-command-log-buffer my-map)
 
 
 
 ;;** Confluence/Outlook (disabled)
 ;disabled; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-;disabled;   (define-key my-map "C" 'vk-open-as-confluence-page)
-;disabled;   (define-key my-map "oe" 'mno-edit-outlook-message)
-;disabled;   (define-key my-map "os" 'mno-save-outlook-message)
+;disabled;   (bind-key "C" #'vk-open-as-confluence-page my-map)
+;disabled;   (bind-key "oe" #'mno-edit-outlook-message my-map)
+;disabled;   (bind-key "os" #'mno-save-outlook-message my-map)
 ;disabled;   )
 
 ;;** mark-ring-goto (my-map <left>)
-(define-key my-map (kbd "<left>") 'org-mark-ring-goto)
+(bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
 
 ;;** main.el (my-map .)
-(define-key my-map (kbd ".") (lambda()  ;; open main.el
+(bind-key (kbd ".") (lambda()  ;; open main.el
 			       (interactive)
 			       (find-file "~/.emacs.d/main.el")
-			       )
-  )
+			       ) 
+          my-map
+          )
+
 
 ;;** org-mode teaser (my-map o)
-(define-key my-map (kbd "o") (lambda()
+(bind-key (kbd "o") (lambda()
 			       (interactive)
                                (when (my-system-is-gary-or-sherri)
                                  (find-file
@@ -4210,27 +4230,29 @@ The app is chosen from your OS's preference."
                                "c:/Users/karl.voit/fromweb/src/org-mode-workshop/featureshow/org-mode-teaser.org")
                                  )
 			       )
+          my-map
   )
 
 ;;** org-mode manual (my-map O)
-(define-key my-map (kbd "O") (lambda()
+(bind-key (kbd "O") (lambda()
 			       (interactive)
                                (info "(org)")
 			       )
+  my-map
   )
 
 
-;;** OrgStruct folding
-;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
-(define-key my-map "[" (lambda () (interactive) (org-cycle t)))
-(define-key my-map "]" (lambda () (interactive) (org-cycle)))
+;; 2015-11-10 deactivated ;; ;;** OrgStruct folding
+;; 2015-11-10 deactivated ;; ;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
+;; 2015-11-10 deactivated ;; (bind-key "[" (lambda () (interactive) (org-cycle t)) my-map)
+;; 2015-11-10 deactivated ;; (bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
 
 ;;** Org-mobile import (my-map i)
-(define-key my-map "i" (lambda ()
+(bind-key "i" (lambda ()
                          """foobar"""
-                         (interactive) (my-mobile-org-import)))
+                         (interactive) (my-mobile-org-import)) my-map )
 ;;** Org-mobile push (my-map I)
-(define-key my-map "I" (lambda () (interactive)
+(bind-key "I" (lambda () (interactive)
                          ;; save original agenda in temporary variable
                          (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
                          ;; set agenda for MobileOrg (omit some agenda
@@ -4242,7 +4264,7 @@ The app is chosen from your OS's preference."
                                         ((agenda "1 month"
                                                  ((org-agenda-ndays 31)
                                                   (org-agenda-time-grid nil)
-                                                  (org-agenda-entry-types '(:timestamp :sexp))
+                                                  (org-agenda-entry-types ##'(:timestamp :sexp))
                                                   )
                                                  )))
 
@@ -4264,6 +4286,7 @@ The app is chosen from your OS's preference."
                          ;; restore previously saved agenda:
                          (setq org-agenda-custom-commands ORIGSAVED-org-agenda-custom-commands)
                          )
+          my-map 
   )
 
 ;;** Filter open Org-tasks by tag (my-map F)
@@ -4285,17 +4308,17 @@ The app is chosen from your OS's preference."
            ":")
    )
   )
-(define-key my-map "F" 'my-sparse-tree-with-tag-filter)
+(bind-key "F" #'my-sparse-tree-with-tag-filter my-map)
 
 ;;** my-fix-drawer-order (my-map C)
 ;; searches for :END: followed by :PROPERTIES: (assuming first drawer
 ;; is :LOGBOOK: and toggles order of them
 (fset 'my-fix-drawer-order
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
-(define-key my-map "C" 'my-fix-drawer-order)
+(bind-key "C" #'my-fix-drawer-order my-map)
 
 ;;** my-title-capitalization (my-map C)
-(define-key my-map "c" 'title-capitalization)
+(bind-key "c" #'title-capitalization my-map)
 
 ;;** hippie-expand (M-/)
 ;; http://emacswiki.org/emacs/HippieExpand
@@ -4316,7 +4339,7 @@ The app is chosen from your OS's preference."
 
 ;;** org-mode-reftex-setup (my-map R)
 ;; see id:2015-05-14-disable-orgmode-reftex-autoload
-(define-key my-map (kbd "R") 'org-mode-reftex-setup)
+(bind-key (kbd "R") #'org-mode-reftex-setup my-map)
 ;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
 
 ;;** my-org-region-to-property (my-map p)
@@ -4340,7 +4363,42 @@ The app is chosen from your OS's preference."
         ;; set property
         (org-set-property prop val))))
 
-(define-key my-map (kbd "p") 'my-org-region-to-property)
+(bind-key (kbd "p") #'my-org-region-to-property my-map)
+
+
+;;** highlight-symbol (my-map h)
+(require 'highlight-symbol)
+(bind-key (kbd "h") #'highlight-symbol my-map)
+;; original: (global-set-key [(control f3)] 'highlight-symbol)
+;; original: (global-set-key [f3] 'highlight-symbol-next)
+;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
+;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
+
+
+;;** mark word|line|sentence|sexp|defun
+
+
+(bind-key (kbd "mw") #'mark-word my-map)
+
+(defun mark-line (&optional arg)
+  (interactive "p")
+  (beginning-of-line)
+  (let ((here (point)))
+    (dotimes (i arg)
+      (end-of-line))
+    (set-mark (point))
+    (goto-char here)))
+
+(bind-key "m l" 'mark-line my-map)
+
+(defun mark-sentence (&optional arg)
+  (interactive "P")
+  (backward-sentence)
+  (mark-end-of-sentence arg))
+
+(bind-key "m s" #'mark-sentence my-map)
+(bind-key "m x" #'mark-sexp my-map)
+(bind-key "m d" #'mark-defun my-map)
 
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
