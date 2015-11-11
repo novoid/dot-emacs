@@ -1133,6 +1133,13 @@ the same coding systems as Emacs."
   ;; checking org-mode syntax:
   (require 'org-lint)
 
+  ;; ######################################################
+  ;; stop the mouse cursor from highlighting lines in the agenda
+  ;; http://orgmode.org/worg/org-faq.html
+  (add-hook 'org-finalize-agenda-hook
+            (lambda () (remove-text-properties
+                        (point-min) (point-max) '(mouse-face t))))
+
 ;;** general key bindings
 
   ;; http://doc.norang.ca/org-mode.html
