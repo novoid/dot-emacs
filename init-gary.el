@@ -30,10 +30,10 @@
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(safe-local-variable-values
    (quote
-    ((TeX-master . "references")
+    ((TeX-master . "misc")
+     (TeX-master . "references")
      (reftex-default-bibliography quote
 				  ("~/archive/library"))
-     (TeX-master . "misc")
      (eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
