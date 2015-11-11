@@ -2569,6 +2569,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
      (sql . t)
      ))
 
+  ;; Inhibit evaluation of code blocks during export
+  ;; http://orgmode.org/manual/Exporting-code-blocks.html
+  (setq org-export-babel-evaluate nil)
+
   ;; Do not prompt to confirm evaluation
   ;; This may be dangerous - make sure you understand the consequences
   ;; of setting this -- see the docstring for details
