@@ -1015,17 +1015,22 @@ the same coding systems as Emacs."
   ;; assign file extensions to Org-mode
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 
-  ;;(require 'org-install) ;; vk 2012-11-20 this line is obsolete
-  ;; (require 'org);; 2014-11-16 according to
-  ;; http://orgmode.org/manual/Activation.html#Activation it is not
-  ;; necessary when auto-mode-alist is set
+  ;;(setq org-babel-safe-header-args nil);; 2014-10-29 test
+
+  ;;  :bind ("M-o l" . highlight-lines-matching-regexp)
+  ;;  :bind (("M-o l" . highlight-lines-matching-regexp)
+  ;;         ("M-o r" . highlight-regexp)
+  ;;         ("M-o w" . highlight-phrase)))
+
+
+;;** load Org and misc contrib packages
 
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
-
+  (my-load-local-el "contrib/ob-restclient.el/ob-restclient.el")
   (autoload 'org-checklist "org-checklist.el")
 
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
