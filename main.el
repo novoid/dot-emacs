@@ -3888,14 +3888,26 @@ The app is chosen from your OS's preference."
 ;; via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
 ;; The file names are absolute, not relative, locations
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
-(setq synonyms-file        "~/.emacs.d/data/mthes10/mthesaur.txt")
-(setq synonyms-cache-file  "~/.emacs.d/data/vkcachefile")
-(require 'synonyms)
+(use-package synonyms
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :init ;; executed before loading package
+  (setq synonyms-file        "~/.emacs.d/data/mthes10/mthesaur.txt")
+  (setq synonyms-cache-file  "~/.emacs.d/data/vkcachefile")
+  :config
+  (defun my-synonym-current-word ()
+    "Lookup synonyms for current word."
+    (interactive)
+    (synonyms-lookup (thing-at-point 'word) nil nil))
+  :bind (:map my-map ("s" . my-synonym-current-word))
+)
 
-(defun my-synonym-current-word ()
-  "Lookup synonyms for current word."
-  (interactive)
-  (synonyms-lookup (thing-at-point 'word) nil nil))
+;;** nyan-mode
+;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
+;; show the percentage within current buffer as Nyan Cat
+;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
+(use-package nyan-mode
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+)
 
 
 ;;* my helper functions
