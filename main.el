@@ -939,29 +939,72 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* yasnippet
 
+(use-package yasnippet
+  :demand t
+  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :diminish yas-minor-mode
+  :defer 10
+  :config
+  (yas-load-directory "~/.emacs.d/snippets/")
+  (yas-global-mode 1)
+  ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
+  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
+  ;;(autoload 'yas-minor-mode "yasnippet")
 
-;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
-;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-;(autoload 'yas-minor-mode "yasnippet")
-(require 'yasnippet)
-(setq yas-root-directory "~/.emacs.d/snippets")
-(yas-load-directory yas-root-directory)
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
-;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
-;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
-;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
-;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
+)
 
 
 ;; #############################################################################
+;;* REST
+;; REST client    https://github.com/pashky/restclient.el
+(use-package restclient
+  ;;:disabled t  ;; stop loading if 't'
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :defer 10
+  :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
+  :init ;; executed before loading package
+  (my-load-local-el "contrib/2del/restclient/json-reformat.el")
+  ;;(my-load-local-el "contrib/restclient/restclient.el")
+  ;; :mode "\\.rb\\'"
+)
+
+
 ;;* Org-mode
 ;; org-mode-begin:
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
+
+;; (message "############### DEBUG: loading orgmode ...")
+;; (use-package org
+;;   :ensure t
+;;   :pin manual
+;;   :if (or 
+;;        (my-system-is-gary-or-sherri) 
+;;        (my-system-is-blanche) 
+;;        (my-system-is-powerplantlinux) 
+;;        (my-system-is-powerplantwin)
+;;        )
+;; 
+;;   ;; set paths to manually installed Org-mode (from git)
+;;   :load-path ( "~/.emacs.d/contrib/org-mode/lisp" 
+;;                "~/.emacs.d/contrib/org-mode/contrib/lisp")
+;; 
+;;   ;; assign file extensions to Org-mode
+;;   :mode ("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode)
+;; 
+;;   :config ;; executed after loading package
+;; 
+;;   (message "############### DEBUG: config orgmode ...")
+
 (when (or (my-system-is-gary-or-sherri) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
 
-(setq org-babel-safe-header-args nil);; 2014-10-29 test
+  (setq org-babel-safe-header-args nil);; 2014-10-29 test
 
 ;;** load Org and misc contrib packages
 
