@@ -1612,52 +1612,57 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
   (bind-key "U" #'my-insert-orgmode-url-from-clipboard my-map)
 
 
-;;** FIXXME: my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map FIXXME)
+;;** my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map l)
   ;; inserts public voit URL from clipboard and jumps to its Org-mode heading
   ;; 2015-05-23: adapted from: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
-  (defun extract-orgmodeid-from-html (html)
-    (let (;; Start index of the id.
-          (start (string-match "<meta name=\"orgmode-id\" content=\"" html))
-          ;; End index of the id.
-          (end (string-match "\" />" html))
-          ;; Amount of characters to skip the openning tag.
-          (chars-to-skip (length "<meta name=\"orgmode-id\" content=\"")))
-      ;; If id is found ...
-      (if (and start end (< start end))
-          ;; ... extract it and return.
-          (substring html (+ start chars-to-skip) end)
-        nil)))
-  
   (defun my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard ()
-    ;; Retrieves an URL from the clipboard, gets its Org-mode source,
-    ;; extracts the ID of the article and jumps to its Org-mode heading
+    "Retrieves an URL from the clipboard, gets its Org-mode source,
+     extracts the ID of the article and jumps to its Org-mode heading"
     (interactive)
-    (let (;; Remembering the current buffer, 'cause it is a destination
-          ;; buffer we are inserting the org-link to.
-          (dest-buffer (current-buffer))
+    (let (
           ;; Getting URL from the clipboard. Since it may contain
           ;; some text properties we are using substring-no-properties
-          ;; function.
-          (url (substring-no-properties (current-kill 0))))
-      ;; Retrieving content by URL.
-      (url-retrieve
-       url
-       ;; Performing an action on the retrieved content.
-       `(lambda (s)
-          (let* (;; Decoding the content from UTF-8.
-                 (decoded-content (decode-coding-string (buffer-string) 'utf-8))
-                 ;; Extrating and preparing the ID.
-                 (message
-                  (extract-orgmodeid-from-html decoded-content)))
-            ;; FIXXME: this is taking forever, listing any doublicate ID in
-            ;; any Org-mode file :-(
-            ;;(org-open-link-from-string "id:2015-05-23-test")
-            )
-          )
-       )
-      ))
-
+          ;; function
+          (url (substring-no-properties (current-kill 0)))
+          ;; This is a check string: if the URL in the clipboard
+          ;; doesn't start with this, an error message is shown
+          (domain "http://karl-voit.at")
+  	)
+      ;; Check if URL string is from my domain (all other strings do
+      ;; not make any sense here)
+      (if (string-prefix-p (upcase domain) (upcase url))
+	  ;; Retrieving content by URL into new buffer asynchronously
+	  (url-retrieve url 
+                        ;; call this lambda function when URL content is retrieved
+			(lambda (status)
+			   ;; Extrating and preparing the ID
+			   (let* (
+                                  ;; Limit the ID search to the top 1000 characters of the buffer
+				  (pageheader (buffer-substring 1 1000))
+				  ;; Start index of the id
+                                  (start (string-match "<meta name=\"orgmode-id\" content=\"" pageheader))
+                                  ;; End index of the id
+                                  (end (string-match "\" />" pageheader start))
+                                  ;; Amount of characters to skip for the openning tag
+                                  (chars-to-skip (length "<meta name=\"orgmode-id\" content=\""))
+                                  ;; Extract ID
+                                  (lazyblorg-id (if (and start end (< start end))
+                                                    ;; ... extract it and return.
+                                                    (substring pageheader (+ start chars-to-skip) end)
+                                                  nil))
+                                  )
+			     (message (concat "Looking for id:" lazyblorg-id " ..."))
+			     (org-open-link-from-string (concat "id:" lazyblorg-id))
+			     )
+			   )
+			)
+  	(message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't start with \"" domain "\". Aborting."))
+  	)
+      )
+    )
+  
+  
 
 ;; ######################################################
 ;;** bookmarks (my-map b)
