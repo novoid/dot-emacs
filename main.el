@@ -46,6 +46,17 @@
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 
+
+;; ######################################################
+;; 2015-11-25: https://github.com/jwiegley/use-package
+(require 'use-package)
+
+;; http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html
+(setq package-enable-at-startup nil)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 ;; ######################################################
 ;; http://twitter.com/emacs_knight/status/128339316417101825
 ;; prefer y/n
@@ -99,7 +110,7 @@
   ;;disabled;; (setq calendar-location-name "Graz, AT")
   ;;disabled;; (setq calendar-latitude 47.07)
   ;;disabled;; (setq calendar-longitude 15.43)
-  ;;disabled;; (require 'theme-changer)
+  ;;disabled;; (use-package theme-changer)
   ;;disabled;; (change-theme 'whiteboard 'misterioso)  ;; day and night theme
 
   ;; my favorite dark themes: misterioso, zenburn, material
@@ -374,7 +385,7 @@ the same coding systems as Emacs."
 	   (getenv "PATH")))
   (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
   ;; Adding cygwin mounts
-  ;(require 'cygwin-mount)
+  ;(use-package cygwin-mount)
   ;(cygwin-mount-activate)
   ;; Adding cygwin bash shell
   (setq shell-file-name "c:/cygwin64/bin/bash")
@@ -435,7 +446,12 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* Python
 
-(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
+(use-package elpy
+  ;; :disabled t ;; stop loading if 't'
+  :ensure nil
+  :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
+  :mode ("\\.py\\'" . python-mode)
+  :config ;; executed after loading package
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
@@ -444,21 +460,21 @@ the same coding systems as Emacs."
     (elpy-use-ipython)
     )
 
-  (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-  (add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
+  ;(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+  ;(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
 
   ;; ######################################################
   ;; http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
   ;; Ropemacs:
   ;;(add-to-list 'load-path "~/.emacs.d/vendor/pymacs-0.24-beta2")
-  ;;disabled; (require 'pymacs)
+  ;;disabled; (use-package pymacs)
   ;;disabled; (pymacs-load "ropemacs" "rope-")
   ;;disabled; (setq ropemacs-enable-autoimport t)
 
   ;; ######################################################
   ;; auto-complete mode
   ;;(add-to-list 'load-path "~/.emacs.d/vendor/auto-complete-1.2")
-  ;;disabled; (require 'auto-complete-config)
+  ;;disabled; (use-package auto-complete-config)
   ;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/vendor/auto-complete-1.2/dict")
   ;;disabled; (ac-config-default)
 
@@ -494,27 +510,41 @@ the same coding systems as Emacs."
   ;; ######################################################
   ;; pylookup: https://github.com/tsgates/pylookup
   ;; add pylookup to your loadpath, ex) ~/.emacs.d/pylookup
-  (setq pylookup-dir "~/.emacs.d/contrib/pylookup")
-  (add-to-list 'load-path pylookup-dir)
+  ;OLD; (setq pylookup-dir "~/.emacs.d/contrib/pylookup")
+  ;OLD; (add-to-list 'load-path pylookup-dir)
   ;; load pylookup when compile time
-  (eval-when-compile (require 'pylookup))
-  ;; set executable file and db file
-  (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
-  (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
-  ;; set search option if you want
-  ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
+  (use-package pylookup
+    ;; :disabled t  ;; stop loading if 't'
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    ;;:diminish whitespace-mode  ;; remove from mode line
+    :defer 5 ;; load after 10s idle time
+    :config
+    ;; set executable file and db file
+    (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
+    (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
+    ;; set search option if you want
+    ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
+    )
 
-  ;; to speedup, just load it on demand
-  (autoload 'pylookup-lookup "pylookup"
-    "Lookup SEARCH-TERM in the Python HTML indexes." t)
+  ;; Lookup SEARCH-TERM in the Python HTML indexes
+  (use-package pylookup-lookup
+    ;; :disabled t  ;; stop loading if 't'
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    ;;:diminish whitespace-mode  ;; remove from mode line
+    :defer 5 ;; load after 10s idle time
+    )
 
-  (autoload 'pylookup-update "pylookup"
-    "Run pylookup-update and create the database at `pylookup-db-file'." t)
+  ;; Run pylookup-update and create the database at `pylookup-db-file'
+  (use-package pylookup-update
+    ;; :disabled t  ;; stop loading if 't'
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    ;;:diminish whitespace-mode  ;; remove from mode line
+    :defer 5 ;; load after 10s idle time
+    :bind (:map my-map ("P" 'pylookup-lookup))
+    ;;  (bind-key "P" #'pylookup-lookup my-map)
+    )
 
-  (bind-key "P" #'pylookup-lookup my-map)
-
-
-  )
+)
 
 
 ;; #############################################################################
@@ -752,12 +782,12 @@ the same coding systems as Emacs."
 ;; ######################################################
 ;; https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
 ;; Edit-server for Chrome
-;;disabled; ;(require 'edit-server)
+;;disabled; ;(use-package edit-server)
 ;;disabled; (my-load-local-el "contrib/edit-server.el")
 ;;disabled; (edit-server-start)
 ;;(if (locate-library "edit-server")
 ;;    (progn
-;;      (require 'edit-server)
+;;      (use-package edit-server)
 ;;      (setq edit-server-new-frame nil)
 ;;      (edit-server-start)))
 
@@ -1050,22 +1080,23 @@ the same coding systems as Emacs."
 
   ;; Enable org modules
   (setq org-modules (quote
-                     (org-bbdb org-bibtex
-                               org-crypt
-                               org-gnus
-                               org-id
-                               org-info
-                               org-habit
-                               org-inlinetask
-                               org-irc
-                               org-mew
-                               org-mhe
-                               org-protocol
-                               org-rmail
-                               org-vm
-                               org-wl
-                               org-w3m
-                               )
+                     (org-bbdb 
+		      org-bibtex
+                      org-crypt
+                      org-gnus
+                      org-id
+                      org-info
+                      org-habit
+                      org-inlinetask
+                      org-irc
+                      org-mew
+                      org-mhe
+                      org-protocol
+                      org-rmail
+                      org-vm
+                      org-wl
+                      org-w3m
+                      )
                      )
         )
 
@@ -1191,7 +1222,7 @@ the same coding systems as Emacs."
   ;; ######################################################
   ;(setq org-src-prevent-auto-filling t)
 
-    ;; ######################################################
+  ;; ######################################################
   ;; 2013-09-13:
   ;; From: Release Notes v8.1
   ;; http://orgmode.org/worg/agenda-optimization.html
@@ -1211,6 +1242,9 @@ the same coding systems as Emacs."
   (add-hook 'org-finalize-agenda-hook
             (lambda () (remove-text-properties
                         (point-min) (point-max) '(mouse-face t))))
+
+  ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
+  (setq org-ellipsis " ⤵")
 
 ;;** general key bindings
 
@@ -1299,16 +1333,14 @@ the same coding systems as Emacs."
 
 ;;** exporters
 
-  ;(autoload 'ox-html "ox-html.el")
-  (require 'ox-html);; 2014-11-16 if replaced with autoload above, it
-                    ;; throws error: "Debugger entered--Lisp error: (void-variable org-latex-classes)"
+  (require 'ox-html) ;; 2014-11-16 if replaced with autoload above, it
   (require 'ox-latex)
   (require 'ox-koma-letter)
-  ;;(autoload 'ox-beamer "ox-beamer.el")
   (require 'ox-ascii)
-  ;;(autoload 'ox-odt "ox-odt.el")
-  ;;(autoload 'ox-freemind "ox-freemind.el")
-  ;;(autoload 'ox-taskjuggler "ox-taskjuggler.el")
+  ;;(require 'ox-beamer)
+  ;;(require 'ox-odt)
+  ;;(require 'ox-freemind)
+  ;;(require 'ox-taskjuggler)
 
   ;; add bibtex to pdf export method:
   ;; http://orgmode.org/worg/exporters/anno-bib-template-worg.html#sec-5
@@ -1365,23 +1397,23 @@ the same coding systems as Emacs."
 
 
   ;; CANCELED -> add ARCHIVE-tag: http://article.gmane.org/gmane.emacs.orgmode/64852
-  (setq org-todo-state-tags-triggers
-	(quote (("CANCELLED"
-		 ("ARCHIVE" . t))
-		("WAITING"
-		 ("WAITING" . t))
-		(done
-		 ("WAITING"))
-		("TODO"
-		 ("WAITING")
-		 ("CANCELLED"))
-		("NEXT"
-		 ("WAITING"))
-		("STARTED"
-		 ("WAITING"))
-		("DONE"
-		 ("WAITING")
-		 ("CANCELLED")))))
+  ;; disabled 2015-12-07: (setq org-todo-state-tags-triggers
+  ;; disabled 2015-12-07:       (quote (("CANCELLED"
+  ;; disabled 2015-12-07:       	 ("ARCHIVE" . t))
+  ;; disabled 2015-12-07:       	("WAITING"
+  ;; disabled 2015-12-07:       	 ("WAITING" . t))
+  ;; disabled 2015-12-07:       	(done
+  ;; disabled 2015-12-07:       	 ("WAITING"))
+  ;; disabled 2015-12-07:       	("TODO"
+  ;; disabled 2015-12-07:       	 ("WAITING")
+  ;; disabled 2015-12-07:       	 ("CANCELLED"))
+  ;; disabled 2015-12-07:       	("NEXT"
+  ;; disabled 2015-12-07:       	 ("WAITING"))
+  ;; disabled 2015-12-07:       	("STARTED"
+  ;; disabled 2015-12-07:       	 ("WAITING"))
+  ;; disabled 2015-12-07:       	("DONE"
+  ;; disabled 2015-12-07:       	 ("WAITING")
+  ;; disabled 2015-12-07:       	 ("CANCELLED")))))
 
   ;;disabled; ;; ######################################################
   ;;disabled; ;; change font for DONE tasks
@@ -1702,13 +1734,10 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 	  ;; move time-stamp to properties-drawer:
 	  (search-forward-regexp "^\\[20")  ;; jump to second line (with time-stamp) via search
 	  (beginning-of-line)
-	  (insert ":PROPERTIES:")
-	  (newline)
-	  (beginning-of-line)
-	  (insert ":CREATED:  ")
+	  (insert ":PROPERTIES:\n:CREATED:  ")
 	  (end-of-line)
 	  (newline)
-	  (insert ":END:")
+	  (insert ":END:\n")
 	  ;; move region to end of notes.org
 	  (kill-region mybegin (point)) ;; kill region to kill-ring
 	  (switch-to-buffer "notes.org")
@@ -2375,7 +2404,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; ######################################################
   ;; contact management with org-contacts
   ;; http://julien.danjou.info/org-contacts.html
-  (autoload 'org-contacts "org-contacts.el")
+  (require 'org-contacts)
   (custom-set-variables
    '(org-contacts-files "~/share/all/org-mode/contacts.org")
    '(org-contacts-address-property "CITY")
@@ -2483,7 +2512,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; https://github.com/kiwanami/emacs-calfw
   ;; A calendar framework for Emacs
   ;;(add-to-list 'load-path "~/.emacs.d/contrib/calfw/")
-  ;;(require 'calfw-org)
+  ;;(use-package calfw-org)
   ;; call calendar using:  M-x cfw:open-org-calendar
 
   ;; ######################################################
@@ -2521,14 +2550,16 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	  ("c" "computer")
-	  ("cs" "sherri" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+	  ("h" "hardware")
+	  ("hs" "sherri" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("cg" "gary" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo X200s (IST, 2009-01-??)" "shorts")
+	  ("hg" "gary" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo X200s (IST, 2009-01-??)" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("cp" "RasPlay" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
+	  ("hp" "RasPlay" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("cb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
+	  ("hb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("hw" "Winora T3" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("w" "Breitenweg")
 	  ("ws" "Breitenweg shorts" entry (file+headline "~/share/all/org-mode/bwg.org" "shorts")
@@ -2595,7 +2626,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-tag-alist (quote (
 			      ;;("Kommunikation" . ?k)
 			      ("Besorgung" . ?B)
-			      ;;("nonComputer" . ?n)
+			      ("nonComputer" . ?n)
 			      ("fitness" . ?f)
 			      (:startgroup)
 			      ("@ALW" . ?a)
@@ -2644,6 +2675,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
      (ditaa . t)
      (dot . t)
      (sql . t)
+     (restclient . t)
      ))
 
   ;; Inhibit evaluation of code blocks during export
@@ -2659,10 +2691,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-show-entry-below (quote ((default))))
 
   ;; see id:2014-12-21-org-screen
-  (my-load-local-el "contrib/org-mode/contrib/lisp/org-screen.el")
-  (my-load-local-el "contrib/org-mode/lisp/ob-screen.el")
-  (require 'org-screen)    ;; requires screen, terminal
-  (require 'ob-screen)    ;; requires screen, terminal
+  (require 'org-screen)
+
+  (require 'ob-screen)
   (defvar org-babel-default-header-args:screen
     '(
       (:results . "silent")
@@ -2675,7 +2706,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
 
   ;; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
-  (if (my-system-is-gary-or-sherri)
+  (if (my-system-is-gary)
     ;outdated: org-babel-sh-command was removed with org-mode v8.3:
     ;outdated;  (setq org-babel-sh-command
     ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
@@ -2693,7 +2724,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;** org-crypt
 
   (when (my-system-is-gary-or-sherri)
-    (require 'org-crypt)  ;; if replaced with autoload: Debugger entered--Lisp error: (void-function org-crypt-use-before-save-magic)
+    (require 'org-crypt)
+       
     ;; Encrypt all entries before saving
     (org-crypt-use-before-save-magic)
     (setq org-tags-exclude-from-inheritance (quote ("crypt")))
@@ -2704,7 +2736,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;; ######################################################
     ;; encrypting whole files:
     ;; http://orgmode.org/worg/org-tutorials/encrypting-files.html
-    (autoload 'epa-file "epa-file.el")
+    (require 'epa-file)
     ;;(epa-file-enable) ;; 2013-08-22: already enabled (somewhere)
 
 
@@ -2744,7 +2776,6 @@ Null prefix argument turns off the mode."
 
     ;; do not ask for disabling auto-save
     (setq org-crypt-disable-auto-save nil)
-
 
     )
 
@@ -2894,7 +2925,7 @@ Null prefix argument turns off the mode."
   ;;disabled;; ;; http://ozymandias.dk/emacs/org-import-calendar.el
   ;;disabled;; ;; https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el
   ;;disabled;; (my-load-local-el "contrib/org-import-calendar.el")
-  ;;disabled;; (require 'org-import-icalendar)
+  ;;disabled;; (use-package org-import-icalendar)
 
 
 
@@ -2902,34 +2933,34 @@ Null prefix argument turns off the mode."
 ;;*** Austrian Holidays
   ;; from: http://paste.lisp.org/display/96464
   ;; ~/Notes/holidays.el
-  (autoload 'holidays "holidays.el")
+  (require 'holidays)
   (setq holiday-austria-holidays '((holiday-fixed  1  1 "Neujahr (frei)")
-				   (holiday-fixed  1  6 "Heilige Drei Könige (frei)")
-				   (holiday-easter-etc 1 "Ostermontag (frei)")
-				   (holiday-easter-etc -46 "Aschermittwoch")
-				   (holiday-easter-etc -2 "Karfreitag")
-				   (holiday-fixed  5  1 "Österreichischer Staatsfeiertag (frei)")
-				   (holiday-easter-etc 39 "Christi Himmelfahrt (frei)")
-				   (holiday-easter-etc 50 "Pfingstmontag (frei)")
-				   (holiday-easter-etc 60 "Fronleichnam (frei)")
-				   (holiday-float 5 0 2 "Muttertag")
-				   (holiday-float 6 0 2 "Vatertag")
-				   (holiday-fixed  8 15 "Mariä Himmelfahrt (frei)")
-				   (holiday-fixed 10 26 "Nationalfeiertag (frei)")
-				   (holiday-fixed 11  1 "Allerheiligen (frei)")
-				   (holiday-fixed 12  8 "Maria Empfängnis (frei)")
-				   (holiday-fixed 12 24 "Heiliger Abend (nicht frei)")
-				   (holiday-fixed 12 25 "Erster Weihnachtstag (frei)")
-				   (holiday-fixed 12 26 "Zweiter Weihnachtstag (frei)")))
-					;(setq holiday-other-holidays '((holiday-fixed 10  3 "Tag der Deutschen Einheit")))
-  (setq holiday-local-holidays holiday-austria-holidays)
-  (setq calendar-holidays (append holiday-local-holidays holiday-other-holidays))
-  ;; and add (load "~/Notes/holidays" t) to your .emacs and add
-  ;; #+CATEGORY: Feiertag
-  ;; %%(org-calendar-holiday)
-  ;; to an agenda file
-  ;; ######################################################
-  ;; Muttertag... from http://debianforum.de/forum/viewtopic.php?f=29&t=67024
+                                     (holiday-fixed  1  6 "Heilige Drei Könige (frei)")
+                                     (holiday-easter-etc 1 "Ostermontag (frei)")
+  				     (holiday-easter-etc -46 "Aschermittwoch")
+  				     (holiday-easter-etc -2 "Karfreitag")
+  				     (holiday-fixed  5  1 "Österreichischer Staatsfeiertag (frei)")
+  				     (holiday-easter-etc 39 "Christi Himmelfahrt (frei)")
+  				     (holiday-easter-etc 50 "Pfingstmontag (frei)")
+  				     (holiday-easter-etc 60 "Fronleichnam (frei)")
+  				     (holiday-float 5 0 2 "Muttertag")
+  				     (holiday-float 6 0 2 "Vatertag")
+  				     (holiday-fixed  8 15 "Mariä Himmelfahrt (frei)")
+  				     (holiday-fixed 10 26 "Nationalfeiertag (frei)")
+  				     (holiday-fixed 11  1 "Allerheiligen (frei)")
+  				     (holiday-fixed 12  8 "Maria Empfängnis (frei)")
+  				     (holiday-fixed 12 24 "Heiliger Abend (nicht frei)")
+  				     (holiday-fixed 12 25 "Erster Weihnachtstag (frei)")
+  				     (holiday-fixed 12 26 "Zweiter Weihnachtstag (frei)")))
+    ;;(setq holiday-other-holidays '((holiday-fixed 10  3 "Tag der Deutschen Einheit")))
+    (setq holiday-local-holidays holiday-austria-holidays)
+    (setq calendar-holidays (append holiday-local-holidays holiday-other-holidays))
+    ;; and add (load "~/Notes/holidays" t) to your .emacs and add
+    ;; #+CATEGORY: Feiertag
+    ;; %%(org-calendar-holiday)
+    ;; to an agenda file
+    ;; ######################################################
+    ;; Muttertag... from http://debianforum.de/forum/viewtopic.php?f=29&t=67024
 
 
   ;; ######################################################
@@ -3288,13 +3319,13 @@ the result as a time value."
     )
 
 ;;** orgaggregate
-;; https://github.com/tbanel/orgaggregate
-
-(my-load-local-el "contrib/orgaggregate/orgtbl-aggregate.el")
-(my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
+  ;; https://github.com/tbanel/orgaggregate
+  (my-load-local-el "contrib/orgaggregate/orgtbl-aggregate.el")
+  (my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
 
   );; end-of-Org-mode
 
+(message "############### DEBUG: config orgmode finished.")
 
 ;; #############################################################################
 ;;* misc modes
@@ -3324,15 +3355,24 @@ the result as a time value."
 ;; MiniMap for Emacs
 ;;deactivated;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
 ;;deactivated;; ;;(autoload 'minimap "minimap.el")
-;;deactivated;; (require 'minimap.el)
+;;deactivated;; (use-package minimap.el)
 ;;deactivated;; (setq minimap-window-location 'right)
+(use-package minimap
+  :disabled t
+  :ensure t
+  :diminish minimap-mode
+  :defer 10
+  :config ;; executed after loading package
+  (setq minimap-window-location 'right)
+)
+
 
 
 ;; #############################################################################
 ;;** TWiki (disabled)
 ;; http://www.neilvandyke.org/erin-twiki-emacs/
 ;; TWiki syntax highlighting
-;;disabled; ;(require 'erin))
+;;disabled; ;(use-package erin))
 ;;disabled; (my-load-local-el "contrib/erin.el")
 
 
@@ -3344,7 +3384,7 @@ the result as a time value."
 ;; http://www.emacswiki.org/emacs/TwitteringMode
 ;; http://citizen428.net/blog/2011/01/21/emacs-twittering-mode/
 ;;disabled; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/twittering-mode/"))
-;;disabled; (require 'twittering-mode)
+;;disabled; (use-package twittering-mode)
 ;;disabled; (setq twittering-timer-interval 300)  ; Update your timeline each 300 seconds (5 minutes)
 ;;disabled; (setq twittering-url-show-status nil) ; Keeps the echo area from showing all the http processes
 ;;disabled; (setq twittering-icon-mode t)         ; Show icons
@@ -3403,7 +3443,7 @@ the result as a time value."
 ;;** open-resource (disabled)
 ;; http://code.google.com/p/emacs-open-resource/
 ;;disabled; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
-;;disabled; (require 'open-resource)
+;;disabled; (use-package open-resource)
 ;;disabled; (global-set-key "\C-cr" 'open-resource)
 
 ;; #############################################################################
@@ -3438,8 +3478,12 @@ the result as a time value."
 ;; #############################################################################
 ;;** magit
 
-(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
-  (require 'magit) ;; if replaced with autoload: Debugger entered--Lisp error: (void-variable magit-status-mode-map)
+(use-package magit
+  ;; :disabled t  ;; stop loading if 't'
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
+  :config ;; executed after loading package
 
   ;; full screen magit-status
   ;; http://whattheemacsd.com//setup-magit.el-01.html
@@ -3454,7 +3498,6 @@ the result as a time value."
     (kill-buffer)
     (jump-to-register :magit-fullscreen))
 
-  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
 
   ;; #############################################################################
@@ -3465,8 +3508,15 @@ the result as a time value."
   ;; M-x smeargle  -  Highlight regions by last updated time.
   ;; M-x smeargle-age  -  Highlight regions by age of changes.
   ;; M-x smeargle-clear  - Clear overlays in current buffer
-  (my-load-local-el "contrib/emacs-smeargle/smeargle.el")
-  (bind-key "c" #'smeargle my-map)
+  ;OLD;(my-load-local-el "contrib/emacs-smeargle/smeargle.el")
+  ;OLD;(bind-key "c" #'smeargle my-map)
+  (use-package smeargle
+    ;; :disabled t
+    :ensure t
+    :defer 10
+    :config ;; executed after loading package
+    :bind (:map my-map ("c" . smeargle))
+  )
 
 
   )
@@ -3498,7 +3548,7 @@ the result as a time value."
 ;;disabled 2015-01-23;;   ;; https://code.google.com/p/confluence-el/
 ;;disabled 2015-01-23;;   ;; M-x confluence-get-page
 ;;disabled 2015-01-23;;   ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
-;;disabled 2015-01-23;;   (require 'confluence)
+;;disabled 2015-01-23;;   (use-package confluence)
 ;;disabled 2015-01-23;;   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
 ;;disabled 2015-01-23;;   (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
 ;;disabled 2015-01-23;; 
@@ -3539,7 +3589,7 @@ the result as a time value."
 ;;disabled 2015-01-23;;  ;; editing Outlook emails in Emacs
 ;;disabled 2015-01-23;;  ;; http://www.emacswiki.org/emacs/MsOutlook
 ;;disabled 2015-01-23;;  (my-load-local-el "contrib/outlookedit.el")
-;;disabled 2015-01-23;;  (require 'outlookedit)
+;;disabled 2015-01-23;;  (use-package outlookedit)
 ;;disabled 2015-01-23;;
 ;;disabled 2015-01-23;;  (defvar mno-get-outlook-body
 ;;disabled 2015-01-23;;    "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
@@ -3598,17 +3648,6 @@ by using nxml's indentation rules."
   )
 
 
-;; #############################################################################
-;;** REST
-;; REST client    https://github.com/pashky/restclient.el
-(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
-  (my-load-local-el "contrib/restclient/json-reformat.el")
-  (my-load-local-el "contrib/restclient/restclient.el")
-  ;(require 'restclient)
-  (autoload 'restclient "restclient.el")
-
-)
-
 
 ;; #############################################################################
 ;;** auto-save (disabled)
@@ -3616,7 +3655,7 @@ by using nxml's indentation rules."
 ;; http://www.emacswiki.org/emacs/AutoSave
 ;; http://www.litchie.net/programs/real-auto-save.html
 ;; ... installed 2014-03-05 via Marmalade
-;(require 'real-auto-save)
+;(use-package real-auto-save)
 ;(add-hook 'org-mode-hook 'turn-on-real-auto-save)
 ;;; Auto save interval is 10 seconds by default. You can change it:
 ;(when (my-system-is-powerplantwin)
@@ -3632,20 +3671,41 @@ by using nxml's indentation rules."
 ;; The algorithm is taken from OpenSpritz
 ;; https://github.com/zk-phi/spray
 ;; ... installed 2014-06-13 via manual download from github (for testing)
-(my-load-local-el "contrib/spray/spray.el")
-(bind-key "S" #'spray-mode my-map)
+;OLD;(my-load-local-el "contrib/spray/spray.el")
+;OLD;(bind-key "S" #'spray-mode my-map)
+(use-package spray
+  ;; :disabled t
+  :ensure t
+  :defer 10
+  :config ;; executed after loading package
+  :bind (:map my-map ("s" . spray-mode))
+)
+
 
 
 ;; #############################################################################
 ;;** yafolding
 ;; https://github.com/zenozeng/yafolding.el
 ;; Folding based on identation
-(my-load-local-el "contrib/yafolding/yafolding.el")
-(add-to-list 'auto-mode-alist '("\\.xml$" . yafolding-mode))
-(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
-(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
-(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
+;;(my-load-local-el "contrib/yafolding/yafolding.el")
+;;(add-to-list 'auto-mode-alist '("\\.xml$" . yafolding-mode))
+;;(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
+;;(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
+;;(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
 
+(use-package yafolding
+  :ensure t
+  :defer 10
+  :mode ("\\.xml\\'" . yafolding-mode)
+
+  :config ;; executed after loading package
+
+  (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
+  ;;(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
+  ;;(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
+  :bind (("<C-S-return>" . yafolding-toggle-all)
+         ("<C-return>" . yafolding-toggle-element))
+)
 
 ;; #############################################################################
 ;;** full screen Emacs   (F12)
@@ -3855,30 +3915,38 @@ The app is chosen from your OS's preference."
 
 ;;** guide-key
 ;; via reddit -> https://github.com/kai2nenobu/guide-key
-(when (my-system-is-gary-or-sherri)
-  (require 'guide-key)
-  ;;(setq guide-key/guide-key-sequence '("C-x r" "C-x 4"))
+(use-package guide-key
+  ;; :disabled t  ;; stop loading if 't'
+  :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
+  :config ;; executed after loading package
   (setq guide-key/guide-key-sequence '("C-c C-,"))
   (guide-key-mode 1)  ; Enable guide-key-mode
 )
 
+
 ;;** vcard-mode
 ;; via https://github.com/dochang/vcard-mode
-(when (my-system-is-gary-or-sherri)
-  (my-load-local-el "contrib/vcard-mode/vcard-mode.el")
-  (autoload 'vcard-mode "vcard-mode" "Major mode for vCard files" t)
-  (add-to-list 'auto-mode-alist '("\\.vc\\(f\\|ard\\)\\'" . vcard-mode))
+(use-package vcard-mode
+  ;; :disabled t  ;; stop loading if 't'
+  :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
+  :load-path "contrib/vcard-mode/" ;; relative to emacs dir
+  :pin manual
+  :mode ("\\.vc\\(f\\|ard\\)\\'" . vcard-mode)
 )
 
 ;;** sunrise-mode
 ;; via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
-;;deactivated 2015-08-31;; (my-load-local-el "contrib/sunrise-commander/sunrise-commander.el")
-;;deactivated 2015-08-31;; (require 'sunrise-commander)
-;;deactivated 2015-08-31;; ;; 3) Choose some unused extension for files to be opened in Sunrise VIRTUAL
-;;deactivated 2015-08-31;; ;; mode and add it to `auto-mode-alist', e.g. if you want to name your virtual
-;;deactivated 2015-08-31;; ;; directories like *.svrm just add to your .emacs file a line like the
-;;deactivated 2015-08-31;; ;; following:
-;;deactivated 2015-08-31;; (add-to-list 'auto-mode-alist '("\\.srvm\\'" . sr-virtual-mode))
+(use-package sunrise-commander
+  :disabled t  ;; disabled 2015-08-31
+  :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
+  :mode ("\\.py\\'" . python-mode)
+  ;; 3) Choose some unused extension for files to be opened in Sunrise VIRTUAL
+  ;; mode and add it to `auto-mode-alist', e.g. if you want to name your virtual
+  ;; directories like *.svrm just add to your .emacs file a line like the
+  ;; following:
+  :mode ("\\.srvm\\'" . sr-virtual-mode)
+)
+
 
 ;;** RAML-mode
 ;; via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
@@ -4054,8 +4122,6 @@ The app is chosen from your OS's preference."
 ;(bind-key "v" #'magit-status my-map)
 (bind-key "g" #'magit-status my-map)
 
-;;** remove trailing whitespaces (my-map " ")
-(bind-key " " #'delete-trailing-whitespace my-map)
 
 ;;** fullscreen (F12)
 (when (my-system-is-gary-or-sherri)
@@ -4085,8 +4151,6 @@ The app is chosen from your OS's preference."
 
 ;2015-11-03: deactivated for synonym (bind-key "s" #'my-toggle-windows-split my-map)
 
-;;** my-synonym-current-word (mymap s)
-(bind-key "s" #'my-synonym-current-word my-map)
 
 ;;** boxquote (my-map [qQ])
 ;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
@@ -4251,9 +4315,16 @@ The app is chosen from your OS's preference."
 
 ;;** command log mode (my-map k)
 ;; https://github.com/lewang/command-log-mode
-(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
-;(require 'command-log-mode)
-(add-hook 'LaTeX-mode-hook 'command-log-mode)
+;;(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
+(use-package command-log-mode
+  :disabled t
+  :ensure t
+  :defer 10
+  :diminish command-log-mode
+  :config ;; executed after loading package
+  (add-hook 'LaTeX-mode-hook 'command-log-mode)
+)
+
 
 ;; (defun my-start-command-log-mode()
 ;;   "load the command-log mode and start it."
@@ -4319,42 +4390,53 @@ The app is chosen from your OS's preference."
                          """foobar"""
                          (interactive) (my-mobile-org-import)) my-map )
 ;;** Org-mobile push (my-map I)
-(bind-key "I" (lambda () (interactive)
-                         ;; save original agenda in temporary variable
-                         (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
-                         ;; set agenda for MobileOrg (omit some agenda
-                         ;; views I do not need on my phone):
-                         (setq org-agenda-custom-commands
-                               (quote (
 
-                                       ("1" "1 month"
-                                        ((agenda "1 month"
-                                                 ((org-agenda-ndays 31)
-                                                  (org-agenda-time-grid nil)
-                                                  (org-agenda-entry-types ##'(:timestamp :sexp))
-                                                  )
-                                                 )))
 
-                                       ("B" "borrowed" tags "+borrowed"
-                                        (
-                                         (org-agenda-overriding-header "borrowed or lend")
-                                         (org-agenda-skip-function 'tag-without-done-or-canceled)
-                                         ))
+(defun my-org-mobile-push (&optional arg)
+  (interactive)
+  ;; when called with universal argument (C-u), Emacs will be closed
+  ;;      after pushing to files
+  ;; save original agenda in temporary variable
+  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+  ;; set agenda for MobileOrg (omit some agenda
+  ;; views I do not need on my phone):
+  (setq org-agenda-custom-commands
+        (quote (
+                
+                ("1" "1 month"
+                 ((agenda "1 month"
+                          ((org-agenda-ndays 31)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           )
+                          )))
 
-                                       ("$" "Besorgungen" tags "+Besorgung"
-                                        (
-                                         (org-agenda-overriding-header "Besorgungen")
-                                         (org-agenda-skip-function 'tag-without-done-or-canceled)
-                                         ))
-
-                                       )))
-                         ;; generate MobileOrg export:
-                         (org-mobile-push)
-                         ;; restore previously saved agenda:
-                         (setq org-agenda-custom-commands ORIGSAVED-org-agenda-custom-commands)
-                         )
-          my-map 
+                ("B" "borrowed" tags "+borrowed"
+                 (
+                  (org-agenda-overriding-header "borrowed or lend")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+                
+                ("$" "Besorgungen" tags "+Besorgung"
+                 (
+                  (org-agenda-overriding-header "Besorgungen")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+                
+                )))
+  ;; generate MobileOrg export:
+  (org-mobile-push)
+  ;; restore previously saved agenda:
+  (setq org-agenda-custom-commands
+        ORIGSAVED-org-agenda-custom-commands)
+  (if (equal arg '(4))
+      ;; save buffers and exit emacs;; FIXXME: not working yet
+      (save-buffers-kill-terminal 't)
+    )
   )
+
+(bind-key "I" #'my-org-mobile-push my-map)
+
 
 ;;** Filter open Org-tasks by tag (my-map F)
 ;; see id:2014-11-02-filter-org-tasks-by-tag
@@ -4434,8 +4516,12 @@ The app is chosen from your OS's preference."
 
 
 ;;** highlight-symbol (my-map h)
-(require 'highlight-symbol)
-(bind-key (kbd "h") #'highlight-symbol my-map)
+(use-package highlight-symbol
+  :ensure t
+  :defer 10
+  ;;(bind-key (kbd "h") #'highlight-symbol my-map)
+  :bind (:map my-map ("h" . highlight-symbol))
+  )
 ;; original: (global-set-key [(control f3)] 'highlight-symbol)
 ;; original: (global-set-key [f3] 'highlight-symbol-next)
 ;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
@@ -4466,6 +4552,14 @@ The app is chosen from your OS's preference."
 (bind-key "m s" #'mark-sentence my-map)
 (bind-key "m x" #'mark-sexp my-map)
 (bind-key "m d" #'mark-defun my-map)
+
+
+;;** delete-trailing-whitespace (my-map SPC)
+
+  ;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
+  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
+
+
 
 ;;* custom variables
 ;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
