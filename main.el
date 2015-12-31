@@ -3856,7 +3856,7 @@ by using nxml's indentation rules."
 	   (blink-cursor-mode t)
 	   (setq visible-bell nil)
 	   (toggle-frame-fullscreen)
-	   (scroll-bar-mode 1)
+	   ;(scroll-bar-mode 1)
 	   ;;(menu-bar-mode 1)
 	   (hidden-mode-line-mode nil)
 
@@ -3980,6 +3980,29 @@ The app is chosen from your OS's preference."
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
 )
 
+;;** nyan-mode
+;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
+;; update settings via M-x highlight-tail-reload
+;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
+(use-package highlight-tail
+  :disabled t  ;; disabled 2015-12-26 due issues with jumping cursor
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :init
+  (setq highlight-tail-colors '(("#1c1c1c" . 0)
+                                ;;("#bc2525" . 25)
+                                ;;("black" . 66)
+                                ))
+  :config
+  (highlight-tail-mode)
+)
+
+;;** anzu-mode (showing number of matches when searching)
+(use-package anzu
+;;  :disabled t  ;; disabled 2015-12-26 due issues with jumping cursor
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :config
+  (global-anzu-mode +1)
+)
 
 ;;* my helper functions
 
