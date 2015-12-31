@@ -17,7 +17,8 @@
 
 (server-start)
 (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
-(menu-bar-mode 0) ;; hide menu bar
+(menu-bar-mode 0) ;; hide menu-bar
+(scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
 (setq backup-inhibited t);; 2011-04-20: turn off backup files
 (setq calendar-week-start-day 1);; set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
