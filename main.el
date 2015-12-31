@@ -1179,7 +1179,8 @@ the same coding systems as Emacs."
   ;;      Message-ID: <87ipjv92pr.fsf@gmx.com>
   ;; syntax highlighting in source code:
   ;; 2014-04-04: set to nil in order to avoid performance issues!
-  (setq org-src-fontify-natively nil)
+  ;; 2015-12-26: set to t to test again these days
+  (setq org-src-fontify-natively t)
 
 
 
