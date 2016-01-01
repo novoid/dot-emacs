@@ -511,39 +511,24 @@ the same coding systems as Emacs."
   ;; ######################################################
   ;; pylookup: https://github.com/tsgates/pylookup
   ;; add pylookup to your loadpath, ex) ~/.emacs.d/pylookup
-  ;OLD; (setq pylookup-dir "~/.emacs.d/contrib/pylookup")
-  ;OLD; (add-to-list 'load-path pylookup-dir)
+  (setq pylookup-dir "~/.emacs.d/contrib/pylookup")
+  (add-to-list 'load-path pylookup-dir)
   ;; load pylookup when compile time
-  (use-package pylookup
-    ;; :disabled t  ;; stop loading if 't'
-    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    ;;:diminish whitespace-mode  ;; remove from mode line
-    :defer 5 ;; load after 10s idle time
-    :config
-    ;; set executable file and db file
-    (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
-    (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
-    ;; set search option if you want
-    ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
-    )
+  (eval-when-compile (require 'pylookup))
+  ;; set executable file and db file
+  (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
+  (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
+  ;; set search option if you want
+  ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
 
-  ;; Lookup SEARCH-TERM in the Python HTML indexes
-  (use-package pylookup-lookup
-    ;; :disabled t  ;; stop loading if 't'
-    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    ;;:diminish whitespace-mode  ;; remove from mode line
-    :defer 5 ;; load after 10s idle time
-    )
+  ;; to speedup, just load it on demand
+  (autoload 'pylookup-lookup "pylookup"
+    "Lookup SEARCH-TERM in the Python HTML indexes." t)
 
-  ;; Run pylookup-update and create the database at `pylookup-db-file'
-  (use-package pylookup-update
-    ;; :disabled t  ;; stop loading if 't'
-    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    ;;:diminish whitespace-mode  ;; remove from mode line
-    :defer 5 ;; load after 10s idle time
-    :bind (:map my-map ("P" 'pylookup-lookup))
-    ;;  (bind-key "P" #'pylookup-lookup my-map)
-    )
+  (autoload 'pylookup-update "pylookup"
+    "Run pylookup-update and create the database at `pylookup-db-file'." t)
+
+  (define-key my-map "P" 'pylookup-lookup)
 
 )
 
