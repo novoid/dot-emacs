@@ -4003,11 +4003,11 @@ The app is chosen from your OS's preference."
 
 
 ;;** display-time-mode
-;; http://www.emacswiki.org/emacs/DisplayTime
-(display-time-mode t)
 ;; http://emacs.stackexchange.com/questions/13227/easy-way-to-give-the-time-its-own-face-in-modeline
 (setq display-time-string-forms
       '((propertize (format-time-string "%A %F %R" now) 'face 'bold)))
+;; http://www.emacswiki.org/emacs/DisplayTime
+(display-time-mode t)
 
 ;;* my helper functions
 
