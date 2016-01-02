@@ -3420,11 +3420,16 @@ the result as a time value."
 ;; #############################################################################
 ;;** UndoTree
 ;; http://www.emacswiki.org/emacs/UndoTree
-(when (or (my-system-is-gary-or-sherri) (my-system-is-blanche))
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/undo-tree"))
+(use-package undo-tree
+  ;; :disabled t
+  :ensure t
+  :if (or (my-system-is-gary-or-sherri) (my-system-is-blanche))
+  :diminish undo-tree-mode
+  :config ;; executed after loading package
   (autoload 'undo-tree "undo-tree.el")
-  (global-undo-tree-mode)
-  )
+)
+
+
 
 ;; #############################################################################
 ;;** open-resource (disabled)
@@ -3997,7 +4002,8 @@ The app is chosen from your OS's preference."
   :config
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
-  (setq rm-blacklist '(" MRev" " hl-p" " Guide" " Anzu" " Guide" " Undo-Tree" " OrgStruct" " ,"))
+  ;;
+  (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
   (smart-mode-line-enable)
 )
 
