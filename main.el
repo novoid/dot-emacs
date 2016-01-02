@@ -3990,6 +3990,18 @@ The app is chosen from your OS's preference."
   (global-anzu-mode +1)
 )
 
+;;** smart-mode-line
+;; https://github.com/Malabarba/smart-mode-line
+(use-package smart-mode-line
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :config
+  (setq sml/no-confirm-load-theme t)
+  (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
+  (setq rm-blacklist '(" MRev" " hl-p" " Guide" " Anzu" " Guide" " Undo-Tree" " OrgStruct"))
+  (smart-mode-line-enable)
+)
+
+
 ;;* my helper functions
 
 ;; #############################################################################
