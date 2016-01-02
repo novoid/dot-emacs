@@ -3991,6 +3991,7 @@ The app is chosen from your OS's preference."
 (use-package anzu
 ;;  :disabled t  ;; disabled 2015-12-26 due issues with jumping cursor
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :diminish anzu-mode
   :config
   (global-anzu-mode +1)
 )
