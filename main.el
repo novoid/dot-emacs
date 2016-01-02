@@ -3997,10 +3997,17 @@ The app is chosen from your OS's preference."
   :config
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
-  (setq rm-blacklist '(" MRev" " hl-p" " Guide" " Anzu" " Guide" " Undo-Tree" " OrgStruct"))
+  (setq rm-blacklist '(" MRev" " hl-p" " Guide" " Anzu" " Guide" " Undo-Tree" " OrgStruct" " ,"))
   (smart-mode-line-enable)
 )
 
+
+;;** display-time-mode
+;; http://www.emacswiki.org/emacs/DisplayTime
+(display-time-mode t)
+;; http://emacs.stackexchange.com/questions/13227/easy-way-to-give-the-time-its-own-face-in-modeline
+(setq display-time-string-forms
+      '((propertize (format-time-string "%A %F %R" now) 'face 'bold)))
 
 ;;* my helper functions
 
