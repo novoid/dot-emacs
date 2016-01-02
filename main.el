@@ -444,6 +444,8 @@ the same coding systems as Emacs."
 ;;disabled;; 			  '(("(\\|)" . 'paren-face))))
 ;;disabled;; (add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
 
+(add-hook 'emacs-lisp-mode-hook 'turn-off-auto-fill)
+
 ;; #############################################################################
 ;;* Python
 
