@@ -3178,10 +3178,10 @@ Null prefix argument turns off the mode."
     (load-library "reftex")
     (and (buffer-file-name) (file-exists-p (buffer-file-name))
 	 (progn
-					;enable auto-revert-mode to update reftex when bibtex file changes on disk
+           ;;enable auto-revert-mode to update reftex when bibtex file changes on disk
 	   (global-auto-revert-mode t)
 	   (reftex-parse-all)
-					;add a custom reftex cite format to insert links
+           ;;add a custom reftex cite format to insert links
 	   (reftex-set-cite-format
 	    '((?b . "[[bib:%l][%l.bib]]")
 	      (?c . "[[cite:%l][%l]]")
