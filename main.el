@@ -451,9 +451,9 @@ the same coding systems as Emacs."
 
 (use-package elpy
   ;; :disabled t ;; stop loading if 't'
-  :ensure nil
+  :ensure t
   :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
-  :mode ("\\.py\\'" . python-mode)
+  :mode ("\\.py\\'" . elpy-mode)
   :config ;; executed after loading package
 
   ;; ######################################################
