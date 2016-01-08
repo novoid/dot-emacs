@@ -4020,6 +4020,34 @@ The app is chosen from your OS's preference."
 ;; http://www.emacswiki.org/emacs/DisplayTime
 (display-time-mode t)
 
+
+;;** dash
+;; required by eno (and most probably others in future)
+(use-package dash
+  :ensure t
+  :defer 10
+  )
+
+;;** edit-at-point
+;; required by eno (and most probably others in future)
+(use-package edit-at-point
+  :ensure t
+  :defer 10
+  )
+
+;;** eno-mode (ace-jump/easymotion provides "goto certain char in view")
+;; https://github.com/enoson/eno.el
+(use-package eno
+  ;; :disabled t
+  :ensure t
+  ;;  :diminish eno
+  :defer 11
+  ;;  :config ;; executed after loading package
+  :bind (:map my-map ("RET" . eno-word-goto))
+)
+
+
+
 ;;* my helper functions
 
 ;; #############################################################################
