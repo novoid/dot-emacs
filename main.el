@@ -4005,8 +4005,10 @@ The app is chosen from your OS's preference."
   :config
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
-  ;;
+  ;; hiding minor modes from mode line (don't forget the leading space) 
   (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
+  ;; replacing path names with abbrevations:
+  (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":ED:") t)
   (smart-mode-line-enable)
 )
 
