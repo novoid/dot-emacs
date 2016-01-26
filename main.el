@@ -88,16 +88,6 @@
 (setq history-delete-duplicates t)
 
 
-;; ######################################################
-;; handle CamelCaseParts as distinct words
-;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-(global-subword-mode 1) ; 1 for on, 0 for off
-;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
-;; FIXXME: this is a test for getting it work independent of CamelCase words
-;; see id:2014-03-04-M-l-subword
-(global-set-key [M-l] 'downcase-word)
-(global-set-key [M-u] 'upcase-word)
-(global-set-key [M-c] 'capitalize-word)
 
 
 ;; ######################################################
