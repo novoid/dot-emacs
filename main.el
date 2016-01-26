@@ -4035,6 +4035,93 @@ The app is chosen from your OS's preference."
   :bind (:map my-map ("RET" . eno-word-goto))
 )
 
+(if (my-system-is-powerplantwin)
+;;** Markdown
+;; http://ikiwiki.info/tips/Emacs_and_markdown/
+(use-package markdown-mode
+  ;; :disabled t
+  :ensure t
+  :if (my-system-is-powerplantwin)
+  ;;:diminish whitespace-mode
+  :defer 10
+  :mode ("\\.md\\'" . markdown-mode)
+)
+)
+
+;;** Ox-Reveal
+;; https://github.com/yjwen/org-reveal
+(use-package ox-reveal
+  :disabled t
+  :ensure t
+  ;;:if (my-system-is-powerplantwin)
+  ;;:diminish whitespace-mode
+  :defer 10
+  :config
+  ;;(setq org-reveal-root "file:///d:/reveal.js")
+  (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+  (setq org-reveal-hlevel 2)
+  (setq org-reveal-postamble "<p> Created by Karl. </p>")
+  (setq org-reveal-center t)
+  (setq org-reveal-progress t)
+  (setq org-reveal-history nil)
+  (setq org-reveal-control t)
+  (setq org-reveal-keyboard t)
+  (setq org-reveal-overview nil)
+  (setq org-reveal-transition "default")
+  ;; - transitions:
+  ;;   - default
+  ;;   - cube
+  ;;   - page
+  ;;   - concave
+  ;;   - zoom
+  ;;   - linear
+  ;;   - fade
+  ;;   - none
+  (setq org-reveal-theme "night")
+  ;; - Styles:
+  ;;   - black (default)
+  ;;   - white
+  ;;   - league
+  ;;     - gray one
+  ;;   - sky
+  ;;     - nice bright one
+  ;;   - beige
+  ;;     - nice bright one
+  ;;   - simple
+  ;;     - bright
+  ;;   - serif
+  ;;     - old school
+  ;;   - blood
+  ;;     - cool!
+  ;;   - *night*
+  ;;     - very nice
+  ;;   - moon
+  ;;   - solarized
+)
+
+;;** Swiper
+;; https://github.com/abo-abo/swiper
+;; http://pragmaticemacs.com/emacs/dont-search-swipe/
+(use-package swiper
+  ;;:disabled t
+  :ensure t
+  ;;:if (my-system-is-powerplantwin)
+  ;;:diminish whitespace-mode
+  :defer 10
+  :config
+
+  (setq ivy-display-style 'fancy) ;; fancy highlighting
+
+  ;;advise swiper to recenter on exit
+  (defun bjm-swiper-recenter (&rest args)
+    "recenter display after swiper"
+    (recenter)
+    )
+  (advice-add 'swiper :after #'bjm-swiper-recenter)
+
+  (bind-key "C-s" 'swiper)
+  ;;(global-set-key "\C-s" 'swiper)
+)
 
 
 ;;* my helper functions
