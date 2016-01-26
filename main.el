@@ -3336,6 +3336,7 @@ the result as a time value."
 ;;deactivated;; (setq minimap-window-location 'right)
 (use-package minimap
   :disabled t
+  :if (my-system-is-gary-or-sherri)
   :ensure t
   :diminish minimap-mode
   :defer 10
@@ -3921,7 +3922,7 @@ The app is chosen from your OS's preference."
 (use-package sunrise-commander
   :disabled t  ;; disabled 2015-08-31
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
-  :mode ("\\.py\\'" . python-mode)
+  :mode ("\\.py\\'" . elpy-mode)
   ;; 3) Choose some unused extension for files to be opened in Sunrise VIRTUAL
   ;; mode and add it to `auto-mode-alist', e.g. if you want to name your virtual
   ;; directories like *.svrm just add to your .emacs file a line like the
