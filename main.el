@@ -41,6 +41,21 @@
 (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 
+;; 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
+;; https://github.com/nicferrier/elmarmalade/issues/55#issuecomment-166271364
+(if (fboundp 'gnutls-available-p)
+    (fmakunbound 'gnutls-available-p))
+(setq tls-program '("gnutls-cli --tofu -p %p %h")
+      imap-ssl-program '("gnutls-cli --tofu -p %p %s")
+      smtpmail-stream-type 'starttls
+      starttls-extra-arguments '("--tofu")
+      )
+
+;; see id:2014-03-04-M-l-subword
+(global-set-key [M-l] 'downcase-word)
+(global-set-key [M-u] 'upcase-word)
+(global-set-key [M-c] 'capitalize-word)
+
 
 ;; ######################################################
 ;; 2015-11-25: https://github.com/jwiegley/use-package
