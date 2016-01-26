@@ -16,9 +16,7 @@
 ;(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
 
 (server-start)
-(if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
-(menu-bar-mode 0) ;; hide menu-bar
-(scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
+
 (setq backup-inhibited t);; 2011-04-20: turn off backup files
 (setq calendar-week-start-day 1);; set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
 (setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
@@ -26,15 +24,11 @@
 (setq large-file-warning-threshold 100000000);; set warning of opening large files to 100MB
 (setq sentence-end-double-space nil);; do not add double space after periods http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/
 (setq column-number-mode t);; show current column
-(setq debug-on-quit t);; show debug information on canceling endless loops and so forth
+(setq truncate-lines t)
 
 ;; Prevent the cursor from blinking
 ;(blink-cursor-mode 0)
 (set-cursor-color "IndianRed")
-
-;; http://www.emacswiki.org/emacs/sylecn
-;;show nothing in *scratch* when started
-(setq initial-scratch-message nil)
 
 ;; 2014-05-24: flat mode-line styling from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
 (set-face-attribute 'mode-line nil :box nil)
@@ -985,7 +979,7 @@ the same coding systems as Emacs."
 ;;* REST
 ;; REST client    https://github.com/pashky/restclient.el
 (use-package restclient
-  ;;:disabled t  ;; stop loading if 't'
+  :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :defer 10
   :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
@@ -1050,7 +1044,7 @@ the same coding systems as Emacs."
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
-  (my-load-local-el "contrib/ob-restclient.el/ob-restclient.el")
+  ;;(my-load-local-el "contrib/ob-restclient.el/ob-restclient.el")
   (autoload 'org-checklist "org-checklist.el")
 
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
@@ -1101,8 +1095,7 @@ the same coding systems as Emacs."
   (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 
 
-  (setq org-hide-leading-stars t)
-  (setq org-startup-indented t)
+  (setq org-startup-indented t);; Might cause performance issues; http://orgmode.org/manual/Clean-view.html
   (setq org-enforce-todo-dependencies t)
   (setq org-blank-before-new-entry (quote ((heading . t)
 					   (plain-list-item . nil))))
@@ -1127,7 +1120,7 @@ the same coding systems as Emacs."
   (setq split-width-threshold 9999);; Minimum width for splitting windows sensibly.
   (setq global-auto-revert-mode t)
   (setq require-final-newline nil)
-
+  (setq org-hide-leading-stars t)
   ;; default state for repeating/recurring events
   ;; see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
   (setq org-todo-repeat-to-state "NEXT")
@@ -1223,7 +1216,7 @@ the same coding systems as Emacs."
 
   ;; ######################################################
   ;; checking org-mode syntax:
-  (require 'org-lint)
+  ;;(require 'org-lint)
 
   ;; ######################################################
   ;; stop the mouse cursor from highlighting lines in the agenda
@@ -2187,8 +2180,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; start Agenda in follow-mode:
   ;(setq org-agenda-start-with-follow-mode t)
 
-  ;; do not initialize agenda Org files when generating (only) agenda
-  (setq org-agenda-inhibit-startup t)
+  ;; t = do not initialize agenda Org files when generating (only) agenda
+  ;; nil = initialize normal
+  (setq org-agenda-inhibit-startup nil)
 
   ;; Compact the block agenda view
   (setq org-agenda-compact-blocks t)
@@ -2664,7 +2658,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
      (ditaa . t)
      (dot . t)
      (sql . t)
-     (restclient . t)
+     ;;(restclient . t)
      ))
 
   ;; Inhibit evaluation of code blocks during export
@@ -2680,16 +2674,16 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-show-entry-below (quote ((default))))
 
   ;; see id:2014-12-21-org-screen
-  (require 'org-screen)
-
-  (require 'ob-screen)
-  (defvar org-babel-default-header-args:screen
-    '(
-      (:results . "silent")
-      (:session . "default")
-      (:cmd . "/bin/zsh")
-      (:terminal . "/usr/bin/gnome-terminal"))
-    "Default arguments to use when running screen source blocks.")
+  ;;(require 'org-screen)
+  ;;
+  ;;(require 'ob-screen)
+  ;;(defvar org-babel-default-header-args:screen
+  ;;  '(
+  ;;    (:results . "silent")
+  ;;    (:session . "default")
+  ;;    (:cmd . "/bin/zsh")
+  ;;    (:terminal . "/usr/bin/gnome-terminal"))
+  ;;  "Default arguments to use when running screen source blocks.")
 
   ;; http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-in-org-mode-take-2/
   (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
@@ -3324,17 +3318,6 @@ the result as a time value."
 ;;disabled;; (setq post-variable-signature-source "~/daten/nobackup/funnies/good_sigs/allsigs.txt")
 ;;disabled;; (setq post-signature-directory "~/daten/nobackup/funnies/good_sigs/")
 
-
-
-;; #############################################################################
-;;** Markdown
-;; http://ikiwiki.info/tips/Emacs_and_markdown/
-(autoload 'markdown-mode "markdown-mode")
-(add-to-list 'auto-mode-alist '("\\.mdwn" . markdown-mode))
-;;(add-hook 'markdown-mode-hook
-;;           '(lambda ()
-;;               (make-local-hook 'write-contents-hooks)
-;;                (add-hook 'write-contents-hooks 'ska-untabify nil t)))
 
 
 
