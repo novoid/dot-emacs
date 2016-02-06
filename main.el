@@ -4078,17 +4078,25 @@ The app is chosen from your OS's preference."
 ;;** Ox-Reveal
 ;; https://github.com/yjwen/org-reveal
 (use-package ox-reveal
-  :disabled t
+  ;;:disabled t
   :ensure t
   ;;:if (my-system-is-powerplantwin)
   ;;:diminish whitespace-mode
   :defer 10
   :config
   ;;(setq org-reveal-root "file:///d:/reveal.js")
-  (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+  (cond ((my-system-is-gary-or-sherri)
+         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+         (setq org-reveal-extra-css "file:///home/vk/.emacs.d/data/reveal_theme_night_local.css"))
+        ((my-system-is-powerplantwin)
+         (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/data/reveal.js/")
+         (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/data/reveal_theme_night_local.css"))
+        (t
+         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
+    )
   (setq org-reveal-hlevel 2)
   (setq org-reveal-postamble "<p> Created by Karl. </p>")
-  (setq org-reveal-center t)
+  (setq org-reveal-center nil)
   (setq org-reveal-progress t)
   (setq org-reveal-history nil)
   (setq org-reveal-control t)
