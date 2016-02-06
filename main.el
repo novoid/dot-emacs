@@ -98,7 +98,6 @@
     (global-unset-key key))
 
 
-(nyan-mode t)
 
 ;; #############################################################################
 ;;* Themes
@@ -3986,9 +3985,11 @@ The app is chosen from your OS's preference."
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
 (use-package nyan-mode
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :config
+  (nyan-mode t)
 )
 
-;;** nyan-mode
+;;** highlight-tail
 ;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
 ;; update settings via M-x highlight-tail-reload
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
