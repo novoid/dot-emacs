@@ -1,4 +1,4 @@
-;;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
+; -*- orgstruct-heading-prefix-regexp: ";;" -*-
 
 ;; ######################################################
 (message "######### loading main.el ...")
@@ -1066,8 +1066,6 @@ the same coding systems as Emacs."
   ;;         ("M-o r" . highlight-regexp)
   ;;         ("M-o w" . highlight-phrase)))
 
-
-;;** load Org and misc contrib packages
 
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
@@ -4459,8 +4457,7 @@ i.e. change right window to bottom, or change bottom window to right."
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
 
-;;** Elisp
-(bind-key "er" #'eval-region my-map)
+;;** Elisp (bind-key "er" #'eval-region my-map)
 ;; disabled ;;(bind-key "el" #'find-library my-map)
 ;; disabled ;;(bind-key "ef" #'find-function-at-point my-map)
 
