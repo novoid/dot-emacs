@@ -119,10 +119,36 @@
   ;;   (load-theme 'zenburn t)
   ;;   (load-theme 'material t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
   ;;              issues with *bold* stuff in org-mode :-(
-  ;; my favorite light themes: leuven, whiteboard, solarized-light, 
+  ;; my favorite light themes: leuven, whiteboard, solarized-light,
   ;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
   ;;   (load-theme 'whiteboard t)
   ;;   (load-theme 'solarized-light t)
+
+  ;; enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
+  ;; issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
+  ;; M-x describe-face  -> show definition
+  ;; C-u C-x =          -> show all font information
+;  (face-spec-set 'org-block-begin-line
+;    '((t (:underline "#FFFFFF" :foreground "#404040" :background "#b3b3b3")))
+;    "Face used for the line delimiting the begin of source blocks.")
+
+  ;(defface org-block-begin-line
+  ;  '((t (:underline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
+  ;  "Face used for the line delimiting the begin of source blocks.")
+
+  (defface org-block
+    ;; defface org-block-background was removed from org:
+    ;; http://emacs.stackexchange.com/questions/14824/org-block-background-font-not-having-effect
+    ;; read also: https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
+    '((t (:background "#1a1a1a")))
+    "Face used for the source block background.")
+
+  ;(defface org-block-end-line
+  ;  '((t (:overline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
+  ;  "Face used for the line delimiting the end of source blocks.")
+
+  ;;test: (set-face-background 'org-block-background "#1a1a1a")
+
   )
 
 
@@ -268,25 +294,25 @@ the same coding systems as Emacs."
 
 (defun my-system-is-gary-or-sherri ()
   "Return true if the system we are running on is gary or sherri"
-  (or 
-    (string-equal system-name "gary") 
-    (string-equal system-name "gary.lan") 
+  (or
+    (string-equal system-name "gary")
+    (string-equal system-name "gary.lan")
     (string-equal system-name "sherri")
     (string-equal system-name "sherri.lan")
     )
   )
 (defun my-system-is-sherri ()
   "Return true if the system we are running on is gary or sherri"
-  (or 
+  (or
     (string-equal system-name "sherri")
     (string-equal system-name "sherri.lan")
     )
   )
 (defun my-system-is-gary ()
   "Return true if the system we are running on is gary or sherri"
-  (or 
-    (string-equal system-name "gary") 
-    (string-equal system-name "gary.lan") 
+  (or
+    (string-equal system-name "gary")
+    (string-equal system-name "gary.lan")
     )
   )
 (defun my-system-is-blanche ()
@@ -483,7 +509,7 @@ the same coding systems as Emacs."
   ;; ######################################################
   ;; PyFlakes:
   (setq python-check-command "pyflakes")
-  
+
   ;; ######################################################
   ;; fix flymake (PEP8): ignore E501 (long lines)
   ;; see id:2015-04-04-flymake and http://stackoverflow.com/a/1393590
@@ -498,16 +524,16 @@ the same coding systems as Emacs."
         (list "~/bin/pycheckers"  (list local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
                  '("\\.py\\'" flymake-pyflakes-init)))
-  
+
   ;; ######################################################
   ;; better flymake: http://stackoverflow.com/a/1621489
-  (add-hook 'python-mode-hook 
-      (lambda () 
+  (add-hook 'python-mode-hook
+      (lambda ()
         (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
         (local-set-key [f5] 'flymake-goto-prev-error)
         (local-set-key [f6] 'flymake-goto-next-error)
         ))
-  
+
 
   ;; ######################################################
   ;; pylookup: https://github.com/tsgates/pylookup
@@ -697,11 +723,11 @@ the same coding systems as Emacs."
   ;; disabled 2015-03-22 because it did not help ;;       (if candidate
   ;; disabled 2015-03-22 because it did not help ;;           (message "TeX master document: %s" (file-name-nondirectory candidate)))
   ;; disabled 2015-03-22 because it did not help ;;       candidate))
-  ;; disabled 2015-03-22 because it did not help ;; 
+  ;; disabled 2015-03-22 because it did not help ;;
   ;; disabled 2015-03-22 because it did not help ;; ;; ONLY for special file modes with a recognized extension!
   ;; disabled 2015-03-22 because it did not help ;; ;; Causes Lisp error (that's a afact) when used with buffers like *scratch* (that's my guess)
   ;; disabled 2015-03-22 because it did not help ;; ;;(setq TeX-master (guess-TeX-master (buffer-file-name)))
-  
+
   );; end LaTeX settings
 
 
@@ -1003,22 +1029,22 @@ the same coding systems as Emacs."
 ;; (use-package org
 ;;   :ensure t
 ;;   :pin manual
-;;   :if (or 
-;;        (my-system-is-gary-or-sherri) 
-;;        (my-system-is-blanche) 
-;;        (my-system-is-powerplantlinux) 
+;;   :if (or
+;;        (my-system-is-gary-or-sherri)
+;;        (my-system-is-blanche)
+;;        (my-system-is-powerplantlinux)
 ;;        (my-system-is-powerplantwin)
 ;;        )
-;; 
+;;
 ;;   ;; set paths to manually installed Org-mode (from git)
-;;   :load-path ( "~/.emacs.d/contrib/org-mode/lisp" 
+;;   :load-path ( "~/.emacs.d/contrib/org-mode/lisp"
 ;;                "~/.emacs.d/contrib/org-mode/contrib/lisp")
-;; 
+;;
 ;;   ;; assign file extensions to Org-mode
 ;;   :mode ("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode)
-;; 
+;;
 ;;   :config ;; executed after loading package
-;; 
+;;
 ;;   (message "############### DEBUG: config orgmode ...")
 
 (when (or (my-system-is-gary-or-sherri) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
@@ -1067,7 +1093,7 @@ the same coding systems as Emacs."
 
   ;; Enable org modules
   (setq org-modules (quote
-                     (org-bbdb 
+                     (org-bbdb
 		      org-bibtex
                       org-crypt
                       org-gnus
@@ -1569,7 +1595,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
   (defun straight-string (s)
     ;; Spliting the string and then concatenating it back.
     (mapconcat '(lambda (x) x) (split-string s) " "))
-  
+
   (defun my-cliplink-format-and-trim-title (title)
     (let (;; Table of replacements which make this title usable for
           ;; org-link. Can be extended.
@@ -1588,7 +1614,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
         (setq result (concat (substring result 0 max-length) "...")))
       ;; Returning result.
       result))
-  
+
   (defun extract-title-from-html (html)
     (let (;; Start index of the title.
           (start (string-match "<title>" html))
@@ -1601,7 +1627,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
           ;; ... extract it and return.
           (substring html (+ start chars-to-skip) end)
         nil)))
-  
+
   (defun cliplink-decode-content-and-return-orgmode-link-of-title (buffer url content)
     (let* (;; Decoding the content from UTF-8.
            (decoded-content (decode-coding-string content 'utf-8))
@@ -1611,7 +1637,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
       ;; Inserting org-link.
       (with-current-buffer buffer
         (insert (format "[[%s][%s]]" url title)))))
-  
+
   (defun my-insert-orgmode-url-from-clipboard ()
     ;; Of course, this function is interactive. :)
     (interactive)
@@ -1654,7 +1680,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
       ;; not make any sense here)
       (if (string-prefix-p (upcase domain) (upcase url))
 	  ;; Retrieving content by URL into new buffer asynchronously
-	  (url-retrieve url 
+	  (url-retrieve url
                         ;; call this lambda function when URL content is retrieved
 			(lambda (status)
 			   ;; Extrating and preparing the ID
@@ -1682,8 +1708,8 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
   	)
       )
     )
-  
-  
+
+
 
 ;; ######################################################
 ;;** bookmarks (my-map b)
@@ -2056,12 +2082,12 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;; disabled 2015-02-15 - can filter by tag ;;  (
 		;; disabled 2015-02-15 - can filter by tag ;;   (org-agenda-overriding-header "SOMEDAY is today! :-)")
 		;; disabled 2015-02-15 - can filter by tag ;;   ))
-                ;; disabled 2015-02-15 - can filter by tag ;; 
+                ;; disabled 2015-02-15 - can filter by tag ;;
 		;; disabled 2015-02-15 - can filter by tag ;; ("h" "home @ALW" tags-todo "+@ALW"
 		;; disabled 2015-02-15 - can filter by tag ;;  (
 		;; disabled 2015-02-15 - can filter by tag ;;   (org-agenda-overriding-header "home tasks")
 		;; disabled 2015-02-15 - can filter by tag ;;   ))
-                ;; disabled 2015-02-15 - can filter by tag ;; 
+                ;; disabled 2015-02-15 - can filter by tag ;;
 		;; disabled 2015-02-15 - can filter by tag ;; ("b" "Breitenweg @BWG" tags-todo "+@BWG"
 		;; disabled 2015-02-15 - can filter by tag ;;  (
 		;; disabled 2015-02-15 - can filter by tag ;;   (org-agenda-overriding-header "home tasks")
@@ -2713,7 +2739,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   (when (my-system-is-gary-or-sherri)
     (require 'org-crypt)
-       
+
     ;; Encrypt all entries before saving
     (org-crypt-use-before-save-magic)
     (setq org-tags-exclude-from-inheritance (quote ("crypt")))
@@ -3525,7 +3551,7 @@ the result as a time value."
 ;;** Confluence (disabled)
 
 ;;disabled 2015-01-23;; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;
 ;;disabled 2015-01-23;;   ;; ######################################################
 ;;disabled 2015-01-23;;   ;; editing Confluence wiki pages (up to Confluence 3.x)
 ;;disabled 2015-01-23;;   ;; https://code.google.com/p/confluence-el/
@@ -3534,7 +3560,7 @@ the result as a time value."
 ;;disabled 2015-01-23;;   (use-package confluence)
 ;;disabled 2015-01-23;;   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
 ;;disabled 2015-01-23;;   (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
-;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;
 ;;disabled 2015-01-23;;   (dolist (hook '(confluence-mode-hook))
 ;;disabled 2015-01-23;;     (add-hook hook (lambda ()
 ;;disabled 2015-01-23;; 		     (flyspell-mode 1)
@@ -3542,7 +3568,7 @@ the result as a time value."
 ;;disabled 2015-01-23;; 		     (flyspell-buffer)
 ;;disabled 2015-01-23;; 		     ))
 ;;disabled 2015-01-23;;     )
-;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;
 ;;disabled 2015-01-23;;   (defun vk-open-as-confluence-page ()
 ;;disabled 2015-01-23;;     "Takes current line (delimited by brackets, two spaces or pipe) and opens it as Confluence page in IR6 space"
 ;;disabled 2015-01-23;;     (interactive)
@@ -3567,7 +3593,7 @@ the result as a time value."
 ;;** Outlook (disabled)
 
 ;;disabled 2015-01-23;; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-;;disabled 2015-01-23;; 
+;;disabled 2015-01-23;;
 ;;disabled 2015-01-23;;  ;; ######################################################
 ;;disabled 2015-01-23;;  ;; editing Outlook emails in Emacs
 ;;disabled 2015-01-23;;  ;; http://www.emacswiki.org/emacs/MsOutlook
@@ -3625,7 +3651,7 @@ by using nxml's indentation rules."
 ;;** my-xml-pretty-print
 (defun my-xml-pretty-print()
   "mark whole buffer and call xml-pretty-print-region"
-  (interactive) 
+  (interactive)
   (mark-whole-buffer)
   (xml-pretty-print-region);; FIXXME: provide (begin end)
   )
@@ -3994,7 +4020,7 @@ The app is chosen from your OS's preference."
   :config
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
-  ;; hiding minor modes from mode line (don't forget the leading space) 
+  ;; hiding minor modes from mode line (don't forget the leading space)
   (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":ED:") t)
@@ -4144,8 +4170,8 @@ The app is chosen from your OS's preference."
 
 (defun my-hours-of-hm-string(hm-string)
   "returns the hours of a string like 9:42 -> 9"
-  (string-to-number 
-   (car 
+  (string-to-number
+   (car
     (split-string hm-string ":")
     )
    )
@@ -4161,7 +4187,7 @@ The app is chosen from your OS's preference."
   (let (
 	(hours (my-hours-of-hm-string hm-string));; integer of hours from hm-string
 	(minutes (my-minutes-of-hm-string hm-string));; integer of minutes from hm-string
-        (norm-hour-minutes (cond 
+        (norm-hour-minutes (cond
                             ((string= day "Mon") 8.5)
                             ((string= day "Mo")  8.5)
                             ((string= day "Tue") 8.5)
@@ -4296,7 +4322,7 @@ i.e. change right window to bottom, or change bottom window to right."
   (menu-bar-mode 0) ;; hide menu-bar
   (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
   (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
-  
+
   ;; http://www.emacswiki.org/emacs/sylecn
   ;;show nothing in *scratch* when started
   (setq initial-scratch-message nil)
@@ -4319,7 +4345,7 @@ i.e. change right window to bottom, or change bottom window to right."
   (menu-bar-mode) ;; show menu-bar
   (scroll-bar-mode 1) ;; show scroll-bar
   (setq debug-on-quit nil);; no debug information on canceling endless loops and so forth
-  
+
   ;; http://www.emacswiki.org/emacs/sylecn
   ;;show nothing in *scratch* when started
   (setq initial-scratch-message ";; This buffer is for notes you don't want to save\n;; If you want to create a file, visit that file with C-x C-f,\n;; then enter the text in that file's own buffer.\n\n")
@@ -4615,7 +4641,7 @@ i.e. change right window to bottom, or change bottom window to right."
 (bind-key (kbd ".") (lambda()  ;; open main.el
 			       (interactive)
 			       (find-file "~/.emacs.d/main.el")
-			       ) 
+			       )
           my-map
           )
 
@@ -4666,7 +4692,7 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; views I do not need on my phone):
   (setq org-agenda-custom-commands
         (quote (
-                
+
                 ("1" "1 month"
                  ((agenda "1 month"
                           ((org-agenda-ndays 31)
@@ -4680,13 +4706,13 @@ i.e. change right window to bottom, or change bottom window to right."
                   (org-agenda-overriding-header "borrowed or lend")
                   (org-agenda-skip-function 'tag-without-done-or-canceled)
                   ))
-                
+
                 ("$" "Besorgungen" tags "+Besorgung"
                  (
                   (org-agenda-overriding-header "Besorgungen")
                   (org-agenda-skip-function 'tag-without-done-or-canceled)
                   ))
-                
+
                 )))
   ;; generate MobileOrg export:
   (org-mobile-push)
@@ -4763,9 +4789,9 @@ i.e. change right window to bottom, or change bottom window to right."
   (if (use-region-p)
       ;; if a region string is found, ask for a property and set property to
       ;; the string in the region
-      (let ((val (replace-regexp-in-string 
+      (let ((val (replace-regexp-in-string
                   "\\`[ \t\n]*" ""
-                  (replace-regexp-in-string "[ \t\n]*\\'" "" 
+                  (replace-regexp-in-string "[ \t\n]*\\'" ""
                                             (substring (buffer-string)
                                                        (- (region-beginning) 1)
                                                        (region-end))))
