@@ -4143,12 +4143,35 @@ The app is chosen from your OS's preference."
     "recenter display after swiper"
     (recenter)
     )
-  (advice-add 'swiper :after #'bjm-swiper-recenter)
+  (when (my-system-is-gary-or-sherri)
+    (advice-add 'swiper :after #'bjm-swiper-recenter)
+    )
 
   (bind-key "C-s" 'swiper)
   ;;(global-set-key "\C-s" 'swiper)
 )
 
+;;** char-menu
+;; http://irreal.org/blog/?p=4926 -> https://github.com/mrkkrp/char-menu
+;; add characters: "M-x customize-group char-menu RET"
+(use-package char-menu
+  ;;:disabled t
+  :ensure t
+;;  :if (my-system-is-gary-or-sherri)
+  :defer 10
+  :config
+  (setq char-menu
+        '("→" "…" "š" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
+         ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
+         ("Math"       "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
+         ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
+          "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
+         ("Hatschek"   "Ǎ" "ǎ" "Č" "č" "Ď" "ď" "Ě" "ě" "Ǧ" "ǧ" "Ȟ" "ȟ"
+          "Ǐ" "ǐ" "ǰ" "Ǩ" "ǩ" "Ľ" "ľ" "Ň" "ň" "Ǒ" "ǒ" "Ř" "ř" "Š" "š" "Ť" "ť"
+          "Ǔ" "ǔ" "Ǚ" "ǚ" "Ž" "ž" "Ǯ" "ǯ")
+        ))
+  (global-set-key [f7] 'char-menu)
+)
 
 ;;* my helper functions
 
