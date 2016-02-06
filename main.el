@@ -4407,6 +4407,15 @@ i.e. change right window to bottom, or change bottom window to right."
 (global-set-key [S-left] 'backward-word)
 (global-set-key [S-right] 'forward-word)
 
+;; https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/czntjs2
+(global-set-key (kbd "C-, l")          'avy-goto-line)
+(global-set-key (kbd "C-, w")          'avy-goto-word-0)
+;;(global-set-key (kbd "C-, .")          'winner-redo)
+;;(global-set-key (kbd "C-, m")          'winner-undo)
+;;(global-set-key (kbd "C-, w")          'ace-window)
+;;(global-set-key (kbd "C-, s")          'workspace-goto)
+;;(global-set-key (kbd "C-, ]")          'evil-jump-to-tag)
+(global-set-key (kbd "C-, n")          'neotree-toggle)
 
 ;;** Magit status (my-map g)
 ;(bind-key "v" #'magit-status my-map)
