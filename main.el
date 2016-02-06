@@ -4849,6 +4849,8 @@ i.e. change right window to bottom, or change bottom window to right."
   ;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
   (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
 
+;; 2016-02-06: https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
 ;;* custom variables
