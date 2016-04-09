@@ -285,6 +285,12 @@ the same coding systems as Emacs."
   (string-equal system-type "darwin")
   )
 
+;; Check if system is Microsoft Windows
+(defun my-system-type-is-windows ()
+  "Return true if system is Windows-based (at least up to Win7)"
+  (string-equal system-type "windows-nt")
+  )
+
 ;; Check if system is GNU/Linux
 (defun my-system-type-is-gnu ()
   "Return true if system is GNU/Linux-based"
@@ -333,6 +339,10 @@ the same coding systems as Emacs."
   "Return true if the system we are running on is powerplant"
   (string-equal system-name "ATGRZ4043268X")
   )
+(defun my-system-is-kva ()
+  "Return true if the system we are running on is karl-voit.at"
+  (string-equal system-name "friends.grml.info")
+  )
 
 
 ;; #############################################################################
@@ -341,7 +351,7 @@ the same coding systems as Emacs."
 
 ;; http://www.emacswiki.org/emacs/MacOSTweaks#toc13
 ;; setting path so that Emacs finds aspell and such
-(when (my-system-is-blanche)
+(when (my-system-type-is-darwin)
   (setenv "PATH"
 	  (concat (getenv "PATH")
 		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
@@ -364,17 +374,17 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; fix paste-issue (\344 instead of ä) on Windows 7:
-(when (my-system-is-powerplantwin)
+(when (my-system-type-is-windows)
   (set-selection-coding-system 'iso-latin-1-dos)
   )
 
-(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+(when (my-system-type-is-gnu)
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
   )
 
 
 ;; setting path so that Emacs finds aspell and such
-(if (my-system-is-powerplantwin)
+(if (my-system-type-is-windows)
 
      ;;disabled;(setenv "PATH"
      ;;disabled;               (concat (getenv "PATH")
@@ -443,12 +453,26 @@ the same coding systems as Emacs."
   (set-face-attribute 'default (selected-frame) :height 100)
   )
 
-(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+(when (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
   (my-increase-fontsize);; increase fonts on some hosts by default
   )
-(when (my-system-is-blanche)
+(when (my-system-type-is-darwin)
   (set-face-attribute 'default (selected-frame) :height 170);; 2011-04-20: increase/set font size http://www.emacswiki.org/emacs/SetFonts
   )
+(when (my-system-is-powerplantwin)
+  (set-face-attribute 'default (selected-frame) :height 150)
+  )
+
+;;* measure-time()
+
+;; http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-function-calls-in-emacs-lisp
+(defmacro measure-time (&rest body)
+  "Measure the time it takes to evaluate BODY."
+  `(let ((time (current-time)))
+     ,@body
+     (message " Execution time: %.06f" (float-time (time-since time)))))
+
+
 
 ;; #############################################################################
 ;;* Elisp
@@ -476,13 +500,13 @@ the same coding systems as Emacs."
 (use-package elpy
   ;; :disabled t ;; stop loading if 't'
   :ensure t
-  :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
+  :if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
   :mode ("\\.py\\'" . elpy-mode)
   :config ;; executed after loading package
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
-  (when (my-system-is-gary-or-sherri)
+  (when (my-system-type-is-gnu)
     (elpy-enable)
     (elpy-use-ipython)
     )
@@ -562,7 +586,7 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* LaTeX
 
-(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+(when (my-system-type-is-gnu)
 
   (autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
   (setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
@@ -669,7 +693,7 @@ the same coding systems as Emacs."
   ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
   ;; CDLaTeX - more LaTeX functionality
   ;; http://orgmode.org/org.html#CDLaTeX-mode
-  ;;disabled;(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+  ;;disabled;(when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
   ;;disabled;  (my-load-local-el "contrib/cdlatex.el")
   ;;disabled;  )
 
@@ -739,7 +763,7 @@ the same coding systems as Emacs."
 
 ;;disabled;; ;; ######################################################
 ;;disabled;; ;; http://blog.zenspider.com/2007/03/locate-and-spotlight.html
-;;disabled;; (when (my-system-is-blanche)
+;;disabled;; (when (my-system-type-is-darwin)
 ;;disabled;;   (defun locate-make-mdfind-command-line (search-string)
 ;;disabled;;     (list "mdfind" (concat "kMDItemDisplayName=*" search-string "*")))
 ;;disabled;;   (defun spotlight ()
@@ -762,28 +786,41 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-(when (my-system-is-powerplantlinux)
-  (setq browse-url-browser-function 'browse-url-generic
-	;;      browse-url-generic-program "/usr/bin/google-chrome")
-	browse-url-generic-program "/usr/bin/firefox")
-  )
-(when (my-system-is-sherri)
-  (setq browse-url-browser-function 'browse-url-generic
-	;;browse-url-generic-program "~/bin/firefox-browser/firefox")
-	browse-url-generic-program "/usr/bin/iceweasel")
-  )
-(when (my-system-is-blanche)
+;;old;;(when (my-system-is-powerplantlinux)
+;;old;;  (setq browse-url-browser-function 'browse-url-generic
+;;old;;	;;      browse-url-generic-program "/usr/bin/google-chrome")
+;;old;;	browse-url-generic-program "/usr/bin/firefox")
+;;old;;  )
+;;old;;(when (my-system-is-sherri)
+;;old;;  (setq browse-url-browser-function 'browse-url-generic
+;;old;;	;;browse-url-generic-program "~/bin/firefox-browser/firefox")
+;;old;;	browse-url-generic-program "/usr/bin/iceweasel")
+;;old;;  )
+;;old;;(when (my-system-type-is-darwin)
+;;old;;  (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+;;old;;  )
+;;old;;(when (my-system-is-gary)
+;;old;;  (setq browse-url-browser-function 'browse-url-generic
+;;old;;	;;      browse-url-generic-program "/usr/bin/google-chrome")
+;;old;;	browse-url-generic-program "/usr/bin/iceweasel")
+;;old;;  )
+(cond
+ ((my-system-type-is-darwin)
   (setq browse-url-browser-function 'browse-url-default-macosx-browser)
   )
-(when (my-system-is-gary)
+ ((file-exists-p "/usr/bin/firefox")
   (setq browse-url-browser-function 'browse-url-generic
-	;;      browse-url-generic-program "/usr/bin/google-chrome")
+	browse-url-generic-program "/usr/bin/firefox")
+  )
+ ((file-exists-p "/usr/bin/iceweasel")
+  (setq browse-url-browser-function 'browse-url-generic
 	browse-url-generic-program "/usr/bin/iceweasel")
   )
-;; (setq browse-url-browser-function 'browse-url-generic
-;; ;      browse-url-generic-program "/usr/bin/google-chrome")
-;; ;      browse-url-generic-program "/Applications/Firefox.app/Contents/MacOS/firefox-bin")
-;;       browse-url-generic-program "/usr/bin/open -a Firefox.app")
+ ((file-exists-p "/usr/bin/google-chrome")
+  (setq browse-url-browser-function 'browse-url-generic
+	browse-url-generic-program "/usr/bin/google-chrome")
+  )
+ )
 
 ;; ######################################################
 ;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
@@ -813,7 +850,7 @@ the same coding systems as Emacs."
 
 ;; ######################################################
 ;; setting path to flyspell-mode.el from MacPorts
-(when (my-system-is-blanche)
+(when (my-system-type-is-darwin)
   (add-to-list 'load-path "/opt/local/share/emacs/lisp/textmodes")
   )
 
@@ -838,7 +875,7 @@ the same coding systems as Emacs."
 (when (my-system-is-powerplantwin)
   (setq flyspell-default-dictionary "german8")
 )
-(when (my-system-is-gary-or-sherri)
+(when (my-system-type-is-gnu)
   (setq flyspell-default-dictionary "de_AT")
 )
 
@@ -913,7 +950,7 @@ the same coding systems as Emacs."
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
   )
-(if (my-system-is-gary-or-sherri)
+(if (my-system-type-is-gnu)
     ;; use US english on powerplantwin:
     (let ((langs '("de_AT" "en_US")))
       (setq lang-ring (make-ring (length langs)))
@@ -975,7 +1012,7 @@ the same coding systems as Emacs."
 ;;* tabbar (disabled)
 
 
-;;disabled;(when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+;;disabled;(when (my-system-type-is-gnu)
 ;;disabled;    (my-load-local-el "contrib/tabbar.el")
 ;;disabled;  )
 
@@ -1012,7 +1049,7 @@ the same coding systems as Emacs."
   :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :defer 10
-  :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantwin))
+  :if (my-system-is-powerplantwin)
   :init ;; executed before loading package
   (my-load-local-el "contrib/2del/restclient/json-reformat.el")
   ;;(my-load-local-el "contrib/restclient/restclient.el")
@@ -1029,7 +1066,7 @@ the same coding systems as Emacs."
 ;;   :ensure t
 ;;   :pin manual
 ;;   :if (or
-;;        (my-system-is-gary-or-sherri)
+;;        (my-system-type-is-gnu)
 ;;        (my-system-is-blanche)
 ;;        (my-system-is-powerplantlinux)
 ;;        (my-system-is-powerplantwin)
@@ -1046,7 +1083,7 @@ the same coding systems as Emacs."
 ;;
 ;;   (message "############### DEBUG: config orgmode ...")
 
-(when (or (my-system-is-gary-or-sherri) (my-system-is-blanche) (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+(when (or (my-system-type-is-gnu) (my-system-type-is-darwin) (my-system-is-powerplantwin))
 
   (setq org-babel-safe-header-args nil);; 2014-10-29 test
 
@@ -2399,7 +2436,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			      )
 			     )
     (message "after shell-command-to-string")
-    (if (my-system-is-gary-or-sherri)
+    (if (my-system-type-is-gnu)
 	(shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
       (message "Please do sync using unison!")
       )
@@ -2455,7 +2492,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled;; ;; For org appointment reminders
   ;;disabled;; ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
   ;;disabled;; ;; Get appointments for today
-  ;;disabled;; (when (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+  ;;disabled;; (when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
   ;;disabled;;   (defun my-org-agenda-to-appt ()
   ;;disabled;;     (interactive)
   ;;disabled;;     (setq appt-time-msg-list nil)
@@ -2496,7 +2533,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
     )
-  (when (my-system-is-gary-or-sherri)
+  (when (my-system-type-is-gnu)
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
@@ -2734,7 +2771,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 ;;** org-crypt
 
-  (when (my-system-is-gary-or-sherri)
+  (when (my-system-type-is-gnu)
     (require 'org-crypt)
 
     ;; Encrypt all entries before saving
@@ -3300,7 +3337,7 @@ the result as a time value."
 
 
 ;;** my-lazyblorg-test
-  (if (my-system-is-gary-or-sherri)
+  (if (my-system-type-is-gnu)
       (defun my-lazyblorg-test()
 	"Saves current blog entry to file and invoke lazyblorg process with it"
 	(interactive)
@@ -3359,7 +3396,7 @@ the result as a time value."
 ;;deactivated;; (setq minimap-window-location 'right)
 (use-package minimap
   :disabled t
-  :if (my-system-is-gary-or-sherri)
+  :if (my-system-type-is-gnu)
   :ensure t
   :diminish minimap-mode
   :defer 10
@@ -3437,7 +3474,7 @@ the result as a time value."
 (use-package undo-tree
   ;; :disabled t
   :ensure t
-  :if (or (my-system-is-gary-or-sherri) (my-system-is-blanche))
+  ;;:if (or (my-system-type-is-gnu) (my-system-type-is-darwin))
   :diminish undo-tree-mode
   :config ;; executed after loading package
   (autoload 'undo-tree "undo-tree.el")
@@ -3455,11 +3492,11 @@ the result as a time value."
 ;; #############################################################################
 ;;** whitespace-mode + style
 ;; from Twitter 2012-05-22: @emacs_knight
-(when (or (my-system-is-gary-or-sherri) (my-system-is-blanche))
-  (whitespace-mode)
-  (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
+;;(when (or (my-system-type-is-gnu) (my-system-is-blanche))
+(whitespace-mode)
+(setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
   ;;(face trailing lines-tail) whitespace-line-column 80) ;; highlight long lines tails (setq whitespace-style
-  )
+;;  )
 
 ;; #############################################################################
 ;;** (e)diff
@@ -3487,8 +3524,8 @@ the result as a time value."
 (use-package magit
   ;; :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  :if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
-;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
+  ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
+  ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
   :config ;; executed after loading package
 
   ;; full screen magit-status
@@ -3667,7 +3704,7 @@ by using nxml's indentation rules."
 ;(when (my-system-is-powerplantwin)
 ;  (setq real-auto-save-interval 10)
 ;)
-;(when (my-system-is-gary-or-sherri)
+;(when (my-system-type-is-gnu)
 ;  (setq real-auto-save-interval 30)
 ;)
 
@@ -3719,7 +3756,7 @@ by using nxml's indentation rules."
 ;; thanks to Bastien; adopted to my requirements
 ;; https://gist.github.com/bzg/8578998
 
-(when (my-system-is-gary-or-sherri)
+(when (my-system-type-is-gnu)
 
   (defvar my-toggle-naked-emacs-status nil
     "state of fullscreen/naked Emacs mode. t means fullscreen, nil means normal")
@@ -4083,7 +4120,7 @@ The app is chosen from your OS's preference."
   :defer 10
   :config
   ;;(setq org-reveal-root "file:///d:/reveal.js")
-  (cond ((my-system-is-gary-or-sherri)
+  (cond ((my-system-type-is-gnu)
          (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
          (setq org-reveal-extra-css "file:///home/vk/.emacs.d/data/reveal_theme_night_local.css"))
         ((my-system-is-powerplantwin)
@@ -4150,11 +4187,11 @@ The app is chosen from your OS's preference."
     "recenter display after swiper"
     (recenter)
     )
-  (when (my-system-is-gary-or-sherri)
+  (when (my-system-type-is-gnu)
     (advice-add 'swiper :after #'bjm-swiper-recenter)
     )
 
-  (bind-key "C-s" 'swiper)
+  ;(bind-key "C-s" 'swiper)
   ;;(global-set-key "\C-s" 'swiper)
 )
 
@@ -4453,13 +4490,14 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;;** fullscreen (F12)
-(when (my-system-is-gary-or-sherri)
+(when (my-system-type-is-gnu)
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
 
-;;** Elisp (bind-key "er" #'eval-region my-map)
-;; disabled ;;(bind-key "el" #'find-library my-map)
-;; disabled ;;(bind-key "ef" #'find-function-at-point my-map)
+;;** Elisp
+(bind-key "er" #'eval-region my-map)
+(bind-key "el" #'find-library my-map)
+(bind-key "ef" #'find-function-at-point my-map)
 
 
 ;;** Toggle between split windows and a single window (my-map s)
@@ -4687,7 +4725,7 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;** org-mode teaser (my-map o)
 (bind-key (kbd "o") (lambda()
 			       (interactive)
-                               (when (my-system-is-gary-or-sherri)
+                               (when (my-system-type-is-gnu)
                                  (find-file
                                "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
                                  )
