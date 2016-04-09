@@ -4011,7 +4011,7 @@ The app is chosen from your OS's preference."
   (my-load-local-el "contrib/raml-mode/raml-mode.el")
 )
 
-;;** synonyms (my-map s)
+;;** synonyms (my-map S)
 ;; via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
 ;; The file names are absolute, not relative, locations
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
@@ -4025,7 +4025,7 @@ The app is chosen from your OS's preference."
     "Lookup synonyms for current word."
     (interactive)
     (synonyms-lookup (thing-at-point 'word) nil nil))
-  :bind (:map my-map ("s" . my-synonym-current-word))
+  :bind (:map my-map ("S" . my-synonym-current-word))
 )
 
 ;;** nyan-mode
