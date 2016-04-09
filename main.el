@@ -1151,6 +1151,16 @@ the same coding systems as Emacs."
                      )
         )
 
+  ;; https://github.com/kawabata/ox-pandoc
+  (use-package ox-pandoc
+    ;;:disabled t  ;; stop loading if 't'
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    :defer 10
+    ;; :if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
+    :init ;; executed before loading package
+    ;; org-pandoc-menu-entry -> customize what is shown in menu
+    ;; :mode "\\.rb\\'"
+  )
 
 ;;** general Org-mode settings
 
