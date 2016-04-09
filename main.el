@@ -1245,8 +1245,14 @@ the same coding systems as Emacs."
 
   (setq org-completion-use-ido t);; Use IDO for target completion
 
-  ;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
-  (setq org-refile-targets (quote ((org-agenda-files :maxlevel . 5) (nil :maxlevel . 5))))
+  ;; Targets include this file and any file contributing to the
+  ;;    agenda - up to 5 levels deep
+  ;; see also: https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
+  (setq org-refile-targets (quote (
+                                   (org-agenda-files :maxlevel . 4)
+                                   ("contacts.org" :maxlevel . 6)
+                                   (nil :maxlevel . 3)
+                                   )))
 
   ;; Targets start with the file name - allows creating level 1 tasks
   (setq org-refile-use-outline-path (quote file))
