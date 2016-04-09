@@ -2642,6 +2642,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("hg" "gary" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo X200s (IST, 2009-01-??)" "shorts")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("hc" "Chromebook" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
+	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("hp" "RasPlay" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("hb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
