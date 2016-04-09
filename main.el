@@ -38,7 +38,7 @@
 (package-initialize)
 ;; http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
 ;; MELPA packages are usually built automatically from a project's repository; the Gnu repository has stable releases that are explicitly submitted to it.
-(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
 
 ;; 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
