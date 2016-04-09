@@ -2792,15 +2792,19 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;  "Default arguments to use when running screen source blocks.")
 
   ;; http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-in-org-mode-take-2/
-  (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
+  ;;2016-04-08;doesnt work; (if (my-system-type-is-gnu)
+  ;;2016-04-08;doesnt work;     ;; does not seem to work with Windows:
+  ;;2016-04-08;doesnt work;     (setq org-babel-python-command "python -i -c \"import sys; sys.stderr = sys.stdout\"")
+  ;;2016-04-08;doesnt work;     (setq org-babel-python-command "python")
+  ;;2016-04-08;doesnt work;     )
 
   ;; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
-  (if (my-system-is-gary)
-    ;outdated: org-babel-sh-command was removed with org-mode v8.3:
-    ;outdated;  (setq org-babel-sh-command
-    ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
-    (setq shell-file-name "~/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
-    )
+  ;; (if (my-system-type-is-gnu)
+  ;;   ;outdated: org-babel-sh-command was removed with org-mode v8.3:
+  ;;   ;outdated;  (setq org-babel-sh-command
+  ;;   ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
+  ;;   (setq shell-file-name "~/.emacs.d/data/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
+  ;;   )
 
 ;;** habits
   ;; ######################################################
