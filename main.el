@@ -4681,6 +4681,11 @@ i.e. change right window to bottom, or change bottom window to right."
 (global-set-key [S-left] 'backward-word)
 (global-set-key [S-right] 'forward-word)
 
+;; 2016-03-23: PageUp/Down (instead of line up/down) for keyboards
+;; without PgUp/Dn-keys:
+(global-set-key (kbd "C-p") 'scroll-down-command)
+(global-set-key (kbd "C-n") 'scroll-up-command)
+
 ;; https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/czntjs2
 (global-set-key (kbd "C-, l")          'avy-goto-line)
 (global-set-key (kbd "C-, w")          'avy-goto-word-0)
