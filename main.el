@@ -5081,14 +5081,32 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;** delete-trailing-whitespace (my-map SPC)
 
   ;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
-  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
+;  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
 
 ;; 2016-02-06: https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+;;** maximize frame window
+;; id:2016-03-27-maximize-window-init.el
+(toggle-frame-maximized)
+
+
+;;* autostart.bat.el
+
+(message "######### Maximizing frame ...")
+(toggle-frame-maximized)
+(toggle-frame-maximized)
+
+(sleep-for 2)
+(setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
+(message (concat "######### Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
+(setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
+
+(message "######### Creating agenda ...")
+(my-org-agenda)
+
 
 ;;* custom variables
-;; END OF FILE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
