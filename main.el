@@ -1313,6 +1313,20 @@ the same coding systems as Emacs."
   ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
   (setq org-ellipsis " ⤵")
 
+  ;; https://twitter.com/_wilfredh/status/708046038200950787
+  (defvar my-cpp-other-file-alist
+  '(("\\.org\\'" (".org_archive"))
+    ;;("\\.ipp\\'" (".hpp" ".cpp"))
+    ;;("\\.hpp\\'" (".ipp" ".cpp"))
+    ;;("\\.cxx\\'" (".hxx" ".ixx"))
+    ;;("\\.ixx\\'" (".cxx" ".hxx"))
+    ;;("\\.hxx\\'" (".ixx" ".cxx"))
+    ;;("\\.c\\'" (".h"))
+    ;;("\\.h\\'" (".c"))
+    ))
+  (setq-default ff-other-file-alist 'my-cpp-other-file-alist)
+  ;; open corresponding .org_archive file with ~ff-find-other-file~
+
 ;;** general key bindings
 
   ;; http://doc.norang.ca/org-mode.html
