@@ -2371,15 +2371,16 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (setq org-tags-column -101); for powerplantwin 23" TFT turned 90
 					; degrees; should *not* differ between
 					; systems! Otherwise Org-files gets
-					; re-formatted after switching system
-  (if (my-system-is-powerplantwin)
-      (progn
-	(setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
-	)
-    (progn
-      (setq org-agenda-tags-column -120)
-      )
-    )
+					; re-formatted after switching
+                                        ; system
+  ;;(when (my-system-is-powerplantwin)
+  ;;    ;;(setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
+  ;;      (setq org-agenda-tags-column -117);; for 24" TFT turned 90 degrees
+  ;;      )
+  ;;(when (my-system-is-sherri)
+  ;;    (setq org-agenda-tags-column -117);; -117 for 23" TFT sherri, rotated 90°
+  ;;    )
+  (setq org-agenda-tags-column (- (- (window-total-width) 3))) ;; total width minus 3
 
   ;; ######################################################
   ;; Sticky agendas remain opened in the background so that you don't
@@ -2395,6 +2396,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (defun my-org-agenda ()
     "Opens the already opened agenda or opens new one instead"
     (interactive)
+
+    (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
+    (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
+
     (if (my-buffer-exists "*Org Agenda*")
 	(switch-to-buffer "*Org Agenda*")
       (org-agenda-list)
