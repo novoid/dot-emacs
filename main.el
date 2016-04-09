@@ -3615,7 +3615,7 @@ the result as a time value."
 ;; recently files
 (autoload 'recentf "recentf.el")
 (recentf-mode 1)
-(setq recentf-max-menu-items 25)
+(setq recentf-max-menu-items 50)
 
 
 ;; #############################################################################
