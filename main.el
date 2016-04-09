@@ -4101,17 +4101,15 @@ The app is chosen from your OS's preference."
   :bind (:map my-map ("RET" . eno-word-goto))
 )
 
-(if (my-system-is-powerplantwin)
 ;;** Markdown
 ;; http://ikiwiki.info/tips/Emacs_and_markdown/
 (use-package markdown-mode
-  ;; :disabled t
+  ;;:disabled t
   :ensure t
   :if (my-system-is-powerplantwin)
   ;;:diminish whitespace-mode
   :defer 10
   :mode ("\\.md\\'" . markdown-mode)
-)
 )
 
 ;;** Ox-Reveal
@@ -4205,21 +4203,77 @@ The app is chosen from your OS's preference."
 (use-package char-menu
   ;;:disabled t
   :ensure t
-;;  :if (my-system-is-gary-or-sherri)
+;;  :if (my-system-type-is-gnu)
   :defer 10
   :config
   (setq char-menu
         '("→" "…" "š" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
-         ("Math"       "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
+         ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
           "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
          ("Hatschek"   "Ǎ" "ǎ" "Č" "č" "Ď" "ď" "Ě" "ě" "Ǧ" "ǧ" "Ȟ" "ȟ"
           "Ǐ" "ǐ" "ǰ" "Ǩ" "ǩ" "Ľ" "ľ" "Ň" "ň" "Ǒ" "ǒ" "Ř" "ř" "Š" "š" "Ť" "ť"
           "Ǔ" "ǔ" "Ǚ" "ǚ" "Ž" "ž" "Ǯ" "ǯ")
+         ("Umlaute"  "ä" "ö" "ü" "Ä" "Ö" "Ü" "ß")
         ))
   (global-set-key [f7] 'char-menu)
 )
+
+;;** smartparens
+;; nice overview: http://danmidwood.com/content/2014/11/21/animated-paredit.html
+;; nice overview: https://ebzzry.github.io/emacs-pairs.html
+(use-package smartparens
+  :disabled t
+  :init
+  (smartparens-global-mode 1)
+  (show-smartparens-global-mode +1)
+
+  :bind (;; ("M-n" . sp-next-sexp)
+         ;; ("M-p" . sp-previous-sexp)
+         ("M-f" . sp-forward-sexp)
+         ("M-b" . sp-backward-sexp)
+         )
+
+  :config
+  ;; Enable smartparens everywhere
+  (use-package smartparens-config)
+
+  ;; ;; Require and disable paredit because some packages rely on it.
+  ;; (use-package paredit)
+  ;; (disable-paredit-mode)
+
+  (setq
+   smartparens-strict-mode t
+   sp-autoinsert-if-followed-by-word t
+   sp-autoskip-closing-pair 'always
+   ;;sp-base-key-bindings 'paredit
+   sp-hybrid-kill-entire-symbol nil)
+
+  ;; (sp-use-paredit-bindings)
+
+  ;; (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+  ;;   (sp-local-pair "*" "*" :bind "C-*")
+  ;;   (sp-local-tag "2" "**" "**")
+  ;;   (sp-local-tag "s" "```scheme" "```")
+  ;;   (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+  ;; ;; Close a backtick with another backtick in clojure-mode
+  ;; (sp-local-pair 'clojure-mode "`" "`" :when '(sp-in-string-p))
+
+  (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
+  )
+
+;;** counsel
+(use-package counsel
+  ;; :disabled t
+  :ensure t
+  ;;:if my-system-is-sherri
+  ;;:if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+  ;;:diminish whitespace-mode
+  :defer 10
+)
+
 
 ;;* my helper functions
 
