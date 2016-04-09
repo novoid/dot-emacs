@@ -415,15 +415,19 @@ the same coding systems as Emacs."
   ;; http://www.emacswiki.org/emacs/RobertAdesamConfig
   (setenv "PATH"
 	  (concat
-	   "c:\\cygwin64\\usr\\local\\bin" ";"
-	   "c:\\cygwin64\\bin" ";"
+	   ;;"c:\\cygwin64\\usr\\local\\bin" ";"  ;; Cygwin
+	   ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
+	   "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
+	   "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
 	   (getenv "PATH")))
-  (setq exec-path (cons "c:/cygwin64/bin/" exec-path))
+  ;;(setq exec-path (cons "c:/cygwin64/bin/" exec-path)) ;; Cygwin
+  (setq exec-path (cons "C:/Users/karl.voit/.babun/cygwin/bin/" exec-path)) ;; Babun
   ;; Adding cygwin mounts
   ;(use-package cygwin-mount)
   ;(cygwin-mount-activate)
   ;; Adding cygwin bash shell
-  (setq shell-file-name "c:/cygwin64/bin/bash")
+  ;;(setq shell-file-name "c:/cygwin64/bin/bash") ;; Cygwin
+  (setq shell-file-name "C:/Users/karl.voit/.babun/cygwin/bin/zsh") ;; Babun
   (setenv "SHELL" shell-file-name)
   (setq explicit-shell-file-name shell-file-name)
   (setq ediff-shell shell-file-name)
