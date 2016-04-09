@@ -4455,7 +4455,9 @@ i.e. change right window to bottom, or change bottom window to right."
   (interactive)
   (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
   (menu-bar-mode 0) ;; hide menu-bar
-  (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
+  (when (not (my-system-is-kva))
+    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
+    )
   (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
 
   ;; http://www.emacswiki.org/emacs/sylecn
