@@ -4465,6 +4465,112 @@ i.e. change right window to bottom, or change bottom window to right."
 
 (global-set-key [f1] 'my-toggle-beginner-setup)
 
+;;** my-org-mobile-push
+
+(defun my-org-mobile-push (&optional arg)
+  (interactive)
+  ;; when called with universal argument (C-u), Emacs will be closed
+  ;;      after pushing to files
+  ;; save original agenda in temporary variable
+  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+  ;; set agenda for MobileOrg (omit some agenda
+  ;; views I do not need on my phone):
+  (setq org-agenda-custom-commands
+        (quote (
+
+                ("1" "1 month"
+                 ((agenda "1 month"
+                          ((org-agenda-ndays 31)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           )
+                          )))
+
+                ("B" "borrowed" tags "+borrowed"
+                 (
+                  (org-agenda-overriding-header "borrowed or lend")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                ("$" "Besorgungen" tags "+Besorgung"
+                 (
+                  (org-agenda-overriding-header "Besorgungen")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                )))
+  ;; generate MobileOrg export:
+  (org-mobile-push)
+  ;; restore previously saved agenda:
+  (setq org-agenda-custom-commands
+        ORIGSAVED-org-agenda-custom-commands)
+  (if (equal arg '(4))
+      ;; save buffers and exit emacs;; FIXXME: not working yet
+      (save-buffers-kill-terminal 't)
+    )
+  )
+
+
+
+;;** my-reset-org
+
+(defun my-reset-org ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (org-element-cache-reset)
+   (org-refile-cache-clear)
+   (org-refile-get-targets)
+   (when (my-buffer-exists "*Org Agenda*")
+     (kill-buffer "*Org Agenda*")
+     (org-agenda-list)
+     )
+   )
+  )
+
+(defun my-reset-org-and-mobile-push ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (my-reset-org)
+   (my-org-mobile-push)
+   )
+)
+
+;;** message-outlook.el - sending mail with Outlook
+(when (my-system-type-is-windows)
+  (my-load-local-el "contrib/message-outlook.el")
+)
+
+;;** my-search-method-according-to-numlines()
+
+;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
+
+;;see below;; (defun my-search-method-according-to-numlines ()
+;;see below;;   "Determines the number of lines of current buffer and chooses a search method accordingly"
+;;see below;;   (interactive)
+;;see below;;   (if (< (count-lines (point-min) (point-max)) 20000)
+;;see below;;       (swiper)
+;;see below;;     (isearch-forward)
+;;see below;;     )
+;;see below;;   )
+;;see below;; ;;fancy search:  (global-set-key "\C-s" 'swiper)
+;;see below;; ;;normal search: (global-set-key "\C-s" 'isearch-forward)
+
+(defun my-search-method-according-to-numlines ()
+  (interactive)
+  (if (and (buffer-file-name)
+           (not (ignore-errors
+                  (file-remote-p (buffer-file-name))))
+           (if (eq major-mode 'org-mode)
+               (> (buffer-size) 60000)
+             (> (buffer-size) 300000)))
+      (progn
+        (save-buffer)
+        (counsel-grep))
+    (swiper--ivy (swiper--candidates))))
+
+(global-set-key "\C-s" 'my-search-method-according-to-numlines)
 
 ;; #############################################################################
 ;;* Key bindings
@@ -4761,49 +4867,6 @@ i.e. change right window to bottom, or change bottom window to right."
                          (interactive) (my-mobile-org-import)) my-map )
 ;;** Org-mobile push (my-map I)
 
-
-(defun my-org-mobile-push (&optional arg)
-  (interactive)
-  ;; when called with universal argument (C-u), Emacs will be closed
-  ;;      after pushing to files
-  ;; save original agenda in temporary variable
-  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
-  ;; set agenda for MobileOrg (omit some agenda
-  ;; views I do not need on my phone):
-  (setq org-agenda-custom-commands
-        (quote (
-
-                ("1" "1 month"
-                 ((agenda "1 month"
-                          ((org-agenda-ndays 31)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-entry-types '(:timestamp :sexp))
-                           )
-                          )))
-
-                ("B" "borrowed" tags "+borrowed"
-                 (
-                  (org-agenda-overriding-header "borrowed or lend")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                ("$" "Besorgungen" tags "+Besorgung"
-                 (
-                  (org-agenda-overriding-header "Besorgungen")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                )))
-  ;; generate MobileOrg export:
-  (org-mobile-push)
-  ;; restore previously saved agenda:
-  (setq org-agenda-custom-commands
-        ORIGSAVED-org-agenda-custom-commands)
-  (if (equal arg '(4))
-      ;; save buffers and exit emacs;; FIXXME: not working yet
-      (save-buffers-kill-terminal 't)
-    )
-  )
 
 (bind-key "I" #'my-org-mobile-push my-map)
 
