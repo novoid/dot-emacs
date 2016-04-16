@@ -3416,6 +3416,18 @@ the result as a time value."
   (my-load-local-el "contrib/orgaggregate/orgtbl-aggregate.el")
   (my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
 
+;;** org-bullets
+
+  ;; nice looking bullets for headings
+  (use-package org-bullets
+    ;; :disabled t
+    :ensure t
+    ;;:if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+    :config ;; executed after loading package
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+
+
   );; end-of-Org-mode
 
 (message "############### DEBUG: config orgmode finished.")
