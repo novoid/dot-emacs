@@ -4682,6 +4682,31 @@ i.e. change right window to bottom, or change bottom window to right."
 (global-set-key "\C-s" 'my-search-method-according-to-numlines)
 
 ;; #############################################################################
+
+;;** my-export-month-agenda-to-png-via-screenshot
+;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
+
+(defun my-export-month-agenda-to-png-via-screenshot()
+  (interactive)
+  (when (my-system-is-sherri)
+    (message "Generating agenda ...")
+    (org-agenda nil "n") ; generates agenda "n" (one month without todos)
+    (if (my-buffer-exists "*Org Agenda*")
+	(switch-to-buffer "*Org Agenda*")
+      (org-agenda-list)
+      )
+    (message "Waiting for Screenshot ...")
+    (sit-for 1) ; (sleep 1) ... doesn't re-display and thus screenshot
+                ; showed buffer before switching to agenda
+    (message "Say cheese ...")
+
+    (setq myoutput
+          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sherri/agenda.png"))
+    (message (concat "Screenshot done (" myoutput ")"))
+    )
+  )
+
+
 ;;* Key bindings
 
 ;;** general navigation keys
