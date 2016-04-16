@@ -5055,8 +5055,13 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;** neotree (f8)
 ;; https://github.com/jaypei/emacs-neotree
 ;; installed on 2015-03-22
-(require 'neotree)
+(use-package neotree
+  ;; :disabled t
+  :ensure t
+  :defer 20
+  :config ;; executed after loading package
 (global-set-key [f8] 'neotree-toggle)
+)
 
 ;;** org-mode-reftex-setup (my-map R)
 ;; see id:2015-05-14-disable-orgmode-reftex-autoload
