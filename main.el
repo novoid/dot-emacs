@@ -5089,6 +5089,41 @@ i.e. change right window to bottom, or change bottom window to right."
         ;; set property
         (org-set-property prop val))))
 
+;; ----------------------------------------------------
+
+;; version that tries to read only properties of current entry:
+;; From: "Antoine R. Dumont" <antoine.romain.dumont@gmail.com>
+;; http://article.gmane.org/gmane.emacs.orgmode/106364
+(defun org-read-entry-property-name ()
+  "Read a property name from the current entry."
+  (let ((completion-ignore-case t)
+        (default-prop (or (and (org-at-property-p)
+                               (org-match-string-no-properties 2))
+                          org-last-set-property)))
+    (org-completing-read
+     (format "Property [%s]: " (if default-prop default-prop ""))
+     (org-entry-properties nil nil)
+     nil nil nil nil default-prop)))
+
+(defun my-org-region-to-property (&optional property)
+  (interactive)
+  ;; if no region is defined, do nothing
+  (if (use-region-p)
+      ;; if a region string is found, ask for a property and set property to
+      ;; the string in the region
+      (let ((val (replace-regexp-in-string
+                  "\\`[ \t\n]*" ""
+                  (replace-regexp-in-string "[ \t\n]*\\'" ""
+                                            (substring (buffer-string)
+                                                       (- (region-beginning) 1)
+                                                       (region-end))))
+                 )
+            ;; if none was stated by user, read property from user
+            (prop (or property
+                      (org-read-entry-property-name))))
+        ;; set property
+        (org-set-property prop val))))
+
 (bind-key (kbd "p") #'my-org-region-to-property my-map)
 
 
