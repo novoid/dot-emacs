@@ -2491,7 +2491,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;; ######################################################
   ;; contact management with org-contacts
   ;; http://julien.danjou.info/org-contacts.html
-  (require 'org-contacts)
+  ;; 2016-04-19 sherri hangs endlessly ;; (require 'org-contacts)
   (custom-set-variables
    '(org-contacts-files "~/share/all/org-mode/contacts.org")
    '(org-contacts-address-property "CITY")
