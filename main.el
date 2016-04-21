@@ -2058,9 +2058,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;; disabled 2014-08-17 ;;           (
 		;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
 		;; disabled 2014-08-17 ;;            ))
-		("n" "no TODO events +31d"
-		 ((agenda "no TODO events +31d"
-			  ((org-agenda-ndays 31)
+		("n" "no TODO events +50d"
+		 ((agenda "no TODO events +50d"
+			  ((org-agenda-ndays 50)
 			   (org-agenda-time-grid nil)
 			   (org-agenda-entry-types '(:timestamp :sexp))
 			   (org-agenda-skip-function
@@ -4739,23 +4739,17 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;(global-set-key (kbd "C-, s")          'workspace-goto)
 ;;(global-set-key (kbd "C-, ]")          'evil-jump-to-tag)
 (global-set-key (kbd "C-, n")          'neotree-toggle)
-
 ;;** Magit status (my-map g)
 ;(bind-key "v" #'magit-status my-map)
 (bind-key "g" #'magit-status my-map)
-
-
 ;;** fullscreen (F12)
 (when (my-system-type-is-gnu)
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
-
 ;;** Elisp
 (bind-key "er" #'eval-region my-map)
 (bind-key "el" #'find-library my-map)
 (bind-key "ef" #'find-function-at-point my-map)
-
-
 ;;** Toggle between split windows and a single window (my-map s)
 ;; http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 (defun my-toggle-windows-split()
@@ -4772,14 +4766,10 @@ i.e. change right window to bottom, or change bottom window to right."
   )
 
 ;2015-11-03: deactivated for synonym (bind-key "s" #'my-toggle-windows-split my-map)
-
-
 ;;** boxquote (my-map [qQ])
 ;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
 (bind-key "q" #'boxquote-region my-map)
 (bind-key "Q" #'boxquote-title my-map)
-
-
 ;;** switching lines (my-map <up/down>)
 ;; http://whattheemacsd.com//editing-defuns.el-02.html
 (defun my-move-line-down ()
@@ -4801,7 +4791,6 @@ i.e. change right window to bottom, or change bottom window to right."
 
 (bind-key (kbd "<up>") #'my-move-line-up my-map)
 (bind-key (kbd "<down>") #'my-move-line-down my-map)
-
 
 ;;** joining lines: (my-map j)
 ;; http://whattheemacsd.com//key-bindings.el-03.html
@@ -4929,7 +4918,7 @@ i.e. change right window to bottom, or change bottom window to right."
 
 ;;** helm-do-grep (my-map G)
 ;; helm-do-grep to grep in current folder
-(bind-key "G" #'helm-do-grep my-map)
+(bind-key "G" #'helm-do-grep-ag my-map)
 
 ;;** helm-org-headlines (my-map H)
 (bind-key "H" #'helm-org-agenda-files-headings my-map)
@@ -5077,6 +5066,8 @@ i.e. change right window to bottom, or change bottom window to right."
 
 ;;** my-org-region-to-property (my-map p)
 ;; see id:2015-05-28-ask-for-properties
+
+;; original function:
 (defun my-org-region-to-property (&optional property)
   (interactive)
   ;; if no region is defined, do nothing
@@ -5184,7 +5175,6 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;** maximize frame window
 ;; id:2016-03-27-maximize-window-init.el
 (toggle-frame-maximized)
-
 
 ;;* autostart.bat.el
 
