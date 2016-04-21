@@ -4327,6 +4327,12 @@ The app is chosen from your OS's preference."
   :defer 10
 )
 
+;;** helm
+(use-package helm
+  ;; :disabled t
+  :ensure t
+  :defer 10
+)
 
 ;;* my helper functions
 
