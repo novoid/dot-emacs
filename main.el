@@ -4675,6 +4675,7 @@ i.e. change right window to bottom, or change bottom window to right."
 (defun my-search-method-according-to-numlines ()
   (interactive)
   (if (and (buffer-file-name)
+           (not (my-system-type-is-windows))
            (not (ignore-errors
                   (file-remote-p (buffer-file-name))))
            (if (eq major-mode 'org-mode)
