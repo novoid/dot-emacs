@@ -2,15 +2,15 @@
 
 ** General Structure
 
-In my $HOME, there is this folder named "~/.emacs.d". It contains a
-symbolic link "init.el" which points to the host-specific
-"init-HOSTNAME.el" file.
+In my home directory, there is this folder named ~$HOME/.emacs.d~. It
+contains a symbolic link "init.el" which points to the host-specific
+~init-HOSTNAME.el~ file.
 
-My "init-HOSTNAME.el" files are very minimal. Each one holds
+My ~init-HOSTNAME.el~ files are very minimal. Each one holds
 custom-set-variables which I want to keep separate on each host. And
-then it includes the host-independent "main.el" configuration file.
+then it includes the host-independent ~main.el~ configuration file.
 
-Please take a look at my ".gitignore" file that contains some things I
+Please take a look at my ~.gitignore~ file that contains some things I
 did *not* add to this git repository for a variety of reasons but are
 necessary for my configuration. Most important here is the directory
 "contrib" which holds a number of external packages:
@@ -38,8 +38,11 @@ In short: don't.
 
 Not because I don't like you to have my configuration. It is not easy
 to accomplish because I left out some parts like the ~contrib~
-directory as explained above. Further more, you should only adopt
-Elisp code you need and understand to avoid [[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs Bankruptcy]].
+directory as explained above. Some of my settings are host-specific
+and/or depend on path variables or external tools.
+
+You should only adopt Elisp code you need and understand to avoid
+[[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs Bankruptcy]].
 
 Therefore: please feel free to look up certain tricks and functions
 and add it to your configuration.
@@ -106,7 +109,7 @@ elpa-packages in this git repository.
 On 2016-04-24, I had following packages installed via elpa:
 
 #+BEGIN_SRC sh :exports results :results output
-ls -1 ~/.emacs.d/elpa | egrep -v '(archives|gnupg|.txt)'
+ls -1 $HOME/.emacs.d/elpa | egrep -v '(archives|gnupg|.txt)'
 #+END_SRC
 
 #+RESULTS:
@@ -169,10 +172,10 @@ manager. I am using the Org Maint version from git directly (within my
 
 - http://www.emacswiki.org/emacs/CategoryDotEmacs
 - http://www.emacswiki.org/emacs/LoadPath
-  - ~/.emacs.d/lisp/ seems to be quite common as directory path for
+  - ~$HOME/.emacs.d/lisp/~ seems to be quite common as directory path for
     installing external packages
   - However, I do prefer "contrib" instead of "lisp" because:
-    - my own config (outside of ~/.emacs.d/lisp/) is LISP as well
+    - my own config (outside of ~$HOME/.emacs.d/lisp/~) is LISP as well
     - "lisp" does not contain the notion of "contributed from other
       people/projects"
 
