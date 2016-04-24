@@ -15,35 +15,83 @@ did *not* add to this git repository for a variety of reasons but are
 necessary for my configuration. Most important here is the directory
 "contrib" which holds a number of external packages:
 
-- Currently (2014-01-19), this directory holds:
-  - [[https://github.com/lewang/command-log-mode][command-log-mode]]/
-  - [[http://randomsample.de/minimap.git][minimap]]/
-  - [[http://Orgmode.org][org-mode]]/
-  - [[http://taesoo.org/proj/pylookup.html][pylookup]]/
+- Currently (2016-04-24), this directory holds:
+  - ews-orgmode/
+  - message-outlook.el
+  - ob-restclient.el/
+  - orgaggregate/
+  - org.el
   - [[https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el][org-import-calendar.el]]
+  - [[http://Orgmode.org][org-mode]]/
+  - outlookedit.el
+  - outshine/
+  - pdf-mode/
+  - [[http://taesoo.org/proj/pylookup.html][pylookup]]/
+  - raml-mode/
+  - sunrise-commander/
+  - vcard-mode/
   - [[http://www.emacswiki.org/emacs/wc.el][wc.el]]
-    
+
+** In Case You Want to Use My Configuration
+
+In short: don't.
+
+Not because I don't like you to have my configuration. It is not easy
+to accomplish because I left out some parts like the ~contrib~
+directory as explained above. Further more, you should only adopt
+Elisp code you need and understand to avoid [[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs Bankruptcy]].
+
+Therefore: please feel free to look up certain tricks and functions
+and add it to your configuration.
+
+** Best Navigation Experience
+
+My ~main.el~ file is quite large. I would not be able to navigate it
+myself without [[http://orgmode.org/manual/Orgstruct-mode.html][Orgstruct minor mode]]. If you don't know it yet: it's a
+minor mode which uses Org-mode elements such as headings in - this
+case - Elisp comment lines.
+
+If you open my ~main.el~ file with org-struct-mode installed, go to
+the next line that starts with ~;;* General settings~ and apply ~C-u
+C-u TAB~. The huge mass of Elisp code gets folded nicely according to
+headings within Elisp comments.
+
+On every line that begins with ~;;*~ you can press ~TAB~ or other
+basic Org-mode shortcuts.
+
 ** Host-Names
 
 Some settings as specific for certain platforms or host names. The
 host names mentioned here are:
 
-- gary
-  - Debian GNU/Linux Wheezy
-  - my main working horse
+- sherri
+  - Debian GNU/Linux 8 (jessie)
+  - my main working horse at home
 
-- blanche
-  - OS X 10.5
-  - pimped with [[https://www.macports.org/][MacPorts]]
-    - (therefore) not as "capable" as gary
+- X260
+  - Debian GNU/Linux 8 (jessie)
+  - my main working horse on the road
 
-- grmlvrs
-  - Debian GNU/Linux stable 5.0
-    - (therefore) not as "capable" as gary
+- grmlvrs/kva
+  - Debian GNU/Linux 7 (wheezy)
+    - (therefore) not as "capable" as sherri/X260
 
 - atgrz*
-  - Windows 7 Pro with native Windows GNU/Emacs 64bit
+  - Windows 7 Pro with native Windows GNU/Emacs 64bit and [[http://babun.github.io/][Babun]]
     - (therefore) not as "capable" as gary
+
+- outdated:
+  - gary
+    - Debian GNU/Linux 7 (wheezy)
+    - predecessor of X260
+  - blanche
+    - OS X 10.5
+    - pimped with [[https://www.macports.org/][MacPorts]]
+    - predecessor of sherri
+
+With 2016-04, I switched from using ~my-system-is-HOSTNAME~ to
+~my-system-type-is-OPERATINGSYSTEM~ instead for most cases. This
+lowers the effort of using Emacs on many computers.
 
 ** Emacs 24
 
@@ -55,78 +103,67 @@ by Emacs 24. As a result, there are much less entries in the folder
 "contrib" and there is a new folder called "elpa". I did not include
 elpa-packages in this git repository.
 
-On 2014-01-19, I had following packages installed via elpa:
+On 2016-04-24, I had following packages installed via elpa:
 
 #+BEGIN_SRC sh :exports results :results output
-ls -1 ~/.emacs.d/elpa
+ls -1 ~/.emacs.d/elpa | egrep -v '(archives|gnupg|.txt)'
 #+END_SRC
 
 #+RESULTS:
 #+begin_example
-ace-jump-mode-20130719.2053
-ack-and-a-half-20130815.1917
-anzu-20131119.1848
-archives
-auctex-11.87.2
-auto-complete-20131128.233
-boxquote-1.23
-browse-kill-ring-20131116.2113
-dash-20131223.933
-deferred-20130930.607
-diminish-20091203.1012
-elisp-slime-nav-20130612.446
-elpy-20131109.1120
-elpy-readme.txt
-epl-20131101.405
-expand-region-20131111.329
-f-20131225.721
-find-file-in-project-20120716.1655
-flx-20130728.820
-flx-ido-20131030.1243
-flycheck-20131224.546
-fuzzy-20131025.2343
-gh-20131223.2140
-gist-20131109.2155
-git-commit-mode-20131230.729
-gitconfig-mode-20131221.230
-gitignore-mode-20131222.833
-git-rebase-mode-20131223.1820
-grizzl-20130810.202
-guru-mode-20121016.452
-helm-20131230.2118
-helm-projectile-20131209.505
-highlight-indentation-20131207.835
-idomenu-20111122.1048
-ido-ubiquitous-20131009.1047
-iedit-20131021.116
-logito-20120225.1255
-magit-20131230.611
-mediawiki-20130223.1141
-move-text-20130506.1826
-nose-20110804.619
-pcache-20131201.1159
-pkg-info-20131101.408
-popup-20131230.544
-projectile-20131230.851
-pydoc-info-readme.txt
-python-info-readme.txt
-rainbow-delimiters-20131015.404
-rainbow-mode-0.9
-s-20131223.944
-smartparens-20131230.514
-smex-20131210.700
-solarized-theme-20131221.1216
-tabulated-list-20120406.1351
-undo-tree-20131118.1744
-virtualenv-20120930.1034
-volatile-highlights-20130321.641
-yasnippet-20131224.143
-zenburn-theme-20131228.1447
+anzu-20160404.2218
+async-20160223.146
+avy-20160402.1049
+avy-menu-20160126.425
+bind-key-20160227.48
+char-menu-20160203.2215
+company-20160325.1650
+counsel-20160411.713
+dash-20160306.1222
+diminish-20151215.915
+edit-at-point-20150716.624
+elpy-20160131.118
+eno-20160110.234
+find-file-in-project-20160404.2330
+git-commit-20160412.130
+helm-20160413.2223
+helm-core-20160415.2250
+highlight-indentation-20150307.208
+highlight-symbol-20160102.1209
+ht-20150830.1115
+magit-20160412.128
+magit-popup-20160408.156
+markdown-mode-20160409.650
+neotree-20160306.730
+nyan-mode-20151017.2235
+org-30000101
+org-bullets-20140918.1137
+ox-pandoc-20151222.1553
+ox-reveal-20160224.1819
+popup-20160409.2133
+pyvenv-20160108.28
+restclient-20160407.146
+rich-minority-20151201.400
+smart-mode-line-20160306.1103
+smeargle-20151013.2242
+spray-20160304.1420
+swiper-20160412.130
+synonyms-20160328.654
+undo-tree-20140509.522
+use-package-20160403.1129
+with-editor-20160408.201
+yafolding-20141202.2056
+yasnippet-20160410.833
 #+end_example
 
-Some of them are not used any more because they got installed by [[https://github.com/bbatsov/prelude][Emacs
-prelude]] which I tested for a couple of days. However, I was not very
-happy about it due to performance issues and unwanted behavior.
+I also tested [[https://github.com/bbatsov/prelude][Emacs prelude]] for a couple of days. However, I was not
+very happy about it due to performance issues, unwanted behavior, and
+the feeling of losing control.
+
+Please note that ~org-30000101~ is a [[http://article.gmane.org/gmane.emacs.orgmode/104548/][manually created and installed
+pseudo-package]] to prevent the installation of Org-mode via package
+manager. I am using the Org Maint version from git directly (within my
+~contrib~ directory).
 
 ** Useful References
 
@@ -136,12 +173,12 @@ happy about it due to performance issues and unwanted behavior.
     installing external packages
   - However, I do prefer "contrib" instead of "lisp" because:
     - my own config (outside of ~/.emacs.d/lisp/) is LISP as well
-    - "lisp" does not contain the notion of "contributed from other people/projects"
+    - "lisp" does not contain the notion of "contributed from other
+      people/projects"
+
 ** License
 
 The code provided here is licensed under a GPL v3 license: see
 license.txt for details. Some smaller parts from other authors but
 included in my configuration might have a different license. Please
 check the source - it's included in the comments.
-
-
