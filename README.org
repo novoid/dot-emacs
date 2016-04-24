@@ -3,7 +3,7 @@
 ** General Structure
 
 In my home directory, there is this folder named ~$HOME/.emacs.d~. It
-contains a symbolic link "init.el" which points to the host-specific
+contains a symbolic link ~init.el~ which points to the host-specific
 ~init-HOSTNAME.el~ file.
 
 My ~init-HOSTNAME.el~ files are very minimal. Each one holds
@@ -13,7 +13,7 @@ then it includes the host-independent ~main.el~ configuration file.
 Please take a look at my ~.gitignore~ file that contains some things I
 did *not* add to this git repository for a variety of reasons but are
 necessary for my configuration. Most important here is the directory
-"contrib" which holds a number of external packages:
+~contrib~ which holds a number of external packages:
 
 - Currently (2016-04-24), this directory holds:
   - ews-orgmode/
