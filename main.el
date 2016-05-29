@@ -3368,6 +3368,13 @@ Null prefix argument turns off the mode."
   ;;(my-load-local-el "contrib/format-bib.el")
   ;; does not work well enough
 
+  ;; http://superuser.com/questions/71786/can-i-create-a-link-to-a-specific-email-message-in-outlook
+  ;; id:2016-05-03-outlook-links
+  (org-add-link-type "outlook" 'org-outlook-open)
+
+  (defun org-outlook-open (id)
+    "Open the Outlook item identified by ID.  ID should be an Outlook GUID."
+    (w32-shell-execute "open" (concat "outlook:" id)))
 
 
   ;; ######################################################
