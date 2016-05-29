@@ -2631,92 +2631,441 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   ;; ######################################################
 ;;** capture
+
   ;; capture:    http://orgmode.org/org.html#Setting-up-capture
   (setq org-default-notes-file "~/share/all/org-mode/inbox.org")
   (define-key global-map "\C-cc" 'org-capture)
+
+  ;; http://storax.github.io/blog/2016/05/02/org-capture-tricks/
+  ;; id:2016-05-05-yasnippet-like-capture-templates
+  ;; example:  * JIRA Ticket %(my-capture-promt "JIRA Project" 'jr-prj)-%(my-capture-promt "JIRA Ticket No." 'jr-no)
+  ;; example:  For project %(my-capture-insert 'jr-prj) I have to do the following stuff:
+  ;; example:  %(my-capture-optional "triage" (format
+  ;; example:   "** Triage %s-%s
+  ;; example:  Do the triage."
+  ;; example:   jr-prj jr-no))
+  ;; example:  %(my-capture-optional "implementation" (format
+  ;; example:   "** Implement %s-%s
+  ;; example:  Implement stuff
+  ;; example:  - [ ] Tests pass?"
+  ;; example:   jr-prj jr-no))
+  (defvar my-capture-promt-history nil
+    "History of prompt answers for org capture.")
+  (defun my-capture-prompt (prompt variable)
+    "PROMPT for string, save it to VARIABLE and insert it."
+    (make-local-variable variable)
+    (set variable (read-string (concat prompt ": ") nil my-capture-promt-history)))
+  (defun my-capture-prompt-date (prompt variable)
+    "PROMPT for a date, save it to VARIABLE and insert it."
+    (make-local-variable variable)
+    (set variable
+         (format-time-string
+          (org-time-stamp-format nil nil)
+          (org-read-date nil t nil prompt))
+         ))
+  (defun my-capture-insert (variable)
+    "Insert content of VARIABLE."
+    (symbol-value variable))
+  (defun my-capture-optional (what text)
+    "Ask user to include WHAT.  If user agrees return TEXT."
+    (when (y-or-n-p (concat "Include " what "?"))
+      text))
+  (defun my-capture-selection (list variable)
+    "Let the user choose between a pre-defined set of strings"
+    (make-local-variable variable)
+    (let ((selected-value (ido-completing-read "Select from list: " list)))
+      (set variable selected-value)
+      selected-value)
+    )
+
+  ;; capture templates:
+  (setq my-capture-template-next "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+  (setq my-capture-template-r6story "** TODO [[IPD:%(my-capture-prompt \"IPD number\" 'my-ipd)]] %(my-capture-prompt \"Story title\" 'my-title) [1/11]                         :US_%(my-capture-prompt \"Short title\" 'my-short-title):
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID: %(format-time-string \"%Y-%m-%d\")-Story-%(my-capture-insert 'my-short-title)
+:END:
+
+| *IPD* | *Confluence* | *Champ* |
+| [[IPD:%(my-capture-insert 'my-ipd)][%(my-capture-insert 'my-ipd)]]  | %(my-capture-insert 'my-title) |     |
+
+*** NEXT create Jira [[IPD:%(my-capture-insert 'my-ipd)]]
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID:    %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-jira-ipd
+:BLOCKER:
+:TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-define-champ(NEXT) %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-get-estimation(NEXT)
+:END:
+
+- fill out:
+  - [ ] set reporter
+  - [ ] set level red
+  - [ ] fixVersion
+
+*** NEXT create Confluence page with template
+SCHEDULED: <%(format-time-string \"%Y-%m-%d\")>
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID:    %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-confluence-page
+:BLOCKER:
+:TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria(NEXT)
+:END:
+
+- fill out:
+  - [ ] add Jira-Link [[IPD:%(my-capture-insert 'my-ipd)]]
+  - [ ] PO
+  - [ ] Title
+  - [ ] Business Value
+- [ ] add Confluence-short-URL to story table above
+
+*** TODO write Acceptance Criteria, Docu, Perms
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria
+:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-confluence-page
+:TRIGGER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-confidence-green(NEXT) %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team(NEXT)
+:END:
+
+*** TODO add Champ to Confluence and Jira                                    :refinement:
+:PROPERTIES:
+:CATEGORY: refinement
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-define-champ
+:BLOCKER:
+:END:
+
+*** TODO get Estimation on [[IPD:%(my-capture-insert 'my-ipd)]]                                           :refinement:
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:CATEGORY: refinement
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-estimation
+:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-jira-ipd
+:TRIGGER:
+:END:
+
+- Estimation:
+
+*** TODO get confidence-level green on [[IPD:%(my-capture-insert 'my-ipd)]]                                :refinement:
+:PROPERTIES:
+:CATEGORY: refinement
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-confidence-green
+:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-estimation
+:TRIGGER:
+:END:
+
+*** TODO hand over to team
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-estimation
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team
+:TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept(WAITING)
+:END:
+
+*** acceptance + finish US
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept
+:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team
+:END:
+")
+
+  (setq my-capture-template-kabarett "
+** Kabarettabendorga: %(my-capture-prompt \"ISO-Datum Veranstaltung\" 'my-event-date) %(my-capture-prompt \"Künstler\" 'my-artist)                   :%(my-capture-insert 'my-artist):Kabarett:
+:PROPERTIES:
+:ID: %(my-capture-insert 'my-event-date)-y-Kabarett
+:END:
+
+- Titel                   : %(my-capture-prompt \"Programmname\" 'my-programname)
+
+- %(my-capture-prompt \"Anzahl der reservierten Plätze\" 'my-num-seats) Plätze gesamt
+  - 2: Kathi und ich
+  - 2:
+  - 2:
+  - 2:
+
+*** NEXT Email: %(my-capture-insert 'my-num-seats)-2 Plätze noch zu vergeben
+SCHEDULED: <%(my-capture-prompt \"ISO-Datum Email-Aussendung\" 'my-email-date)>
+:PROPERTIES:
+:ID: %(my-capture-insert 'my-event-date)-k-email1
+:END:
+
+- Email an \"kabarettinteressierte\" (mutt-alias)
+- Eintragen in Liste oben
+
+#+BEGIN_QUOTE
+Kabarett: %(my-capture-insert 'my-artist) am %(my-capture-insert 'my-event-date)
+
+Hallo Kabarettfreunde!
+
+Es ist wieder soweit:
+
+  Wer:    %(my-capture-insert 'my-artist)
+  Was:    \"%(my-capture-insert 'my-programname)\"
+  Wann:   %(my-capture-insert 'my-event-date) 19:15 Abendkassa
+  Wo:     %(my-capture-selection '(\"Theatercafé\" \"Orpheum\" \"FIXXME\") 'my-location)
+
+Wer zuerst sich anmeldet, der bekommt die reservierten Karten. Mein
+Kontingent ist dieses Mal begrenzt auf %(my-capture-insert 'my-num-seats) Karten.
+
+	  Ich bitte um verbindliche Zusagen per Email.
+
+Wie üblich: reservierte Karten sind an der Abendkasse selber abzuholen
+und zu bezahlen. Reserviert wurde auf »Karl Voit«. Vergünstigungen
+bekommst du mit AKCard, Studentenausweis (Alterslimit!) oder (nur für
+den *Eintritt* ins Theatercafe) bis zu 20% durch die Kabanussis.
+
+Wir freuen uns!
+
+
+
+Wenn du in Zukunft keine solchen Emails mehr von mir bekommen
+möchtest, so schick' mir bitte ein Email. Du wirst dann von der
+Kabarett-Emailliste entfernt.
+
+#+END_QUOTE
+
+*** NEXT Kabarett-Reminder an alle angemeldeten
+SCHEDULED: <%(my-capture-prompt \"ISO-Datum Erinnerungsemail\" 'my-reminder-date)>
+:PROPERTIES:
+:BLOCKER: %(my-capture-insert 'my-event-date)-k-email1
+:ID: %(my-capture-insert 'my-event-date)-k-email2
+:END:
+
+#+BEGIN_QUOTE
+Erinnerung: Kabarett %(my-capture-insert 'my-artist) am %(my-capture-insert 'my-event-date)
+
+Hallo Kabarettinteressierter!
+
+Du hast dich bei mir für das kommende Kabarett angemeldet:
+
+  Wer:    %(my-capture-insert 'my-artist)
+  Was:    \"%(my-capture-insert 'my-programname)\"
+  Wann:   %(my-capture-insert 'my-event-date) 19:15 Abendkassa
+  Wo:     %(my-capture-insert 'my-location)
+
+Wie üblich: reservierte Karten sind an der Abendkasse selber abzuholen
+und zu bezahlen. Reserviert wurde auf »Karl Voit«. Vergünstigungen
+bekommst du mit AKCard, Studentenausweis (Alterslimit!) oder (nur für
+den *Eintritt* ins Theatercafe) bis zu 20% durch die Kabanussis.
+
+Wir freuen uns!
+
+#+END_QUOTE
+
+*** <%(my-capture-insert 'my-event-date) 19:00-20:00> Kabarett-Vorglühen              :@Stadt:
+:PROPERTIES:
+:ID: %(my-capture-insert 'my-event-date)-kabarettvorgluehen
+:END:
+
+*** <%(my-capture-insert 'my-event-date) 20:00-23:30> %(my-capture-insert 'my-artist): \"%(my-capture-insert 'my-programname)\" (%(my-capture-insert 'my-location), DND) :@Stadt:
+:PROPERTIES:
+:ID: %(my-capture-insert 'my-event-date)-kabarettabend
+:END:
+
+- http://members.aon.at/hinwider/S.4_Kuenstler.htm
+#+BEGIN_QUOTE
+#+END_QUOTE
+")
+
+
+  (setq my-capture-template-contact "** %(my-capture-prompt \"Vorname\" 'my-firstname) %(my-capture-prompt \"Nachname\" 'my-lastname)     :%(my-capture-insert 'my-firstname)%(my-capture-insert 'my-lastname):
+:PROPERTIES:
+:TYPE: %(my-capture-selection '(\"person\" \"company\") 'my-person-or-company)
+:TITLE:
+:EMAIL: %(my-capture-prompt \"Email\" 'my-email)
+:URL:
+:MOBILE: 0043/
+:HOMEPHONE:
+:WORKPHONE:
+:PHONE:
+:COMPANY:
+:STREET:
+:POSTALCODE:
+:CITY:
+:COUNTRY: Österreich
+:PHOTOGRAPH: [[photo:%(my-capture-insert 'my-firstname)%(my-capture-insert 'my-lastname).jpg]]
+:BORN:
+:ITOLDTHEM_EMAIL:
+:ITOLDTHEM_ADDRESS:
+:ITOLDTHEM_PHONE:
+:ADDRESS_CHANGE_METHOD:
+:END:
+
+- Erstkontakt:
+
+\n\n")
+
+  (setq my-capture-template-releasenotes "***** NEXT [#A] Release Notes Sprint 16-%(my-capture-prompt \"Sprint\" 'my-sprint) [0/7]
+SCHEDULED: %(my-capture-prompt-date \"Friday\" 'my-friday)
+:PROPERTIES:
+:NOTordered: t
+:END:
+
+| Release   | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Successor created]] | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Jira Released]] | [[https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel][Notes done]] | URL sent | Notes |
+|-----------+-------------------+---------------+------------+----------+-------|
+
+****** Status
+
+#+BEGIN_SRC sh :results output :wrap quote
+c:/Users/karl.voit/src/jira-defect-analysis.py/jira-defect-analysis.py
+#+END_SRC
+
+****** NEXT Scrum-Master: Defects bitte closen
+SCHEDULED: %(my-capture-prompt-date \"Wednesday\" 'my-wednesday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
+:END:
+
+****** NEXT Create Jira Successor
+SCHEDULED: %(my-capture-prompt-date \"Thursday\" 'my-thursday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-create-jira-release-successors
+:END:
+
+****** NEXT [#A] Beno bescheid geben, wenn alle Defects auf closed sind
+SCHEDULED: %(my-capture-insert 'my-thursday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified
+:END:
+
+****** NEXT Tasks: Fixversion löschen; Stories: nicht in Service Packs
+SCHEDULED: %(my-capture-insert 'my-thursday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-tasks-and-stories
+:END:
+
+****** NEXT Release Notes erstellen
+SCHEDULED: %(my-capture-insert 'my-friday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created
+:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified
+:END:
+
+https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel
+
+- replace-regexp
+  : &create.*
+
+****** NEXT Release Note-URLs verschicken
+SCHEDULED: <%(my-capture-insert 'my-friday)>
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent
+:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created
+:END:
+
+- [[mailto:BPt-DL AT GRZ R6Teams <ise.r6teams@bearingpoint.com>; BPt-DL AT GRZ PM Team <pmteam@infonova.com>; BPt-DL AT R6 Release and Deployment Management <r6rdm@infonova.com>; BPt-FM Infonova R6 Support <support@infonova.com>; Brantner, Stefan <stefan.brantner@infonova.com>; Koerner, Christian <Christian.koerner@infonova.com>; Laber, Elke <Elke.laber@infonova.com>; Voit, Karl <Karl.voit@infonova.com>; Lipp, Hannes <hannes.lipp@infonova.com>; Poetz, Patrick <Patrick.poetz@infonova.com>; Kleva, Nusa <nusa.kleva@infonova.com>; Zurman, Beno <Beno.zurman@infonova.com>; Gaisbauer, Mansuet <Mansuet.gaisbauer@infonova.com>; Hoeserle, Christian <christian.hoeserle@infonova.com>?subject=Infonova R6 Service Pack Release Notes&body=Here are the Service Pack Release Notes for following releases. Please log in to Jira before accessing the URLs below.]]
+- *nicht* die URLs in Emacs pasten, da compose-mode backslash/slash vertauscht
+
+****** NEXT Release-Note-Orgmode-Struktur für nächsten Sprint erstellen (capture)
+SCHEDULED: <%(my-capture-insert 'my-friday)>
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-next-orgmode-struct-done
+:END:
+
+")
+
+
+
+
+;;test  (setq org-capture-templates
+;;test	`(
+;;test	  ("1" "first version with string" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+;;test	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+;;test	  ("2" "second version with variable" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+;;test	   ,my-capture-template-next :empty-lines 1)
+;;test          ))
+
   ;; ######################################################
   ;; templates:  http://orgmode.org/org.html#Capture-templates
   ;; elements:   http://orgmode.org/org.html#Template-elements
   (setq org-capture-templates
-	'(
+	`(
 	  ("s" "shorts-todo" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("e" "Event" entry (file+headline "~/share/all/org-mode/misc.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("k" "Kabarett" entry (file+headline "~/share/all/org-mode/misc.org" "Events")
+	   ,my-capture-template-kabarett :empty-lines 1)
 	  ("b" "Bookmark" entry (file+headline "~/share/all/org-mode/notes.org" "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("c" "Contact" entry (file+headline "~/share/all/org-mode/contacts.org" "Inbox")
+	   ,my-capture-template-contact :empty-lines 1)
+	   ;;(file "~/.emacs.d/data/capture_contact.org") :empty-lines 1)
 	  ("p" "public voit" entry (file+headline "~/share/all/org-mode/public_voit.org" "Blogbeiträge")
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 	  ("h" "hardware")
 	  ("hs" "sherri" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("hg" "gary" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo X200s (IST, 2009-01-??)" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("hc" "Chromebook" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("hp" "RasPlay" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("hb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
+	  ;;old;;("hb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
+	  ;;old;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("hw" "Winora T3" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("w" "Breitenweg")
 	  ("ws" "Breitenweg shorts" entry (file+headline "~/share/all/org-mode/bwg.org" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("we" "Breitenweg event" entry (file+headline "~/share/all/org-mode/bwg.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("wa" "Breitenweg Ausgaben" table-line (file+headline "~/share/all/org-mode/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
+	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/share/all/org-mode/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 	  ("i" "infonova Templates")
 	  ("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
+	  ("in" "infonova Release Notes" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
+	   ,my-capture-template-releasenotes :empty-lines 1)
 	  ("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("ir" "r6 Templates")
-	  ("irs" "infonova R6 shorts" entry (file+headline "~/share/all/org-mode/r6-stories.org" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("ire" "infonova R6 event" entry (file+headline "~/share/all/org-mode/r6-stories.org" "Events")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("irs" "R6 shorts" entry (file+headline "~/share/all/org-mode/r6-stories.org" "shorts")
+	   ,my-capture-template-next :empty-lines 1)
+	  ("iru" "Userstory" entry (file+headline "~/share/all/org-mode/r6-stories.org" "New Stories")
+	   ,my-capture-template-r6story :empty-lines 1)
 	  ("f" "FH St. Pölten")
 	  ("fs" "FH shorts" entry (file+headline "~/share/all/org-mode/fhsp.org" "shorts")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ("fe" "FH event" entry (file+headline "~/share/all/org-mode/fhsp.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("ii" "infonova IPD" entry (file+headline "~/share/all/org-mode/infonova.org" "IPDs")
 	  ;; "* IPD-%?: \n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("p" "PhD Templates")
 	  ;;("ps" "PhD shorts" entry (file+headline "~/share/all/org-mode/phd.org" "shorts")
-	  ;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ;; ,my-capture-template-next :empty-lines 1)
 	  ;;("pe" "PhD event" entry (file+headline "~/share/all/org-mode/phd.org" "Events")
 	  ;; "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("t" "tagstore Templates")
 	  ;;("ts" "tagstore shorts" entry (file+headline "~/share/all/org-mode/tagstore.org" "shorts")
-	  ;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ;; ,my-capture-template-next :empty-lines 1)
 	  ;;("te" "tagstore event" entry (file+headline "~/share/all/org-mode/tagstore.org" "Events")
 	  ;; "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("B" "Besorgung" entry (file+headline "~/share/all/org-mode/hardware.org" "Besorgungen")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	   ,my-capture-template-next :empty-lines 1)
 	  ;;("C" "Clipboard" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
 	  ;; "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 	  ("I" "inbox, refile later" entry (file "~/share/all/org-mode/inbox.org")
 	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("m" "movie" entry (file+headline "~/share/all/org-mode/movies.org" "inbox")
 	  ;; "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("x" "xlog")
-	  ("xf" "xlog FNS" table-line (id "xlog-fns-id") "| %T |")
-	  ("xz" "xlog ZNS" table-line (id "xlog-zns-id") "| %T |")
-	  ("xh" "xlog hometrainer" table-line (id "xlog-hometrainer") "| %T |  |  |  |")
-	  ("xb" "xlog Bettwäsche" table-line (id "xlog-bettwaesche-id") "| %T |  |  |  |  |")
-	  ("xg" "xlog Gewicht" table-line (id "xlog-gewicht") "| %T |  |")
-	  ("xr" "Reinigung Geschirrspüler" table-line (id "xlog-Geschirrspuelerreinigung") "| %T |")
-	  ("xp" "Pollenallergie Symptome" table-line (id "ad5f7363-e280-4566-912d-1fb5699725da") "| %T |")
-	  ("xt" "Pollenallergie Tabletteneinnahme" table-line (id "b718be27a93a35207bac9b18ec390cc3") "| %T |")
-	  ("xG" "elmex grün" table-line (id "d705cdf9-40e5-4677-9662-e0e17d05798f") "| %T |")
-	  ("xR" "elmex rot" table-line (id "fbd9be0e-5077-4ba9-89eb-6041f945991a") "| %T |")
-	  ("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
-	  ("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
-	  ("xx" "xlogtest" table-line (file+headline "~/share/all/org-mode/misc.org" "xlogtest2012-06-17") "| %T |")
+	  ;;old;;("x" "xlog")
+	  ;;old;;("xf" "xlog FNS" table-line (id "xlog-fns-id") "| %T |")
+	  ;;old;;("xz" "xlog ZNS" table-line (id "xlog-zns-id") "| %T |")
+	  ;;old;;("xh" "xlog hometrainer" table-line (id "xlog-hometrainer") "| %T |  |  |  |")
+	  ;;old;;("xb" "xlog Bettwäsche" table-line (id "xlog-bettwaesche-id") "| %T |  |  |  |  |")
+	  ;;old;;("xg" "xlog Gewicht" table-line (id "xlog-gewicht") "| %T |  |")
+	  ;;old;;("xr" "Reinigung Geschirrspüler" table-line (id "xlog-Geschirrspuelerreinigung") "| %T |")
+	  ;;old;;("xp" "Pollenallergie Symptome" table-line (id "ad5f7363-e280-4566-912d-1fb5699725da") "| %T |")
+	  ;;old;;("xt" "Pollenallergie Tabletteneinnahme" table-line (id "b718be27a93a35207bac9b18ec390cc3") "| %T |")
+	  ;;old;;("xG" "elmex grün" table-line (id "d705cdf9-40e5-4677-9662-e0e17d05798f") "| %T |")
+	  ;;old;;("xR" "elmex rot" table-line (id "fbd9be0e-5077-4ba9-89eb-6041f945991a") "| %T |")
+	  ;;old;;("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
+	  ;;old;;("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
+	  ;;old;;("xx" "xlogtest" table-line (file+headline "~/share/all/org-mode/misc.org" "xlogtest2012-06-17") "| %T |")
 	  )
 	)
 
