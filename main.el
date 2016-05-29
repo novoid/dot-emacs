@@ -169,99 +169,6 @@
 
 
 ;; #############################################################################
-;;* UTF-8 and codings
-
-;; Activate UTF-8 mode:
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-
-;; 2013-12-10 IRC #Emacs
-(set-clipboard-coding-system 'utf-8)
-
-;; http://www.masteringemacs.org/articles/2012/08/09/working-coding-systems-unicode-emacs/
-;; in addition to the lines above:
-
-(set-default-coding-systems 'utf-8)
-;; backwards compatibility as default-buffer-file-coding-system
-;; is deprecated in 23.2.
-(if (boundp 'buffer-file-coding-system)
-    ;; NOTE: default-buffer-file-coding-system is obsolete; use
-    ;;       buffer-file-coding-system if found
-    (setq-default buffer-file-coding-system 'utf-8)
-  (setq default-buffer-file-coding-system 'utf-8))
-;; Treat clipboard input as UTF-8 string first; compound text next, etc.
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-
-(defvar universal-coding-system-env-list '("PYTHONIOENCODING")
-  "List of environment variables \\[universal-coding-system-argument] should set")
-
-(defadvice universal-coding-system-argument (around provide-env-handler activate)
-  "Augments \\[universal-coding-system-argument] so it also sets environment variables
-
-Naively sets all environment variables specified in
-`universal-coding-system-env-list' to the literal string
-representation of the argument `coding-system'.
-
-No guarantees are made that the environment variables set by this advice support
-the same coding systems as Emacs."
-  (let ((process-environment (copy-alist process-environment)))
-    (dolist (extra-env universal-coding-system-env-list)
-      (setenv extra-env (symbol-name (ad-get-arg 0))))
-    ad-do-it))
-
-;; English time-stamps in Org-mode (instead of localized German ones):
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2011-10/msg01046.html
-;;   system locale to use for formatting time values (e.g., timestamps in
-;;   Org mode files)
-;; "en_US.utf8" did not work for the weekday in the agenda!
-(setq system-time-locale "C")
-
-
-;; #############################################################################
-;;* my-map
-
-
-;; about defining keys
-;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
-
-
-;; 2015-11-10 replaced by bind-key ;; ;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
-;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
-;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
-;; 2015-11-10 replaced by bind-key ;; ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
-;; 2015-11-10 replaced by bind-key ;; (global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
-;; 2015-11-10 replaced by bind-key ;; ;; same as: (global-unset-key (kbd "C-c C-,"))
-;; 2015-11-10 replaced by bind-key ;; (define-prefix-command 'my-map)
-;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c C-,") 'my-map)
-;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c ,") 'my-map)
-
-
-;; https://github.com/jwiegley/dot-emacs/blob/master/init.el
-(require 'bind-key);; https://github.com/emacsattic/bind-key
-
-(bind-keys
- :prefix-map my-map
- :prefix-docstring "My own keyboard map"
- :prefix "C-c C-,"
- ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
- ("-" . text-scale-decrease)
- ("+" . text-scale-increase)
- ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget shift
- )
-
-;; examples:
-;;   (bind-key "m w" #'mark-word my-map)
-;; or:
-;;   (bind-keys
-;;    :map my-map
-;;    ("f" . forward-char)
-;;    ("b" . backward-char))
-
-
-;; #############################################################################
 ;;* my-system-is-FOOBAR
 
 ;; Emacs config switch depending on hostname or operating system
@@ -344,6 +251,112 @@ the same coding systems as Emacs."
   "Return true if the system we are running on is karl-voit.at"
   (string-equal system-name "friends.grml.info")
   )
+
+
+;; #############################################################################
+;;* UTF-8 and codings
+
+;; Activate UTF-8 mode:
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+(cond ((my-system-type-is-windows)
+       ;; on Windows, 'utf-8 does not work properly when system
+       ;; clipboard gets yanked
+       (setq selection-coding-system 'utf-16le-dos)
+       )
+      ((my-system-type-is-gnu)
+       (set-selection-coding-system 'utf-8)
+       )
+      (t
+       (set-selection-coding-system 'utf-8)
+       )
+      )
+
+
+;; 2013-12-10 IRC #Emacs
+(set-clipboard-coding-system 'utf-8)
+
+;; http://www.masteringemacs.org/articles/2012/08/09/working-coding-systems-unicode-emacs/
+;; in addition to the lines above:
+
+(set-default-coding-systems 'utf-8)
+;; backwards compatibility as default-buffer-file-coding-system
+;; is deprecated in 23.2.
+(if (boundp 'buffer-file-coding-system)
+    ;; NOTE: default-buffer-file-coding-system is obsolete; use
+    ;;       buffer-file-coding-system if found
+    (setq-default buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8))
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+(defvar universal-coding-system-env-list '("PYTHONIOENCODING")
+  "List of environment variables \\[universal-coding-system-argument] should set")
+
+(defadvice universal-coding-system-argument (around provide-env-handler activate)
+  "Augments \\[universal-coding-system-argument] so it also sets environment variables
+
+Naively sets all environment variables specified in
+`universal-coding-system-env-list' to the literal string
+representation of the argument `coding-system'.
+
+No guarantees are made that the environment variables set by this advice support
+the same coding systems as Emacs."
+  (let ((process-environment (copy-alist process-environment)))
+    (dolist (extra-env universal-coding-system-env-list)
+      (setenv extra-env (symbol-name (ad-get-arg 0))))
+    ad-do-it))
+
+;; English time-stamps in Org-mode (instead of localized German ones):
+;; http://lists.gnu.org/archive/html/emacs-orgmode/2011-10/msg01046.html
+;;   system locale to use for formatting time values (e.g., timestamps in
+;;   Org mode files)
+;; "en_US.utf8" did not work for the weekday in the agenda!
+(setq system-time-locale "C")
+
+
+;; #############################################################################
+;;* my-map
+
+
+;; about defining keys
+;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
+
+
+;; 2015-11-10 replaced by bind-key ;; ;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
+;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
+;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
+;; 2015-11-10 replaced by bind-key ;; ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
+;; 2015-11-10 replaced by bind-key ;; (global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
+;; 2015-11-10 replaced by bind-key ;; ;; same as: (global-unset-key (kbd "C-c C-,"))
+;; 2015-11-10 replaced by bind-key ;; (define-prefix-command 'my-map)
+;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c C-,") 'my-map)
+;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c ,") 'my-map)
+
+
+;; https://github.com/jwiegley/dot-emacs/blob/master/init.el
+(require 'bind-key);; https://github.com/emacsattic/bind-key
+
+(bind-keys
+ :prefix-map my-map
+ :prefix-docstring "My own keyboard map"
+ :prefix "C-c C-,"
+ ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
+ ("-" . text-scale-decrease)
+ ("+" . text-scale-increase)
+ ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget shift
+ )
+
+;; examples:
+;;   (bind-key "m w" #'mark-word my-map)
+;; or:
+;;   (bind-keys
+;;    :map my-map
+;;    ("f" . forward-char)
+;;    ("b" . backward-char))
 
 
 ;; #############################################################################
