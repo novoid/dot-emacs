@@ -864,8 +864,6 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* flyspell
 
-
-
 ;; ######################################################
 ;; setting path to flyspell-mode.el from MacPorts
 (when (my-system-type-is-darwin)
@@ -1387,16 +1385,16 @@ the same coding systems as Emacs."
 
 ;;** org-mode-hook
 
-  (add-hook 'org-mode-hook
-	    (lambda ()
-	      ;; yasnippet
-	      ;;disabled;            (make-variable-buffer-local 'yas/trigger-key)
-	      ;;disabled;            (org-set-local 'yas/trigger-key [tab])
-	      ;;disabled;            (define-key yas/keymap [tab] 'yas/next-field-group)
-	      ;; flyspell mode for spell checking everywhere
-	      ;;disabled; (flyspell-mode 1)
-	      ;; auto-fill mode on
-	      (auto-fill-mode 1)))
+;;disabled;; (add-hook 'org-mode-hook
+;;disabled;;           (lambda ()
+;;disabled;;             ;; yasnippet
+;;disabled;;             ;;disabled;            (make-variable-buffer-local 'yas/trigger-key)
+;;disabled;;             ;;disabled;            (org-set-local 'yas/trigger-key [tab])
+;;disabled;;             ;;disabled;            (define-key yas/keymap [tab] 'yas/next-field-group)
+;;disabled;;             ;; flyspell mode for spell checking everywhere
+;;disabled;;             ;;disabled; (flyspell-mode 1)
+;;disabled;;             ;; auto-fill mode on
+;;disabled;;             (auto-fill-mode 1)))
 
   ;; ######################################################
   ;; Make TAB the yas trigger key in the org-mode-hook and enable flyspell mode and autofill
