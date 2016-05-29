@@ -5075,7 +5075,11 @@ i.e. change right window to bottom, or change bottom window to right."
       (progn
         (save-buffer)
         (counsel-grep))
-    (swiper--ivy (swiper--candidates))))
+    (if (my-system-type-is-windows)
+        (isearch-forward)
+      (swiper--ivy (swiper--candidates))
+      )
+    ))
 
 (global-set-key "\C-s" 'my-search-method-according-to-numlines)
 
