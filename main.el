@@ -4702,6 +4702,29 @@ The app is chosen from your OS's preference."
   :defer 10
 )
 
+;;** wttrin.el
+;; http://pragmaticemacs.com/emacs/weather-in-emacs/
+;; https://github.com/bcbcarl/emacs-wttrin
+(use-package wttrin
+  :ensure t
+  :commands (wttrin)
+  :defer 15
+  :init
+  (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming"))
+  (cond ((my-system-is-sherri)
+         (bind-key "w" #'(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
+         )
+        ((my-system-is-powerplantwin)
+         (bind-key "w" #'(lambda () (interactive) (wttrin-query "unterpremstatten") (toggle-truncate-lines)) my-map)
+          )
+        (t
+         (bind-key "w" #'(lambda () (interactive) (wttrin) (toggle-truncate-lines)) my-map)
+         )
+        )
+  )
+
+        (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
+
 ;;* my helper functions
 
 ;; #############################################################################
