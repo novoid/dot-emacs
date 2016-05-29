@@ -3801,7 +3801,7 @@ the result as a time value."
 (message "############### DEBUG: config orgmode finished.")
 
 ;; #############################################################################
-;;* misc modes
+;;* misc modes/packages
 
 ;; #############################################################################
 ;;** post-mode (disabled)
@@ -4485,6 +4485,7 @@ The app is chosen from your OS's preference."
   (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":ED:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/share/all/org-mode" ":org:") t)
   (smart-mode-line-enable)
 )
 
