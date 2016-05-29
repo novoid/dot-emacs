@@ -24,7 +24,8 @@
 (setq large-file-warning-threshold 100000000);; set warning of opening large files to 100MB
 (setq sentence-end-double-space nil);; do not add double space after periods http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/
 (setq column-number-mode t);; show current column
-(setq truncate-lines t)
+(setq truncate-lines t);; https://www.emacswiki.org/emacs/TruncateLines - M-x toggle-truncate-lines
+(setq-default global-visual-line-mode t) ;; http://stackoverflow.com/questions/7577614/emacs-truncate-lines-in-all-buffers
 
 ;; Prevent the cursor from blinking
 ;(blink-cursor-mode 0)
