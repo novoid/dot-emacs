@@ -5081,6 +5081,30 @@ i.e. change right window to bottom, or change bottom window to right."
     )
   )
 
+;;** my-yank-windows (my-map y)
+;; id:2016-05-22-my-yank-windows
+
+(when (my-system-type-is-windows)
+  (defun my-yank-windows ()
+    "yanks from clipboard and replaces typical (list) markup"
+    (interactive)
+    (let ((mybegin (point)))              ;; mark beginning of line as start point
+      (clipboard-yank)
+      (save-restriction
+        (narrow-to-region mybegin (point))  ;; ignore everything outside of region
+        (goto-char (point-min))
+        (while (search-forward "\"	" nil t)
+  	(replace-match "- " nil t))
+        (while (search-forward "o	" nil t)
+  	(replace-match "  - " nil t))
+        ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
+        ;; (replace-match "1. " nil t))
+        ))
+    )
+
+  (bind-key "y" #'my-yank-windows my-map)
+  )
+
 
 ;;* Key bindings
 
