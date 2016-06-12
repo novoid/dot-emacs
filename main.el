@@ -1305,7 +1305,7 @@ the same coding systems as Emacs."
   ;; 2013-09-13:
   ;; From: Release Notes v8.1
   ;; http://orgmode.org/worg/agenda-optimization.html
-  (setq org-agenda-ignore-drawer-properties '(effort appt category))
+  (setq org-agenda-ignore-drawer-properties '(effort appt stats));; agenda performance
 
   ;; automatically CREATED properties
   (org-expiry-insinuate)
@@ -2293,14 +2293,17 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   ;; t = do not initialize agenda Org files when generating (only) agenda
   ;; nil = initialize normal
-  (setq org-agenda-inhibit-startup nil)
+  ;; performance issue when not "t": https://punchagan.muse-amuse.in/posts/how-i-learnt-to-use-emacs-profiler.html
+  ;;(setq org-agenda-inhibit-startup nil);; slower but visibility of buffers is correctly shown
+  (setq org-agenda-inhibit-startup t);; faster with no hidden headings (agenda performance)
 
   ;; Compact the block agenda view
   (setq org-agenda-compact-blocks t)
 
   ;; Changed in v7.9.3
   ;; http://orgmode.org/worg/doc.html#org-use-tag-inheritance
-  (setq org-agenda-use-tag-inheritance (quote (agenda)))
+  ;; performance issue when not nil: https://punchagan.muse-amuse.in/posts/how-i-learnt-to-use-emacs-profiler.html
+  (setq org-agenda-use-tag-inheritance (quote (agenda)));; agenda performance
 
   ;; http://orgmode.org/org.html#Weekly_002fdaily-agenda
   (setq org-agenda-span 1)
