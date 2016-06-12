@@ -1339,6 +1339,9 @@ the same coding systems as Emacs."
   (setq-default ff-other-file-alist 'my-cpp-other-file-alist)
   ;; open corresponding .org_archive file with ~ff-find-other-file~
 
+  ;; http://orgmode.org/manual/The-Export-Dispatcher.html
+  (setq org-export-initial-scope 'subtree);; export subtree (by default)
+
 ;;** general key bindings
 
   ;; http://doc.norang.ca/org-mode.html
