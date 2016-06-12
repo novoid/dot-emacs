@@ -4732,6 +4732,50 @@ The app is chosen from your OS's preference."
 
         (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
 
+;;** git-timemachine
+;; https://github.com/pidu/git-timemachine
+(use-package git-timemachine
+  :ensure t
+  :defer 15
+  :init
+  (cond ((my-system-type-is-gnu)
+
+         ;; http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html -> start from selected revision instead of HEAD
+         (defun my-git-timemachine-show-selected-revision ()
+           "Show last (current) revision of file."
+           (interactive)
+           (let (collection)
+             (setq collection
+                   (mapcar (lambda (rev)
+                             ;; re-shape list for the ivy-read
+                             (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
+                           (git-timemachine--revisions)))
+             (ivy-read "commits:"
+                       collection
+                       :action (lambda (rev)
+                                 (git-timemachine-show-revision rev)))))
+
+         (defun my-git-timemachine ()
+           "Open git snapshot with the selected version.  Based on ivy-mode."
+           (interactive)
+           (unless (featurep 'git-timemachine)
+             (require 'git-timemachine))
+           (git-timemachine--start #'my-git-timemachine-show-selected-revision))
+
+         )
+        )
+  )
+
+;;** pandoc-mode
+;; http://joostkremers.github.io/pandoc-mode/
+;; https://github.com/joostkremers/pandoc-mode
+(use-package pandoc-mode
+  ;; :disabled t
+  :ensure nil
+  :defer 10
+)
+
+
 ;;* my helper functions
 
 ;; #############################################################################
