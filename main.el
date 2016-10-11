@@ -484,7 +484,11 @@ the same coding systems as Emacs."
   (set-face-attribute 'default (selected-frame) :height 170);; 2011-04-20: increase/set font size http://www.emacswiki.org/emacs/SetFonts
   )
 (when (my-system-is-powerplantwin)
-  (set-face-attribute 'default (selected-frame) :height 150)
+  ;;(set-face-attribute 'default (selected-frame) :height 150)
+  (set-face-attribute 'default (selected-frame) :height 130);; 2016-08-19 let's test 130 after 150 seems too big
+  )
+(when (my-system-is-floyd)
+  (set-face-attribute 'default (selected-frame) :height 110)
   )
 
 ;;* measure-time()
