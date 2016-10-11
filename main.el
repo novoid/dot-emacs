@@ -1,10 +1,10 @@
 ; -*- orgstruct-heading-prefix-regexp: ";;" -*-
+;;* General settings
 
 ;; ######################################################
 (message "######### loading main.el ...")
 
-;; #############################################################################
-;;* General settings
+;(profiler-start 'cpu);; test startup performance - create report with M-x profiler-report
 
 ;; personalize prelude
 ;; from: http://batsov.com/prelude/
