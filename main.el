@@ -452,6 +452,11 @@ the same coding systems as Emacs."
   ;; id:2015-11-02-tramp-windows-babel
   (setq tramp-default-method "plink")
 
+  ;; id:2016-04-22-magit-not-working-on-windows
+  (setq cygwin-root-directory "c:/Users/karl.voit/.babun/cygwin")
+  ;; requires: setup-cygwin.el and cygwin-mount.el in the contrib dir:
+  (add-to-list 'load-path "~/.emacs.d/contrib/")
+  (require 'setup-cygwin)
   )
 
 
