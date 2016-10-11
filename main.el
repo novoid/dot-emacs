@@ -1198,6 +1198,16 @@ the same coding systems as Emacs."
     ;; :mode "\\.rb\\'"
   )
 
+  (use-package ox-asciidoc
+    ;;:disabled t  ;; stop loading if 't'
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    :defer 10
+    ;; :if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
+    :init ;; executed before loading package
+    ;; org-pandoc-menu-entry -> customize what is shown in menu
+    ;; :mode "\\.rb\\'"
+  )
+
 ;;** general Org-mode settings
 
   ;; http://www.reddit.com/r/emacs/comments/2m4b7j/help_setting_orgmode_as_the_default_major_mode/
