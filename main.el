@@ -1757,11 +1757,11 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
           (url (substring-no-properties (current-kill 0)))
           ;; This is a check string: if the URL in the clipboard
           ;; doesn't start with this, an error message is shown
-          (domain "http://karl-voit.at")
+          (domain "karl-voit.at")
   	)
       ;; Check if URL string is from my domain (all other strings do
       ;; not make any sense here)
-      (if (string-prefix-p (upcase domain) (upcase url))
+      (if (string-match (upcase domain) (upcase url))
 	  ;; Retrieving content by URL into new buffer asynchronously
 	  (url-retrieve url
                         ;; call this lambda function when URL content is retrieved
@@ -1787,7 +1787,9 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
 			     )
 			   )
 			)
-  	(message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't start with \"" domain "\". Aborting."))
+  	(message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't contain \"" domain "\". Aborting."))
+        ;;(message (concat "domain: " domain))
+        ;;(message (concat "url:    " url))
   	)
       )
     )
