@@ -205,27 +205,27 @@
   (string-equal system-type "gnu/linux")
   )
 
-(defun my-system-is-gary-or-sherri ()
-  "Return true if the system we are running on is gary or sherri"
+(defun my-system-is-floyd-or-sherri ()
+  "Return true if the system we are running on is floyd or sherri"
   (or
-    (string-equal system-name "gary")
-    (string-equal system-name "gary.lan")
+    (string-equal system-name "floyd")
+    (string-equal system-name "floyd.lan")
     (string-equal system-name "sherri")
     (string-equal system-name "sherri.lan")
     )
   )
 (defun my-system-is-sherri ()
-  "Return true if the system we are running on is gary or sherri"
+  "Return true if the system we are running on is sherri"
   (or
     (string-equal system-name "sherri")
     (string-equal system-name "sherri.lan")
     )
   )
-(defun my-system-is-gary ()
-  "Return true if the system we are running on is gary or sherri"
+(defun my-system-is-floyd ()
+  "Return true if the system we are running on is floyd"
   (or
-    (string-equal system-name "gary")
-    (string-equal system-name "gary.lan")
+    (string-equal system-name "floyd")
+    (string-equal system-name "floyd.lan")
     )
   )
 (defun my-system-is-blanche ()
@@ -817,7 +817,7 @@ the same coding systems as Emacs."
 ;;old;;(when (my-system-type-is-darwin)
 ;;old;;  (setq browse-url-browser-function 'browse-url-default-macosx-browser)
 ;;old;;  )
-;;old;;(when (my-system-is-gary)
+;;old;;(when (my-system-is-floyd)
 ;;old;;  (setq browse-url-browser-function 'browse-url-generic
 ;;old;;	;;      browse-url-generic-program "/usr/bin/google-chrome")
 ;;old;;	browse-url-generic-program "/usr/bin/iceweasel")
@@ -3005,7 +3005,7 @@ SCHEDULED: <%(my-capture-insert 'my-friday)>
 	  ("h" "hardware")
 	  ("hs" "sherri" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hg" "gary" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo X200s (IST, 2009-01-??)" "shorts")
+	  ("hf" "floyd" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 	  ("hc" "Chromebook" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
@@ -3796,7 +3796,7 @@ the result as a time value."
   (use-package org-bullets
     ;; :disabled t
     :ensure t
-    ;;:if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+    ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
     :config ;; executed after loading package
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
@@ -4697,7 +4697,7 @@ The app is chosen from your OS's preference."
   ;; :disabled t
   :ensure t
   ;;:if my-system-is-sherri
-  ;;:if (or (my-system-is-gary-or-sherri) (my-system-is-powerplantlinux))
+  ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
   ;;:diminish whitespace-mode
   :defer 10
 )
