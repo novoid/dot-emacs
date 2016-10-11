@@ -3184,7 +3184,6 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
 			      ("nonComputer" . ?n)
 			      ("fitness" . ?f)
 			      (:startgroup)
-			      ("@ALW" . ?a)
 			      ("@BWG" . ?b)
 			      ;;("@Infonova" . ?i)
 			      ;;("@out_of_town" . ?o)
