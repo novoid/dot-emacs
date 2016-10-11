@@ -2636,7 +2636,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
   ;; ######################################################
-;;** capture
+;;** CAPTURE
 
   ;; capture:    http://orgmode.org/org.html#Setting-up-capture
   (setq org-default-notes-file "~/share/all/org-mode/inbox.org")
@@ -2685,7 +2685,25 @@ Late deadlines first, then scheduled, then non-late deadlines"
     )
 
   ;; capture templates:
+
   (setq my-capture-template-next "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+
+  ;; for testing purposes only:
+  (setq my-capture-template-test "** Capture test
+
+- Entering values: %(my-capture-prompt \"Please enter FOO\" 'my-foo) %(my-capture-prompt \"Please enter BAR\" 'my-bar)
+- Entering a date: %(my-capture-prompt-date \"Enter a date\" 'my-date)
+- Selection: %(my-capture-selection '(\"one\" \"two\" \"three\") 'my-number)
+- Optional: %(my-capture-optional \"an optional snippet\" \"The content for the optional thing\")
+
+Re-using:
+- Here comes %(my-capture-insert 'my-foo) and %(my-capture-insert 'my-bar)
+- The date: %(my-capture-insert 'my-date)
+- Your number choice: %(my-capture-insert 'my-number)
+
+\n\n")
+
+
   (setq my-capture-template-r6story "** TODO [[IPD:%(my-capture-prompt \"IPD number\" 'my-ipd)]] %(my-capture-prompt \"Story title\" 'my-title) [1/11]                         :US_%(my-capture-prompt \"Short title\" 'my-short-title):
 :PROPERTIES:
 :CREATED:  [%<%Y-%m-%d %a %H:%M>]
@@ -2768,11 +2786,23 @@ SCHEDULED: <%(format-time-string \"%Y-%m-%d\")>
 :TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept(WAITING)
 :END:
 
-*** acceptance + finish US
+*** acceptance
 :PROPERTIES:
 :CREATED:  [%<%Y-%m-%d %a %H:%M>]
 :ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept
 :BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team
+:END:
+
+- Dev macht danach:
+  - auf \"Implementation Complete\" setzen
+  - mergen + master-Tests grün -> \"Resolved\"
+
+*** close
+:PROPERTIES:
+:CREATED:  [%<%Y-%m-%d %a %H:%M>]
+:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-close
+:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept
+:TRIGGER: %(format-time-string \"%Y-%m-%d\")-Story-%(my-capture-insert 'my-short-title)(DONE)
 :END:
 ")
 
@@ -2902,14 +2932,15 @@ Wir freuen uns!
 
 \n\n")
 
-  (setq my-capture-template-releasenotes "***** NEXT [#A] Release Notes Sprint 16-%(my-capture-prompt \"Sprint\" 'my-sprint) [0/7]
+  (setq my-capture-template-releasenotes "***** NEXT [#A] Release Notes Sprint 2016-%(my-capture-prompt \"Sprint\" 'my-sprint) [0/7]
 SCHEDULED: %(my-capture-prompt-date \"Friday\" 'my-friday)
 :PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-sprint-release-notes
 :NOTordered: t
 :END:
 
-| Release   | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Successor created]] | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Jira Released]] | [[https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel][Notes done]] | URL sent | Notes |
-|-----------+-------------------+---------------+------------+----------+-------|
+| Release   | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Successor created]] | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Jira Released]] | [[https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel][Notes done]] | am Nexus | URL sent | Notes |
+|-----------+-------------------+---------------+------------+----------+-------+-------|
 
 ****** Status
 
@@ -2917,10 +2948,11 @@ SCHEDULED: %(my-capture-prompt-date \"Friday\" 'my-friday)
 c:/Users/karl.voit/src/jira-defect-analysis.py/jira-defect-analysis.py
 #+END_SRC
 
-****** NEXT Scrum-Master: Defects bitte closen
+****** NEXT Defects closen (mit Scrum-Master)
 SCHEDULED: %(my-capture-prompt-date \"Wednesday\" 'my-wednesday)
 :PROPERTIES:
 :ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
+:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified(NEXT) release-notes-process-2016-%(my-capture-insert 'my-sprint)-tasks-and-stories(NEXT)
 :END:
 
 ****** NEXT Create Jira Successor
@@ -2929,23 +2961,35 @@ SCHEDULED: %(my-capture-prompt-date \"Thursday\" 'my-thursday)
 :ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-create-jira-release-successors
 :END:
 
-****** NEXT [#A] Beno bescheid geben, wenn alle Defects auf closed sind
+****** WAITING [#A] \"Release Info\"-Channel: all defects closed
 SCHEDULED: %(my-capture-insert 'my-thursday)
 :PROPERTIES:
+:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
 :ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified
 :END:
 
-****** NEXT Tasks: Fixversion löschen; Stories: nicht in Service Packs
+****** WAITING Tasks: Fixversion löschen; Stories: nicht in Service Packs
 SCHEDULED: %(my-capture-insert 'my-thursday)
 :PROPERTIES:
+:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
 :ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-tasks-and-stories
 :END:
 
-****** NEXT Release Notes erstellen
+- Doku-Defects (die nicht in Release Notes sollen): alle Fixversions löschen
+
+****** NEXT Release Notes Review
+SCHEDULED: %(my-capture-insert 'my-friday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-reviewed
+:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created(NEXT)
+:END:
+
+****** WAITING Release Notes erstellen
 SCHEDULED: %(my-capture-insert 'my-friday)
 :PROPERTIES:
 :ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created
 :BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified
+:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-finished-mattermost(NEXT) release-notes-process-2016-%(my-capture-insert 'my-sprint)-releases-on-nexus(WAITING) release-notes-process-2016-%(my-capture-insert 'my-sprint)-PDF-released(WAITING)
 :END:
 
 https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel
@@ -2953,25 +2997,74 @@ https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira
 - replace-regexp
   : &create.*
 
-****** NEXT Release Note-URLs verschicken
-SCHEDULED: <%(my-capture-insert 'my-friday)>
+****** WAITING [#A] \"Release Info\"-Channel: Release Notes verkünden
+SCHEDULED: %(my-capture-insert 'my-friday)
 :PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-finished-mattermost
 :BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created
+:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent(NEXT)
 :END:
 
-- [[mailto:BPt-DL AT GRZ R6Teams <ise.r6teams@bearingpoint.com>; BPt-DL AT GRZ PM Team <pmteam@infonova.com>; BPt-DL AT R6 Release and Deployment Management <r6rdm@infonova.com>; BPt-FM Infonova R6 Support <support@infonova.com>; Brantner, Stefan <stefan.brantner@infonova.com>; Koerner, Christian <Christian.koerner@infonova.com>; Laber, Elke <Elke.laber@infonova.com>; Voit, Karl <Karl.voit@infonova.com>; Lipp, Hannes <hannes.lipp@infonova.com>; Poetz, Patrick <Patrick.poetz@infonova.com>; Kleva, Nusa <nusa.kleva@infonova.com>; Zurman, Beno <Beno.zurman@infonova.com>; Gaisbauer, Mansuet <Mansuet.gaisbauer@infonova.com>; Hoeserle, Christian <christian.hoeserle@infonova.com>?subject=Infonova R6 Service Pack Release Notes&body=Here are the Service Pack Release Notes for following releases. Please log in to Jira before accessing the URLs below.]]
-- *nicht* die URLs in Emacs pasten, da compose-mode backslash/slash vertauscht
 
 ****** NEXT Release-Note-Orgmode-Struktur für nächsten Sprint erstellen (capture)
-SCHEDULED: <%(my-capture-insert 'my-friday)>
+SCHEDULED: %(my-capture-insert 'my-friday)
 :PROPERTIES:
 :ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-next-orgmode-struct-done
+:END:
+
+****** WAITING [#A] Releases am Nexus verfügbar
+SCHEDULED: %(my-capture-insert 'my-friday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-releases-on-nexus
+:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent(NEXT)
+:END:
+
+****** WAITING [#A] PDF am Partnerportal verfügbar (Nusa)
+SCHEDULED: %(my-capture-insert 'my-friday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-PDF-released
+:END:
+
+****** WAITING [#A] Release Note Email verschicken
+SCHEDULED: %(my-capture-insert 'my-friday)
+:PROPERTIES:
+:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent
+:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-releases-on-nexus release-notes-process-2016-%(my-capture-insert 'my-sprint)-PDF-released
+:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-sprint-release-notes(DONE)
 :END:
 
 ")
 
 
+  (setq my-capture-template-officehours "****** Arbeitsstunden von Karl Voit für 2016-%(my-capture-prompt \"Monat (zB 06)\" 'my-month)
+:PROPERTIES:
+:EXPORT_OPTIONS: toc:nil author:nil ^:nil *:nil timestamp:nil date:nil tags:nil
+:EXPORT_LATEX_CLASS: scrartcl
+:EXPORT_FILE_NAME: c:/Users/karl.voit/infonova/Stundenabrechnung/2016-%(my-capture-insert 'my-month)_Arbeitsstunden_Karl_Voit.pdf
+:END:
+
+#+BEGIN_SRC sh :exports results :results raw :prologue \"echo \\\"|      Datum | Tag | Kommt | MP Beginn | MP Ende |  Geht | Summe | Prozent |\\n|-\\\"\"
+grep ':OFFICE-SUMMARY:' /cygd*/c/Use*/karl*/sha*/all/org-m*/mem*/roylog*archive | grep 2016-%(my-capture-insert 'my-month) | sed 's/:OFFICE-SUMMARY: //' ;
+echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: \\$8 = '(my-percentage-of-hm-string-with-day \\$7 \\$2)\"
+#+END_SRC
+
+
+#+ATTR_LATEX: :width 2cm :float wrap :placement {r}{1.8\\textwidth}
+[[file:c:/Users/karl.voit/templates_labels/2016-07-12 Karl Voit - Unterschrift.pdf]]
+
+******* Process                :noexport:
+
+1. [X] Capture
+2. [ ] Execute babel code (C-c C-c)
+3. [ ] Update table (C-u C-u C-c C-c)
+4. [ ] Copy heading + body above
+5. [ ] Open [[file:c:/Users/karl.voit/infonova/Stundenabrechnung/2016-%(my-capture-insert 'my-month)_Arbeitsstunden_Karl_Voit.org]]
+6. [ ] Paste heading + body
+7. [ ] Export as PDF
+8. [ ] [[mailto:klaudija.ferencek-horvat@infonova.com?subject=Arbeitsstunden%20von%20Karl%20Voit%20fuer%202016-%(my-capture-insert 'my-month)&body=Hallo%20Klaudija!%0D%0A%0D%0AHier%20sind%20meine%20unterschriebenen%20und%20gescannten%20Stunden%20fuer%20den%20Monat%202016-%(my-capture-insert 'my-month).%0D%0A%0D%0AEinen%20schoenen%20Tag%20noch!&attachment=c:/Users/karl.voit/infonova/Stundenabrechnung/2016-%(my-capture-insert 'my-month)_Arbeitsstunden_Karl_Voit.pdf]]
+9. [ ] attach the PDF file
+
+\n\n")
 
 
 ;;test  (setq org-capture-templates
@@ -3024,8 +3117,10 @@ SCHEDULED: <%(my-capture-insert 'my-friday)>
 	  ("i" "infonova Templates")
 	  ("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("in" "infonova Release Notes" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
+	  ("in" "infonova Release Notes" entry (file+olp "~/share/all/org-mode/infonova.org" "Notes" "R6" "Processes" "Release-Notes" "Release Management & Defect Finalization")
 	   ,my-capture-template-releasenotes :empty-lines 1)
+	  ("iS" "infonova Stundenabrechnung" entry (file+olp "~/share/all/org-mode/infonova.org" "Notes" "Orga" "Arbeitszeiten" "Buchen mit roylog nach 2016-07-01")
+	   ,my-capture-template-officehours :empty-lines 1)
 	  ("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("ir" "r6 Templates")
@@ -3072,6 +3167,8 @@ SCHEDULED: <%(my-capture-insert 'my-friday)>
 	  ;;old;;("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
 	  ;;old;;("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
 	  ;;old;;("xx" "xlogtest" table-line (file+headline "~/share/all/org-mode/misc.org" "xlogtest2012-06-17") "| %T |")
+	  ("X" "test" entry (file+headline "~/share/all/org-mode/misc.org" "Tests")
+	   ,my-capture-template-test :empty-lines 1)
 	  )
 	)
 
