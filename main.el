@@ -4907,12 +4907,50 @@ The app is chosen from your OS's preference."
   :defer 10
 )
 
+;;** ox-clip - formatted copy to orgmode
+;; http://melpa.org/#/ox-clip
+;; https://libraries.io/emacs/ox-clip
+;; https://github.com/jkitchin/scimax
+(use-package ox-clip
+  ;; :disabled t
+  :ensure t
+  :defer 10
+)
+
+;;** bm - visible bookmarks
+;; http://pragmaticemacs.com/emacs/use-visible-bookmarks-to-quickly-jump-around-a-file/
+(use-package bm
+  :ensure t
+  :defer 5
+  :bind (:map my-map ("8" . bm-toggle))
+  :bind (:map my-map ("9" . bm-previous))
+  :bind (:map my-map ("0" . bm-next))
+  )
+
+;;** adoc-mode - asciidoc mode
+(use-package adoc-mode
+  :ensure t
+  :defer 5
+  :config
+  (add-to-list
+   'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
+  )
+
+;;** suggest
+;; http://www.wilfred.me.uk/blog/2016/07/30/example-driven-development/
+;; id:2016-08-04-suggest
+
+(use-package suggest
+  :ensure t
+  :defer 5
+  )
+
 
 ;;* my helper functions
 
 ;; #############################################################################
 ;;** Infonova Functions for Working Hour Calculation
-(defun my-minutes-of-hm-string(hm-string)
+(defun my-extract-minutes-of-hm-string(hm-string)
   "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
   (let (
 	;; minutes is the second element after splitting with ":"
