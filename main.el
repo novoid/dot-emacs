@@ -1057,6 +1057,20 @@ the same coding systems as Emacs."
 
 )
 
+;;** yankpad
+;; id:2016-08-08-yankpad-test
+;; https://github.com/Kungsgeten/yankpad
+
+(use-package yankpad
+  :ensure t
+  :defer 10
+  :init
+  (setq yankpad-file "~/org/yankpad.org")
+  :bind (:map my-map ("SPC" . yankpad-insert))
+  :config
+  (bind-key "<f6>" 'yankpad-map))
+
+
 
 ;; #############################################################################
 ;;* REST
