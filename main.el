@@ -1030,9 +1030,16 @@ the same coding systems as Emacs."
 ;; #############################################################################
 ;;* flycheck
 ;; http://www.flycheck.org/en/latest/guide/quickstart.html
+;; 2016-11-05: converted to use-package according to http://www.flycheck.org/en/latest/user/installation.html#use-package
 
-(add-hook 'after-init-hook #'global-flycheck-mode) ; enable everywhere
-(setq flycheck-flake8-maximum-line-length 200); http://www.flycheck.org/manual/latest/Configuring-checkers.html#Configuring-checkers
+;OLD: (add-hook 'after-init-hook #'global-flycheck-mode) ; enable everywhere
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode)
+  :config
+  (setq flycheck-flake8-maximum-line-length 200); http://www.flycheck.org/manual/latest/Configuring-checkers.html#Configuring-checkers
+  )
 
 
 ;; #############################################################################
