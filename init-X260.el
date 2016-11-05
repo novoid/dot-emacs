@@ -24,10 +24,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(org-contacts-address-property "CITY")
- '(org-contacts-birthday-property "BORN")
- '(org-contacts-files "~/share/all/org-mode/contacts.org")
- '(org-contacts-icon-property "PHOTOGRAPH")
+ '(org-contacts-address-property "CITY" t)
+ '(org-contacts-birthday-property "BORN" t)
+ '(org-contacts-files "~/share/all/org-mode/contacts.org" t)
+ '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(safe-local-variable-values
    (quote
     ((TeX-master . "misc")

@@ -1366,6 +1366,9 @@ the same coding systems as Emacs."
 
   ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
   (setq org-ellipsis " ⤵")
+  ;; on some computers, this results in higher line height as
+  ;;   described on http://emacs.stackexchange.com/questions/251/line-height-with-unicode-characters
+  ;; id:2016-08-19-unicode-enlarges-line-height
 
   ;; https://twitter.com/_wilfredh/status/708046038200950787
   (defvar my-cpp-other-file-alist
@@ -4546,6 +4549,7 @@ The app is chosen from your OS's preference."
 ;;** browse-kill-ring (M-y)
 ;; https://github.com/browse-kill-ring/browse-kill-ring
 ;; browse-kill-ring
+(require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
 
 ;;** pdf-mode
@@ -4658,6 +4662,7 @@ The app is chosen from your OS's preference."
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":ED:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/share/all/org-mode" ":org:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/share/all/org-mode" ":org:") t)
   (smart-mode-line-enable)
 )
 
@@ -4768,6 +4773,7 @@ The app is chosen from your OS's preference."
 ;;** Swiper
 ;; https://github.com/abo-abo/swiper
 ;; http://pragmaticemacs.com/emacs/dont-search-swipe/
+;; http://irreal.org/blog/?p=5340 -> swiper depends on ivy; ivy is much better than ido-mode/smex; example config
 (use-package swiper
   ;;:disabled t
   :ensure t
@@ -4875,7 +4881,7 @@ The app is chosen from your OS's preference."
   :defer 10
 )
 
-;;** wttrin.el
+;;** wttrin.el Weather in Emacs
 ;; http://pragmaticemacs.com/emacs/weather-in-emacs/
 ;; https://github.com/bcbcarl/emacs-wttrin
 (use-package wttrin
@@ -4883,7 +4889,7 @@ The app is chosen from your OS's preference."
   :commands (wttrin)
   :defer 15
   :init
-  (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming"))
+  (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming" "malia"))
   (cond ((my-system-is-sherri)
          (bind-key "w" #'(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
          )
@@ -4900,6 +4906,8 @@ The app is chosen from your OS's preference."
 
 ;;** git-timemachine
 ;; https://github.com/pidu/git-timemachine
+;; n/p: previous/next state
+;; q: quit
 (use-package git-timemachine
   :ensure t
   :defer 15
@@ -5409,6 +5417,7 @@ i.e. change right window to bottom, or change bottom window to right."
     ))
 
 (global-set-key "\C-s" 'my-search-method-according-to-numlines)
+;;(global-set-key "\C-s" 'isearch-forward)
 
 ;; #############################################################################
 
@@ -5755,8 +5764,8 @@ i.e. change right window to bottom, or change bottom window to right."
           )
 
 
-;;** org-mode teaser (my-map o)
-(bind-key (kbd "o") (lambda()
+;;** org-mode teaser (my-map O)
+(bind-key (kbd "O") (lambda()
 			       (interactive)
                                (when (my-system-type-is-gnu)
                                  (find-file
@@ -5770,8 +5779,8 @@ i.e. change right window to bottom, or change bottom window to right."
           my-map
   )
 
-;;** org-mode manual (my-map O)
-(bind-key (kbd "O") (lambda()
+;;** org-mode manual (my-map o)
+(bind-key (kbd "o") (lambda()
 			       (interactive)
                                (info "(org)")
 			       )

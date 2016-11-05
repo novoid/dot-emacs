@@ -31,9 +31,6 @@
  '(safe-local-variable-values
    (quote
     ((TeX-master . "misc")
-     (TeX-master . "references")
-     (reftex-default-bibliography quote
-				  ("~/archive/library"))
      (eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
