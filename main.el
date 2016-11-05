@@ -3730,7 +3730,7 @@ Null prefix argument turns off the mode."
   ;; 2014-10-16: does NOT work yet. Most probably because savetrees does not work well with inputenc
   (add-to-list 'org-latex-classes
                '("scrartclsmall"
-                 "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\[savetrees\]"
+                 "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\{savetrees\}"
                  ("\\section\{%s\}" . "\\section*\{%s\}")
                  ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
                  ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
