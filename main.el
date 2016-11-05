@@ -4343,8 +4343,8 @@ by using nxml's indentation rules."
   (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
   ;;(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
   ;;(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
-  :bind (("<C-S-return>" . yafolding-toggle-all)
-         ("<C-return>" . yafolding-toggle-element))
+  :bind (("<M-S-return>" . yafolding-toggle-all)
+         ("<M-return>" . yafolding-toggle-element))
 )
 
 ;; #############################################################################
