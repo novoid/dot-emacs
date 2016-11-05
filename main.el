@@ -3865,7 +3865,11 @@ Null prefix argument turns off the mode."
   ;;     #+TBLFM: $6='(with-time t (+ (- $5 $4) (- $3 $2)))
 
   (defun org-time-string-to-seconds (s)
-    "Convert a string HH:MM:SS to a number of seconds."
+    "Convert a string HH:MM:SS to a number of seconds.
+     Omitted third element will be interpreted as MM:SS with missing hours."
+    ;; test with:
+    ;; (message (concat "result is: " (number-to-string (org-time-string-to-seconds "57:45:03"))))
+    ;; (message (concat "result is: " (number-to-string (org-time-string-to-seconds "57:45"))))
     (cond
      ((and (stringp s)
 	   (string-match "\\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)" s))
@@ -3878,8 +3882,19 @@ Null prefix argument turns off the mode."
       (let ((min (string-to-number (match-string 1 s)))
 	    (sec (string-to-number (match-string 2 s))))
 	(+ (* min 60) sec)))
-     ((stringp s) (string-to-number s))
-     (t s)))
+     ;;((stringp s) (string-to-number s))
+     ;;(t s)
+     )
+    )
+
+  (defun org-time-string-to-hours (s)
+    "Convert a string HH:MM:SS to hours (float).
+     When only two values given, they will be interpreted as MM:SS with missing hours."
+    ;; test via:
+    ;; (message (concat "result is: " (number-to-string (org-time-string-to-hours "57:45:03"))))
+    ;; (message (concat "result is: " (number-to-string (org-time-string-to-hours "57:45"))))
+    (/ (org-time-string-to-seconds s) 3600.0)
+    )
 
   (defun org-time-seconds-to-string (secs)
     "Convert a number of seconds to a time string."
