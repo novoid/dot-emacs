@@ -4979,6 +4979,45 @@ The app is chosen from your OS's preference."
   :defer 5
   )
 
+;;** move-text
+;; tipp from http://irreal.org/blog/?p=5611
+;; https://github.com/emacsfodder/move-text
+(my-load-local-el "contrib/move-text/move-text.el")
+(require 'move-text)
+;; (move-text-default-bindings)
+(global-set-key (kbd "M-,")          'move-text-up)
+(global-set-key (kbd "M-.")          'move-text-down)
+
+;;** command-log-mode
+;; https://github.com/lewang/command-log-mode
+;; used in screencast video: https://www.reddit.com/r/emacs/comments/4yhfn6/emacs_screencast_acelink_swiper_lispy_and_macros/
+;;
+;; To see the log buffer, call M-x clm/open-command-log-buffer.
+;;
+;; The key strokes in the log are decorated with ISO9601 timestamps on
+;; the property `:time' so if you want to convert the log for
+;; screencasting purposes you could use the time stamp as a key into
+;; the video beginning.
+(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
+(require 'command-log-mode)
+
+;;** scss-mode
+(use-package scss-mode
+  :if (my-system-is-floyd-or-sherri)
+  :ensure t
+  :defer 10
+  :config
+  (autoload 'scss-mode "scss-mode")
+  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  )
+
+; Command line utility sass is required, see http://sass-lang.com/
+; To install sass (haml):
+; gem install haml
+;
+; Also make sure sass location is in emacs PATH, example:
+; (setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))
+; or customize `scss-sass-command' to point to your sass executable.
 
 ;;* my helper functions
 
