@@ -504,6 +504,490 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
+;;* my helper functions
+
+;; #############################################################################
+;;** Infonova Functions for Working Hour Calculation
+(defun my-extract-minutes-of-hm-string(hm-string)
+  "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
+  (let (
+	;; minutes is the second element after splitting with ":"
+	(minutes (nth 1 (split-string hm-string ":")))
+	)
+    ;; if there is no second element, return "0" (instead of nil)
+    (if (eq minutes 'nil)
+	0
+      (string-to-number minutes)
+      )
+    )
+  )
+
+(defun my-extract-hours-of-hm-string(hm-string)
+  "returns the hours of a string like 9:42 -> 9"
+  (string-to-number
+   (car
+    (split-string hm-string ":")
+    )
+   )
+)
+
+(defun my-hm-string-to-minutes(hm-string)
+  "returns the minutes of a string like 2:42 -> 162"
+  (let (
+	;; minutes is the second element after splitting with ":"
+	(minutes (my-extract-minutes-of-hm-string hm-string))
+	(hours (my-extract-hours-of-hm-string hm-string))
+	)
+    (+ minutes (* hours 60))
+    )
+  )
+
+
+;; EXAMPLE USAGE:
+;; | [2015-01-13 Di] | Tue | 08:53-17:23 |   |   | 8:30 | 8:30 | 100 | Product Development |       |
+;; |                 |     |             |   |   |      | korr |   % | Was                 | Notiz |
+;; #+TBLFM: $7=$6::$9=Product Development::$8 = '(my-percentage-of-hm-string-with-day $7 $2)
+
+(defun my-percentage-of-hm-string-with-day(hm-string day)
+  "percentage of HH:MM when 8h30min (Mon-Thu) or 4h30min (Fri) are 100 percent"
+  (let (
+	(hours (my-extract-hours-of-hm-string hm-string));; integer of hours from hm-string
+	(minutes (my-extract-minutes-of-hm-string hm-string));; integer of minutes from hm-string
+        (norm-hour-minutes (cond
+                            ((string= day "Mon") 8.5)
+                            ((string= day "Mo")  8.5)
+                            ((string= day "Tue") 8.5)
+                            ((string= day "Di")  8.5)
+                            ((string= day "Wed") 8.5)
+                            ((string= day "Mi")  8.5)
+                            ((string= day "Thu") 8.5)
+                            ((string= day "Do")  8.5)
+                            ((string= day "Fri") 4.5)
+                            ((string= day "Fr")  4.5)
+                            )
+                           )
+	)
+    ;;debug;;(message (concat "norm-hour-minutes for " day " is " (number-to-string norm-hour-minutes)))
+    (let (
+	  (hoursminutes (+ hours (/ minutes 60.00))) ;; 8h30min -> 8.5h
+	  )
+      (round (* 100 (/ hoursminutes norm-hour-minutes)));; hoursminutes in relation to norm-hoursminutes
+      )
+    )
+  )
+
+(defun my-calculate-office-hour-total(officestart officeend lunchstart lunchend)
+  "calculates the total hours:minutes of a work-day depending on time of arrival/leave and lunch break in HH:MM"
+  (let (
+	(officestartminutes (my-hm-string-to-minutes officestart));; integer of minutes
+	(officeendminutes (my-hm-string-to-minutes officeend));; integer of minutes
+	(lunchstartminutes (my-hm-string-to-minutes lunchstart));; integer of minutes
+	(lunchendminutes (my-hm-string-to-minutes lunchend));; integer of minutes
+	)
+    (let* (
+          (officeminutes (- (- officeendminutes officestartminutes) (- lunchendminutes lunchstartminutes)))
+          (officeminutesstring (format-time-string "%H:%M" (seconds-to-time (* 60 officeminutes)) t))
+          )
+      ;;(message (concat "Minutes epoch: " (number-to-string officeminutes)))
+      ;;(message (concat "Minutes string: " officeminutesstring))
+      (symbol-value 'officeminutesstring)
+      )
+    )
+  )
+;; (my-calculate-office-hour-total "09:57" "17:22" "11:35" "12:08") -> Minutes epoch: 412 | Minutes string: 06:52
+
+
+;; #############################################################################
+;;** Proper English Title Capitalization of a Marked Region
+;; additionally to the list defined in title-capitalization:
+(defvar my-do-not-capitalize-words '("lazyblorg" "mutt")
+  "My personal list of words that doesn't get capitalized in titles.")
+
+
+(defun title-capitalization (beg end)
+  "Proper English title capitalization of a marked region"
+  ;; - before: the presentation of this heading of my own from my keyboard and yet
+  ;; - after:  The Presentation of This Heading of My Own from My Keyboard and Yet
+  ;; - before: a a a a a a a a
+  ;; - after:  A a a a a a a A
+  (interactive "r")
+  (save-excursion
+    (let* (
+	   ;; basic list of words which don't get capitalized according to simplified rules:
+	   ;; http://karl-voit.at/2015/05/25/elisp-title-capitalization/
+           (do-not-capitalize-basic-words '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
+                                            "from" "in" "into" "it" "next" "nor" "of" "off"
+                                            "on" "onto" "or" "over" "past" "so" "the" "till"
+                                            "to" "up" "yet"
+                                            "n" "t" "es" "s"))
+	   ;; if user has defined 'my-do-not-capitalize-words, append to basic list:
+           (do-not-capitalize-words (if (boundp 'my-do-not-capitalize-words)
+                                        (append do-not-capitalize-basic-words my-do-not-capitalize-words )
+                                      do-not-capitalize-basic-words
+                                      )
+                                    )
+           )
+      ;; go to begin of first word:
+      (goto-char beg)
+      (capitalize-word 1)
+      ;; go through the region, word by word:
+      (while (< (point) end)
+        (skip-syntax-forward "^w" end)
+;;        (let ((word (thing-at-point 'word t)))
+        (let ((word (thing-at-point 'word)))
+          (if (stringp word)
+              ;; capitalize current word except it is list member:
+              (if (member (downcase word) do-not-capitalize-words)
+                  (downcase-word 1)
+                (capitalize-word 1)))))
+      ;; capitalize last word in any case:
+      (backward-word 1)
+      (if (and (>= (point) beg)
+;;               (not (member (or (thing-at-point 'word t) "s")
+               (not (member (or (thing-at-point 'word) "s")
+                            '("n" "t" "es" "s"))))
+          (capitalize-word 1))))
+)
+
+(ert-deftest my-title-capitalization ()
+  "Tests proper English title capitalization"
+  (should (string= (with-temp-buffer
+		     (insert "the presentation of this heading of my own from my keyboard and yet\n")
+		     (goto-char (point-min))
+		     (set-mark-command nil)
+		     (goto-char (point-max))
+		     ;(transient-mark-mode 1)
+		     (title-capitalization)
+		     (buffer-string))
+		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
+		   )))
+
+;; #############################################################################
+;;** my-toggle-windows-split
+;; http://www.emacswiki.org/emacs/ToggleWindowSplit
+(defun my-toggle-windows-split ()
+  "Switch window split from horizontally to vertically, or vice versa.
+
+i.e. change right window to bottom, or change bottom window to right."
+  (interactive)
+  (require 'windmove)
+  (let ((done))
+    (dolist (dirs '((right . down) (down . right)))
+      (unless done
+        (let* ((win (selected-window))
+               (nextdir (car dirs))
+               (neighbour-dir (cdr dirs))
+               (next-win (windmove-find-other-window nextdir win))
+               (neighbour1 (windmove-find-other-window neighbour-dir win))
+               (neighbour2 (if next-win (with-selected-window next-win
+                                          (windmove-find-other-window neighbour-dir next-win)))))
+          ;;(message "win: %s\nnext-win: %s\nneighbour1: %s\nneighbour2:%s" win next-win neighbour1 neighbour2)
+          (setq done (and (eq neighbour1 neighbour2)
+                          (not (eq (minibuffer-window) next-win))))
+          (if done
+              (let* ((other-buf (window-buffer next-win)))
+                (delete-window next-win)
+                (if (eq nextdir 'right)
+                    (split-window-vertically)
+                  (split-window-horizontally))
+                (set-window-buffer (windmove-find-other-window neighbour-dir) other-buf))))))))
+
+(bind-key "|" #'my-toggle-windows-split my-map)
+
+
+;; #############################################################################
+;;** my-toggle-beginner-setup
+
+(defvar my-toggle-beginner-setup-status nil
+  "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
+;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
+
+(defun my-emacs-normal-setup ()
+  "Hide things for my normal usage"
+  (interactive)
+  (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
+  (menu-bar-mode 0) ;; hide menu-bar
+  (when (not (my-system-is-kva))
+    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
+    )
+  (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
+
+  ;; http://www.emacswiki.org/emacs/sylecn
+  ;;show nothing in *scratch* when started
+  (setq initial-scratch-message nil)
+
+  ;; ######################################################
+  ;; handle CamelCaseParts as distinct words
+  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
+  (global-subword-mode 1) ; 1 for on, 0 for off
+  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
+  ;; FIXXME: this is a test for getting it work independent of
+  ;; CamelCase words
+
+  ;;(setq org-hide-leading-stars t)
+)
+
+(defun my-emacs-beginner-setup ()
+  "Make things nice for beginners"
+  (interactive)
+  (tool-bar-mode) ;; show icons
+  (menu-bar-mode) ;; show menu-bar
+  (scroll-bar-mode 1) ;; show scroll-bar
+  (setq debug-on-quit nil);; no debug information on canceling endless loops and so forth
+
+  ;; http://www.emacswiki.org/emacs/sylecn
+  ;;show nothing in *scratch* when started
+  (setq initial-scratch-message ";; This buffer is for notes you don't want to save\n;; If you want to create a file, visit that file with C-x C-f,\n;; then enter the text in that file's own buffer.\n\n")
+
+  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
+  (global-subword-mode 0) ; 1 for on, 0 for off
+  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
+  ;; FIXXME: this is a test for getting it work independent of CamelCase words
+
+  ;;(setq org-hide-leading-stars nil)
+
+
+  ;; http://stackoverflow.com/questions/24684979/how-to-add-a-tool-bar-button-in-emacs
+  ;;(add-hook 'after-init-hook
+  ;;          (lambda ()
+  ;;            (define-key global-map [tool-bar pdf-button]
+  ;;              '(menu-item "Export to PDF" org-latex-export-to-pdf
+  ;;                          :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
+  ;;                          ))))
+  (define-key global-map [tool-bar pdf-button]
+    '(menu-item "Export to PDF" org-latex-export-to-pdf
+                :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
+                ))
+)
+
+
+(my-emacs-normal-setup)
+
+(defun my-toggle-beginner-setup ()
+  "Toggle Emacs beginner setup and normal Emacs"
+  (interactive)
+  (cond (my-toggle-beginner-setup-status
+         ;; normal mode
+         (my-emacs-normal-setup)
+         (message "As you please")
+         (setq my-toggle-beginner-setup-status nil)
+         )
+        (t
+         ;; make it easy for beginners
+         (my-emacs-beginner-setup)
+         (message "Welcome to Emacs!")
+         (setq my-toggle-beginner-setup-status t)
+         )
+        )
+  )
+
+(global-set-key [f1] 'my-toggle-beginner-setup)
+
+;;** my-org-mobile-push
+
+(defun my-org-mobile-push (&optional arg)
+  (interactive)
+  ;; when called with universal argument (C-u), Emacs will be closed
+  ;;      after pushing to files
+  ;; save original agenda in temporary variable
+  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+  ;; set agenda for MobileOrg (omit some agenda
+  ;; views I do not need on my phone):
+  (setq org-agenda-custom-commands
+        (quote (
+
+                ("1" "1 month"
+                 ((agenda "1 month"
+                          ((org-agenda-ndays 31)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           )
+                          )))
+
+                ("B" "borrowed" tags "+borrowed"
+                 (
+                  (org-agenda-overriding-header "borrowed or lend")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                ("$" "Besorgungen" tags "+Besorgung"
+                 (
+                  (org-agenda-overriding-header "Besorgungen")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                )))
+  ;; generate MobileOrg export:
+  (org-mobile-push)
+  ;; restore previously saved agenda:
+  (setq org-agenda-custom-commands
+        ORIGSAVED-org-agenda-custom-commands)
+  (if (equal arg '(4))
+      ;; save buffers and exit emacs;; FIXXME: not working yet
+      (save-buffers-kill-terminal 't)
+    )
+  )
+
+
+
+;;** my-reset-org
+
+(defun my-reset-org ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (org-element-cache-reset)
+   (org-refile-cache-clear)
+   (org-refile-get-targets)
+   (when (my-buffer-exists "*Org Agenda*")
+     (kill-buffer "*Org Agenda*")
+     (org-agenda-list)
+     )
+   )
+  )
+
+(defun my-reset-org-and-mobile-push ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (my-reset-org)
+   (my-org-mobile-push)
+   )
+)
+
+;;** message-outlook.el - sending mail with Outlook
+(when (my-system-type-is-windows)
+  (my-load-local-el "contrib/message-outlook.el")
+)
+
+;;** my-search-method-according-to-numlines()
+
+;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
+
+;;see below;; (defun my-search-method-according-to-numlines ()
+;;see below;;   "Determines the number of lines of current buffer and chooses a search method accordingly"
+;;see below;;   (interactive)
+;;see below;;   (if (< (count-lines (point-min) (point-max)) 20000)
+;;see below;;       (swiper)
+;;see below;;     (isearch-forward)
+;;see below;;     )
+;;see below;;   )
+;;see below;; ;;fancy search:  (global-set-key "\C-s" 'swiper)
+;;see below;; ;;normal search: (global-set-key "\C-s" 'isearch-forward)
+
+(defun my-search-method-according-to-numlines ()
+  (interactive)
+  (if (and (buffer-file-name)
+           (not (my-system-type-is-windows))
+           (not (ignore-errors
+                  (file-remote-p (buffer-file-name))))
+           (if (eq major-mode 'org-mode)
+               (> (buffer-size) 60000)
+             (> (buffer-size) 300000)))
+      (progn
+        (save-buffer)
+        (counsel-grep))
+    (if (my-system-type-is-windows)
+        (isearch-forward)
+      (swiper--ivy (swiper--candidates))
+      )
+    ))
+
+(global-set-key "\C-s" 'my-search-method-according-to-numlines)
+;;(global-set-key "\C-s" 'isearch-forward)
+
+;; #############################################################################
+
+;;** my-export-month-agenda-to-png-via-screenshot
+;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
+
+(defun my-export-month-agenda-to-png-via-screenshot()
+  (interactive)
+  (when (my-system-is-sherri)
+    (message "Generating agenda ...")
+    (org-agenda nil "n") ; generates agenda "n" (one month without todos)
+    (if (my-buffer-exists "*Org Agenda*")
+	(switch-to-buffer "*Org Agenda*")
+      (org-agenda-list)
+      )
+    (message "Waiting for Screenshot ...")
+    (sit-for 1) ; (sleep 1) ... doesn't re-display and thus screenshot
+                ; showed buffer before switching to agenda
+    (message "Say cheese ...")
+
+    (setq myoutput
+          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sherri/agenda.png"))
+    (message (concat "Screenshot done (" myoutput ")"))
+    )
+  )
+
+;;** my-yank-windows (my-map y)
+;; id:2016-05-22-my-yank-windows
+
+(when (my-system-type-is-windows)
+  (defun my-yank-windows ()
+    "yanks from clipboard and replaces typical (list) markup"
+    (interactive)
+    (let ((mybegin (point)))              ;; mark beginning of line as start point
+      (clipboard-yank)
+      (save-restriction
+        (narrow-to-region mybegin (point))  ;; ignore everything outside of region
+        (goto-char (point-min))
+        (while (search-forward "\"	" nil t)
+  	(replace-match "- " nil t))
+        (while (search-forward "o	" nil t)
+  	(replace-match "  - " nil t))
+        ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
+        ;; (replace-match "1. " nil t))
+        ))
+    )
+
+  (bind-key "y" #'my-yank-windows my-map)
+  )
+
+;;** when being idle for 15 minutes, run my-reset-org
+;; id:2016-06-05-reset-things-after-15-min-idle
+;; current-idle-time example: (0 420 1000 0)
+(setq my-reset-org-previous-idle-time-invocation (current-time))
+(run-with-idle-timer (* 60 15) t (lambda ()
+                                   (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
+                                       (sit-for 2)
+                                     (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+                                       (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
+                                       (sit-for 10);; give user 10s to press a button to prevent this
+                                       (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+                                         (my-reset-org)
+                                         (setq my-reset-org-previous-idle-time-invocation (current-time))
+                                         (message (concat "my-reset-org finished at " (current-time-string)))
+                                         )
+                                       )
+                                     )
+                                   ))
+
+;;(defun mytest ()
+;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
+;;       (message "yes")
+;;       )
+;;     )
+;;
+;;(sit-for 3)
+;;(message (or (current-idle-time) (number-to-string 0)))
+
+;;** my-fill-or-unfill (paragraph)
+;; http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
+(defun my-fill-or-unfill ()
+  "Like `fill-paragraph', but unfill if used twice."
+  (interactive)
+  (let ((fill-column
+         (if (eq last-command 'my-fill-or-unfill)
+             (progn (setq this-command nil)
+                    (point-max))
+           fill-column)))
+    (call-interactively #'fill-paragraph)))
+
+(global-set-key [remap fill-paragraph]
+                #'my-fill-or-unfill)
+
 ;;* Elisp
 
 
@@ -5026,490 +5510,6 @@ The app is chosen from your OS's preference."
 ; Also make sure sass location is in emacs PATH, example:
 ; (setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))
 ; or customize `scss-sass-command' to point to your sass executable.
-
-;;* my helper functions
-
-;; #############################################################################
-;;** Infonova Functions for Working Hour Calculation
-(defun my-extract-minutes-of-hm-string(hm-string)
-  "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
-  (let (
-	;; minutes is the second element after splitting with ":"
-	(minutes (nth 1 (split-string hm-string ":")))
-	)
-    ;; if there is no second element, return "0" (instead of nil)
-    (if (eq minutes 'nil)
-	0
-      (string-to-number minutes)
-      )
-    )
-  )
-
-(defun my-extract-hours-of-hm-string(hm-string)
-  "returns the hours of a string like 9:42 -> 9"
-  (string-to-number
-   (car
-    (split-string hm-string ":")
-    )
-   )
-)
-
-(defun my-hm-string-to-minutes(hm-string)
-  "returns the minutes of a string like 2:42 -> 162"
-  (let (
-	;; minutes is the second element after splitting with ":"
-	(minutes (my-extract-minutes-of-hm-string hm-string))
-	(hours (my-extract-hours-of-hm-string hm-string))
-	)
-    (+ minutes (* hours 60))
-    )
-  )
-
-
-;; EXAMPLE USAGE:
-;; | [2015-01-13 Di] | Tue | 08:53-17:23 |   |   | 8:30 | 8:30 | 100 | Product Development |       |
-;; |                 |     |             |   |   |      | korr |   % | Was                 | Notiz |
-;; #+TBLFM: $7=$6::$9=Product Development::$8 = '(my-percentage-of-hm-string-with-day $7 $2)
-
-(defun my-percentage-of-hm-string-with-day(hm-string day)
-  "percentage of HH:MM when 8h30min (Mon-Thu) or 4h30min (Fri) are 100 percent"
-  (let (
-	(hours (my-extract-hours-of-hm-string hm-string));; integer of hours from hm-string
-	(minutes (my-extract-minutes-of-hm-string hm-string));; integer of minutes from hm-string
-        (norm-hour-minutes (cond
-                            ((string= day "Mon") 8.5)
-                            ((string= day "Mo")  8.5)
-                            ((string= day "Tue") 8.5)
-                            ((string= day "Di")  8.5)
-                            ((string= day "Wed") 8.5)
-                            ((string= day "Mi")  8.5)
-                            ((string= day "Thu") 8.5)
-                            ((string= day "Do")  8.5)
-                            ((string= day "Fri") 4.5)
-                            ((string= day "Fr")  4.5)
-                            )
-                           )
-	)
-    ;;debug;;(message (concat "norm-hour-minutes for " day " is " (number-to-string norm-hour-minutes)))
-    (let (
-	  (hoursminutes (+ hours (/ minutes 60.00))) ;; 8h30min -> 8.5h
-	  )
-      (round (* 100 (/ hoursminutes norm-hour-minutes)));; hoursminutes in relation to norm-hoursminutes
-      )
-    )
-  )
-
-(defun my-calculate-office-hour-total(officestart officeend lunchstart lunchend)
-  "calculates the total hours:minutes of a work-day depending on time of arrival/leave and lunch break in HH:MM"
-  (let (
-	(officestartminutes (my-hm-string-to-minutes officestart));; integer of minutes
-	(officeendminutes (my-hm-string-to-minutes officeend));; integer of minutes
-	(lunchstartminutes (my-hm-string-to-minutes lunchstart));; integer of minutes
-	(lunchendminutes (my-hm-string-to-minutes lunchend));; integer of minutes
-	)
-    (let* (
-          (officeminutes (- (- officeendminutes officestartminutes) (- lunchendminutes lunchstartminutes)))
-          (officeminutesstring (format-time-string "%H:%M" (seconds-to-time (* 60 officeminutes)) t))
-          )
-      ;;(message (concat "Minutes epoch: " (number-to-string officeminutes)))
-      ;;(message (concat "Minutes string: " officeminutesstring))
-      (symbol-value 'officeminutesstring)
-      )
-    )
-  )
-;; (my-calculate-office-hour-total "09:57" "17:22" "11:35" "12:08") -> Minutes epoch: 412 | Minutes string: 06:52
-
-
-;; #############################################################################
-;;** Proper English Title Capitalization of a Marked Region
-;; additionally to the list defined in title-capitalization:
-(defvar my-do-not-capitalize-words '("lazyblorg" "mutt")
-  "My personal list of words that doesn't get capitalized in titles.")
-
-
-(defun title-capitalization (beg end)
-  "Proper English title capitalization of a marked region"
-  ;; - before: the presentation of this heading of my own from my keyboard and yet
-  ;; - after:  The Presentation of This Heading of My Own from My Keyboard and Yet
-  ;; - before: a a a a a a a a
-  ;; - after:  A a a a a a a A
-  (interactive "r")
-  (save-excursion
-    (let* (
-	   ;; basic list of words which don't get capitalized according to simplified rules:
-	   ;; http://karl-voit.at/2015/05/25/elisp-title-capitalization/
-           (do-not-capitalize-basic-words '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
-                                            "from" "in" "into" "it" "next" "nor" "of" "off"
-                                            "on" "onto" "or" "over" "past" "so" "the" "till"
-                                            "to" "up" "yet"
-                                            "n" "t" "es" "s"))
-	   ;; if user has defined 'my-do-not-capitalize-words, append to basic list:
-           (do-not-capitalize-words (if (boundp 'my-do-not-capitalize-words)
-                                        (append do-not-capitalize-basic-words my-do-not-capitalize-words )
-                                      do-not-capitalize-basic-words
-                                      )
-                                    )
-           )
-      ;; go to begin of first word:
-      (goto-char beg)
-      (capitalize-word 1)
-      ;; go through the region, word by word:
-      (while (< (point) end)
-        (skip-syntax-forward "^w" end)
-;;        (let ((word (thing-at-point 'word t)))
-        (let ((word (thing-at-point 'word)))
-          (if (stringp word)
-              ;; capitalize current word except it is list member:
-              (if (member (downcase word) do-not-capitalize-words)
-                  (downcase-word 1)
-                (capitalize-word 1)))))
-      ;; capitalize last word in any case:
-      (backward-word 1)
-      (if (and (>= (point) beg)
-;;               (not (member (or (thing-at-point 'word t) "s")
-               (not (member (or (thing-at-point 'word) "s")
-                            '("n" "t" "es" "s"))))
-          (capitalize-word 1))))
-)
-
-(ert-deftest my-title-capitalization ()
-  "Tests proper English title capitalization"
-  (should (string= (with-temp-buffer
-		     (insert "the presentation of this heading of my own from my keyboard and yet\n")
-		     (goto-char (point-min))
-		     (set-mark-command nil)
-		     (goto-char (point-max))
-		     ;(transient-mark-mode 1)
-		     (title-capitalization)
-		     (buffer-string))
-		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
-		   )))
-
-;; #############################################################################
-;;** my-toggle-windows-split
-;; http://www.emacswiki.org/emacs/ToggleWindowSplit
-(defun my-toggle-windows-split ()
-  "Switch window split from horizontally to vertically, or vice versa.
-
-i.e. change right window to bottom, or change bottom window to right."
-  (interactive)
-  (require 'windmove)
-  (let ((done))
-    (dolist (dirs '((right . down) (down . right)))
-      (unless done
-        (let* ((win (selected-window))
-               (nextdir (car dirs))
-               (neighbour-dir (cdr dirs))
-               (next-win (windmove-find-other-window nextdir win))
-               (neighbour1 (windmove-find-other-window neighbour-dir win))
-               (neighbour2 (if next-win (with-selected-window next-win
-                                          (windmove-find-other-window neighbour-dir next-win)))))
-          ;;(message "win: %s\nnext-win: %s\nneighbour1: %s\nneighbour2:%s" win next-win neighbour1 neighbour2)
-          (setq done (and (eq neighbour1 neighbour2)
-                          (not (eq (minibuffer-window) next-win))))
-          (if done
-              (let* ((other-buf (window-buffer next-win)))
-                (delete-window next-win)
-                (if (eq nextdir 'right)
-                    (split-window-vertically)
-                  (split-window-horizontally))
-                (set-window-buffer (windmove-find-other-window neighbour-dir) other-buf))))))))
-
-(bind-key "|" #'my-toggle-windows-split my-map)
-
-
-;; #############################################################################
-;;** my-toggle-beginner-setup
-
-(defvar my-toggle-beginner-setup-status nil
-  "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
-;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
-
-(defun my-emacs-normal-setup ()
-  "Hide things for my normal usage"
-  (interactive)
-  (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
-  (menu-bar-mode 0) ;; hide menu-bar
-  (when (not (my-system-is-kva))
-    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
-    )
-  (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
-
-  ;; http://www.emacswiki.org/emacs/sylecn
-  ;;show nothing in *scratch* when started
-  (setq initial-scratch-message nil)
-
-  ;; ######################################################
-  ;; handle CamelCaseParts as distinct words
-  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-  (global-subword-mode 1) ; 1 for on, 0 for off
-  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
-  ;; FIXXME: this is a test for getting it work independent of
-  ;; CamelCase words
-
-  ;;(setq org-hide-leading-stars t)
-)
-
-(defun my-emacs-beginner-setup ()
-  "Make things nice for beginners"
-  (interactive)
-  (tool-bar-mode) ;; show icons
-  (menu-bar-mode) ;; show menu-bar
-  (scroll-bar-mode 1) ;; show scroll-bar
-  (setq debug-on-quit nil);; no debug information on canceling endless loops and so forth
-
-  ;; http://www.emacswiki.org/emacs/sylecn
-  ;;show nothing in *scratch* when started
-  (setq initial-scratch-message ";; This buffer is for notes you don't want to save\n;; If you want to create a file, visit that file with C-x C-f,\n;; then enter the text in that file's own buffer.\n\n")
-
-  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-  (global-subword-mode 0) ; 1 for on, 0 for off
-  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
-  ;; FIXXME: this is a test for getting it work independent of CamelCase words
-
-  ;;(setq org-hide-leading-stars nil)
-
-
-  ;; http://stackoverflow.com/questions/24684979/how-to-add-a-tool-bar-button-in-emacs
-  ;;(add-hook 'after-init-hook
-  ;;          (lambda ()
-  ;;            (define-key global-map [tool-bar pdf-button]
-  ;;              '(menu-item "Export to PDF" org-latex-export-to-pdf
-  ;;                          :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
-  ;;                          ))))
-  (define-key global-map [tool-bar pdf-button]
-    '(menu-item "Export to PDF" org-latex-export-to-pdf
-                :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
-                ))
-)
-
-
-(my-emacs-normal-setup)
-
-(defun my-toggle-beginner-setup ()
-  "Toggle Emacs beginner setup and normal Emacs"
-  (interactive)
-  (cond (my-toggle-beginner-setup-status
-         ;; normal mode
-         (my-emacs-normal-setup)
-         (message "As you please")
-         (setq my-toggle-beginner-setup-status nil)
-         )
-        (t
-         ;; make it easy for beginners
-         (my-emacs-beginner-setup)
-         (message "Welcome to Emacs!")
-         (setq my-toggle-beginner-setup-status t)
-         )
-        )
-  )
-
-(global-set-key [f1] 'my-toggle-beginner-setup)
-
-;;** my-org-mobile-push
-
-(defun my-org-mobile-push (&optional arg)
-  (interactive)
-  ;; when called with universal argument (C-u), Emacs will be closed
-  ;;      after pushing to files
-  ;; save original agenda in temporary variable
-  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
-  ;; set agenda for MobileOrg (omit some agenda
-  ;; views I do not need on my phone):
-  (setq org-agenda-custom-commands
-        (quote (
-
-                ("1" "1 month"
-                 ((agenda "1 month"
-                          ((org-agenda-ndays 31)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-entry-types '(:timestamp :sexp))
-                           )
-                          )))
-
-                ("B" "borrowed" tags "+borrowed"
-                 (
-                  (org-agenda-overriding-header "borrowed or lend")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                ("$" "Besorgungen" tags "+Besorgung"
-                 (
-                  (org-agenda-overriding-header "Besorgungen")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                )))
-  ;; generate MobileOrg export:
-  (org-mobile-push)
-  ;; restore previously saved agenda:
-  (setq org-agenda-custom-commands
-        ORIGSAVED-org-agenda-custom-commands)
-  (if (equal arg '(4))
-      ;; save buffers and exit emacs;; FIXXME: not working yet
-      (save-buffers-kill-terminal 't)
-    )
-  )
-
-
-
-;;** my-reset-org
-
-(defun my-reset-org ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (org-element-cache-reset)
-   (org-refile-cache-clear)
-   (org-refile-get-targets)
-   (when (my-buffer-exists "*Org Agenda*")
-     (kill-buffer "*Org Agenda*")
-     (org-agenda-list)
-     )
-   )
-  )
-
-(defun my-reset-org-and-mobile-push ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (my-reset-org)
-   (my-org-mobile-push)
-   )
-)
-
-;;** message-outlook.el - sending mail with Outlook
-(when (my-system-type-is-windows)
-  (my-load-local-el "contrib/message-outlook.el")
-)
-
-;;** my-search-method-according-to-numlines()
-
-;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
-
-;;see below;; (defun my-search-method-according-to-numlines ()
-;;see below;;   "Determines the number of lines of current buffer and chooses a search method accordingly"
-;;see below;;   (interactive)
-;;see below;;   (if (< (count-lines (point-min) (point-max)) 20000)
-;;see below;;       (swiper)
-;;see below;;     (isearch-forward)
-;;see below;;     )
-;;see below;;   )
-;;see below;; ;;fancy search:  (global-set-key "\C-s" 'swiper)
-;;see below;; ;;normal search: (global-set-key "\C-s" 'isearch-forward)
-
-(defun my-search-method-according-to-numlines ()
-  (interactive)
-  (if (and (buffer-file-name)
-           (not (my-system-type-is-windows))
-           (not (ignore-errors
-                  (file-remote-p (buffer-file-name))))
-           (if (eq major-mode 'org-mode)
-               (> (buffer-size) 60000)
-             (> (buffer-size) 300000)))
-      (progn
-        (save-buffer)
-        (counsel-grep))
-    (if (my-system-type-is-windows)
-        (isearch-forward)
-      (swiper--ivy (swiper--candidates))
-      )
-    ))
-
-(global-set-key "\C-s" 'my-search-method-according-to-numlines)
-;;(global-set-key "\C-s" 'isearch-forward)
-
-;; #############################################################################
-
-;;** my-export-month-agenda-to-png-via-screenshot
-;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
-
-(defun my-export-month-agenda-to-png-via-screenshot()
-  (interactive)
-  (when (my-system-is-sherri)
-    (message "Generating agenda ...")
-    (org-agenda nil "n") ; generates agenda "n" (one month without todos)
-    (if (my-buffer-exists "*Org Agenda*")
-	(switch-to-buffer "*Org Agenda*")
-      (org-agenda-list)
-      )
-    (message "Waiting for Screenshot ...")
-    (sit-for 1) ; (sleep 1) ... doesn't re-display and thus screenshot
-                ; showed buffer before switching to agenda
-    (message "Say cheese ...")
-
-    (setq myoutput
-          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sherri/agenda.png"))
-    (message (concat "Screenshot done (" myoutput ")"))
-    )
-  )
-
-;;** my-yank-windows (my-map y)
-;; id:2016-05-22-my-yank-windows
-
-(when (my-system-type-is-windows)
-  (defun my-yank-windows ()
-    "yanks from clipboard and replaces typical (list) markup"
-    (interactive)
-    (let ((mybegin (point)))              ;; mark beginning of line as start point
-      (clipboard-yank)
-      (save-restriction
-        (narrow-to-region mybegin (point))  ;; ignore everything outside of region
-        (goto-char (point-min))
-        (while (search-forward "\"	" nil t)
-  	(replace-match "- " nil t))
-        (while (search-forward "o	" nil t)
-  	(replace-match "  - " nil t))
-        ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
-        ;; (replace-match "1. " nil t))
-        ))
-    )
-
-  (bind-key "y" #'my-yank-windows my-map)
-  )
-
-;;** when being idle for 15 minutes, run my-reset-org
-;; id:2016-06-05-reset-things-after-15-min-idle
-;; current-idle-time example: (0 420 1000 0)
-(setq my-reset-org-previous-idle-time-invocation (current-time))
-(run-with-idle-timer (* 60 15) t (lambda ()
-                                   (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
-                                       (sit-for 2)
-                                     (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-                                       (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
-                                       (sit-for 10);; give user 10s to press a button to prevent this
-                                       (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-                                         (my-reset-org)
-                                         (setq my-reset-org-previous-idle-time-invocation (current-time))
-                                         (message (concat "my-reset-org finished at " (current-time-string)))
-                                         )
-                                       )
-                                     )
-                                   ))
-
-;;(defun mytest ()
-;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
-;;       (message "yes")
-;;       )
-;;     )
-;;
-;;(sit-for 3)
-;;(message (or (current-idle-time) (number-to-string 0)))
-
-;;** my-fill-or-unfill (paragraph)
-;; http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
-(defun my-fill-or-unfill ()
-  "Like `fill-paragraph', but unfill if used twice."
-  (interactive)
-  (let ((fill-column
-         (if (eq last-command 'my-fill-or-unfill)
-             (progn (setq this-command nil)
-                    (point-max))
-           fill-column)))
-    (call-interactively #'fill-paragraph)))
-
-(global-set-key [remap fill-paragraph]
-                #'my-fill-or-unfill)
 
 ;;* Key bindings
 
