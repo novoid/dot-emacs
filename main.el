@@ -3313,6 +3313,17 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
   ;;   (setq shell-file-name "~/.emacs.d/data/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
   ;;   )
 
+  ;; re-direct stderr to stdout and add an additional line:
+  ;; From: Ken Mankoff <mankoff@gmail.com>
+  ;; Newsgroups: gmane.emacs.orgmode
+  ;; Subject: Re: No output from babel shell src block
+  ;; Date: Thu, 12 May 2016 15:36:03 -0400
+  ;; Message-ID: <m237pn83x8.fsf@gmail.com>
+  ;;disabled;; (setq org-babel-default-header-args:sh
+  ;;disabled;;       '((:prologue . "exec 2>&1") (:epilogue . ":"))
+  ;;disabled;;       '((:epilogue . ":"))
+  ;;disabled;;       )
+
 ;;** habits
   ;; ######################################################
   ;; global STYLE property values for completion
