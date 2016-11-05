@@ -5037,7 +5037,7 @@ The app is chosen from your OS's preference."
     )
   )
 
-(defun my-hours-of-hm-string(hm-string)
+(defun my-extract-hours-of-hm-string(hm-string)
   "returns the hours of a string like 9:42 -> 9"
   (string-to-number
    (car
@@ -5045,6 +5045,18 @@ The app is chosen from your OS's preference."
     )
    )
 )
+
+(defun my-hm-string-to-minutes(hm-string)
+  "returns the minutes of a string like 2:42 -> 162"
+  (let (
+	;; minutes is the second element after splitting with ":"
+	(minutes (my-extract-minutes-of-hm-string hm-string))
+	(hours (my-extract-hours-of-hm-string hm-string))
+	)
+    (+ minutes (* hours 60))
+    )
+  )
+
 
 ;; EXAMPLE USAGE:
 ;; | [2015-01-13 Di] | Tue | 08:53-17:23 |   |   | 8:30 | 8:30 | 100 | Product Development |       |
@@ -5054,8 +5066,8 @@ The app is chosen from your OS's preference."
 (defun my-percentage-of-hm-string-with-day(hm-string day)
   "percentage of HH:MM when 8h30min (Mon-Thu) or 4h30min (Fri) are 100 percent"
   (let (
-	(hours (my-hours-of-hm-string hm-string));; integer of hours from hm-string
-	(minutes (my-minutes-of-hm-string hm-string));; integer of minutes from hm-string
+	(hours (my-extract-hours-of-hm-string hm-string));; integer of hours from hm-string
+	(minutes (my-extract-minutes-of-hm-string hm-string));; integer of minutes from hm-string
         (norm-hour-minutes (cond
                             ((string= day "Mon") 8.5)
                             ((string= day "Mo")  8.5)
@@ -5078,6 +5090,27 @@ The app is chosen from your OS's preference."
       )
     )
   )
+
+(defun my-calculate-office-hour-total(officestart officeend lunchstart lunchend)
+  "calculates the total hours:minutes of a work-day depending on time of arrival/leave and lunch break in HH:MM"
+  (let (
+	(officestartminutes (my-hm-string-to-minutes officestart));; integer of minutes
+	(officeendminutes (my-hm-string-to-minutes officeend));; integer of minutes
+	(lunchstartminutes (my-hm-string-to-minutes lunchstart));; integer of minutes
+	(lunchendminutes (my-hm-string-to-minutes lunchend));; integer of minutes
+	)
+    (let* (
+          (officeminutes (- (- officeendminutes officestartminutes) (- lunchendminutes lunchstartminutes)))
+          (officeminutesstring (format-time-string "%H:%M" (seconds-to-time (* 60 officeminutes)) t))
+          )
+      ;;(message (concat "Minutes epoch: " (number-to-string officeminutes)))
+      ;;(message (concat "Minutes string: " officeminutesstring))
+      (symbol-value 'officeminutesstring)
+      )
+    )
+  )
+;; (my-calculate-office-hour-total "09:57" "17:22" "11:35" "12:08") -> Minutes epoch: 412 | Minutes string: 06:52
+
 
 ;; #############################################################################
 ;;** Proper English Title Capitalization of a Marked Region
