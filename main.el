@@ -4306,7 +4306,7 @@ by using nxml's indentation rules."
 ;)
 
 ;; #############################################################################
-;;** spray (speed-reading; my-map S)
+;;** spray (speed-reading; my-map s)
 ;; A speed reading mode for Emacs.
 ;; The algorithm is taken from OpenSpritz
 ;; https://github.com/zk-phi/spray
