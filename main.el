@@ -3751,7 +3751,7 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
      (python . t)
      (ruby . t)
      (gnuplot . t)
-     (sh . t)
+     (shell . t)
      (org . t)
      (R . t)
      (emacs-lisp . t)
