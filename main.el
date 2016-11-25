@@ -1,4 +1,4 @@
-; -*- orgstruct-heading-prefix-regexp: ";;" -*-
+;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
 ;;* General settings
 
 ;; ######################################################
@@ -783,144 +783,6 @@ i.e. change right window to bottom, or change bottom window to right."
 
 (global-set-key [f1] 'my-toggle-beginner-setup)
 
-;;** my-org-mobile-push
-
-(defun my-org-mobile-push (&optional arg)
-  (interactive)
-  ;; when called with universal argument (C-u), Emacs will be closed
-  ;;      after pushing to files
-  ;; save original agenda in temporary variable
-  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
-  ;; set agenda for MobileOrg (omit some agenda
-  ;; views I do not need on my phone):
-  (setq org-agenda-custom-commands
-        (quote (
-
-                ("1" "1 month"
-                 ((agenda "1 month"
-                          ((org-agenda-ndays 31)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-entry-types '(:timestamp :sexp))
-                           )
-                          )))
-
-                ("B" "borrowed" tags "+borrowed"
-                 (
-                  (org-agenda-overriding-header "borrowed or lend")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                ("$" "Besorgungen" tags "+Besorgung"
-                 (
-                  (org-agenda-overriding-header "Besorgungen")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                )))
-  ;; generate MobileOrg export:
-  (org-mobile-push)
-  ;; restore previously saved agenda:
-  (setq org-agenda-custom-commands
-        ORIGSAVED-org-agenda-custom-commands)
-  (if (equal arg '(4))
-      ;; save buffers and exit emacs;; FIXXME: not working yet
-      (save-buffers-kill-terminal 't)
-    )
-  )
-
-
-
-;;** my-reset-org
-
-(defun my-reset-org ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (org-element-cache-reset)
-   (org-refile-cache-clear)
-   (org-refile-get-targets)
-   (when (my-buffer-exists "*Org Agenda*")
-     (kill-buffer "*Org Agenda*")
-     (org-agenda-list)
-     )
-   )
-  )
-
-(defun my-reset-org-and-mobile-push ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (my-reset-org)
-   (my-org-mobile-push)
-   )
-)
-
-;;** message-outlook.el - sending mail with Outlook
-(when (my-system-type-is-windows)
-  (my-load-local-el "contrib/message-outlook.el")
-)
-
-;;** my-search-method-according-to-numlines()
-
-;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
-
-;;see below;; (defun my-search-method-according-to-numlines ()
-;;see below;;   "Determines the number of lines of current buffer and chooses a search method accordingly"
-;;see below;;   (interactive)
-;;see below;;   (if (< (count-lines (point-min) (point-max)) 20000)
-;;see below;;       (swiper)
-;;see below;;     (isearch-forward)
-;;see below;;     )
-;;see below;;   )
-;;see below;; ;;fancy search:  (global-set-key "\C-s" 'swiper)
-;;see below;; ;;normal search: (global-set-key "\C-s" 'isearch-forward)
-
-(defun my-search-method-according-to-numlines ()
-  (interactive)
-  (if (and (buffer-file-name)
-           (not (my-system-type-is-windows))
-           (not (ignore-errors
-                  (file-remote-p (buffer-file-name))))
-           (if (eq major-mode 'org-mode)
-               (> (buffer-size) 60000)
-             (> (buffer-size) 300000)))
-      (progn
-        (save-buffer)
-        (counsel-grep))
-    (if (my-system-type-is-windows)
-        (isearch-forward)
-      (swiper--ivy (swiper--candidates))
-      )
-    ))
-
-(global-set-key "\C-s" 'my-search-method-according-to-numlines)
-;;(global-set-key "\C-s" 'isearch-forward)
-
-;; #############################################################################
-
-;;** my-export-month-agenda-to-png-via-screenshot
-;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
-
-(defun my-export-month-agenda-to-png-via-screenshot()
-  (interactive)
-  (when (my-system-is-sherri)
-    (message "Generating agenda ...")
-    (org-agenda nil "n") ; generates agenda "n" (one month without todos)
-    (if (my-buffer-exists "*Org Agenda*")
-	(switch-to-buffer "*Org Agenda*")
-      (org-agenda-list)
-      )
-    (message "Waiting for Screenshot ...")
-    (sit-for 1) ; (sleep 1) ... doesn't re-display and thus screenshot
-                ; showed buffer before switching to agenda
-    (message "Say cheese ...")
-
-    (setq myoutput
-          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sherri/agenda.png"))
-    (message (concat "Screenshot done (" myoutput ")"))
-    )
-  )
-
 ;;** my-yank-windows (my-map y)
 ;; id:2016-05-22-my-yank-windows
 
@@ -945,34 +807,6 @@ i.e. change right window to bottom, or change bottom window to right."
   (bind-key "y" #'my-yank-windows my-map)
   )
 
-;;** when being idle for 15 minutes, run my-reset-org
-;; id:2016-06-05-reset-things-after-15-min-idle
-;; current-idle-time example: (0 420 1000 0)
-(setq my-reset-org-previous-idle-time-invocation (current-time))
-(run-with-idle-timer (* 60 15) t (lambda ()
-                                   (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
-                                       (sit-for 2)
-                                     (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-                                       (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
-                                       (sit-for 10);; give user 10s to press a button to prevent this
-                                       (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-                                         (my-reset-org)
-                                         (setq my-reset-org-previous-idle-time-invocation (current-time))
-                                         (message (concat "my-reset-org finished at " (current-time-string)))
-                                         )
-                                       )
-                                     )
-                                   ))
-
-;;(defun mytest ()
-;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
-;;       (message "yes")
-;;       )
-;;     )
-;;
-;;(sit-for 3)
-;;(message (or (current-idle-time) (number-to-string 0)))
-
 ;;** my-fill-or-unfill (paragraph)
 ;; http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
 (defun my-fill-or-unfill ()
@@ -987,6 +821,36 @@ i.e. change right window to bottom, or change bottom window to right."
 
 (global-set-key [remap fill-paragraph]
                 #'my-fill-or-unfill)
+
+;;** my-open-in-external-app
+;; http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+;; open dired file in external app (specified by the operating system)
+(defun my-open-in-external-app (&optional file)
+  "Open the current FILE or dired marked files in external app.
+   The app is chosen from your OS's preference."
+  (interactive)
+  (message "%s" (concat "my-open-in-external-app called with \"" file "\" as argument"))
+  ;; FIXXME: add check if FILE is an existing file; show error message if not
+  (let ( doIt
+         (myFileList
+          (cond
+           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
+           ((not file) (list (buffer-file-name)))
+           (file (list file)))))
+
+    (setq doIt (if (<= (length myFileList) 5)
+                   t
+                 (y-or-n-p "Open more than 5 files? ") ) )
+
+    (when doIt
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)) ) myFileList))
+       ((string-equal system-type "darwin")
+        (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)) )  myFileList) )
+       ((string-equal system-type "gnu/linux")
+        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
+
 
 ;;* Elisp
 
@@ -1542,7 +1406,7 @@ i.e. change right window to bottom, or change bottom window to right."
   :demand t
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
   :diminish yas-minor-mode
-  :defer 10
+  :defer 15
   :config
   (yas-load-directory "~/.emacs.d/snippets/")
   (yas-global-mode 1)
@@ -4031,6 +3895,52 @@ Null prefix argument turns off the mode."
 
   ;; ######################################################
 
+;;** org-link-set-parameters
+
+;;*** Color links
+;; http://kitchingroup.cheme.cmu.edu/blog/2016/11/08/New-color-link-in-org-9-0-using-font-lock-to-color-the-text/
+
+;; (require 's)
+;;
+;; (defun color-comp (&optional arg)
+;;   "Completion function for color links."
+;;   (let ((color-data (prog2
+;;                         (save-selected-window
+;;                           (list-colors-display))
+;;                         (with-current-buffer (get-buffer "*Colors*")
+;;                           (mapcar (lambda (line)
+;;                                     (append (list line)
+;;                                             (s-split " " line t)))
+;;                                   (s-split "\n" (buffer-string))))
+;;                       (kill-buffer "*Colors*"))))
+;;     (format "color:%s"
+;;             (s-trim (cadr (assoc (completing-read "Color: " color-data) color-data))))))
+;;
+;;
+;; (defun color-link-face (path)
+;;   "Face function for color links."
+;;   (or (cdr (assoc path org-link-colors))
+;;       `(:foreground ,path)))
+;;
+;;
+;; (defun color-link-export (path description backend)
+;;   "Export function for color links."
+;;   (cond
+;;    ((eq backend 'html)
+;;     (let ((rgb (assoc (downcase path) color-name-rgb-alist))
+;;           r g b)
+;;       (setq r (* 255 (/ (nth 1 rgb) 65535.0))
+;;             g (* 255 (/ (nth 2 rgb) 65535.0))
+;;             b (* 255 (/ (nth 3 rgb) 65535.0)))
+;;       (format "<span style=\"color: rgb(%s,%s,%s)\">%s</span>"
+;;               (truncate r) (truncate g) (truncate b)
+;;               (or description path))))))
+;;
+;; (org-link-set-parameters "color"
+;;                          :face 'color-link-face
+;;                          :complete 'color-comp
+;;                          :export 'color-link-export)
+
 ;;** iCal
 ;;*** iCal -> Org (disabled)
   ;;disabled;; ;; ######################################################
@@ -5007,34 +4917,6 @@ by using nxml's indentation rules."
 )
 
 ;; #############################################################################
-;;** my-open-in-external-app
-;; http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
-;; open dired file in external app (specified by the operating system)
-(defun my-open-in-external-app (&optional file)
-  "Open the current file or dired marked files in external app.
-
-The app is chosen from your OS's preference."
-  (interactive)
-  (let ( doIt
-         (myFileList
-          (cond
-           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
-           ((not file) (list (buffer-file-name)))
-           (file (list file)))))
-
-    (setq doIt (if (<= (length myFileList) 5)
-                   t
-                 (y-or-n-p "Open more than 5 files? ") ) )
-
-    (when doIt
-      (cond
-       ((string-equal system-type "windows-nt")
-        (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)) ) myFileList))
-       ((string-equal system-type "darwin")
-        (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)) )  myFileList) )
-       ((string-equal system-type "gnu/linux")
-        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
-
 
 
 ;; #############################################################################
@@ -5142,7 +5024,7 @@ The app is chosen from your OS's preference."
   (global-anzu-mode +1)
 )
 
-;;** smart-mode-line
+;;** smart-mode-line (abbreviating paths, ...)
 ;; https://github.com/Malabarba/smart-mode-line
 (use-package smart-mode-line
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5154,7 +5036,9 @@ The app is chosen from your OS's preference."
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":ED:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/share/all/org-mode" ":org:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/frankie/src/lazyblorg" ":lb:") t)
   (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/share/all/org-mode" ":org:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/frankie/" "~/") t)
   (smart-mode-line-enable)
 )
 
@@ -5289,7 +5173,7 @@ The app is chosen from your OS's preference."
   ;;(global-set-key "\C-s" 'swiper)
 )
 
-;;** char-menu
+;;** char-menu (soecial character menu)
 ;; http://irreal.org/blog/?p=4926 -> https://github.com/mrkkrp/char-menu
 ;; add characters: "M-x customize-group char-menu RET"
 (use-package char-menu
@@ -5525,6 +5409,175 @@ The app is chosen from your OS's preference."
 ; Also make sure sass location is in emacs PATH, example:
 ; (setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))
 ; or customize `scss-sass-command' to point to your sass executable.
+
+;;* my helper functions
+
+;;** my-org-mobile-push
+
+(defun my-org-mobile-push (&optional arg)
+  (interactive)
+  ;; when called with universal argument (C-u), Emacs will be closed
+  ;;      after pushing to files
+  ;; save original agenda in temporary variable
+  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+  ;; set agenda for MobileOrg (omit some agenda
+  ;; views I do not need on my phone):
+  (setq org-agenda-custom-commands
+        (quote (
+
+                ("1" "1 month"
+                 ((agenda "1 month"
+                          ((org-agenda-ndays 31)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           )
+                          )))
+
+                ("B" "borrowed" tags "+borrowed"
+                 (
+                  (org-agenda-overriding-header "borrowed or lend")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                ("$" "Besorgungen" tags "+Besorgung"
+                 (
+                  (org-agenda-overriding-header "Besorgungen")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                )))
+  ;; generate MobileOrg export:
+  (org-mobile-push)
+  ;; restore previously saved agenda:
+  (setq org-agenda-custom-commands
+        ORIGSAVED-org-agenda-custom-commands)
+  (if (equal arg '(4))
+      ;; save buffers and exit emacs;; FIXXME: not working yet
+      (save-buffers-kill-terminal 't)
+    )
+  )
+
+
+
+;;** my-reset-org
+
+(defun my-reset-org ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (org-element-cache-reset)
+   (org-refile-cache-clear)
+   (org-refile-get-targets)
+   (when (my-buffer-exists "*Org Agenda*")
+     (kill-buffer "*Org Agenda*")
+     (org-agenda-list)
+     )
+   )
+  )
+
+(defun my-reset-org-and-mobile-push ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (my-reset-org)
+   (my-org-mobile-push)
+   )
+)
+
+;;** message-outlook.el - sending mail with Outlook
+(when (my-system-type-is-windows)
+  (my-load-local-el "contrib/message-outlook.el")
+)
+
+;;** my-search-method-according-to-numlines()
+
+;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
+
+;;see below;; (defun my-search-method-according-to-numlines ()
+;;see below;;   "Determines the number of lines of current buffer and chooses a search method accordingly"
+;;see below;;   (interactive)
+;;see below;;   (if (< (count-lines (point-min) (point-max)) 20000)
+;;see below;;       (swiper)
+;;see below;;     (isearch-forward)
+;;see below;;     )
+;;see below;;   )
+;;see below;; ;;fancy search:  (global-set-key "\C-s" 'swiper)
+;;see below;; ;;normal search: (global-set-key "\C-s" 'isearch-forward)
+
+(defun my-search-method-according-to-numlines ()
+  (interactive)
+  (if (and (buffer-file-name)
+           (not (my-system-type-is-windows))
+           (not (ignore-errors
+                  (file-remote-p (buffer-file-name))))
+           (if (eq major-mode 'org-mode)
+               (> (buffer-size) 60000)
+             (> (buffer-size) 300000)))
+      (progn
+        (save-buffer)
+        (counsel-grep))
+    (if (my-system-type-is-windows)
+        (isearch-forward)
+      (swiper--ivy (swiper--candidates))
+      )
+    ))
+
+(global-set-key "\C-s" 'my-search-method-according-to-numlines)
+;;(global-set-key "\C-s" 'isearch-forward)
+
+;; #############################################################################
+
+;;** my-export-month-agenda-to-png-via-screenshot
+;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
+
+(defun my-export-month-agenda-to-png-via-screenshot()
+  (interactive)
+  (when (my-system-is-sherri)
+    (message "Generating agenda ...")
+    (org-agenda nil "n") ; generates agenda "n" (one month without todos)
+    (if (my-buffer-exists "*Org Agenda*")
+	(switch-to-buffer "*Org Agenda*")
+      (org-agenda-list)
+      )
+    (message "Waiting for Screenshot ...")
+    (sit-for 1) ; (sleep 1) ... doesn't re-display and thus screenshot
+                ; showed buffer before switching to agenda
+    (message "Say cheese ...")
+
+    (setq myoutput
+          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sherri/agenda.png"))
+    (message (concat "Screenshot done (" myoutput ")"))
+    )
+  )
+
+;;** when being idle for 15 minutes, run my-reset-org
+;; id:2016-06-05-reset-things-after-15-min-idle
+;; current-idle-time example: (0 420 1000 0)
+(setq my-reset-org-previous-idle-time-invocation (current-time))
+(run-with-idle-timer (* 60 15) t (lambda ()
+                                   (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
+                                       (sit-for 2)
+                                     (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+                                       (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
+                                       (sit-for 10);; give user 10s to press a button to prevent this
+                                       (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+                                         (my-reset-org)
+                                         (setq my-reset-org-previous-idle-time-invocation (current-time))
+                                         (message (concat "my-reset-org finished at " (current-time-string)))
+                                         )
+                                       )
+                                     )
+                                   ))
+
+;;(defun mytest ()
+;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
+;;       (message "yes")
+;;       )
+;;     )
+;;
+;;(sit-for 3)
+;;(message (or (current-idle-time) (number-to-string 0)))
+
 
 ;;* Key bindings
 
