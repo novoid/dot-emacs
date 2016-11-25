@@ -5511,6 +5511,13 @@ The app is chosen from your OS's preference."
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   )
 
+;;** scss-mode
+(use-package json-mode
+  :if (my-system-is-powerplantwin)
+  :ensure t
+  :defer 10
+)
+
 ; Command line utility sass is required, see http://sass-lang.com/
 ; To install sass (haml):
 ; gem install haml
