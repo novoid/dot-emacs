@@ -1757,6 +1757,14 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; smart yanking
   (setq org-yank-adjusted-subtrees t);; https://www.gnu.org/software/emacs/manual/html_node/org/Structure-editing.html
 
+  ;; until 2016-11-10, the defaults were OK to me
+  ;; with update to Org 9, jumping from agenda to hidden heading reveales only heading but not ancestors as before
+  (setq org-show-context-detail
+        '((agenda . lineage) ;; instead of "local"
+          (bookmark-jump . lineage)
+          (isearch . lineage)
+          (default . ancestors))
+        )
 
   ;; ######################################################
   ;; set the timestamps of expiry.el to inactive ones
