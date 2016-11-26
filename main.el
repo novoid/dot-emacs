@@ -1602,6 +1602,8 @@ i.e. change right window to bottom, or change bottom window to right."
   (setq global-auto-revert-mode t)
   (setq require-final-newline nil)
   (setq org-hide-leading-stars t)
+  (setq org-adapt-indentation nil);; do not indent drawers/body according to heading level
+
   ;; default state for repeating/recurring events
   ;; see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
   (setq org-todo-repeat-to-state "NEXT")
