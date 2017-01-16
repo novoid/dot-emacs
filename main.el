@@ -5426,6 +5426,15 @@ by using nxml's indentation rules."
   :defer 10
 )
 
+;;** mode-icons
+;; https://www.reddit.com/r/emacs/comments/5fjri7/how_to_use_git_logo_in_modeline_instead_of/
+;; https://github.com/ryuslash/mode-icons
+(use-package mode-icons
+  :ensure t
+  :config
+  (mode-icons-mode)
+)
+
 ; Command line utility sass is required, see http://sass-lang.com/
 ; To install sass (haml):
 ; gem install haml
