@@ -4866,7 +4866,8 @@ by using nxml's indentation rules."
   ;;(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
   ;;(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
   :bind (("<M-S-return>" . yafolding-toggle-all)
-         ("<M-return>" . yafolding-toggle-element))
+         ("<M-return>" . yafolding-toggle-element)
+         ("<C-Tab>" . yafolding-toggle-element))
 )
 
 ;; #############################################################################
