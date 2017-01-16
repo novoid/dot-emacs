@@ -6107,6 +6107,8 @@ by using nxml's indentation rules."
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))
 
+(setq truncate-lines t);; https://www.emacswiki.org/emacs/TruncateLines - M-x toggle-truncate-lines
+
 (message "######### finished loading main.el.")
 ;; Local Variables:
 ;; eval: (orgstruct++-mode)
