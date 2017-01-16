@@ -5586,21 +5586,21 @@ by using nxml's indentation rules."
 ;;** when being idle for 15 minutes, run my-reset-org
 ;; id:2016-06-05-reset-things-after-15-min-idle
 ;; current-idle-time example: (0 420 1000 0)
-(setq my-reset-org-previous-idle-time-invocation (current-time))
-(run-with-idle-timer (* 60 15) t (lambda ()
-                                   (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
-                                       (sit-for 2)
-                                     (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-                                       (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
-                                       (sit-for 10);; give user 10s to press a button to prevent this
-                                       (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-                                         (my-reset-org)
-                                         (setq my-reset-org-previous-idle-time-invocation (current-time))
-                                         (message (concat "my-reset-org finished at " (current-time-string)))
-                                         )
-                                       )
-                                     )
-                                   ))
+;;disabled because it doesn't work;; (setq my-reset-org-previous-idle-time-invocation (current-time))
+;;disabled because it doesn't work;; (run-with-idle-timer (* 60 15) t (lambda ()
+;;disabled because it doesn't work;;                                    (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
+;;disabled because it doesn't work;;                                        (sit-for 2)
+;;disabled because it doesn't work;;                                      (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+;;disabled because it doesn't work;;                                        (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
+;;disabled because it doesn't work;;                                        (sit-for 10);; give user 10s to press a button to prevent this
+;;disabled because it doesn't work;;                                        (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+;;disabled because it doesn't work;;                                          (my-reset-org)
+;;disabled because it doesn't work;;                                          (setq my-reset-org-previous-idle-time-invocation (current-time))
+;;disabled because it doesn't work;;                                          (message (concat "my-reset-org finished at " (current-time-string)))
+;;disabled because it doesn't work;;                                          )
+;;disabled because it doesn't work;;                                        )
+;;disabled because it doesn't work;;                                      )
+;;disabled because it doesn't work;;                                    ))
 
 ;;(defun mytest ()
 ;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
