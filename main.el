@@ -2450,15 +2450,34 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;; ######################################################
   ;; From: http://doc.norang.ca/org-mode.html#CustomAgendaViewFilteringContext
   ;; removes things tagged with "lp" or "reward" when typing "/ RET" in agenda
-  (defun bh/org-auto-exclude-function (tag)
+
+  (defun bh/org-auto-exclude-function-private (tag)
     "Automatic task exclusion in the agenda with / RET"
     (and (cond
 	  ((string= tag "lp") t)
 	  ((string= tag "reward") t)
 	  ((string= tag "test") t)
+	  ((string= tag "2read") t)
 	  )
 	 (concat "-" tag)))
-  (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
+
+  (defun bh/org-auto-exclude-function-infonova (tag)
+    "Automatic task exclusion in the agenda with / RET"
+    (and (cond
+	  ((string= tag "lp") t)
+	  ((string= tag "reward") t)
+	  ((string= tag "test") t)
+	  ((string= tag "@BWG") t)
+	  ((string= tag "blog") t)
+	  ((string= tag "2read") t)
+	  )
+	 (concat "-" tag)))
+
+  (if (my-system-is-powerplantwin)
+      (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function-infonova)
+    (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function-private)
+    )
+
 
 
 
