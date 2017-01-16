@@ -3924,7 +3924,97 @@ Null prefix argument turns off the mode."
 
 ;;** org-link-set-parameters
 
-;;*** Color links
+  (defvar memacs-root "~/org/memacs/")
+
+  (defvar memacs-file-pattern "files.org_archive") ;; also possible: "*.org"
+
+;;old;;   (defun my-handle-tsfile-link (querystring)
+;;old;;     ;; get a list of hits
+;;old;;     (let ((queryresults (split-string (replace-regexp-in-string
+;;old;;                                        "\r?\n$" ""
+;;old;;                                        (shell-command-to-string
+;;old;; 					(concat "grep "
+;;old;; 						querystring
+;;old;; 						(concat memacs-root memacs-file-pattern))))
+;;old;;                                       "\n")))
+;;old;;
+;;old;;       ;; doesn't work because queryresults is not a string:
+;;old;;       ;; (message "%s" (concat "DEBUG: queryresults: " queryresults))
+;;old;;
+;;old;;       ;; check length of list (number of lines)
+;;old;;       (cond
+;;old;;        ((= 0 (length queryresults))
+;;old;; 	;; edge case: empty query result
+;;old;; 	(message "Sorry, empty querystring."))
+;;old;;
+;;old;; ;; I get «split-string: Wrong type argument: stringp, ("")»
+;;old;;        ((= 1 (length (split-string queryresults "\n")))
+;;old;; 	;; queryresults is unique
+;;old;; 	(with-temp-buffer
+;;old;; 	  (insert queryresults)
+;;old;; 	  (org-mode)
+;;old;; 	  (org-element-map (org-element-parse-buffer) 'link
+;;old;; 	    (lambda (ln)
+;;old;; 	      (when (string= (org-element-property :type ln) "file")
+;;old;; 		(org-element-property :path ln)
+;;old;; 		(message "%s" (concat "DEBUG: file -> " ln))
+;;old;; 		)))))
+;;old;;
+;;old;; ;; I get the «File: » prompt but no completion:
+;;old;;        (t
+;;old;; 	;; querystring results multiple matches
+;;old;; 	(org-open-file (completing-read
+;;old;; 			"File: "
+;;old;; 			(remove-if-not    ;remove nils from list
+;;old;; 			 'identity
+;;old;; 			 (loop for queryresult in queryresults
+;;old;;                                collect
+;;old;;                                ;; get the filename the match is in. assumes no : in the file name
+;;old;;                                (let* ((f (car (split-string queryresult ":")))
+;;old;;                                       (basedir (file-name-directory f)))
+;;old;; 				 (with-temp-buffer
+;;old;;                                    (insert queryresult)
+;;old;;                                    (org-mode)
+;;old;;                                    (org-element-map (org-element-parse-buffer) 'link
+;;old;;                                      (lambda (ln)
+;;old;;                                        (when (string= (org-element-property :type ln) "file")
+;;old;; 					 (expand-file-name  (org-element-property :path ln) basedir))))))))))))))
+
+  ;; 2016-12-31 by John Kitchin
+  (defun my-handle-tsfile-link (querystring)
+    ;;(message (concat "querystring: " querystring))
+    ;; get a list of hits
+    (let ((queryresults (split-string
+                         (s-trim
+                          (shell-command-to-string
+                           (concat
+                            "grep \""
+                            querystring
+                            "\" "
+                            (concat memacs-root memacs-file-pattern))))
+                         "\n" t)))
+      ;; check length of list (number of lines)
+      (cond
+       ((= 0 (length queryresults))
+        ;; edge case: empty query result
+        (message "Sorry, no results found for query: %s" querystring))
+       (t
+        (with-temp-buffer
+          (insert (if (= 1 (length queryresults))
+                      (car queryresults)
+                    (completing-read "Choose: " queryresults)))
+          (org-mode)
+          (goto-char (point-min))
+          (org-next-link)
+          (org-open-at-point))))))
+
+  (org-link-set-parameters
+   "tsfile"
+   :follow (lambda (path) (my-handle-tsfile-link path))
+   :help-echo "Opens the linked file with your default application")
+
+
+;;*** color links
 ;; http://kitchingroup.cheme.cmu.edu/blog/2016/11/08/New-color-link-in-org-9-0-using-font-lock-to-color-the-text/
 
 ;; (require 's)
