@@ -1748,6 +1748,13 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; http://orgmode.org/manual/The-Export-Dispatcher.html
   (setq org-export-initial-scope 'subtree);; export subtree (by default)
 
+;;** org-file-apps -> open files in external apps
+
+  ;;(add-to-list 'org-file-apps '("\\.odp" . system))
+  ;;(add-to-list 'org-file-apps '("\\.odp" . mailcap))
+  (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
+  ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
+
 ;;** general key bindings
 
   ;; http://doc.norang.ca/org-mode.html
