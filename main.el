@@ -952,6 +952,9 @@ i.e. change right window to bottom, or change bottom window to right."
   (autoload 'pylookup-lookup "pylookup"
     "Lookup SEARCH-TERM in the Python HTML indexes." t)
 
+  ;; MANUALLY run the DB update on LOCAL resources:
+  ;; 1) install Debian package "python-doc"
+  ;; 2) run: ~/.emacs.d/contrib/pylookup/pylookup.py -u ~doc/python2.7/html
   (autoload 'pylookup-update "pylookup"
     "Run pylookup-update and create the database at `pylookup-db-file'." t)
 
@@ -5353,6 +5356,7 @@ by using nxml's indentation rules."
 ;; http://melpa.org/#/ox-clip
 ;; https://libraries.io/emacs/ox-clip
 ;; https://github.com/jkitchin/scimax
+;; use: M-x ox-clip-formatted-copy
 (use-package ox-clip
   ;; :disabled t
   :ensure t
@@ -5965,25 +5969,25 @@ by using nxml's indentation rules."
 ;;** my-org-region-to-property (my-map p)
 ;; see id:2015-05-28-ask-for-properties
 
-;; original function:
-(defun my-org-region-to-property (&optional property)
-  (interactive)
-  ;; if no region is defined, do nothing
-  (if (use-region-p)
-      ;; if a region string is found, ask for a property and set property to
-      ;; the string in the region
-      (let ((val (replace-regexp-in-string
-                  "\\`[ \t\n]*" ""
-                  (replace-regexp-in-string "[ \t\n]*\\'" ""
-                                            (substring (buffer-string)
-                                                       (- (region-beginning) 1)
-                                                       (region-end))))
-                 )
-            ;; if none was stated by user, read property from user
-            (prop (or property
-                      (org-read-property-name))))
-        ;; set property
-        (org-set-property prop val))))
+;; OLD ;; ;; original function:
+;; OLD ;; (defun my-org-region-to-property (&optional property)
+;; OLD ;;   (interactive)
+;; OLD ;;   ;; if no region is defined, do nothing
+;; OLD ;;   (if (use-region-p)
+;; OLD ;;       ;; if a region string is found, ask for a property and set property to
+;; OLD ;;       ;; the string in the region
+;; OLD ;;       (let ((val (replace-regexp-in-string
+;; OLD ;;                   "\\`[ \t\n]*" ""
+;; OLD ;;                   (replace-regexp-in-string "[ \t\n]*\\'" ""
+;; OLD ;;                                             (substring (buffer-string)
+;; OLD ;;                                                        (- (region-beginning) 1)
+;; OLD ;;                                                        (region-end))))
+;; OLD ;;                  )
+;; OLD ;;             ;; if none was stated by user, read property from user
+;; OLD ;;             (prop (or property
+;; OLD ;;                       (org-read-property-name))))
+;; OLD ;;         ;; set property
+;; OLD ;;         (org-set-property prop val))))
 
 ;; ----------------------------------------------------
 
@@ -6002,6 +6006,7 @@ by using nxml's indentation rules."
      nil nil nil nil default-prop)))
 
 (defun my-org-region-to-property (&optional property)
+  "Copies the region as value to an Org-mode property"
   (interactive)
   ;; if no region is defined, do nothing
   (if (use-region-p)
