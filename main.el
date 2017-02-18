@@ -5544,13 +5544,19 @@ by using nxml's indentation rules."
   (mode-icons-mode)
 )
 
-; Command line utility sass is required, see http://sass-lang.com/
-; To install sass (haml):
-; gem install haml
-;
-; Also make sure sass location is in emacs PATH, example:
-; (setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))
-; or customize `scss-sass-command' to point to your sass executable.
+
+;;** unicode-fonts
+;; solved an issue where a host was using different-height-sized font for few special characters
+;; see id:2016-08-19-unicode-enlarges-line-height
+(use-package unicode-fonts
+  ;;:disabled t
+  :ensure t
+  :if (my-system-is-floyd)
+  :defer 10
+  :config
+  (unicode-fonts-setup)
+)
+
 
 ;;* my helper functions
 
