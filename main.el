@@ -1940,85 +1940,116 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;;** agenda files
-  (if (my-system-is-powerplantwin)
-      (setq org-agenda-files (append (quote (
-					     ;;"c:/Users/karl.voit/share/all/org-mode/phd.org";;moved to archive
-					     "c:/Users/karl.voit/share/all/org-mode/r6-stories.org"
-					     "c:/Users/karl.voit/share/all/org-mode/infonova.org"
-					     "c:/Users/karl.voit/share/all/org-mode/misc.org"
-					     "c:/Users/karl.voit/share/all/org-mode/bwg.org"
-					     ;;"c:/Users/karl.voit/share/all/org-mode/tagstore.org";;moved to archive
-					     ;;"c:/Users/karl.voit/share/all/org-mode/ist.org";;moved to archive
-					     "c:/Users/karl.voit/share/all/org-mode/contacts.org"
-					     ;;"c:/Users/karl.voit/share/all/org-mode/postdoc.org";;moved to archive
-					     ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
-					     "c:/Users/karl.voit/share/all/org-mode/hardware.org"
-					     "c:/Users/karl.voit/share/all/org-mode/fhsp.org"
-					     "c:/Users/karl.voit/share/all/org-mode/notes.org"
-					     "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
-					     "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
-					     ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
-					     "c:/Users/karl.voit/share/all/org-mode/references.org"
-					     ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
-					     "c:/Users/karl.voit/share/all/org-mode/memacs/error.org"
-					     "c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
-					     "c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
-					     "c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
-					     "c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
-					     "c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
-					     )
-					    )
-				     ;;(file-expand-wildcards "c:/Users/karl.voit/share/all/org-mode/memacs/*.org")
-				     )
-	    )
 
-    (setq org-agenda-files (append (quote (
-					   "~/share/all/org-mode/archive.org"
-					   ;;"~/share/all/org-mode/phd.org";;moved to archive
-					   "~/share/all/org-mode/r6-stories.org"
-					   "~/share/all/org-mode/infonova.org"
-					   ;;  "~/share/all/org-mode/test-phd.org"
-					   "~/share/all/org-mode/misc.org"
-					   "~/share/all/org-mode/bwg.org"
-					   ;;"~/share/all/org-mode/tagstore.org";;moved to archive
-					   ;;"~/share/all/org-mode/ist.org";;moved to archive
-					   "~/share/all/org-mode/contacts.org"
-					   ;;"~/share/all/org-mode/postdoc.org";;moved to archive
-					   "~/share/all/org-mode/foodandbeverages.org"
-					   "~/share/all/org-mode/hardware.org"
-					   "~/share/all/org-mode/notes.org"
-					   "~/share/all/org-mode/movies.org"
-					   "~/share/all/org-mode/references.org"
-					   "~/share/all/org-mode/public_voit.org"
-					   "~/share/all/org-mode/errors_public_voit.org"
-					   "~/share/all/org-mode/errors_orgmode_commits.org"
-					   "~/share/all/org-mode/fhsp.org"
-					   "~/src/lazyblorg/lazyblorg.org"
-					   "~/share/all/org-mode/memacs/roylog.org"
-					   ;;"~/share/all/org-mode/memacs/archive.org"
-					   "~/share/all/org-mode/memacs/bank.org"
-					   ;;"~/share/all/org-mode/memacs/datebk6.org"
-					   ;;"~/share/all/org-mode/memacs/delicious.org"
-					   "~/share/all/org-mode/memacs/error.org"
-					   "~/share/all/org-mode/memacs/files.org"
-					   "~/share/all/org-mode/memacs/gcal.org"
-					   "~/share/all/org-mode/memacs/git.org"
-					   ;;"~/share/all/org-mode/memacs/ifiles.org"
-					   "~/share/all/org-mode/memacs/mbox.org"
-					   "~/share/all/org-mode/memacs/news.org"
-					   "~/share/all/org-mode/memacs/phonecalls.org"
-					   "~/share/all/org-mode/memacs/sms.org"
-					   "~/share/all/org-mode/memacs/tweets.org"
-					   ;;"~/share/all/org-mode/memacs/www.org"
-					   "~/share/all/org-mode/memacs/movies.org"
-					   "~/share/all/org-mode/memacs/Filmliste.org"
-					   )
-					  )
-				   ;;(file-expand-wildcards "~/share/all/org-mode/memacs/*.org")
-				   )
-	  )
+  ;; I maintain two categories of agenda files: work and non-work files which are
+  ;; defined for Windows and non-windows separately (path format differs).
 
+  ;; Using my-toggle-agenda-files() I can toggle between host-specific default
+  ;; agenda and all agenda files.
+
+  (if (my-system-type-is-windows))
+      (setq my-work-agenda-files (append (quote (
+                                                 "c:/Users/karl.voit/share/all/org-mode/r6-stories.org"
+                                                 "c:/Users/karl.voit/share/all/org-mode/infonova.org"
+                                                 ))))
+    (setq my-work-agenda-files (append (quote (
+                                               "~/share/all/org-mode/r6-stories.org"
+                                               "~/share/all/org-mode/infonova.org"
+                                               ;;"~/share/all/org-mode/tagstore.org";;moved to archive
+                                               ;;"~/share/all/org-mode/ist.org";;moved to archive
+                                               ;;"~/share/all/org-mode/test-phd.org"
+                                               ;;"~/share/all/org-mode/postdoc.org";;moved to archive
+                                               ))))
     )
+
+   (if (my-system-type-is-windows)
+      (setq my-nonwork-agenda-files (append (quote (
+                                                    "c:/Users/karl.voit/share/all/org-mode/misc.org"
+					            "c:/Users/karl.voit/share/all/org-mode/issues.org"
+					            "c:/Users/karl.voit/share/all/org-mode/projects.org"
+					            "c:/Users/karl.voit/share/all/org-mode/finanzen_behoerden_versicherungen.org"
+					            "c:/Users/karl.voit/share/all/org-mode/bwg.org"
+					            "c:/Users/karl.voit/share/all/org-mode/contacts.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
+					            "c:/Users/karl.voit/share/all/org-mode/hardware.org"
+					            "c:/Users/karl.voit/share/all/org-mode/fhsp.org"
+					            "c:/Users/karl.voit/share/all/org-mode/notes.org"
+					            "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
+					            "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
+					            "c:/Users/karl.voit/share/all/org-mode/references.org"
+					            "c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
+					            "c:/Users/karl.voit/share/all/org-mode/memacs/error.org"
+					            "c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
+					            "c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
+					            "c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
+					            "c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
+					            "c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
+                                                 ))))
+    (setq my-nonwork-agenda-files (append (quote (
+                                                  "~/share/all/org-mode/archive.org"
+					          "~/share/all/org-mode/misc.org"
+					          "~/share/all/org-mode/issues.org"
+					          "~/share/all/org-mode/projects.org"
+					          "~/share/all/org-mode/finanzen_behoerden_versicherungen.org"
+					          "~/share/all/org-mode/bwg.org"
+					          "~/share/all/org-mode/contacts.org"
+					          "~/share/all/org-mode/foodandbeverages.org"
+					          "~/share/all/org-mode/hardware.org"
+					          "~/share/all/org-mode/notes.org"
+					          "~/share/all/org-mode/movies.org"
+					          "~/share/all/org-mode/references.org"
+					          "~/share/all/org-mode/public_voit.org"
+					          "~/share/all/org-mode/errors_public_voit.org"
+					          "~/share/all/org-mode/errors_orgmode_commits.org"
+					          "~/share/all/org-mode/fhsp.org"
+					          "~/src/lazyblorg/lazyblorg.org"
+					          "~/share/all/org-mode/memacs/roylog.org"
+					          ;;"~/share/all/org-mode/memacs/archive.org"
+					          "~/share/all/org-mode/memacs/bank.org"
+					          ;;"~/share/all/org-mode/memacs/datebk6.org"
+					          ;;"~/share/all/org-mode/memacs/delicious.org"
+					          "~/share/all/org-mode/memacs/error.org"
+					          "~/share/all/org-mode/memacs/files.org"
+					          "~/share/all/org-mode/memacs/gcal.org"
+					          "~/share/all/org-mode/memacs/git.org"
+					          ;;"~/share/all/org-mode/memacs/ifiles.org"
+					          "~/share/all/org-mode/memacs/mbox.org"
+					          "~/share/all/org-mode/memacs/news.org"
+					          "~/share/all/org-mode/memacs/phonecalls.org"
+					          "~/share/all/org-mode/memacs/sms.org"
+					          "~/share/all/org-mode/memacs/tweets.org"
+					          ;;"~/share/all/org-mode/memacs/www.org"
+					          "~/share/all/org-mode/memacs/movies.org"
+					          "~/share/all/org-mode/memacs/Filmliste.org"
+                                               ))))
+    )
+
+  (defun my-toggle-agenda-files ()
+    "Toggle my agenda files between work/everything and nonwork/everything
+  depending on the current system.
+  Source for the toggle code: `http://ergoemacs.org/emacs/elisp_toggle_command.html'"
+    (interactive)
+    ;; use a property “state”. Value is t or nil
+    (if (get 'my-toggle-agenda-files 'state)
+        (progn
+          (message "Agenda files: host-specific")
+          (if (my-system-is-powerplantwin)
+              (setq org-agenda-files (append my-work-agenda-files ))
+            (setq org-agenda-files (append my-nonwork-agenda-files ))
+            )
+          (put 'my-toggle-agenda-files 'state nil))
+      (progn
+        (message "Agenda files: all")
+        (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
+        (put 'my-toggle-agenda-files 'state t))))
+
+   ;; default agenda files: on my business host, start with the work-related files;
+   ;;                       on my other machines, start with my non-work-related files
+   (if (my-system-is-powerplantwin)
+       (setq org-agenda-files (append my-work-agenda-files ))
+       (setq org-agenda-files (append my-nonwork-agenda-files ))
+       )
 
 
   ;; ######################################################
