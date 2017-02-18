@@ -5513,6 +5513,13 @@ by using nxml's indentation rules."
 
 ;;** scss-mode
 (use-package scss-mode
+  ; Command line utility sass is required, see http://sass-lang.com/
+  ; To install sass (haml):
+  ; gem install haml
+  ;
+  ; Also make sure sass location is in emacs PATH, example:
+  ; (setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))
+  ; or customize `scss-sass-command' to point to your sass executable.
   :if (my-system-is-floyd-or-sherri)
   :ensure t
   :defer 10
@@ -5521,7 +5528,7 @@ by using nxml's indentation rules."
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   )
 
-;;** scss-mode
+;;** json-mode
 (use-package json-mode
   :if (my-system-is-powerplantwin)
   :ensure t
