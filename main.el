@@ -321,6 +321,7 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
+
 ;;* my-map
 
 
@@ -2491,6 +2492,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
     ;; ######################################################
   ;; From: http://doc.norang.ca/org-mode.html#CustomAgendaViewFilteringContext
+  ;; Also: http://orgmode.org/manual/Filtering_002flimiting-agenda-items.html
   ;; removes things tagged with "lp" or "reward" when typing "/ RET" in agenda
 
   (defun bh/org-auto-exclude-function-private (tag)
@@ -2552,7 +2554,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;; disabled 2014-08-17 ;;            ))
 		("n" "no TODO events +50d"
 		 ((agenda "no TODO events +50d"
-			  ((org-agenda-ndays 50)
+			  ((org-agenda-span 50)
 			   (org-agenda-time-grid nil)
 			   (org-agenda-entry-types '(:timestamp :sexp))
 			   (org-agenda-skip-function
