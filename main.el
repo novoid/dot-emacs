@@ -1221,6 +1221,46 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;      (edit-server-start)))
 
 
+;;* yasnippet
+
+(use-package yasnippet
+  :demand t
+  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :diminish yas-minor-mode
+  :defer 15
+  :config
+  (yas-load-directory "~/.emacs.d/snippets/")
+  (yas-global-mode 1)
+  ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
+  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
+  ;;(autoload 'yas-minor-mode "yasnippet")
+
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
+
+)
+
+;;** yankpad
+;; id:2016-08-08-yankpad-test
+;; https://github.com/Kungsgeten/yankpad
+
+(use-package yankpad
+  :ensure t
+  :defer 10
+  :init
+  (setq yankpad-file "~/org/yankpad.org")
+  :bind (:map my-map ("SPC" . yankpad-insert))
+  :config
+  (bind-key "<f6>" 'yankpad-map))
+
+
+
+;; #############################################################################
+
 
 
 ;; #############################################################################
@@ -1400,45 +1440,6 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;disabled;(when (my-system-type-is-gnu)
 ;;disabled;    (my-load-local-el "contrib/tabbar.el")
 ;;disabled;  )
-
-
-;; #############################################################################
-;;* yasnippet
-
-(use-package yasnippet
-  :demand t
-  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :diminish yas-minor-mode
-  :defer 15
-  :config
-  (yas-load-directory "~/.emacs.d/snippets/")
-  (yas-global-mode 1)
-  ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
-  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-  ;;(autoload 'yas-minor-mode "yasnippet")
-
-  ;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
-  ;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
-  ;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
-  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
-
-)
-
-;;** yankpad
-;; id:2016-08-08-yankpad-test
-;; https://github.com/Kungsgeten/yankpad
-
-(use-package yankpad
-  :ensure t
-  :defer 10
-  :init
-  (setq yankpad-file "~/org/yankpad.org")
-  :bind (:map my-map ("SPC" . yankpad-insert))
-  :config
-  (bind-key "<f6>" 'yankpad-map))
-
 
 
 ;; #############################################################################
