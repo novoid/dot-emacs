@@ -2520,8 +2520,19 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function-private)
     )
 
+(defun my-narrow-agenda ()
+  (interactive "P")
+;  (org-agenda-filter-apply "-\(WAITING\|:reward:\|:lp:\)" 'regexp)
 
+  (org-agenda-filter-apply "-NEXT.*:\\(@BWG\\|reward\\):" 'regexp)
+;; returns: wrong number of arguments
 
+;  (setq current-prefix-arg '(4)) ; C-u
+;  (org-agenda-filter-by-regexp "\(WAITING\|:reward:\|:lp:\)")
+
+;;  (org-agenda-filter-by-regexp '(4) "WAITING")
+;; NEXT.*:\(@BWG\|reward\):   -> keyword "NEXT" with either tag "@BWG" OR "reward"
+  )
 
 
   ;; ######################################################
