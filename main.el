@@ -1948,7 +1948,7 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; Using my-toggle-agenda-files() I can toggle between host-specific default
   ;; agenda and all agenda files.
 
-  (if (my-system-type-is-windows))
+  (if (my-system-type-is-windows)
       (setq my-work-agenda-files (append (quote (
                                                  "c:/Users/karl.voit/share/all/org-mode/r6-stories.org"
                                                  "c:/Users/karl.voit/share/all/org-mode/infonova.org"
@@ -2044,6 +2044,9 @@ i.e. change right window to bottom, or change bottom window to right."
         (message "Agenda files: all")
         (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
         (put 'my-toggle-agenda-files 'state t))))
+
+
+  (bind-key "A" #'my-togle-agenda-files my-map)
 
    ;; default agenda files: on my business host, start with the work-related files;
    ;;                       on my other machines, start with my non-work-related files
