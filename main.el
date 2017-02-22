@@ -1484,8 +1484,6 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;
 ;;   (message "############### DEBUG: config orgmode ...")
 
-(when (or (my-system-type-is-gnu) (my-system-type-is-darwin) (my-system-is-powerplantwin))
-
   (setq org-babel-safe-header-args nil);; 2014-10-29 test
 
 ;;** load Org and misc contrib packages
@@ -4543,9 +4541,6 @@ the result as a time value."
     :config ;; executed after loading package
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
-
-
-  );; end-of-Org-mode
 
 (message "############### DEBUG: config orgmode finished.")
 
