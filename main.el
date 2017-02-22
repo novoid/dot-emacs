@@ -4542,6 +4542,16 @@ the result as a time value."
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
 
+;;** org-table-sticky-header-mode
+;; https://github.com/cute-jumper/org-table-sticky-header
+;; A minor mode to show the sticky header for org-mode tables.
+(use-package org-table-sticky-header
+  ;; :disabled t
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook 'org-table-sticky-header-mode)
+  )
+
 (message "############### DEBUG: config orgmode finished.")
 
 ;; #############################################################################
