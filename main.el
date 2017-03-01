@@ -3703,9 +3703,24 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
   ;; active Babel languages
+(when (my-system-type-is-windows)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
+     (python . t)
+     (shell . t)
+     (org . t)
+     (emacs-lisp . t)
+     (sql . t)
+     (restclient . t)
+     ))
+  )
+
+(when (my-system-type-is-gnu)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+;     (ipython . t)
      (python . t)
      (ruby . t)
      (gnuplot . t)
@@ -3718,6 +3733,7 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
      (sql . t)
      (restclient . t)
      ))
+  )
 
   ;; Inhibit evaluation of code blocks during export
   ;; http://orgmode.org/manual/Exporting-code-blocks.html
