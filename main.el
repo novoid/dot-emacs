@@ -1660,26 +1660,6 @@ i.e. change right window to bottom, or change bottom window to right."
 
   (setq org-completion-use-ido t);; Use IDO for target completion
 
-  ;; Targets include this file and any file contributing to the
-  ;;    agenda - up to 5 levels deep
-  ;; see also: https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
-  (setq org-refile-targets (quote (
-                                   (org-agenda-files :maxlevel . 4)
-                                   ("contacts.org" :maxlevel . 6)
-                                   (nil :maxlevel . 3)
-                                   )))
-
-  ;; Targets start with the file name - allows creating level 1 tasks
-  (setq org-refile-use-outline-path (quote file))
-
-  ;; 2014-10-22: activate caching of targets
-  (setq org-refile-use-cache t)
-
-  ;; Targets complete directly with IDO
-  (setq org-outline-path-complete-in-steps nil)
-
-  ;; Allow refile to create parent tasks with confirmation
-  (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
   ;; disable property inheritance (in order to seed up)
   ;; https://www.gnu.org/software/emacs/manual/html_node/org/Property-inheritance.html
@@ -1983,7 +1963,7 @@ i.e. change right window to bottom, or change bottom window to right."
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
-					            "c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
                                                  ))))
     (setq my-nonwork-agenda-files (append (quote (
                                                   "~/share/all/org-mode/archive.org"
@@ -2010,13 +1990,13 @@ i.e. change right window to bottom, or change bottom window to right."
 					          ;;"~/share/all/org-mode/memacs/delicious.org"
 					          "~/share/all/org-mode/memacs/error.org"
 					          "~/share/all/org-mode/memacs/files.org"
-					          "~/share/all/org-mode/memacs/gcal.org"
+					          "~/share/all/org-mode/memacs/GCal.org"
 					          "~/share/all/org-mode/memacs/git.org"
 					          ;;"~/share/all/org-mode/memacs/ifiles.org"
 					          "~/share/all/org-mode/memacs/mbox.org"
 					          "~/share/all/org-mode/memacs/news.org"
 					          "~/share/all/org-mode/memacs/phonecalls.org"
-					          "~/share/all/org-mode/memacs/sms.org"
+					          "~/share/all/org-mode/memacs/SMS.org"
 					          "~/share/all/org-mode/memacs/tweets.org"
 					          ;;"~/share/all/org-mode/memacs/www.org"
 					          "~/share/all/org-mode/memacs/movies.org"
@@ -2049,9 +2029,35 @@ i.e. change right window to bottom, or change bottom window to right."
    ;; default agenda files: on my business host, start with the work-related files;
    ;;                       on my other machines, start with my non-work-related files
    (if (my-system-is-powerplantwin)
-       (setq org-agenda-files (append my-work-agenda-files ))
+       (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
        (setq org-agenda-files (append my-nonwork-agenda-files ))
        )
+
+;;** refiling
+
+  ;; Targets include this file and any file contributing to the
+  ;;    agenda - up to 5 levels deep
+  ;; see also: https://www.reddit.com/r/emacs/comments/4366f9/how_do_orgrefiletargets_work/
+  (setq org-refile-targets (quote (
+                                   ;; ignore my-org-memacs-files here
+                                   (my-work-agenda-files :maxlevel . 4)
+                                   (my-nonwork-agenda-files :maxlevel . 4)
+                                   ;;OLD: (nil :maxlevel . 3)
+                                   ;;OLD: ("contacts.org" :maxlevel . 6)
+                                   )))
+
+  ;; Targets start with the file name - allows creating level 1 tasks
+  (setq org-refile-use-outline-path (quote file))
+
+  ;; 2014-10-22: activate caching of targets
+  (setq org-refile-use-cache t)
+
+  ;; Targets complete directly with IDO
+  (setq org-outline-path-complete-in-steps nil)
+
+  ;; Allow refile to create parent tasks with confirmation
+  (setq org-refile-allow-creating-parent-nodes (quote confirm))
+
 
 
   ;; ######################################################
