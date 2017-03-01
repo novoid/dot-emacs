@@ -42,6 +42,7 @@
 ;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 ;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
 (add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
+;;unstable;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 ;; 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
 ;; https://github.com/nicferrier/elmarmalade/issues/55#issuecomment-166271364
@@ -121,6 +122,7 @@
   ;;   (load-theme 'zenburn t)
   ;;   (load-theme 'material t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
   ;;              issues with *bold* stuff in org-mode :-(
+
   ;; my favorite light themes: leuven, whiteboard, solarized-light,
   ;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
   ;;   (load-theme 'whiteboard t)
@@ -878,16 +880,16 @@ i.e. change right window to bottom, or change bottom window to right."
 (use-package elpy
   ;; :disabled t ;; stop loading if 't'
   :ensure t
-  :if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
+  ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
   :mode ("\\.py\\'" . elpy-mode)
   :config ;; executed after loading package
 
   ;; ######################################################
   ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
-  (when (my-system-type-is-gnu)
+  ;;(when (my-system-type-is-gnu)
     (elpy-enable)
     (elpy-use-ipython)
-    )
+  ;;  )
 
   ;(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
   ;(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
@@ -942,7 +944,7 @@ i.e. change right window to bottom, or change bottom window to right."
   (setq pylookup-dir "~/.emacs.d/contrib/pylookup")
   (add-to-list 'load-path pylookup-dir)
   ;; load pylookup when compile time
-  (eval-when-compile (require 'pylookup))
+;  (eval-when-compile (require 'pylookup))
   ;; set executable file and db file
   (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
   (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
@@ -1222,7 +1224,10 @@ i.e. change right window to bottom, or change bottom window to right."
 ;;      (edit-server-start)))
 
 
-;;* yasnippet
+;; #############################################################################
+;;* misc modes/packages
+;;** snippets
+;;*** yasnippet
 
 (use-package yasnippet
   :demand t
@@ -1245,7 +1250,7 @@ i.e. change right window to bottom, or change bottom window to right."
 
 )
 
-;;** yankpad
+;;*** yankpad
 ;; id:2016-08-08-yankpad-test
 ;; https://github.com/Kungsgeten/yankpad
 
@@ -1261,11 +1266,7 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;; #############################################################################
-
-
-
-;; #############################################################################
-;;* flyspell
+;;** flyspell
 
 ;; ######################################################
 ;; setting path to flyspell-mode.el from MacPorts
@@ -1420,7 +1421,7 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;; #############################################################################
-;;* flycheck
+;;** flycheck
 ;; http://www.flycheck.org/en/latest/guide/quickstart.html
 ;; 2016-11-05: converted to use-package according to http://www.flycheck.org/en/latest/user/installation.html#use-package
 
@@ -1435,7 +1436,7 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;; #############################################################################
-;;* tabbar (disabled)
+;;** tabbar (disabled)
 
 
 ;;disabled;(when (my-system-type-is-gnu)
@@ -1444,7 +1445,7 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;; #############################################################################
-;;* REST
+;;** REST
 ;; REST client    https://github.com/pashky/restclient.el
 (use-package restclient
   :disabled t  ;; stop loading if 't'
@@ -1456,7 +1457,6 @@ i.e. change right window to bottom, or change bottom window to right."
   ;;(my-load-local-el "contrib/restclient/restclient.el")
   ;; :mode "\\.rb\\'"
 )
-
 
 ;;* Org-mode
 ;; org-mode-begin:
@@ -3617,11 +3617,8 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
 	   ,my-capture-template-next :empty-lines 1)
 	  ("iru" "Userstory" entry (file+headline "~/share/all/org-mode/r6-stories.org" "New Stories")
 	   ,my-capture-template-r6story :empty-lines 1)
-	  ("f" "FH St. Pölten")
-	  ("fs" "FH shorts" entry (file+headline "~/share/all/org-mode/fhsp.org" "shorts")
+	  ("f" "FH St. Pölten shorts" entry (file+headline "~/share/all/org-mode/fhsp.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("fe" "FH event" entry (file+headline "~/share/all/org-mode/fhsp.org" "Events")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("ii" "infonova IPD" entry (file+headline "~/share/all/org-mode/infonova.org" "IPDs")
 	  ;; "* IPD-%?: \n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;("p" "PhD Templates")
@@ -5365,7 +5362,7 @@ by using nxml's indentation rules."
   :ensure t
   ;;:if (my-system-is-powerplantwin)
   ;;:diminish whitespace-mode
-  :defer 10
+  ;;:defer 10
   :config
 
   (setq ivy-display-style 'fancy) ;; fancy highlighting
