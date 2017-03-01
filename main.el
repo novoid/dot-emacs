@@ -4574,6 +4574,16 @@ the result as a time value."
   (add-hook 'org-mode-hook 'org-table-sticky-header-mode)
   )
 
+;;** ob-async: asynchronous babel execution
+;; https://github.com/astahlman/ob-async
+;not yet available; (use-package ob-async
+;not yet available;   ;; :disabled t
+;not yet available;   :ensure t
+;not yet available;   :config
+;not yet available;   (add-to-list 'org-ctrl-c-ctrl-c-hook 'ob-async-org-babel-execute-src-block)
+;not yet available;   )
+
+
 (message "############### DEBUG: config orgmode finished.")
 
 ;; #############################################################################
