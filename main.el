@@ -106,6 +106,11 @@
     (global-unset-key key))
 
 
+;;* maximize frame window
+;; id:2016-03-27-maximize-window-init.el
+;(message "######### Maximizing frame ...")
+(toggle-frame-maximized)
+
 
 ;; #############################################################################
 ;;* Themes
@@ -1959,6 +1964,7 @@ i.e. change right window to bottom, or change bottom window to right."
 					            "c:/Users/karl.voit/share/all/org-mode/notes.org"
 					            "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
 					            "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
+					            "c:/Users/karl.voit/share/all/org-mode/errors_orgmode_commits.org"
 					            ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
 					            "c:/Users/karl.voit/share/all/org-mode/references.org"
 					            "c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
@@ -2563,9 +2569,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;; disabled 2014-08-17 ;;           (
 		;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
 		;; disabled 2014-08-17 ;;            ))
-		("n" "no TODO events +50d"
-		 ((agenda "no TODO events +50d"
-			  ((org-agenda-span 50)
+		("n" "no TODO events +60d"
+		 ((agenda "no TODO events +60d"
+			  ((org-agenda-span 60)
 			   (org-agenda-time-grid nil)
 			   (org-agenda-entry-types '(:timestamp :sexp))
 			   (org-agenda-skip-function
@@ -6289,17 +6295,10 @@ by using nxml's indentation rules."
 ;; 2016-02-06: https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;;** maximize frame window
-;; id:2016-03-27-maximize-window-init.el
-(toggle-frame-maximized)
 
 ;;* autostart.bat.el
 
-(message "######### Maximizing frame ...")
-(toggle-frame-maximized)
-(toggle-frame-maximized)
-
-(sleep-for 2)
+;(sleep-for 2)
 (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
 (message (concat "######### Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
 (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
