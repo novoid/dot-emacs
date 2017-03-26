@@ -44,6 +44,10 @@
 (add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
 ;;unstable;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
+;; 2017-03-26: from https://www.reddit.com/r/emacs/comments/61jsvy/melpa_stopped_working_over_https_for_me_any_ideas/
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
 ;; 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
 ;; https://github.com/nicferrier/elmarmalade/issues/55#issuecomment-166271364
 ;; 2016-11-05: got «(void-function gnutls-available-p)» on floyd (after org upgrade)
