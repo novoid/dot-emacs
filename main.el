@@ -4328,7 +4328,17 @@ Null prefix argument turns off the mode."
                  ("\\section\{%s\}" . "\\section*\{%s\}")
                  ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
                  ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+  ;; 2017-03-23: 2-column layout sans-serif for lyrics
+  (add-to-list 'org-latex-classes
+;                 "\\documentclass\[a4paper,parskip=half,twocolumn,fontsize=14pt\]\{scrartcl\}\\usepackage\{savetrees\}
+               '("lyrics"
+                 "\\documentclass\[a4paper,parskip=half,twocolumn\]\{scrartcl\}\\usepackage\{savetrees\}
+                  \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
+                 ("\\section\{%s\}" . "\\section*\{%s\}")
+                 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
 
+;;                  \\renewcommand*\\familydefault\{\\sfdefault\}"
 
   ;; ;; ######################################################
   ;; ;; adding TUGRAZ letter export class format
