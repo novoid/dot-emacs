@@ -3643,6 +3643,9 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
 	  ;; "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("B" "Besorgung" entry (file+headline "~/share/all/org-mode/hardware.org" "Besorgungen")
 	   ,my-capture-template-next :empty-lines 1)
+          ("W" "Web site" entry
+            (file "")
+            "* %a :website:\n\n%U %?\n\n%:initial")
 	  ;;("C" "Clipboard" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
 	  ;; "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
 	  ("I" "inbox, refile later" entry (file "~/share/all/org-mode/inbox.org")
@@ -5666,6 +5669,22 @@ by using nxml's indentation rules."
   (unicode-fonts-setup)
 )
 
+;;** org-protocol-capture-html
+;; turn HTML into Org-mode
+;; id:2016-07-10-inst-org-protocol-capture
+
+;;disabled;(when (my-system-type-is-gnu)
+(my-load-local-el "contrib/org-protocol-capture-html/org-protocol-capture-html.el")
+(require 'org-protocol-capture-html)
+;;disabled;  )
+
+;;** goto-chg - visit places of previous changes in current buffer (F5/F6)
+;; http://pragmaticemacs.com/emacs/move-through-edit-points/
+;; http://www.emacswiki.org/emacs/download/goto-chg.el
+(my-load-local-el "contrib/goto-chg.el")
+(require 'goto-chg)
+(global-set-key [f5] 'goto-last-change)
+(global-set-key [f6] 'goto-last-change-reverse)
 
 ;;* my helper functions
 
