@@ -1742,7 +1742,7 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; Standard key bindings
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cb" 'org-iswitchb)
+;;obsolete:  (global-set-key "\C-cb" 'org-iswitchb)
 
   ;; unset C-c , (org-priority) because I get confused when I mistype C-c C-,
   ;;(global-unset-key (kbd "C-c ,"))
