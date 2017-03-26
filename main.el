@@ -3989,7 +3989,13 @@ Null prefix argument turns off the mode."
 
   (defun org-outlook-open (id)
     "Open the Outlook item identified by ID.  ID should be an Outlook GUID."
-    (w32-shell-execute "open" (concat "outlook:" id)))
+    ;; 2017-03-02: following line stopped working with "org-outlook-open: ShellExecute failed: Access is denied."
+    ;;(w32-shell-execute "open" (concat "outlook:" id))
+    ;; fix:
+    (w32-shell-execute "open"
+                       "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE"
+                       (concat "/select " "outlook:" id))
+    )
 
 
   ;; ######################################################
