@@ -95,7 +95,10 @@
 ;; http://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-History.html
 (setq history-delete-duplicates t)
 
-
+;; ######################################################
+;; Pasting with the mouse without moving the point
+;; http://sachachua.com/blog/2017/04/emacs-pasting-with-the-mouse-without-moving-the-point-mouse-yank-at-point/
+(setq mouse-yank-at-point t)
 
 
 ;; ######################################################
