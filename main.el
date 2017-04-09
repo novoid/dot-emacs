@@ -165,6 +165,9 @@
 
   ;;test: (set-face-background 'org-block-background "#1a1a1a")
 
+  ;; 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
+  ;; from http://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
+  ;;    (defadvice load-theme (before theme-dont-propagate activate) (mapcar #'disable-theme custom-enabled-themes))
   )
 
 
@@ -711,93 +714,6 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 ;; #############################################################################
-;;** my-toggle-beginner-setup
-
-(defvar my-toggle-beginner-setup-status nil
-  "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
-;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
-
-(defun my-emacs-normal-setup ()
-  "Hide things for my normal usage"
-  (interactive)
-  (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
-  (menu-bar-mode 0) ;; hide menu-bar
-  (when (not (my-system-is-kva))
-    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
-    )
-  (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
-
-  ;; http://www.emacswiki.org/emacs/sylecn
-  ;;show nothing in *scratch* when started
-  (setq initial-scratch-message nil)
-
-  ;; ######################################################
-  ;; handle CamelCaseParts as distinct words
-  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-  (global-subword-mode 1) ; 1 for on, 0 for off
-  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
-  ;; FIXXME: this is a test for getting it work independent of
-  ;; CamelCase words
-
-  ;;(setq org-hide-leading-stars t)
-)
-
-(defun my-emacs-beginner-setup ()
-  "Make things nice for beginners"
-  (interactive)
-  (tool-bar-mode) ;; show icons
-  (menu-bar-mode) ;; show menu-bar
-  (scroll-bar-mode 1) ;; show scroll-bar
-  (setq debug-on-quit nil);; no debug information on canceling endless loops and so forth
-
-  ;; http://www.emacswiki.org/emacs/sylecn
-  ;;show nothing in *scratch* when started
-  (setq initial-scratch-message ";; This buffer is for notes you don't want to save\n;; If you want to create a file, visit that file with C-x C-f,\n;; then enter the text in that file's own buffer.\n\n")
-
-  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-  (global-subword-mode 0) ; 1 for on, 0 for off
-  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
-  ;; FIXXME: this is a test for getting it work independent of CamelCase words
-
-  ;;(setq org-hide-leading-stars nil)
-
-
-  ;; http://stackoverflow.com/questions/24684979/how-to-add-a-tool-bar-button-in-emacs
-  ;;(add-hook 'after-init-hook
-  ;;          (lambda ()
-  ;;            (define-key global-map [tool-bar pdf-button]
-  ;;              '(menu-item "Export to PDF" org-latex-export-to-pdf
-  ;;                          :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
-  ;;                          ))))
-  (define-key global-map [tool-bar pdf-button]
-    '(menu-item "Export to PDF" org-latex-export-to-pdf
-                :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
-                ))
-)
-
-
-(my-emacs-normal-setup)
-
-(defun my-toggle-beginner-setup ()
-  "Toggle Emacs beginner setup and normal Emacs"
-  (interactive)
-  (cond (my-toggle-beginner-setup-status
-         ;; normal mode
-         (my-emacs-normal-setup)
-         (message "As you please")
-         (setq my-toggle-beginner-setup-status nil)
-         )
-        (t
-         ;; make it easy for beginners
-         (my-emacs-beginner-setup)
-         (message "Welcome to Emacs!")
-         (setq my-toggle-beginner-setup-status t)
-         )
-        )
-  )
-
-(global-set-key [f1] 'my-toggle-beginner-setup)
-
 ;;** my-yank-windows (my-map y)
 ;; id:2016-05-22-my-yank-windows
 
@@ -5857,6 +5773,105 @@ by using nxml's indentation rules."
 ;;(sit-for 3)
 ;;(message (or (current-idle-time) (number-to-string 0)))
 
+
+;;** my-toggle-beginner-setup
+
+(defvar my-toggle-beginner-setup-status nil
+  "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
+;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
+
+(defun my-emacs-normal-setup ()
+  "Hide things for my normal usage"
+  (interactive)
+  (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
+  (menu-bar-mode 0) ;; hide menu-bar
+  (when (not (my-system-is-kva))
+    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
+    )
+  (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
+
+  (org-expiry-insinuate)
+  (setq org-log-into-drawer t)
+  (org-bullets-mode 1)
+
+  ;; http://www.emacswiki.org/emacs/sylecn
+  ;;show nothing in *scratch* when started
+  (setq initial-scratch-message nil)
+
+  ;; ######################################################
+  ;; handle CamelCaseParts as distinct words
+  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
+  (global-subword-mode 1) ; 1 for on, 0 for off
+  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
+  ;; FIXXME: this is a test for getting it work independent of
+  ;; CamelCase words
+
+  ;;(setq org-hide-leading-stars t)
+
+  (load-theme 'wombat t) ;; dark theme
+
+)
+
+(defun my-emacs-beginner-setup ()
+  "Make things nice for beginners"
+  (interactive)
+  (tool-bar-mode) ;; show icons
+  (menu-bar-mode) ;; show menu-bar
+  (scroll-bar-mode 1) ;; show scroll-bar
+  (setq debug-on-quit nil);; no debug information on canceling endless loops and so forth
+
+  ;; http://www.emacswiki.org/emacs/sylecn
+  ;;show nothing in *scratch* when started
+  (setq initial-scratch-message ";; This buffer is for notes you don't want to save\n;; If you want to create a file, visit that file with C-x C-f,\n;; then enter the text in that file's own buffer.\n\n")
+
+  ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
+  (global-subword-mode 0) ; 1 for on, 0 for off
+  ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
+  ;; FIXXME: this is a test for getting it work independent of CamelCase words
+
+  ;;(setq org-hide-leading-stars nil)
+
+  (org-bullets-mode 0)
+  (org-expiry-deinsinuate);; omit automatically created drawers
+  (setq org-log-into-drawer nil)
+
+  (disable-theme 'wombat)
+
+  ;; http://stackoverflow.com/questions/24684979/how-to-add-a-tool-bar-button-in-emacs
+  ;;(add-hook 'after-init-hook
+  ;;          (lambda ()
+  ;;            (define-key global-map [tool-bar pdf-button]
+  ;;              '(menu-item "Export to PDF" org-latex-export-to-pdf
+  ;;                          :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
+  ;;                          ))))
+  (define-key global-map [tool-bar pdf-button]
+    '(menu-item "Export to PDF" org-latex-export-to-pdf
+                :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
+                ))
+)
+
+
+(my-emacs-normal-setup)
+
+(defun my-toggle-beginner-setup ()
+  "Toggle Emacs beginner setup and normal Emacs"
+  (interactive)
+  (cond (my-toggle-beginner-setup-status
+         ;; normal mode
+         (my-emacs-normal-setup)
+         (message "As you please")
+         (setq my-toggle-beginner-setup-status nil)
+         )
+        (t
+         ;; make it easy for beginners
+         (my-emacs-beginner-setup)
+         (message "Welcome to Emacs!")
+         (setq my-toggle-beginner-setup-status t)
+         )
+        )
+  )
+
+(global-set-key [f1] 'my-toggle-beginner-setup)
 
 ;;* Key bindings
 
