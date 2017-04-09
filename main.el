@@ -5412,7 +5412,7 @@ by using nxml's indentation rules."
   :ensure t
   ;;:if my-system-is-sherri
   ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
-  :defer 10
+  ;;:defer 10
   :config
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
 )
