@@ -1386,6 +1386,13 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; :mode "\\.rb\\'"
 )
 
+;; gnuplot
+(use-package gnuplot
+  :ensure t
+  :defer 10
+  :if (my-system-type-is-gnu)
+)
+
 ;;* Org-mode
 ;; org-mode-begin:
 ;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
