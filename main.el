@@ -5700,7 +5700,8 @@ by using nxml's indentation rules."
   ;;:config
 )
 
-;;*** request-deferred
+;;*** tkf/request-deferred
+;; https://github.com/tkf/emacs-request
 ;; required for org-wunderlist.el
 (use-package request-deferred
   ;;:disabled t
