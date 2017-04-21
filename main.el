@@ -5827,11 +5827,34 @@ by using nxml's indentation rules."
 ;;(message (or (current-idle-time) (number-to-string 0)))
 
 
+;;** my-toggle-dark-bright-theme
+
+(defvar my-toggle-dark-bright-theme-status t
+  "Toggle between dark emacs theme and bright emacs theme; nil means dark theme, t means bright theme")
+
+(defun my-toggle-dark-bright-theme ()
+  "Toggle between dark emacs theme and bright emacs theme"
+  (interactive)
+  (cond (my-toggle-dark-bright-theme-status
+         (message "Loading bright theme")
+         (disable-theme 'wombat)
+         (setq my-toggle-dark-bright-theme-status nil)
+         )
+        (t
+         (message "Loading dark theme")
+         (load-theme 'wombat t) ;; dark theme
+         (setq my-toggle-dark-bright-theme-status t)
+         )
+        )
+  )
+
 ;;** my-toggle-beginner-setup
 
 (defvar my-toggle-beginner-setup-status nil
   "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
 ;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
+
+
 
 (defun my-emacs-normal-setup ()
   "Hide things for my normal usage"
