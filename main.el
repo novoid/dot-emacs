@@ -5678,49 +5678,6 @@ by using nxml's indentation rules."
 (global-set-key [f5] 'goto-last-change)
 (global-set-key [f6] 'goto-last-change-reverse)
 
-;;** org-wunderlist (and dependencies)
-
-;;*** tkf/emacs-request
-;; https://github.com/tkf/emacs-request
-;; required for org-wunderlist.el
-(use-package request
-  ;;:disabled t
-  :ensure t
-  :defer 10
-  ;;:config
-)
-
-;;*** jwiegley/alert
-;; https://github.com/jwiegley/alert
-;; required for org-wunderlist.el
-(use-package alert
-  ;;:disabled t
-  :ensure t
-  :defer 10
-  ;;:config
-)
-
-;;*** tkf/request-deferred
-;; https://github.com/tkf/emacs-request
-;; required for org-wunderlist.el
-(use-package request-deferred
-  ;;:disabled t
-  :ensure t
-  :defer 10
-  ;;:config
-)
-
-;;*** magnars/s.el
-;; https://github.com/magnars/s.el
-;; required for org-wunderlist.el
-(my-load-local-el "contrib/s.el/s.el")
-
-;;*** org-wunderlist.org
-;; https://github.com/myuhe/org-wunderlist.el
-(my-load-local-el "contrib/org-wunderlist/org-wunderlist.el")
-(require 'org-wunderlist)
-(my-load-local-el "org-wunderlist.credencials.el")
-
 ;;* my helper functions
 
 ;;** my-org-mobile-push
