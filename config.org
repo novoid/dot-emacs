@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-22 18:37:44 vk>
+# Time-stamp: <2017-05-22 19:01:47 vk>
 # Source: https://github.com/novoid/dot-emacs
 # oe=ö ae=ä ue=ü OE=Ö AE=Ä UE=Ü sz=ß
 #+TODO: ACTIVE | DISABLED
@@ -285,7 +285,7 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
   )
 (defun my-system-is-karl-voit-at ()
   "Return true if the system we are running on is grmlvrs"
-  (string-equal system-name "grmlvrs")
+  (string-equal system-name "friends.grml.info")
   )
 (defun my-system-is-powerplantlinux ()
   "Return true if the system we are running on is powerplant"
@@ -514,8 +514,6 @@ About defining keys: http://ergoemacs.org/emacs/keyboard_shortcuts.html
 (global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
 ;; same as: (global-unset-key (kbd "C-c C-,"))
 (define-prefix-command 'my-map)
-(global-set-key (kbd "C-c C-,") 'my-map)
-(global-set-key (kbd "C-c ,") 'my-map)
 #+END_SRC
 
 
@@ -3233,7 +3231,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
     )
-  (when (my-system-type-is-gnu)
+  (when (and (my-system-type-is-gnu) (not (my-system-is-karl-voit-at)))
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
@@ -5378,7 +5376,7 @@ by using nxml's indentation rules."
 
 #+END_SRC
 
-** dash
+** DISABLED dash
 
 #+BEGIN_SRC emacs-lisp
 ;; required by eno (and most probably others in future)
@@ -5389,7 +5387,7 @@ by using nxml's indentation rules."
 
 #+END_SRC
 
-** edit-at-point
+** DISABLED edit-at-point
 
 #+BEGIN_SRC emacs-lisp
 ;; required by eno (and most probably others in future)
@@ -5400,7 +5398,7 @@ by using nxml's indentation rules."
 
 #+END_SRC
 
-** eno-mode: ace-jump/easymotion provides: goto certain char in view
+** DISABLED eno-mode: ace-jump/easymotion provides: goto certain char in view
 
 #+BEGIN_SRC emacs-lisp
 ;; https://github.com/enoson/eno.el
@@ -5708,18 +5706,20 @@ by using nxml's indentation rules."
 
 ** ox-clip - formatted copy to orgmode
 
-#+BEGIN_SRC emacs-lisp
-;; http://melpa.org/#/ox-clip
-;; https://libraries.io/emacs/ox-clip
-;; https://github.com/jkitchin/scimax
-;; use: M-x ox-clip-formatted-copy
-(use-package ox-clip
-  ;; :disabled t
-  :if (not (my-system-is-karl-voit-at))
-  :ensure t
-  :defer 10
-)
+- http://melpa.org/#/ox-clip
+- https://libraries.io/emacs/ox-clip
+- https://github.com/jkitchin/scimax
+- use: M-x ox-clip-formatted-copy
 
+#+BEGIN_SRC emacs-lisp
+  (when (not (my-system-is-karl-voit-at))
+    (use-package ox-clip
+      ;; :disabled t
+      ;;:if
+      :ensure t
+      :defer 10
+      )
+    )
 #+END_SRC
 
 ** bm - visible bookmarks
@@ -6214,6 +6214,15 @@ by using nxml's indentation rules."
 #+END_SRC
 
 * Key bindings
+
+** my-map
+
+=C-c ,= is defined by Org-mode and must be re-defined here:
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c C-,") 'my-map)
+(global-set-key (kbd "C-c ,") 'my-map)
+#+END_SRC
 
 ** general navigation keys
 
