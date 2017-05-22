@@ -1,44 +1,113 @@
-;; -*- orgstruct-heading-prefix-regexp: ";;" -*-
-;;* General settings
+# -*- mode: org; coding: utf-8; -*-
+# Time-stamp: <2017-05-22 18:37:44 vk>
+# Source: https://github.com/novoid/dot-emacs
+# oe=ö ae=ä ue=ü OE=Ö AE=Ä UE=Ü sz=ß
+#+TODO: ACTIVE | DISABLED
+#+STARTUP: indent
 
-;; ######################################################
-(message "######### loading main.el ...")
+- [ ] LaTeX: run config only if (file-exists-p "/usr/bin/latex") and
+  so forth
+  - [ ] locate binaries on Windows
+  - [ ] locate binaries on Linux
 
+- flyspell bindkeys:
+  - [ ] create a hydra some day
+
+- [ ] manually check blocks
+  - 2017-05-22: checked until before Org
+
+* General settings
+
+profiling:
+#+BEGIN_SRC emacs-lisp
+(defvar my-config-el-start-time (current-time) "Time when config.el was started")
 ;(profiler-start 'cpu);; test startup performance - create report with M-x profiler-report
+#+END_SRC
 
-;; personalize prelude
-;; from: http://batsov.com/prelude/
-;(load-theme 'solarized-light t)
+2011-04-20: turn off backup files
+#+BEGIN_SRC emacs-lisp
+(setq backup-inhibited t)
+#+END_SRC
 
-;(defun disable-guru-mode ()
-;  (guru-mode -1)
-;  )
-;(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
+set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
+#+BEGIN_SRC emacs-lisp
+(setq calendar-week-start-day 1)
+#+END_SRC
 
-(server-start)
+omit usage of TAB for =C-x r o=: indent-tabs-mode
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode t)
+#+END_SRC
 
-(setq backup-inhibited t);; 2011-04-20: turn off backup files
-(setq calendar-week-start-day 1);; set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
-(setq-default indent-tabs-mode t);; damit C-x r o keine TABs benutzt:
+append and update time-stamps for =Time-stamp: <>= in headers:
+#+BEGIN_SRC emacs-lisp
 (add-hook 'write-file-hooks 'time-stamp)
-(setq large-file-warning-threshold 100000000);; set warning of opening large files to 100MB
-(setq sentence-end-double-space nil);; do not add double space after periods http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/
-(setq column-number-mode t);; show current column
-(setq truncate-lines t);; https://www.emacswiki.org/emacs/TruncateLines - M-x toggle-truncate-lines
-(setq-default global-visual-line-mode t) ;; http://stackoverflow.com/questions/7577614/emacs-truncate-lines-in-all-buffers
+#+END_SRC
 
-;; Prevent the cursor from blinking
-;(blink-cursor-mode 0)
-(set-cursor-color "IndianRed")
+set warning of opening large files to 100MB
+#+BEGIN_SRC emacs-lisp
+(setq large-file-warning-threshold 100000000)
+#+END_SRC
 
-;; 2014-05-24: flat mode-line styling from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
-(set-face-attribute 'mode-line nil :box nil)
-(set-face-attribute 'mode-line-inactive nil :box nil)
+do not add double space after periods [[http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/][Real sentence in Emacs : emacs]]
+#+BEGIN_SRC emacs-lisp
+(setq sentence-end-double-space nil)
+#+END_SRC
 
+https://www.emacswiki.org/emacs/TruncateLines =M-x toggle-truncate-lines=
+#+BEGIN_SRC emacs-lisp
+(setq truncate-lines t)
+#+END_SRC
+
+[[http://stackoverflow.com/questions/7577614/emacs-truncate-lines-in-all-buffers][elisp - Emacs truncate lines in all buffers - Stack Overflow]]
+#+BEGIN_SRC emacs-lisp
+(setq-default global-visual-line-mode t)
+#+END_SRC
+
+inhibit the startup screen
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-screen t)
+#+END_SRC
+
+** Paths
+
+#+BEGIN_SRC emacs-lisp
+(defvar my-elisp-dir "~/.emacs.d/")
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (setq package-user-dir "~/.emacs.d/elpa")
+#+END_SRC
+
+** DISABLED Guru mode
+
+#+BEGIN_SRC emacs-lisp
+(defun disable-guru-mode ()
+  (guru-mode -1)
+  )
+(add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
+#+END_SRC
+
+** Server mode
+
+Start an Emacs server: new files can be visited via =emacsclient= (instead of parallel =emacs= instances):
+#+BEGIN_SRC emacs-lisp
+(server-start)
+#+END_SRC
+
+** Package
+
+configure packages:
+
+
+http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
+
+MELPA packages are usually built automatically from a project's
+repository; the Gnu repository has stable releases that are explicitly
+submitted to it.
+
+#+BEGIN_SRC emacs-lisp
 (package-initialize)
-;; http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
-;; MELPA packages are usually built automatically from a project's repository; the Gnu repository has stable releases that are explicitly submitted to it.
 ;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 ;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
 (add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
@@ -47,25 +116,25 @@
 ;; 2017-03-26: from https://www.reddit.com/r/emacs/comments/61jsvy/melpa_stopped_working_over_https_for_me_any_ideas/
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+#+END_SRC
 
-;; 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
-;; https://github.com/nicferrier/elmarmalade/issues/55#issuecomment-166271364
-;; 2016-11-05: got «(void-function gnutls-available-p)» on floyd (after org upgrade)
-;(if (fboundp 'gnutls-available-p)
-;    (fmakunbound 'gnutls-available-p))
-;(setq tls-program '("gnutls-cli --tofu -p %p %h")
-;      imap-ssl-program '("gnutls-cli --tofu -p %p %s")
-;      smtpmail-stream-type 'starttls
-;      starttls-extra-arguments '("--tofu")
-;      )
+Bugfixing:
+2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
+- https://github.com/nicferrier/elmarmalade/issues/55#issuecomment-166271364
+- 2016-11-05: got «(void-function gnutls-available-p)» on floyd (after org upgrade)
+#+BEGIN_SRC emacs-lisp :tangle no
+(if (fboundp 'gnutls-available-p)
+    (fmakunbound 'gnutls-available-p))
+(setq tls-program '("gnutls-cli --tofu -p %p %h")
+      imap-ssl-program '("gnutls-cli --tofu -p %p %s")
+      smtpmail-stream-type 'starttls
+      starttls-extra-arguments '("--tofu")
+      )
+#+END_SRC
 
-;; see id:2014-03-04-M-l-subword
-(global-set-key [M-l] 'downcase-word)
-(global-set-key [M-u] 'upcase-word)
-(global-set-key [M-c] 'capitalize-word)
+Initialize packages:
 
-
-;; ######################################################
+#+BEGIN_SRC emacs-lisp
 ;; 2015-11-25: https://github.com/jwiegley/use-package
 (require 'use-package)
 
@@ -74,124 +143,87 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+#+END_SRC
 
-;; ######################################################
-;; http://twitter.com/emacs_knight/status/128339316417101825
-;; prefer y/n
+** Upper/lower-case
+
+see id:2014-03-04-M-l-subword
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [M-l] 'downcase-word)
+(global-set-key [M-u] 'upcase-word)
+(global-set-key [M-c] 'capitalize-word)
+#+END_SRC
+
+** yes-or-no-p: prefer y/n
+
+http://twitter.com/emacs_knight/status/128339316417101825
+→ prefer y/n
+
+#+BEGIN_SRC emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
 
-;; ######################################################
-;; only one window on startup
-;; http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
-(add-hook 'emacs-startup-hook 'delete-other-windows t)
+** Highlight matching parenthesis
 
-;; ######################################################
-;; http://wason21cn.blogspot.com/feeds/posts/default?orderby=updated
-;; Highlight matching parenthesis
+http://wason21cn.blogspot.com/feeds/posts/default?orderby=updated
+
+#+BEGIN_SRC emacs-lisp
 (show-paren-mode t)
+#+END_SRC
 
-;; ######################################################
-;; deletes duplicate entries of history
-;; http://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-History.html
+** deletes duplicate entries of history
+
+http://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-History.html
+
+#+BEGIN_SRC emacs-lisp
 (setq history-delete-duplicates t)
+#+END_SRC
 
-;; ######################################################
-;; Pasting with the mouse without moving the point
-;; http://sachachua.com/blog/2017/04/emacs-pasting-with-the-mouse-without-moving-the-point-mouse-yank-at-point/
+** Pasting with the mouse without moving the point
+
+http://sachachua.com/blog/2017/04/emacs-pasting-with-the-mouse-without-moving-the-point-mouse-yank-at-point/
+
+#+BEGIN_SRC emacs-lisp
 (setq mouse-yank-at-point t)
+#+END_SRC
 
+** Un-setting keys
 
-;; ######################################################
-;; un-setting keys
+#+BEGIN_SRC emacs-lisp
 ;;   \C-v   scroll up
 ;;   \C-t   transpose-chars
 (dolist (key '("\C-v" "\C-t"))
     (global-unset-key key))
+#+END_SRC
 
+** maximize frame window
 
-;;* maximize frame window
-;; id:2016-03-27-maximize-window-init.el
-;(message "######### Maximizing frame ...")
+Details: id:2016-03-27-maximize-window-init.el
+
+#+BEGIN_SRC emacs-lisp
 (toggle-frame-maximized)
+#+END_SRC
 
+* my-load-local-el
 
-;; #############################################################################
-;;* Themes
-
-(when (>= emacs-major-version 24)
-  ;; ######################################################
-  ;; https://github.com/hadronzoo/theme-changer
-  ;; set color theme according to day-time:
-  ;;disabled;; (setq calendar-location-name "Graz, AT")
-  ;;disabled;; (setq calendar-latitude 47.07)
-  ;;disabled;; (setq calendar-longitude 15.43)
-  ;;disabled;; (use-package theme-changer)
-  ;;disabled;; (change-theme 'whiteboard 'misterioso)  ;; day and night theme
-
-  ;; my favorite dark themes: misterioso, zenburn, material
-  (load-theme 'wombat t) ;; dark theme
-  ;;   (load-theme 'misterioso t)
-  ;;   (load-theme 'zenburn t)
-  ;;   (load-theme 'material t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
-  ;;              issues with *bold* stuff in org-mode :-(
-
-  ;; my favorite light themes: leuven, whiteboard, solarized-light,
-  ;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
-  ;;   (load-theme 'whiteboard t)
-  ;;   (load-theme 'solarized-light t)
-
-  ;; enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
-  ;; issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
-  ;; M-x describe-face  -> show definition
-  ;; C-u C-x =          -> show all font information
-;  (face-spec-set 'org-block-begin-line
-;    '((t (:underline "#FFFFFF" :foreground "#404040" :background "#b3b3b3")))
-;    "Face used for the line delimiting the begin of source blocks.")
-
-  ;(defface org-block-begin-line
-  ;  '((t (:underline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
-  ;  "Face used for the line delimiting the begin of source blocks.")
-
-  (defface org-block
-    ;; defface org-block-background was removed from org:
-    ;; http://emacs.stackexchange.com/questions/14824/org-block-background-font-not-having-effect
-    ;; read also: https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
-    '((t (:background "#1a1a1a")))
-    "Face used for the source block background.")
-
-  ;(defface org-block-end-line
-  ;  '((t (:overline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
-  ;  "Face used for the line delimiting the end of source blocks.")
-
-  ;;test: (set-face-background 'org-block-background "#1a1a1a")
-
-  ;; 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
-  ;; from http://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
-  ;;    (defadvice load-theme (before theme-dont-propagate activate) (mapcar #'disable-theme custom-enabled-themes))
-  )
-
-
-;; #############################################################################
-;;* my-PATHS
-
-
-;; von: http://www.zonix.de/html40/linux/emacsgnus.html
-;; hier liegen alle meine Emacs- und Gnus-Einstellungen
-(defvar my-elisp-dir "~/.emacs.d/")
-
+from: http://www.zonix.de/html40/linux/emacsgnus.html
+#+BEGIN_SRC emacs-lisp
 (defun my-load-local-el (part)
   "load lisp file and warn if not found"
   (let ((fullname (concat my-elisp-dir part)))
     (if (file-exists-p fullname)
 	(load fullname)
       (message (format "Loading %s (source)...failed" fullname)))))
+#+END_SRC
 
+* my-system-is-FOOBAR
 
-;; #############################################################################
-;;* my-system-is-FOOBAR
+Emacs config switch depending on hostname or operating system:
+https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
 
-;; Emacs config switch depending on hostname or operating system
-;; https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
+#+BEGIN_SRC emacs-lisp
+
 ;; Get current system's name
 (defun my-insert-system-name()
   (interactive)
@@ -251,7 +283,7 @@
   "Return true if the system we are running on is blanche"
   (or (string-equal system-name "blanche") (string-equal system-name "blanche.lan"))
   )
-(defun my-system-is-grmlvrs ()
+(defun my-system-is-karl-voit-at ()
   "Return true if the system we are running on is grmlvrs"
   (string-equal system-name "grmlvrs")
   )
@@ -262,18 +294,150 @@
    (string-equal system-name "powerplant.lan")
    )
   )
-(defun my-system-is-powerplantwin ()
-  "Return true if the system we are running on is powerplant"
-  (string-equal system-name "ATGRZ4043268X")
-  )
+;; DISABLED 2017-05-19 ;; (defun my-system-is-powerplantwin ()
+;; DISABLED 2017-05-19 ;;   "Return true if the system we are running on is powerplant"
+;; DISABLED 2017-05-19 ;;   (string-equal system-name "ATGRZ4043268X")
+;; DISABLED 2017-05-19 ;;   )
 (defun my-system-is-kva ()
   "Return true if the system we are running on is karl-voit.at"
   (string-equal system-name "friends.grml.info")
   )
+#+END_SRC
 
+* Styling
 
-;; #############################################################################
-;;* UTF-8 and codings
+Interesting read: http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
+
+Show current column:
+
+#+BEGIN_SRC emacs-lisp
+(setq column-number-mode t)
+#+END_SRC
+
+Cursor settings:
+
+#+BEGIN_SRC emacs-lisp
+;; Prevent the cursor from blinking
+;(blink-cursor-mode 0)
+(set-cursor-color "IndianRed")
+#+END_SRC
+
+Flat mode-line styling:
+
+2014-05-24: from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'mode-line nil :box nil)
+(set-face-attribute 'mode-line-inactive nil :box nil)
+#+END_SRC
+
+** Themes
+
+#+BEGIN_SRC emacs-lisp
+;; https://github.com/hadronzoo/theme-changer
+;; set color theme according to day-time:
+;;disabled;; (setq calendar-location-name "Graz, AT")
+;;disabled;; (setq calendar-latitude 47.07)
+;;disabled;; (setq calendar-longitude 15.43)
+;;disabled;; (use-package theme-changer)
+;;disabled;; (change-theme 'whiteboard 'misterioso)  ;; day and night theme
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; my favorite dark themes: misterioso, zenburn, material
+(load-theme 'wombat t) ;; dark theme
+;;   (load-theme 'misterioso t)
+;;   (load-theme 'zenburn t)
+;;   (load-theme 'material t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
+;;              issues with *bold* stuff in org-mode :-(
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; my favorite light themes: leuven, whiteboard, solarized-light,
+;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
+;;   (load-theme 'whiteboard t)
+;;   (load-theme 'solarized-light t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  ;; enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
+  ;; issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
+  ;; M-x describe-face  -> show definition
+  ;; C-u C-x =          -> show all font information
+;  (face-spec-set 'org-block-begin-line
+;    '((t (:underline "#FFFFFF" :foreground "#404040" :background "#b3b3b3")))
+;    "Face used for the line delimiting the begin of source blocks.")
+
+  ;(defface org-block-begin-line
+  ;  '((t (:underline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
+  ;  "Face used for the line delimiting the begin of source blocks.")
+
+  (defface org-block
+    ;; defface org-block-background was removed from org:
+    ;; http://emacs.stackexchange.com/questions/14824/org-block-background-font-not-having-effect
+    ;; read also: https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
+    '((t (:background "#1a1a1a")))
+    "Face used for the source block background.")
+
+  ;(defface org-block-end-line
+  ;  '((t (:overline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
+  ;  "Face used for the line delimiting the end of source blocks.")
+
+  ;;test: (set-face-background 'org-block-background "#1a1a1a")
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
+;; from http://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
+;;    (defadvice load-theme (before theme-dont-propagate activate) (mapcar #'disable-theme custom-enabled-themes))
+#+END_SRC
+
+#+END_SRC
+
+** Only one window on startup
+
+http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'emacs-startup-hook 'delete-other-windows t)
+#+END_SRC
+
+** Host-specific font size
+
+#+BEGIN_SRC emacs-lisp
+
+;; 2011-04-20: increase/set font size
+;; http://www.emacswiki.org/emacs/SetFonts
+(defun my-increase-fontsize ()
+  (interactive)
+  "Sets the font to bigger size"
+  (set-face-attribute 'default (selected-frame) :height 130)
+  )
+(defun my-normal-fontsize ()
+  (interactive)
+  "Sets the font to normal size"
+  (set-face-attribute 'default (selected-frame) :height 100)
+  )
+
+(when (or (my-system-type-is-gnu) (my-system-type-is-windows))
+  (my-increase-fontsize);; increase fonts on some hosts by default
+  )
+(when (my-system-type-is-darwin)
+  (set-face-attribute 'default (selected-frame) :height 170);; 2011-04-20: increase/set font size http://www.emacswiki.org/emacs/SetFonts
+  )
+(when (my-system-type-is-windows)
+  ;;(set-face-attribute 'default (selected-frame) :height 150)
+  (set-face-attribute 'default (selected-frame) :height 130);; 2016-08-19 let's test 130 after 150 seems too big
+  )
+(when (my-system-is-floyd)
+  (set-face-attribute 'default (selected-frame) :height 110)
+  )
+
+#+END_SRC
+
+* UTF-8 and codings
+
+#+BEGIN_SRC emacs-lisp
 
 ;; Activate UTF-8 mode:
 (setq locale-coding-system 'utf-8)
@@ -335,29 +499,28 @@ the same coding systems as Emacs."
 ;;   Org mode files)
 ;; "en_US.utf8" did not work for the weekday in the agenda!
 (setq system-time-locale "C")
+#+END_SRC
+
+* my-map
+
+About defining keys: http://ergoemacs.org/emacs/keyboard_shortcuts.html
+
+2015-11-10 replaced by bind-key below:
+#+BEGIN_SRC emacs-lisp :tangle no
+;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
+;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
+;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
+;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
+(global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
+;; same as: (global-unset-key (kbd "C-c C-,"))
+(define-prefix-command 'my-map)
+(global-set-key (kbd "C-c C-,") 'my-map)
+(global-set-key (kbd "C-c ,") 'my-map)
+#+END_SRC
 
 
-;; #############################################################################
-
-;;* my-map
-
-
-;; about defining keys
-;; http://ergoemacs.org/emacs/keyboard_shortcuts.html
-
-
-;; 2015-11-10 replaced by bind-key ;; ;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
-;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
-;; 2015-11-10 replaced by bind-key ;; ;; http://stackoverflow.com/questions/5682631/what-are-good-custom-keybindings-in-emacs
-;; 2015-11-10 replaced by bind-key ;; ;; NOTE: (info "(elisp) Key Binding Conventions") warns about user prefixes other than C-c
-;; 2015-11-10 replaced by bind-key ;; (global-unset-key (kbd "C-c C-,")); causes error: "Invalid modifier in string"
-;; 2015-11-10 replaced by bind-key ;; ;; same as: (global-unset-key (kbd "C-c C-,"))
-;; 2015-11-10 replaced by bind-key ;; (define-prefix-command 'my-map)
-;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c C-,") 'my-map)
-;; 2015-11-10 replaced by bind-key ;; (global-set-key (kbd "C-c ,") 'my-map)
-
-
-;; https://github.com/jwiegley/dot-emacs/blob/master/init.el
+#+BEGIN_SRC emacs-lisp
+;; from: https://github.com/jwiegley/dot-emacs/blob/master/init.el
 (require 'bind-key);; https://github.com/emacsattic/bind-key
 
 (bind-keys
@@ -369,21 +532,25 @@ the same coding systems as Emacs."
  ("+" . text-scale-increase)
  ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget shift
  )
+#+END_SRC
 
-;; examples:
-;;   (bind-key "m w" #'mark-word my-map)
-;; or:
-;;   (bind-keys
-;;    :map my-map
-;;    ("f" . forward-char)
-;;    ("b" . backward-char))
+examples:
+: (bind-key "m w" #'mark-word my-map)
 
+or:
+: (bind-keys
+:  :map my-map
+:  ("f" . forward-char)
+:  ("b" . backward-char))
 
-;; #############################################################################
-;;* system-specific paths and keys
+or for use-package():
+: :bind (:map my-map ("8" . bm-toggle))
 
+* System-specific paths
 
-;; http://www.emacswiki.org/emacs/MacOSTweaks#toc13
+http://www.emacswiki.org/emacs/MacOSTweaks#toc13
+
+#+BEGIN_SRC emacs-lisp
 ;; setting path so that Emacs finds aspell and such
 (when (my-system-type-is-darwin)
   (setenv "PATH"
@@ -404,21 +571,26 @@ the same coding systems as Emacs."
   ;; setting path to color-theme-mode.el from MacPorts
   (add-to-list 'load-path "/opt/local/share/emacs/site-lisp/color-theme-6.6.0")
   )
+#+END_SRC
 
-
-;; ######################################################
-;; fix paste-issue (\344 instead of ä) on Windows 7:
+fix paste-issue (\344 instead of ä) on Windows 7:
+#+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
   (set-selection-coding-system 'iso-latin-1-dos)
   )
+#+END_SRC
 
+ditaa
+#+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-gnu)
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
   )
+#+END_SRC
 
 
-;; setting path so that Emacs finds aspell and such
-(if (my-system-type-is-windows)
+setting path so that Emacs finds aspell and such:
+#+BEGIN_SRC emacs-lisp
+ (if (my-system-type-is-windows)
 
      ;;disabled;(setenv "PATH"
      ;;disabled;               (concat (getenv "PATH")
@@ -434,19 +606,22 @@ the same coding systems as Emacs."
    ;; on all other systems:
    )
   )
+#+END_SRC
+
+* Cygwin Paths (Windows)
+
+- http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
+- id:2014-01-31-cygwin-emacs
+
+- http://www.emacswiki.org/emacs/RobertAdesamConfig
 
 
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-windows)
 
-;; ######################################################
-;;** Cygwin (Windows)
-(when (my-system-is-powerplantwin)
-
-  ;; http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
-  ;; id:2014-01-31-cygwin-emacs
   (if (file-directory-p "c:/cygwin64/bin")
   (add-to-list 'exec-path "c:/cygwin64/bin"))
 
-  ;; http://www.emacswiki.org/emacs/RobertAdesamConfig
   (setenv "PATH"
 	  (concat
 	   ;;"c:\\cygwin64\\usr\\local\\bin" ";"  ;; Cygwin
@@ -477,55 +652,25 @@ the same coding systems as Emacs."
   (add-to-list 'load-path "~/.emacs.d/contrib/")
   (require 'setup-cygwin)
   )
+#+END_SRC
 
+* measure-time()
 
+from: http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-function-calls-in-emacs-lisp
 
-;; #############################################################################
-;;* font size
-
-;; 2011-04-20: increase/set font size
-;; http://www.emacswiki.org/emacs/SetFonts
-(defun my-increase-fontsize ()
-  (interactive)
-  "Sets the font to bigger size"
-  (set-face-attribute 'default (selected-frame) :height 130)
-  )
-(defun my-normal-fontsize ()
-  (interactive)
-  "Sets the font to normal size"
-  (set-face-attribute 'default (selected-frame) :height 100)
-  )
-
-(when (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
-  (my-increase-fontsize);; increase fonts on some hosts by default
-  )
-(when (my-system-type-is-darwin)
-  (set-face-attribute 'default (selected-frame) :height 170);; 2011-04-20: increase/set font size http://www.emacswiki.org/emacs/SetFonts
-  )
-(when (my-system-is-powerplantwin)
-  ;;(set-face-attribute 'default (selected-frame) :height 150)
-  (set-face-attribute 'default (selected-frame) :height 130);; 2016-08-19 let's test 130 after 150 seems too big
-  )
-(when (my-system-is-floyd)
-  (set-face-attribute 'default (selected-frame) :height 110)
-  )
-
-;;* measure-time()
-
-;; http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-function-calls-in-emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defmacro measure-time (&rest body)
   "Measure the time it takes to evaluate BODY."
   `(let ((time (current-time)))
      ,@body
      (message " Execution time: %.06f" (float-time (time-since time)))))
+#+END_SRC
 
+* my helper functions
 
+** DISABLED Infonova Functions for Working Hour Calculation
 
-;; #############################################################################
-;;* my helper functions
-
-;; #############################################################################
-;;** Infonova Functions for Working Hour Calculation
+#+BEGIN_SRC emacs-lisp
 (defun my-extract-minutes-of-hm-string(hm-string)
   "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
   (let (
@@ -616,7 +761,13 @@ the same coding systems as Emacs."
 
 
 ;; #############################################################################
-;;** Proper English Title Capitalization of a Marked Region
+#+END_SRC
+
+** Proper English Title Capitalization of a Marked Region
+
+Read: http://www.karl-voit.at/2015/05/25/elisp-title-capitalization/
+
+#+BEGIN_SRC emacs-lisp
 ;; additionally to the list defined in title-capitalization:
 (defvar my-do-not-capitalize-words '("lazyblorg" "mutt")
   "My personal list of words that doesn't get capitalized in titles.")
@@ -651,7 +802,6 @@ the same coding systems as Emacs."
       ;; go through the region, word by word:
       (while (< (point) end)
         (skip-syntax-forward "^w" end)
-;;        (let ((word (thing-at-point 'word t)))
         (let ((word (thing-at-point 'word)))
           (if (stringp word)
               ;; capitalize current word except it is list member:
@@ -661,7 +811,6 @@ the same coding systems as Emacs."
       ;; capitalize last word in any case:
       (backward-word 1)
       (if (and (>= (point) beg)
-;;               (not (member (or (thing-at-point 'word t) "s")
                (not (member (or (thing-at-point 'word) "s")
                             '("n" "t" "es" "s"))))
           (capitalize-word 1))))
@@ -679,10 +828,13 @@ the same coding systems as Emacs."
 		     (buffer-string))
 		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
 		   )))
+#+END_SRC
 
-;; #############################################################################
-;;** my-toggle-windows-split
-;; http://www.emacswiki.org/emacs/ToggleWindowSplit
+** my-toggle-windows-split
+
+http://www.emacswiki.org/emacs/ToggleWindowSplit
+
+#+BEGIN_SRC emacs-lisp
 (defun my-toggle-windows-split ()
   "Switch window split from horizontally to vertically, or vice versa.
 
@@ -710,13 +862,14 @@ i.e. change right window to bottom, or change bottom window to right."
                   (split-window-horizontally))
                 (set-window-buffer (windmove-find-other-window neighbour-dir) other-buf))))))))
 
-(bind-key "|" #'my-toggle-windows-split my-map)
+(bind-key "|" 'my-toggle-windows-split my-map)
+#+END_SRC
 
+** my-yank-windows (my-map y)
 
-;; #############################################################################
-;;** my-yank-windows (my-map y)
-;; id:2016-05-22-my-yank-windows
+- id:2016-05-22-my-yank-windows
 
+#+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
   (defun my-yank-windows ()
     "yanks from clipboard and replaces typical (list) markup"
@@ -735,11 +888,16 @@ i.e. change right window to bottom, or change bottom window to right."
         ))
     )
 
-  (bind-key "y" #'my-yank-windows my-map)
+  (bind-key "y" 'my-yank-windows my-map)
   )
 
-;;** my-fill-or-unfill (paragraph)
-;; http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
+#+END_SRC
+
+** my-fill-or-unfill (paragraph)
+
+- http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
+
+#+BEGIN_SRC emacs-lisp
 (defun my-fill-or-unfill ()
   "Like `fill-paragraph', but unfill if used twice."
   (interactive)
@@ -748,14 +906,19 @@ i.e. change right window to bottom, or change bottom window to right."
              (progn (setq this-command nil)
                     (point-max))
            fill-column)))
-    (call-interactively #'fill-paragraph)))
+    (call-interactively 'fill-paragraph)))
 
 (global-set-key [remap fill-paragraph]
-                #'my-fill-or-unfill)
+                'my-fill-or-unfill)
 
-;;** my-open-in-external-app
-;; http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
-;; open dired file in external app (specified by the operating system)
+#+END_SRC
+
+** my-open-in-external-app
+
+- http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+  - open dired file in external app (specified by the operating system)
+
+#+BEGIN_SRC emacs-lisp
 (defun my-open-in-external-app (&optional file)
   "Open the current FILE or dired marked files in external app.
    The app is chosen from your OS's preference."
@@ -781,70 +944,97 @@ i.e. change right window to bottom, or change bottom window to right."
         (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)) )  myFileList) )
        ((string-equal system-type "gnu/linux")
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
+#+END_SRC
 
+* Elisp
 
-;;* Elisp
+separate color for highlightning () brackets:
+http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
+#+BEGIN_SRC emacs-lisp :tangle no
+;; ######################################################
+(defface paren-face
+  '((((class color) (background dark))
+     (:foreground "grey30"))
+    (((class color) (background light))
+     (:foreground "grey60")))
+  "Face used to dim parentheses.")
+(defun egoge-dim-parens ()
+  (font-lock-add-keywords nil
+			  '(("(\\|)" . 'paren-face))))
+(add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
+#+END_SRC
 
-
-;;disabled;; ;; ######################################################
-;;disabled;; ;; separate color for highlightning () brackets:
-;;disabled;; ;; http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
-;;disabled;; (defface paren-face
-;;disabled;;   '((((class color) (background dark))
-;;disabled;;      (:foreground "grey30"))
-;;disabled;;     (((class color) (background light))
-;;disabled;;      (:foreground "grey60")))
-;;disabled;;   "Face used to dim parentheses.")
-;;disabled;; (defun egoge-dim-parens ()
-;;disabled;;   (font-lock-add-keywords nil
-;;disabled;; 			  '(("(\\|)" . 'paren-face))))
-;;disabled;; (add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
-
+#+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook 'turn-off-auto-fill)
+#+END_SRC
 
-;; #############################################################################
-;;* Python
+* Python
 
+- misc stuff from: https://github.com/jorgenschaefer/elpy/wiki/
+
+| key      | command                  |
+|----------+--------------------------|
+| F5       | flymake-goto-prev-error  |
+| F6       | flymake-goto-next-error  |
+| my-map P | pylookup                 |
+
+-------------
+
+BEGIN of elpy package
+#+BEGIN_SRC emacs-lisp
 (use-package elpy
   ;; :disabled t ;; stop loading if 't'
   :ensure t
-  ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
+  ;;:if (or (my-system-type-is-gnu) (my-system-type-is-windows))
   :mode ("\\.py\\'" . elpy-mode)
   :config ;; executed after loading package
+#+END_SRC
 
-  ;; ######################################################
-  ;; elpy: https://github.com/jorgenschaefer/elpy/wiki/
+enable elpy and use ipython:
+#+BEGIN_SRC emacs-lisp
   ;;(when (my-system-type-is-gnu)
     (elpy-enable)
     (elpy-use-ipython)
   ;;  )
+#+END_SRC
 
-  ;(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-  ;(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
+auto-mode-list:
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
+#+END_SRC
 
-  ;; ######################################################
-  ;; http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
-  ;; Ropemacs:
-  ;;(add-to-list 'load-path "~/.emacs.d/vendor/pymacs-0.24-beta2")
-  ;;disabled; (use-package pymacs)
-  ;;disabled; (pymacs-load "ropemacs" "rope-")
-  ;;disabled; (setq ropemacs-enable-autoimport t)
 
-  ;; ######################################################
-  ;; auto-complete mode
-  ;;(add-to-list 'load-path "~/.emacs.d/vendor/auto-complete-1.2")
-  ;;disabled; (use-package auto-complete-config)
-  ;;(add-to-list 'ac-dictionary-directories "~/.emacs.d/vendor/auto-complete-1.2/dict")
-  ;;disabled; (ac-config-default)
+http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
+Ropemacs:
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'load-path "~/.emacs.d/vendor/pymacs-0.24-beta2")
+(use-package pymacs)
+(pymacs-load "ropemacs" "rope-")
+(setq ropemacs-enable-autoimport t)
+#+END_SRC
 
-  ;; ######################################################
-  ;; PyFlakes:
-  (setq python-check-command "pyflakes")
+- auto-complete mode:
+  - [ ] check why disabled in my config
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'load-path "~/.emacs.d/vendor/auto-complete-1.2")
+(use-package auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/vendor/auto-complete-1.2/dict")
+(ac-config-default)
+#+END_SRC
 
-  ;; ######################################################
-  ;; fix flymake (PEP8): ignore E501 (long lines)
-  ;; see id:2015-04-04-flymake and http://stackoverflow.com/a/1393590
-  ;; looks similar: http://people.cs.uct.ac.za/~ksmith/2011/better-python-flymake-integration-in-emacs.html
+
+PyFlakes:
+#+BEGIN_SRC emacs-lisp
+(setq python-check-command "pyflakes")
+#+END_SRC
+
+
+Flymake
+- fix flymake (PEP8): ignore E501 (long lines)
+- see id:2015-04-04-flymake and http://stackoverflow.com/a/1393590
+- looks similar: http://people.cs.uct.ac.za/~ksmith/2011/better-python-flymake-integration-in-emacs.html
+#+BEGIN_SRC emacs-lisp
   (when (load "flymake" t)
     (defun flymake-pyflakes-init ()
       (let* ((temp-file (flymake-init-create-temp-buffer-copy
@@ -855,17 +1045,20 @@ i.e. change right window to bottom, or change bottom window to right."
         (list "~/bin/pycheckers"  (list local-file))))
     (add-to-list 'flymake-allowed-file-name-masks
                  '("\\.py\\'" flymake-pyflakes-init)))
+#+END_SRC
 
-  ;; ######################################################
-  ;; better flymake: http://stackoverflow.com/a/1621489
+better flymake: http://stackoverflow.com/a/1621489
+#+BEGIN_SRC emacs-lisp
   (add-hook 'python-mode-hook
       (lambda ()
         (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
         (local-set-key [f5] 'flymake-goto-prev-error)
         (local-set-key [f6] 'flymake-goto-next-error)
         ))
+#+END_SRC
 
 
+#+BEGIN_SRC emacs-lisp
   ;; ######################################################
   ;; pylookup: https://github.com/tsgates/pylookup
   ;; add pylookup to your loadpath, ex) ~/.emacs.d/pylookup
@@ -891,230 +1084,235 @@ i.e. change right window to bottom, or change bottom window to right."
 
   (define-key my-map "P" 'pylookup-lookup)
 
+#+END_SRC
+
+
+END of elpy package
+#+BEGIN_SRC emacs-lisp
 )
+#+END_SRC
+
+* LaTeX
+
+BEGIN of LaTeX settings
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
+#+END_SRC
+
+General LaTeX settings:
+#+BEGIN_SRC emacs-lisp
+(autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
+(setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
+(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill) ;; word-wrap in TeX files
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+;(setq-default TeX-master nil);; 2015-03-22 deactivated because it doesn't seem to have any influence: id:2013-12-31-org-master-file
+(make-variable-buffer-local 'TeX-master) ;; I think this is need because the variable is not buffer local until Auctex is active
+#+END_SRC
 
 
-;; #############################################################################
-;;* LaTeX
+Synctex: http://www.bleedingmind.com/index.php/2010/06/17/synctex-on-linux-and-mac-os-x-with-emacs/
+#+BEGIN_SRC emacs-lisp
+(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+(setq TeX-source-correlate-method 'synctex)
+#+END_SRC
+
+Define system-specific PDF viewers:
+#+BEGIN_SRC emacs-lisp
+(defun okular-make-url () (concat
+      		     "file://"
+      		     (expand-file-name (funcall file (TeX-output-extension) t)
+      				       (file-name-directory (TeX-master-file)))
+      		     "#src:"
+      		     (TeX-current-line)
+      		     (TeX-current-file-name-master-relative))
+       "./"
+       (TeX-current-file-name-master-relative)
+       )
+
+(defun skim-make-url () (
+      		   concat
+      		   (TeX-current-line)
+      		   " "
+      		   (expand-file-name (funcall file (TeX-output-extension) t)
+      				     (file-name-directory (TeX-master-file)))
+      		   " "
+      		   (buffer-file-name))
+       )
+
+(setq TeX-view-program-list '(
+      			("Okular" "okular --unique %u")
+      			("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %q")
+      			)
+      )
 
 (when (my-system-type-is-gnu)
-
-  (autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
-  (setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
-
-  (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill) ;; word-wrap in TeX files
-
-
-  ;; ######################################################
-  ;; synctex
-  ;; http://www.bleedingmind.com/index.php/2010/06/17/synctex-on-linux-and-mac-os-x-with-emacs/
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (setq TeX-source-correlate-method 'synctex)
-
-  (defun okular-make-url () (concat
-			     "file://"
-			     (expand-file-name (funcall file (TeX-output-extension) t)
-					       (file-name-directory (TeX-master-file)))
-			     "#src:"
-			     (TeX-current-line)
-			     (TeX-current-file-name-master-relative))
-	 "./"
-	 (TeX-current-file-name-master-relative)
-	 )
-
-  (defun skim-make-url () (
-			   concat
-			   (TeX-current-line)
-			   " "
-			   (expand-file-name (funcall file (TeX-output-extension) t)
-					     (file-name-directory (TeX-master-file)))
-			   " "
-			   (buffer-file-name))
-	 )
-
-  (setq TeX-view-program-list '(
-				("Okular" "okular --unique %u")
-				("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %q")
-				)
-	)
-
-  (when (my-system-type-is-gnu)
-    (setq TeX-view-program-selection '((output-pdf "Okular") (output-dvi "Okular")))
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-expand-list '("%u" okular-make-url))
-      )
-    )
-
-  (when (my-system-type-is-darwin)
-    (setq TeX-view-program-selection '((output-pdf "Skim")))
-    (eval-after-load "tex"
-      '(add-to-list 'TeX-expand-list '("%q" skim-make-url))
-      )
-    )
-
-
-  ;; (add-hook ‘LaTeX-mode-hook
-  ;; (lambda ()
-  ;; (add-to-list ‘TeX-expand-list
-  ;; ‘(“%u” okular-make-url))))
-
-  ;; ######################################################
-  ;; http://www.tug.org/pipermail/macostex-archives/2005-November/018997.html
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-  (add-hook 'LaTeX-mode-hook '(lambda () (TeX-fold-mode 1)))
-
-
-  ;; ######################################################
-  ;; biblatex and AucTeX
-  ;; http://www.mail-archive.com/auctex@gnu.org/msg04137.html
+  (setq TeX-view-program-selection '((output-pdf "Okular") (output-dvi "Okular")))
   (eval-after-load "tex"
-    '(add-to-list 'TeX-command-list
-		  '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber") t))
+    '(add-to-list 'TeX-expand-list '("%u" okular-make-url))
+    )
+  )
 
-  (defun TeX-run-Biber (name command file)
-    "Create a process for NAME using COMMAND to format FILE with Biber."
-    (let ((process (TeX-run-command name command file)))
-      (setq TeX-sentinel-function 'TeX-Biber-sentinel)
-      (if TeX-process-asynchronous
-	  process
-	(TeX-synchronous-sentinel name file process))))
-
-  (defun TeX-Biber-sentinel (process name)
-    "Cleanup TeX output buffer after running Biber."
-    (goto-char (point-max))
-    (cond
-     ;; Check whether Biber reports any warnings or errors.
-     ((re-search-backward (concat
-			   "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
-			   "\\(warnings?\\|error messages?\\))") nil t)
-      ;; Tell the user their number so that she sees whether the
-      ;; situation is getting better or worse.
-      (message (concat "Biber finished with %s %s. "
-		       "Type `%s' to display output.")
-	       (match-string 1) (match-string 2)
-	       (substitute-command-keys
-		"\\\\[TeX-recenter-output-buffer]")))
-     (t
-      (message (concat "Biber finished successfully. "
-		       "Run LaTeX again to get citations right."))))
-    (setq TeX-command-next TeX-command-default))
+(when (my-system-type-is-darwin)
+  (setq TeX-view-program-selection '((output-pdf "Skim")))
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-expand-list '("%q" skim-make-url))
+    )
+  )
+#+END_SRC
 
 
-  ;; ######################################################
-  ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
-  ;; CDLaTeX - more LaTeX functionality
-  ;; http://orgmode.org/org.html#CDLaTeX-mode
-  ;;disabled;(when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
-  ;;disabled;  (my-load-local-el "contrib/cdlatex.el")
-  ;;disabled;  )
-
-  ;; ######################################################
-  ;; http://staff.science.uva.nl/~dominik/Tools/cdlatex/
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  ;(setq-default TeX-master nil);; 2015-03-22 deactivated because it doesn't seem to have any influence: id:2013-12-31-org-master-file
-  (make-variable-buffer-local 'TeX-master) ;; I think this is need because the variable is not buffer local until Auctex is active
-  ;;disabled; (defun org-mode-reftex-setup ()
-  ;;disabled;   (setq TeX-master t)
-  ;;disabled;   (load-library "reftex")
-  ;;disabled;   (and (buffer-file-name)
-  ;;disabled;	 (file-exists-p (buffer-file-name))
-  ;;disabled;	 (progn
-  ;;disabled;	   (reftex-parse-all)
-  ;;disabled;	   (reftex-set-cite-format "[[cite:%l][%l]]")))
-  ;;disabled;   (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
-  ;;disabled;   (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
-  ;;disabled; (add-hook 'org-mode-hook 'org-mode-reftex-setup)
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook ‘LaTeX-mode-hook
+(lambda ()
+  (add-to-list ‘TeX-expand-list
+  ‘(“%u” okular-make-url))))
+#+END_SRC
 
 
-  ;; ######################################################
-  ;; http://www.gnu.org/software/auctex/manual/reftex.html#SEC48
-  ;; Specify my bibtex folder
-  ;;(setq reftex-bibpath-environment-variables
-  ;;      '("~/archive/library/"))
-  ;; does not work :-(
-  ;; tested with tagstore.org
-
-  ;; disabled 2015-03-22 because it did not help ;; ;; 2015-03-22 - see also id:2013-12-31-org-master-file
-  ;; disabled 2015-03-22 because it did not help ;; ;; http://www.emacswiki.org/emacs/AUCTeX
-  ;; disabled 2015-03-22 because it did not help ;; (defun guess-TeX-master (filename)
-  ;; disabled 2015-03-22 because it did not help ;;     "Guess the master file for FILENAME from currently open files according to their extension."
-  ;; disabled 2015-03-22 because it did not help ;;     (let ((candidate nil)
-  ;; disabled 2015-03-22 because it did not help ;;           (filename (file-name-nondirectory filename)))
-  ;; disabled 2015-03-22 because it did not help ;;       (save-excursion
-  ;; disabled 2015-03-22 because it did not help ;;         (dolist (buffer (buffer-list))
-  ;; disabled 2015-03-22 because it did not help ;;           (with-current-buffer buffer
-  ;; disabled 2015-03-22 because it did not help ;;             (let ((name (buffer-name))
-  ;; disabled 2015-03-22 because it did not help ;;                   (file buffer-file-name))
-  ;; disabled 2015-03-22 because it did not help ;;               ;(if (and file (string-match "\\.\(org\|tex\)$" file))
-  ;; disabled 2015-03-22 because it did not help ;;               (if (and file (string-match "\\.org$" file))
-  ;; disabled 2015-03-22 because it did not help ;;                   (progn
-  ;; disabled 2015-03-22 because it did not help ;;                     (goto-char (point-min))
-  ;; disabled 2015-03-22 because it did not help ;;                     (if (re-search-forward (concat "\\\\input{" filename "}") nil t)
-  ;; disabled 2015-03-22 because it did not help ;;                         (setq candidate file))
-  ;; disabled 2015-03-22 because it did not help ;;                     (if (re-search-forward (concat "\\\\include{" (file-name-sans-extension filename) "}") nil t)
-  ;; disabled 2015-03-22 because it did not help ;;                         (setq candidate file))))))))
-  ;; disabled 2015-03-22 because it did not help ;;       (if candidate
-  ;; disabled 2015-03-22 because it did not help ;;           (message "TeX master document: %s" (file-name-nondirectory candidate)))
-  ;; disabled 2015-03-22 because it did not help ;;       candidate))
-  ;; disabled 2015-03-22 because it did not help ;;
-  ;; disabled 2015-03-22 because it did not help ;; ;; ONLY for special file modes with a recognized extension!
-  ;; disabled 2015-03-22 because it did not help ;; ;; Causes Lisp error (that's a afact) when used with buffers like *scratch* (that's my guess)
-  ;; disabled 2015-03-22 because it did not help ;; ;;(setq TeX-master (guess-TeX-master (buffer-file-name)))
-
-  );; end LaTeX settings
+http://www.tug.org/pipermail/macostex-archives/2005-November/018997.html
+- reftex
+- TeX-fold-mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+(add-hook 'LaTeX-mode-hook '(lambda () (TeX-fold-mode 1)))
+#+END_SRC
 
 
+biblatex and AucTeX
+http://www.mail-archive.com/auctex@gnu.org/msg04137.html
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list
+      	  '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber") t))
+
+(defun TeX-run-Biber (name command file)
+  "Create a process for NAME using COMMAND to format FILE with Biber."
+  (let ((process (TeX-run-command name command file)))
+    (setq TeX-sentinel-function 'TeX-Biber-sentinel)
+    (if TeX-process-asynchronous
+        process
+      (TeX-synchronous-sentinel name file process))))
+
+(defun TeX-Biber-sentinel (process name)
+  "Cleanup TeX output buffer after running Biber."
+  (goto-char (point-max))
+  (cond
+   ;; Check whether Biber reports any warnings or errors.
+   ((re-search-backward (concat
+      		   "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
+      		   "\\(warnings?\\|error messages?\\))") nil t)
+    ;; Tell the user their number so that she sees whether the
+    ;; situation is getting better or worse.
+    (message (concat "Biber finished with %s %s. "
+      	       "Type `%s' to display output.")
+             (match-string 1) (match-string 2)
+             (substitute-command-keys
+      	"\\\\[TeX-recenter-output-buffer]")))
+   (t
+    (message (concat "Biber finished successfully. "
+      	       "Run LaTeX again to get citations right."))))
+  (setq TeX-command-next TeX-command-default))
+#+END_SRC
 
 
+- http://staff.science.uva.nl/~dominik/Tools/cdlatex/
+- CDLaTeX - more LaTeX functionality
+- http://orgmode.org/org.html#CDLaTeX-mode
+#+BEGIN_SRC emacs-lisp :tangle no
+(when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
+  (my-load-local-el "contrib/cdlatex.el")
+  )
+#+END_SRC
 
-;; #############################################################################
-;;* OS X: mdfind (disabled)
+org-mode-reftex-setup
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-mode-reftex-setup ()
+  (setq TeX-master t)
+  (load-library "reftex")
+  (and (buffer-file-name)
+     (file-exists-p (buffer-file-name))
+     (progn
+       (reftex-parse-all)
+       (reftex-set-cite-format "[[cite:%l][%l]]")))
+  (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+  (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
+(add-hook 'org-mode-hook 'org-mode-reftex-setup)
+#+END_SRC
 
 
-;;disabled;; ;; ######################################################
-;;disabled;; ;; http://blog.zenspider.com/2007/03/locate-and-spotlight.html
-;;disabled;; (when (my-system-type-is-darwin)
-;;disabled;;   (defun locate-make-mdfind-command-line (search-string)
-;;disabled;;     (list "mdfind" (concat "kMDItemDisplayName=*" search-string "*")))
-;;disabled;;   (defun spotlight ()
-;;disabled;;     "Search for files by name using spotlight"
-;;disabled;;     (interactive)
-;;disabled;;     (let ((locate-command "mdfind")
-;;disabled;; 	  (locate-make-command-line 'locate-make-mdfind-command-line))
-;;disabled;;       (call-interactively 'locate nil)))
-;;disabled;;   (defun spotlight-full ()
-;;disabled;;     "Search using spotlight"
-;;disabled;;     (interactive)
-;;disabled;;     (let ((locate-command "mdfind"))
-;;disabled;;       (call-interactively 'locate nil)))
-;;disabled;;   )
+- http://www.gnu.org/software/auctex/manual/reftex.html#SEC48
+- Specify my bibtex folder
+  - *does not work* :-(
+  - tested with tagstore.org
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq reftex-bibpath-environment-variables
+      '("~/archive/library/"))
+#+END_SRC
+
+- 2015-03-22 - see also id:2013-12-31-org-master-file
+- http://www.emacswiki.org/emacs/AUCTeX
+  - disabled 2015-03-22 because it did not help
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun guess-TeX-master (filename)
+    "Guess the master file for FILENAME from currently open files according to their extension."
+    (let ((candidate nil)
+          (filename (file-name-nondirectory filename)))
+      (save-excursion
+        (dolist (buffer (buffer-list))
+          (with-current-buffer buffer
+            (let ((name (buffer-name))
+                  (file buffer-file-name))
+              ;(if (and file (string-match "\\.\(org\|tex\)$" file))
+              (if (and file (string-match "\\.org$" file))
+                  (progn
+                    (goto-char (point-min))
+                    (if (re-search-forward (concat "\\\\input{" filename "}") nil t)
+                        (setq candidate file))
+                    (if (re-search-forward (concat "\\\\include{" (file-name-sans-extension filename) "}") nil t)
+                        (setq candidate file))))))))
+      (if candidate
+          (message "TeX master document: %s" (file-name-nondirectory candidate)))
+      candidate))
+
+;; ONLY for special file modes with a recognized extension!
+;; Causes Lisp error (that's a afact) when used with buffers like *scratch* (that's my guess)
+;;(setq TeX-master (guess-TeX-master (buffer-file-name)))
+#+END_SRC
 
 
+END of LaTeX settings
+#+BEGIN_SRC emacs-lisp
+  )
+#+END_SRC
 
-;; #############################################################################
-;;* system-specific browse-url-browser
+* DISABLED OS X: mdfind (find via spotlight)
 
-;; ######################################################
-;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-;;old;;(when (my-system-is-powerplantlinux)
-;;old;;  (setq browse-url-browser-function 'browse-url-generic
-;;old;;	;;      browse-url-generic-program "/usr/bin/google-chrome")
-;;old;;	browse-url-generic-program "/usr/bin/firefox")
-;;old;;  )
-;;old;;(when (my-system-is-sherri)
-;;old;;  (setq browse-url-browser-function 'browse-url-generic
-;;old;;	;;browse-url-generic-program "~/bin/firefox-browser/firefox")
-;;old;;	browse-url-generic-program "/usr/bin/iceweasel")
-;;old;;  )
-;;old;;(when (my-system-type-is-darwin)
-;;old;;  (setq browse-url-browser-function 'browse-url-default-macosx-browser)
-;;old;;  )
-;;old;;(when (my-system-is-floyd)
-;;old;;  (setq browse-url-browser-function 'browse-url-generic
-;;old;;	;;      browse-url-generic-program "/usr/bin/google-chrome")
-;;old;;	browse-url-generic-program "/usr/bin/iceweasel")
-;;old;;  )
+http://blog.zenspider.com/2007/03/locate-and-spotlight.html
+
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-darwin)
+  (defun locate-make-mdfind-command-line (search-string)
+    (list "mdfind" (concat "kMDItemDisplayName=*" search-string "*")))
+  (defun spotlight ()
+    "Search for files by name using spotlight"
+    (interactive)
+    (let ((locate-command "mdfind")
+	  (locate-make-command-line 'locate-make-mdfind-command-line))
+      (call-interactively 'locate nil)))
+  (defun spotlight-full ()
+    "Search using spotlight"
+    (interactive)
+    (let ((locate-command "mdfind"))
+      (call-interactively 'locate nil)))
+  )
+#+END_SRC
+
+* system-specific browse-url-browser
+
+http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
+
+#+BEGIN_SRC emacs-lisp
 (cond
  ((my-system-type-is-darwin)
   (setq browse-url-browser-function 'browse-url-default-macosx-browser)
@@ -1132,31 +1330,33 @@ i.e. change right window to bottom, or change bottom window to right."
 	browse-url-generic-program "/usr/bin/google-chrome")
   )
  )
+#+END_SRC
 
-;; ######################################################
-;; http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-;;disabled; (setq browse-url-browser-function 'browse-url-generic
-;;disabled;       browse-url-generic-program "chromium-browser")
+http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "chromium-browser")
+#+END_SRC
 
+https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
+- Edit-server for Chrome
+#+BEGIN_SRC emacs-lisp :tangle no
+;(use-package edit-server)
+(my-load-local-el "contrib/edit-server.el")
+(edit-server-start)
 
-;; ######################################################
-;; https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
-;; Edit-server for Chrome
-;;disabled; ;(use-package edit-server)
-;;disabled; (my-load-local-el "contrib/edit-server.el")
-;;disabled; (edit-server-start)
-;;(if (locate-library "edit-server")
-;;    (progn
-;;      (use-package edit-server)
-;;      (setq edit-server-new-frame nil)
-;;      (edit-server-start)))
+(if (locate-library "edit-server")
+    (progn
+      (use-package edit-server)
+      (setq edit-server-new-frame nil)
+      (edit-server-start)))
+#+END_SRC
 
+* Snippets
 
-;; #############################################################################
-;;* misc modes/packages
-;;** snippets
-;;*** yasnippet
+** yasnippet
 
+#+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :demand t
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
@@ -1177,11 +1377,13 @@ i.e. change right window to bottom, or change bottom window to right."
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
 )
+#+END_SRC
 
-;;*** yankpad
-;; id:2016-08-08-yankpad-test
-;; https://github.com/Kungsgeten/yankpad
+** yankpad
 
+- id:2016-08-08-yankpad-test
+- https://github.com/Kungsgeten/yankpad
+#+BEGIN_SRC emacs-lisp
 (use-package yankpad
   :ensure t
   :defer 10
@@ -1189,102 +1391,48 @@ i.e. change right window to bottom, or change bottom window to right."
   (setq yankpad-file "~/org/yankpad.org")
   :bind (:map my-map ("SPC" . yankpad-insert))
   :config
-  (bind-key "<f6>" 'yankpad-map))
+  ;; (bind-key "<f6>" 'yankpad-map))
+)
+#+END_SRC
 
+* flyspell
 
-
-;; #############################################################################
-;;** flyspell
-
-;; ######################################################
-;; setting path to flyspell-mode.el from MacPorts
+setting path to flyspell-mode.el from MacPorts:
+#+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-darwin)
   (add-to-list 'load-path "/opt/local/share/emacs/lisp/textmodes")
   )
+#+END_SRC
 
-;; save to user dictionary without asking:
-;;(setq ispell-silently-savep t)
+save to user dictionary without asking:
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq ispell-silently-savep t)
+#+END_SRC
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; flyspell.el <http://kaolin.unice.fr/~serrano/>
+flyspell.el <http://kaolin.unice.fr/~serrano/>
+#+BEGIN_SRC emacs-lisp :tangle no
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
+;(define-key global-map [(f10)] 'flyspell-mode)
+#+END_SRC
 
-;;(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
-;;;(define-key global-map [(f10)] 'flyspell-mode)
-;;;(set-default 'ispell-local-dictionary my-german-ispell-dictionary)
-
-;; old stuff:
-
-;; ######################################################
-;; http://www.linuxfaq.de/f/cache/146.html
+Dictionary settings:
+- http://www.linuxfaq.de/f/cache/146.html
+#+BEGIN_SRC emacs-lisp
+;(set-default 'ispell-local-dictionary my-german-ispell-dictionary)
 
 ;;(autoload 'flyspell-mode "flyspell" "On-the-fly ispell." t)
 (setq flyspell-issue-welcome-flag nil)
 
-(when (my-system-is-powerplantwin)
+(when (my-system-type-is-windows)
   (setq flyspell-default-dictionary "german8")
 )
 (when (my-system-type-is-gnu)
   (setq flyspell-default-dictionary "de_AT")
 )
+#+END_SRC
 
-;;old-method until 2014-01-26;; ;; http://stackoverflow.com/questions/15346723/emacs-and-ispell-error-loading-german8
-;;old-method until 2014-01-26;; (eval-after-load "ispell"
-;;old-method until 2014-01-26;;   '(add-to-list 'ispell-dictionary-alist
-;;old-method until 2014-01-26;; 		'("german8"
-;;old-method until 2014-01-26;; 		  "[A-zA-ZäöüßÄÖÜ]" "[^a-zA-ZäöüßÄÖÜ]" "[']" t
-;;old-method until 2014-01-26;; 		  ("-C" "-d" "de_DE-neu.multi")
-;;old-method until 2014-01-26;; 		  "~latin1" iso-8859-1)))
-;;old-method until 2014-01-26;;
-;;old-method until 2014-01-26;; (defun my-ispell-set-deutsch()
-;;old-method until 2014-01-26;;   "switch ispell language to Deutsch"
-;;old-method until 2014-01-26;;   (interactive)
-;;old-method until 2014-01-26;;   (ispell-change-dictionary "german8"))
-;;old-method until 2014-01-26;;
-;;old-method until 2014-01-26;; (defun my-ispell-set-USenglish()
-;;old-method until 2014-01-26;;   "switch ispell language to US English"
-;;old-method until 2014-01-26;;   (interactive)
-;;old-method until 2014-01-26;;   (ispell-change-dictionary "american"))
-;;old-method until 2014-01-26;;
-;;old-method until 2014-01-26;; (defun my-ispell-set-GBenglish()
-;;old-method until 2014-01-26;;   "switch ispell language to British English"
-;;old-method until 2014-01-26;;   (interactive)
-;;old-method until 2014-01-26;;   (ispell-change-dictionary "british"))
-;;old-method until 2014-01-26;;
-;;old-method until 2014-01-26;; (defvar my-toggle-ispell-english-deutsch nil
-;;old-method until 2014-01-26;;   "state of english/ngerman toggle. t means english, nil means ngerman")
-;;old-method until 2014-01-26;; (make-variable-buffer-local 'my-toggle-ispell-english-deutsch)
-;;old-method until 2014-01-26;;
-;;old-method until 2014-01-26;; ;; use british english on powerplant and US english on all other machines:
-;;old-method until 2014-01-26;; (if (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-;;old-method until 2014-01-26;;     (defun my-toggle-ispell-language ()
-;;old-method until 2014-01-26;;       "Toggle ispell-language between british english and ngerman"
-;;old-method until 2014-01-26;;       (interactive)
-;;old-method until 2014-01-26;;       (cond (my-toggle-ispell-english-deutsch
-;;old-method until 2014-01-26;; 	     (setq my-toggle-ispell-english-deutsch nil)
-;;old-method until 2014-01-26;; 	     (my-ispell-set-deutsch)
-;;old-method until 2014-01-26;; 	     )
-;;old-method until 2014-01-26;; 	    (t
-;;old-method until 2014-01-26;; 	     (setq my-toggle-ispell-english-deutsch t)
-;;old-method until 2014-01-26;; 	     (my-ispell-set-GBenglish)
-;;old-method until 2014-01-26;; 	     )
-;;old-method until 2014-01-26;; 	    )
-;;old-method until 2014-01-26;;       )
-;;old-method until 2014-01-26;;   (defun my-toggle-ispell-language ()
-;;old-method until 2014-01-26;;     "Toggle ispell-language between english and ngerman"
-;;old-method until 2014-01-26;;     (interactive)
-;;old-method until 2014-01-26;;     (cond (my-toggle-ispell-english-deutsch
-;;old-method until 2014-01-26;; 	   (setq my-toggle-ispell-english-deutsch nil)
-;;old-method until 2014-01-26;; 	   (my-ispell-set-deutsch)
-;;old-method until 2014-01-26;; 	   )
-;;old-method until 2014-01-26;; 	  (t
-;;old-method until 2014-01-26;; 	   (setq my-toggle-ispell-english-deutsch t)
-;;old-method until 2014-01-26;; 	   (my-ispell-set-USenglish)
-;;old-method until 2014-01-26;; 	   )
-;;old-method until 2014-01-26;; 	  )
-;;old-method until 2014-01-26;;     )
-;;old-method until 2014-01-26;;   )
-
-;; from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
+from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
+#+BEGIN_SRC emacs-lisp
 (eval-after-load "ispell"
   '(add-to-list 'ispell-dictionary-alist
                 '("german8"
@@ -1292,7 +1440,7 @@ i.e. change right window to bottom, or change bottom window to right."
                   ("-C" "-d" "de_DE-neu.multi")
                   "~latin1" iso-8859-1)))
 
-(if (my-system-is-powerplantwin)
+(if (my-system-type-is-windows)
     ;; use british english on powerplantwin:
     (let ((langs '("german8" "british")))
       (setq lang-ring (make-ring (length langs)))
@@ -1308,52 +1456,48 @@ i.e. change right window to bottom, or change bottom window to right."
     (setq lang-ring (make-ring (length langs)))
     (dolist (elem langs) (ring-insert lang-ring elem)))
   )
+#+END_SRC
 
+my-toggle-ispell-language
+#+BEGIN_SRC emacs-lisp
 (defun my-toggle-ispell-language ()
   (interactive)
   (let ((lang (ring-ref lang-ring -1)))
     (ring-insert lang-ring lang)
     (ispell-change-dictionary lang)))
+#+END_SRC
 
 
-;;disabled;(add-hook 'post-mode-hook
-;;disabled;         '(lambda ()
-;;disabled;            (flyspell-mode t)
-;;disabled;            (setq flyspell-generic-check-word-p 'mail-mode-flyspell-verify)))
-;; ######################################################
+- modes for programming languages; check spelling only in comments/strings
+  - http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook          'c-mode-hook 'flyspell-prog-mode)
+(add-hook         'sh-mode-hook 'flyspell-prog-mode)
+(add-hook        'c++-mode-hook 'flyspell-prog-mode)
+(add-hook       'ruby-mode-hook 'flyspell-prog-mode)
+(add-hook      'cperl-mode-hook 'flyspell-prog-mode)
+(add-hook     'python-mode-hook 'flyspell-prog-mode)
+(add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
+(add-hook   'autotest-mode-hook 'flyspell-prog-mode)
+(add-hook   'makefile-mode-hook 'flyspell-prog-mode)
+(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
+#+END_SRC
 
+bind-keys:
+#+BEGIN_SRC emacs-lisp
+(bind-key "fm" 'flyspell-mode my-map)
+(bind-key "fr" 'flyspell-region my-map)
+(bind-key "fl" 'my-toggle-ispell-language my-map)
+(bind-key "ft" 'my-toggle-ispell-language my-map);; can't remember if l(anguage) or t(oggle)
+(bind-key "fn" 'flyspell-goto-next-error my-map)
+(bind-key "ff" 'flyspell-correct-word-before-point my-map)
+#+END_SRC
 
-;; http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
-;; modes for programming languages; check spelling only in comments/strings
-;;disabled;(add-hook          'c-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook         'sh-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook        'c++-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook       'ruby-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook      'cperl-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook     'python-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook   'autoconf-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook   'autotest-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook   'makefile-mode-hook 'flyspell-prog-mode)
-;;disabled;(add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
+* flycheck
 
-;; ######################################################
-;;(setq ispell-dictionary "german-new8")
-;;(setq ispell-dictionary "german-new8")
-;;(setq ispell-local-dictionary "german-new8")
-(bind-key "fm" #'flyspell-mode my-map)
-(bind-key "fr" #'flyspell-region my-map)
-(bind-key "fl" #'my-toggle-ispell-language my-map)
-(bind-key "ft" #'my-toggle-ispell-language my-map);; can't remember if l(anguage) or t(oggle)
-(bind-key "fn" #'flyspell-goto-next-error my-map)
-(bind-key "ff" #'flyspell-correct-word-before-point my-map)
-
-
-;; #############################################################################
-;;** flycheck
-;; http://www.flycheck.org/en/latest/guide/quickstart.html
-;; 2016-11-05: converted to use-package according to http://www.flycheck.org/en/latest/user/installation.html#use-package
-
-;OLD: (add-hook 'after-init-hook #'global-flycheck-mode) ; enable everywhere
+- http://www.flycheck.org/en/latest/guide/quickstart.html
+- 2016-11-05: converted to use-package according to http://www.flycheck.org/en/latest/user/installation.html#use-package
+#+BEGIN_SRC emacs-lisp
 (use-package flycheck
   :ensure t
   :init
@@ -1361,76 +1505,65 @@ i.e. change right window to bottom, or change bottom window to right."
   :config
   (setq flycheck-flake8-maximum-line-length 200); http://www.flycheck.org/manual/latest/Configuring-checkers.html#Configuring-checkers
   )
+#+END_SRC
 
+* DISABLED tabbar
 
-;; #############################################################################
-;;** tabbar (disabled)
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
+    (my-load-local-el "contrib/tabbar.el")
+  )
+#+END_SRC
 
+* REST
 
-;;disabled;(when (my-system-type-is-gnu)
-;;disabled;    (my-load-local-el "contrib/tabbar.el")
-;;disabled;  )
-
-
-;; #############################################################################
-;;** REST
-;; REST client    https://github.com/pashky/restclient.el
+- REST client: https://github.com/pashky/restclient.el
+#+BEGIN_SRC emacs-lisp
 (use-package restclient
   :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :defer 10
-  :if (my-system-is-powerplantwin)
+  :if (my-system-type-is-windows)
   :init ;; executed before loading package
   (my-load-local-el "contrib/2del/restclient/json-reformat.el")
   ;;(my-load-local-el "contrib/restclient/restclient.el")
   ;; :mode "\\.rb\\'"
 )
+#+END_SRC
 
+* GnuPlot
+
+#+BEGIN_SRC emacs-lisp
 ;; gnuplot
 (use-package gnuplot
   :ensure t
   :defer 10
   :if (my-system-type-is-gnu)
 )
+#+END_SRC
 
-;;* Org-mode
-;; org-mode-begin:
-;; additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
+* Org-mode
 
-;; (message "############### DEBUG: loading orgmode ...")
-;; (use-package org
-;;   :ensure t
-;;   :pin manual
-;;   :if (or
-;;        (my-system-type-is-gnu)
-;;        (my-system-is-blanche)
-;;        (my-system-is-powerplantlinux)
-;;        (my-system-is-powerplantwin)
-;;        )
-;;
-;;   ;; set paths to manually installed Org-mode (from git)
-;;   :load-path ( "~/.emacs.d/contrib/org-mode/lisp"
-;;                "~/.emacs.d/contrib/org-mode/contrib/lisp")
-;;
-;;   ;; assign file extensions to Org-mode
-;;   :mode ("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode)
-;;
-;;   :config ;; executed after loading package
-;;
-;;   (message "############### DEBUG: config orgmode ...")
+- additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
 
-  (setq org-babel-safe-header-args nil);; 2014-10-29 test
+Profiling Org-mode config loading time:
+#+BEGIN_SRC emacs-lisp
+(defvar my-org-config-start-time (current-time) "Time when my org-mode config was started")
+(message "★→ Org-mode")
+#+END_SRC
 
-;;** load Org and misc contrib packages
+** load Org and misc contrib packages
 
-  ;; set paths to manually installed Org-mode (from git)
-  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
-  (add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
+#+BEGIN_SRC emacs-lisp
 
-  ;; assign file extensions to Org-mode
-  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+;; set paths to manually installed Org-mode (from git)
+(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
+(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
 
-  ;;(setq org-babel-safe-header-args nil);; 2014-10-29 test
+;; assign file extensions to Org-mode
+(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+
+(setq org-babel-safe-header-args nil);; 2014-10-29 test
 
   ;;  :bind ("M-o l" . highlight-lines-matching-regexp)
   ;;  :bind (("M-o l" . highlight-lines-matching-regexp)
@@ -1438,11 +1571,11 @@ i.e. change right window to bottom, or change bottom window to right."
   ;;         ("M-o w" . highlight-phrase)))
 
 
-  (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
-  (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
+;; FIXXMEconfig (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
+;; FIXXMEconfig (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
-  (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
+  ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
   (my-load-local-el "contrib/ob-restclient.el/ob-restclient.el")
   (autoload 'org-checklist "org-checklist.el")
 
@@ -1462,7 +1595,7 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; Enable org modules
   (setq org-modules (quote
                      (org-bbdb
-		      org-bibtex
+	     	          org-bibtex
                       org-crypt
                       org-gnus
                       org-id
@@ -1486,7 +1619,7 @@ i.e. change right window to bottom, or change bottom window to right."
     ;;:disabled t  ;; stop loading if 't'
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 10
-    ;; :if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
+    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
     :init ;; executed before loading package
     ;; org-pandoc-menu-entry -> customize what is shown in menu
     ;; :mode "\\.rb\\'"
@@ -1494,15 +1627,19 @@ i.e. change right window to bottom, or change bottom window to right."
 
   (use-package ox-asciidoc
     ;;:disabled t  ;; stop loading if 't'
-    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    ;;:ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 10
-    ;; :if (or (my-system-type-is-gnu) (my-system-is-powerplantwin))
+    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
     :init ;; executed before loading package
     ;; org-pandoc-menu-entry -> customize what is shown in menu
     ;; :mode "\\.rb\\'"
   )
 
-;;** general Org-mode settings
+#+END_SRC
+
+** general Org-mode settings
+
+#+BEGIN_SRC emacs-lisp
 
   ;; http://www.reddit.com/r/emacs/comments/2m4b7j/help_setting_orgmode_as_the_default_major_mode/
   ;; 2014-12-07
@@ -1663,14 +1800,22 @@ i.e. change right window to bottom, or change bottom window to right."
   ;; http://orgmode.org/manual/The-Export-Dispatcher.html
   (setq org-export-initial-scope 'subtree);; export subtree (by default)
 
-;;** org-file-apps -> open files in external apps
+#+END_SRC
+
+** org-file-apps -> open files in external apps
+
+#+BEGIN_SRC emacs-lisp
 
   ;;(add-to-list 'org-file-apps '("\\.odp" . system))
   ;;(add-to-list 'org-file-apps '("\\.odp" . mailcap))
-  (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
+;; FIXXMEconfig  (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
   ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
 
-;;** general key bindings
+#+END_SRC
+
+** general key bindings
+
+#+BEGIN_SRC emacs-lisp
 
   ;; http://doc.norang.ca/org-mode.html
   ;;
@@ -1714,7 +1859,11 @@ i.e. change right window to bottom, or change bottom window to right."
   ;;disabled;;2014-01-19;;  )
   ;;disabled;;2014-01-19;;(add-hook 'org-mode-hook 'my-org-mode-hook)
 
-;;** org-mode-hook
+#+END_SRC
+
+** org-mode-hook
+
+#+BEGIN_SRC emacs-lisp
 
 ;;disabled;; (add-hook 'org-mode-hook
 ;;disabled;;           (lambda ()
@@ -1755,12 +1904,12 @@ i.e. change right window to bottom, or change bottom window to right."
 			       ) org-file-apps ))))
 
 
-;;** exporters
+#+END_SRC
 
-  (require 'ox-html) ;; 2014-11-16 if replaced with autoload above, it
-  (require 'ox-latex)
-  (require 'ox-koma-letter)
-  (require 'ox-ascii)
+** exporters
+
+#+BEGIN_SRC emacs-lisp
+
   ;;(require 'ox-beamer)
   ;;(require 'ox-odt)
   ;;(require 'ox-freemind)
@@ -1787,7 +1936,11 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 
-;;** TODO keywords + faces
+#+END_SRC
+
+** TODO keywords + faces
+
+#+BEGIN_SRC emacs-lisp
 
   ;; ######################################################
   ;; define keywords:
@@ -1853,7 +2006,11 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
 
-;;** agenda files
+#+END_SRC
+
+** agenda files
+
+#+BEGIN_SRC emacs-lisp
 
   ;; I maintain two categories of agenda files: work and non-work files which are
   ;; defined for Windows and non-windows separately (path format differs).
@@ -1893,7 +2050,7 @@ i.e. change right window to bottom, or change bottom window to right."
 					            "c:/Users/karl.voit/share/all/org-mode/errors_orgmode_commits.org"
 					            ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
 					            "c:/Users/karl.voit/share/all/org-mode/references.org"
-					            "c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
+					            ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/error.org"
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
@@ -1949,7 +2106,7 @@ i.e. change right window to bottom, or change bottom window to right."
     (if (get 'my-toggle-agenda-files 'state)
         (progn
           (message "Agenda files: host-specific")
-          (if (my-system-is-powerplantwin)
+          (if (my-system-type-is-windows)
               (setq org-agenda-files (append my-work-agenda-files ))
             (setq org-agenda-files (append my-nonwork-agenda-files ))
             )
@@ -1960,16 +2117,20 @@ i.e. change right window to bottom, or change bottom window to right."
         (put 'my-toggle-agenda-files 'state t))))
 
 
-  (bind-key "A" #'my-togle-agenda-files my-map)
+  (bind-key "A" 'my-togle-agenda-files my-map)
 
    ;; default agenda files: on my business host, start with the work-related files;
    ;;                       on my other machines, start with my non-work-related files
-   (if (my-system-is-powerplantwin)
+   (if (my-system-type-is-windows)
        (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
        (setq org-agenda-files (append my-nonwork-agenda-files ))
        )
 
-;;** refiling
+#+END_SRC
+
+** refiling
+
+#+BEGIN_SRC emacs-lisp
 
   ;; Targets include this file and any file contributing to the
   ;;    agenda - up to 5 levels deep
@@ -1997,7 +2158,11 @@ i.e. change right window to bottom, or change bottom window to right."
 
 
   ;; ######################################################
-;;** my-url-linkify (my-map u)
+#+END_SRC
+
+** my-url-linkify (my-map u)
+
+#+BEGIN_SRC emacs-lisp
   ;; replaces URL with Org-mode link including description
   ;; see id:2014-03-09-inbox-to-bookmarks
   ;; 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
@@ -2056,17 +2221,21 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
       )
     )
 
-  (bind-key "u" #'my-url-linkify my-map)
+  (bind-key "u" 'my-url-linkify my-map)
 
 ;; ######################################################
-;;** my-insert-orgmode-url-from-clipboard (my-map U)
+#+END_SRC
+
+** my-insert-orgmode-url-from-clipboard (my-map U)
+
+#+BEGIN_SRC emacs-lisp
   ;; inserts URL from clipboard and retrieves title as Org-mode link
   ;; see id:2014-08-10-bookmarks-with-orgmode
   ;; 2015-05-22: Via email arjan: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
   (defun straight-string (s)
     ;; Spliting the string and then concatenating it back.
-    (mapconcat '(lambda (x) x) (split-string s) " "))
+    (mapconcat #'(lambda (x) x) (split-string s) " "))
 
   (defun my-cliplink-format-and-trim-title (title)
     (let (;; Table of replacements which make this title usable for
@@ -2128,10 +2297,14 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
           (cliplink-decode-content-and-return-orgmode-link-of-title ,dest-buffer ,url
                             (buffer-string))))))
 
-  (bind-key "U" #'my-insert-orgmode-url-from-clipboard my-map)
+  (bind-key "U" 'my-insert-orgmode-url-from-clipboard my-map)
 
 
-;;** my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map l)
+#+END_SRC
+
+** my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map l)
+
+#+BEGIN_SRC emacs-lisp
   ;; inserts public voit URL from clipboard and jumps to its Org-mode heading
   ;; 2015-05-23: adapted from: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
@@ -2186,7 +2359,11 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
 
 
 ;; ######################################################
-;;** bookmarks (my-map b)
+#+END_SRC
+
+** bookmarks (my-map b)
+
+#+BEGIN_SRC emacs-lisp
   ;; smart moving bookmark headings from inbox to notes.org
   ;; see id:2014-03-09-inbox-to-bookmarks
   (defun my-save-bookmark()
@@ -2239,10 +2416,14 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
       )
     )
 
-  (bind-key "b" #'my-save-bookmark my-map)
+  (bind-key "b" 'my-save-bookmark my-map)
 
 
-;;** misc agenda helper functions
+#+END_SRC
+
+** misc agenda helper functions
+
+#+BEGIN_SRC emacs-lisp
 
   ;; ######################################################
   ;; 2012-12-09 From: Memnon Anon <gegendosenfleisch@googlemail.com>
@@ -2460,7 +2641,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 	  )
 	 (concat "-" tag)))
 
-  (if (my-system-is-powerplantwin)
+  (if (my-system-type-is-windows)
       (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function-infonova)
     (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function-private)
     )
@@ -2486,7 +2667,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
     )
 
 
-;;** org-agenda-custom-commands
+#+END_SRC
+
+** org-agenda-custom-commands
+
+#+BEGIN_SRC emacs-lisp
   (setq org-agenda-custom-commands
 	(quote (
 
@@ -2495,19 +2680,21 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		;; disabled 2014-08-17 ;;           (
 		;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
 		;; disabled 2014-08-17 ;;            ))
-		("n" "no TODO events +60d"
-		 ((agenda "no TODO events +60d"
-			  ((org-agenda-span 60)
+		("n" "no TODO events +180d"
+		 ((agenda "no TODO events +180d"
+			  ((org-agenda-span 180)
 			   (org-agenda-time-grid nil)
 			   (org-agenda-entry-types '(:timestamp :sexp))
 			   (org-agenda-skip-function
                             '(or
                               (org-agenda-skip-entry-if 'todo 'any);; skip if any TODO state is found
+                              (org-agenda-skip-entry-if 'category "infonova");; skip if any TODO state is found
                               (my-skip-tag "lp")
                               )
                             )
                            ;;(org-agenda-skip-function '(my-skip-tag "lp"))
-			  ))))
+			  )))
+                 nil ("~/org/agenda.html"))
 
 		;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
 		;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
@@ -2711,7 +2898,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		)))
 
 
-;;** agenda settings
+#+END_SRC
+
+** agenda settings
+
+#+BEGIN_SRC emacs-lisp
 
   ;; start Agenda in follow-mode:
   ;(setq org-agenda-start-with-follow-mode t)
@@ -2833,7 +3024,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 					; systems! Otherwise Org-files gets
 					; re-formatted after switching
                                         ; system
-  ;;(when (my-system-is-powerplantwin)
+  ;;(when (my-system-type-is-windows)
   ;;    ;;(setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
   ;;      (setq org-agenda-tags-column -117);; for 24" TFT turned 90 degrees
   ;;      )
@@ -2849,7 +3040,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled; (setq org-agenda-sticky t)
 
 
-;;** my-org-agenda (my-map a)
+#+END_SRC
+
+** my-org-agenda (my-map a)
+
+#+BEGIN_SRC emacs-lisp
 
   ;; ######################################################
   ;; 2014-06-03: switch to open Agenda or open new one:
@@ -2865,10 +3060,14 @@ Late deadlines first, then scheduled, then non-late deadlines"
       (org-agenda-list)
       )
     )
-  (bind-key "a" #'my-org-agenda my-map)
+  (bind-key "a" 'my-org-agenda my-map)
 
 
-;;** my-memacs-org-agenda (my-map m)
+#+END_SRC
+
+** my-memacs-org-agenda (my-map m)
+
+#+BEGIN_SRC emacs-lisp
 
   ;; ######################################################
   ;; 2014-06-28: Memacs org-agenda shortcut
@@ -2881,11 +3080,15 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (call-interactively 'org-agenda-archives-mode)
     (org-agenda-archives-mode 'files)
     )
-  ;;disabled because I needed "m";; (bind-key "m" #'my-memacs-org-agenda my-map)
+  ;;disabled because I needed "m";; (bind-key "m" 'my-memacs-org-agenda my-map)
   (global-set-key "\C-cm" 'my-memacs-org-agenda)
 
 
-;;** my-export-agenda
+#+END_SRC
+
+** my-export-agenda
+
+#+BEGIN_SRC emacs-lisp
   ;; ######################################################
   (defun my-export-agenda()
     "Exports monthly Org-mode agenda to agenda.ics file"
@@ -2920,7 +3123,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
       (message "Please do sync using unison!")
       )
     )
-;;** Org-contacts
+#+END_SRC
+
+** Org-contacts
+
+#+BEGIN_SRC emacs-lisp
   ;; set org-contacts defaults that differ from standard
   (setq org-contacts-address-property "CITY")
   (setq org-contacts-birthday-property "BORN")
@@ -2941,7 +3148,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
   ;; ######################################################
-;;** my-0d
+#+END_SRC
+
+** my-0d
+
+#+BEGIN_SRC emacs-lisp
   ;; on an agenda entry: add "-0d" to deadline
   (fset 'my-0d
 	[return ?\C-s ?> left ?  ?- ?0 ?d ?\C-x ?b return down])
@@ -2966,42 +3177,49 @@ Late deadlines first, then scheduled, then non-late deadlines"
   ;;disabled;; 	)
 
 
-;;** my-org-agenda-to-appt (disabled)
-  ;;disabled;; ;; ######################################################
-  ;;disabled;; ;; For org appointment reminders
-  ;;disabled;; ;; http://orgmode.org/worg/org-hacks.html#sec-3_1
-  ;;disabled;; ;; Get appointments for today
-  ;;disabled;; (when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
-  ;;disabled;;   (defun my-org-agenda-to-appt ()
-  ;;disabled;;     (interactive)
-  ;;disabled;;     (setq appt-time-msg-list nil)
-  ;;disabled;;     (let ((org-deadline-warning-days 0))    ;; will be automatic in org 5.23
-  ;;disabled;; 	(org-agenda-to-appt)))
-  ;;disabled;;   ;; Run once, activate and schedule refresh
-  ;;disabled;;   (my-org-agenda-to-appt)
-  ;;disabled;;   (appt-activate t)
-  ;;disabled;;   (run-at-time "24:01" nil 'org-agenda-to-appt)
-  ;;disabled;;   ;; 5 minute warnings
-  ;;disabled;;   (setq appt-message-warning-time 15)
-  ;;disabled;;   (setq appt-display-interval 15)
-  ;;disabled;;   ;; Update appt each time agenda opened.
-  ;;disabled;;   (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-  ;;disabled;;   ;; Setup zenify, we tell appt to use window, and replace default function
-  ;;disabled;;   (setq appt-display-format 'window)
-  ;;disabled;;   (setq appt-disp-window-function (function appt-disp-window))
-  ;;disabled;;   (defun appt-disp-window (min-to-app new-time msg)
-  ;;disabled;;     (save-window-excursion
-  ;;disabled;; 	(shell-command
-  ;;disabled;; 	 (concat "/usr/bin/zenity --info --title='Appointment' --text='" msg "' &") nil nil)
-  ;;disabled;; 	)
-  ;;disabled;;     )
-  ;;disabled;;   )
+#+END_SRC
 
-;;** icons (categories)
+** DISABLED my-org-agenda-to-appt
+
+#+BEGIN_SRC emacs-lisp
+;; ######################################################
+;; For org appointment reminders
+;; http://orgmode.org/worg/org-hacks.html#sec-3_1
+;; Get appointments for today
+(when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
+  (defun my-org-agenda-to-appt ()
+    (interactive)
+    (setq appt-time-msg-list nil)
+    (let ((org-deadline-warning-days 0))    ;; will be automatic in org 5.23
+	(org-agenda-to-appt)))
+  ;; Run once, activate and schedule refresh
+  (my-org-agenda-to-appt)
+  (appt-activate t)
+  (run-at-time "24:01" nil 'org-agenda-to-appt)
+  ;; 5 minute warnings
+  (setq appt-message-warning-time 15)
+  (setq appt-display-interval 15)
+  ;; Update appt each time agenda opened.
+  (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+  ;; Setup zenify, we tell appt to use window, and replace default function
+  (setq appt-display-format 'window)
+  (setq appt-disp-window-function (function appt-disp-window))
+  (defun appt-disp-window (min-to-app new-time msg)
+    (save-window-excursion
+	(shell-command
+	 (concat "/usr/bin/zenity --info --title='Appointment' --text='" msg "' &") nil nil)
+	)
+    )
+  )
+#+END_SRC
+
+** icons (categories)
+
+#+BEGIN_SRC emacs-lisp
 
   ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
   (setq org-agenda-category-icon-alist nil)
-  (when (my-system-is-powerplantwin)
+  (when (my-system-type-is-windows)
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
@@ -3037,7 +3255,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		  )
     )
 
-;;** calfw (disabled)
+#+END_SRC
+
+** calfw (disabled)
+
+#+BEGIN_SRC emacs-lisp
   ;; ######################################################
   ;; https://github.com/kiwanami/emacs-calfw
   ;; A calendar framework for Emacs
@@ -3061,7 +3283,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
   ;; ######################################################
-;;** CAPTURE
+#+END_SRC
+
+** CAPTURE
+
+#+BEGIN_SRC emacs-lisp
 
   ;; capture:    http://orgmode.org/org.html#Setting-up-capture
   (setq org-default-notes-file "~/share/all/org-mode/inbox.org")
@@ -3128,394 +3354,31 @@ Re-using:
 
 \n\n")
 
-
-  (setq my-capture-template-r6story "** TODO [[IPD:%(my-capture-prompt \"IPD number\" 'my-ipd)]] %(my-capture-prompt \"Story title\" 'my-title) [1/11]                         :US_%(my-capture-prompt \"Short title\" 'my-short-title):
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID: %(format-time-string \"%Y-%m-%d\")-Story-%(my-capture-insert 'my-short-title)
-:END:
-
-| *IPD* | *Confluence* | *Champ* |
-| [[IPD:%(my-capture-insert 'my-ipd)][%(my-capture-insert 'my-ipd)]]  | %(my-capture-insert 'my-title) |     |
-
-*** NEXT create Jira [[IPD:%(my-capture-insert 'my-ipd)]]
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID:    %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-jira-ipd
-:BLOCKER:
-:TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-define-champ(NEXT) %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-get-estimation(NEXT)
-:END:
-
-- fill out:
-  - [ ] set reporter
-  - [ ] set level red
-  - [ ] fixVersion
-
-*** NEXT create Confluence page with template
-SCHEDULED: <%(format-time-string \"%Y-%m-%d\")>
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID:    %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-confluence-page
-:BLOCKER:
-:TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria(NEXT)
-:END:
-
-- fill out:
-  - [ ] add Jira-Link [[IPD:%(my-capture-insert 'my-ipd)]]
-  - [ ] PO
-  - [ ] Title
-  - [ ] Business Value
-- [ ] add Confluence-short-URL to story table above
-
-*** TODO write Acceptance Criteria, Docu, Perms
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria
-:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-confluence-page
-:TRIGGER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-confidence-green(NEXT) %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team(NEXT)
-:END:
-
-*** TODO add Champ to Confluence and Jira                                    :refinement:
-:PROPERTIES:
-:CATEGORY: refinement
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-define-champ
-:BLOCKER:
-:END:
-
-*** TODO get Estimation on [[IPD:%(my-capture-insert 'my-ipd)]]                                           :refinement:
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:CATEGORY: refinement
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-estimation
-:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-create-jira-ipd
-:TRIGGER:
-:END:
-
-- Estimation:
-
-*** TODO get confidence-level green on [[IPD:%(my-capture-insert 'my-ipd)]]                                :refinement:
-:PROPERTIES:
-:CATEGORY: refinement
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-confidence-green
-:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-estimation
-:TRIGGER:
-:END:
-
-*** TODO hand over to team
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-write-acceptance-criteria %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-estimation
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team
-:TRIGGER:  %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept(WAITING)
-:END:
-
-*** acceptance
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept
-:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-hand-over-team
-:END:
-
-- Dev macht danach:
-  - auf \"Implementation Complete\" setzen
-  - mergen + master-Tests grün -> \"Resolved\"
-
-*** close
-:PROPERTIES:
-:CREATED:  [%<%Y-%m-%d %a %H:%M>]
-:ID: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-close
-:BLOCKER: %(format-time-string \"%Y-%m-%d\")-%(my-capture-insert 'my-short-title)-accept
-:TRIGGER: %(format-time-string \"%Y-%m-%d\")-Story-%(my-capture-insert 'my-short-title)(DONE)
-:END:
-")
-
-  (setq my-capture-template-kabarett "
-** Kabarettabendorga: %(my-capture-prompt \"ISO-Datum Veranstaltung\" 'my-event-date) %(my-capture-prompt \"Künstler\" 'my-artist)                   :%(my-capture-insert 'my-artist):Kabarett:
-:PROPERTIES:
-:ID: %(my-capture-insert 'my-event-date)-y-Kabarett
-:END:
-
-- Titel                   : %(my-capture-prompt \"Programmname\" 'my-programname)
-
-- %(my-capture-prompt \"Anzahl der reservierten Plätze\" 'my-num-seats) Plätze gesamt
-  - 2: Kathi und ich
-  - 2:
-  - 2:
-  - 2:
-
-*** NEXT Email: %(my-capture-insert 'my-num-seats)-2 Plätze noch zu vergeben
-SCHEDULED: <%(my-capture-prompt \"ISO-Datum Email-Aussendung\" 'my-email-date)>
-:PROPERTIES:
-:ID: %(my-capture-insert 'my-event-date)-k-email1
-:END:
-
-- Email an \"kabarettinteressierte\" (mutt-alias)
-- Eintragen in Liste oben
-
-#+BEGIN_QUOTE
-Kabarett: %(my-capture-insert 'my-artist) am %(my-capture-insert 'my-event-date)
-
-Hallo Kabarettfreunde!
-
-Es ist wieder soweit:
-
-  Wer:    %(my-capture-insert 'my-artist)
-  Was:    \"%(my-capture-insert 'my-programname)\"
-  Wann:   %(my-capture-insert 'my-event-date) 19:15 Abendkassa
-  Wo:     %(my-capture-selection '(\"Theatercafé\" \"Orpheum\" \"FIXXME\") 'my-location)
-
-Wer zuerst sich anmeldet, der bekommt die reservierten Karten. Mein
-Kontingent ist dieses Mal begrenzt auf %(my-capture-insert 'my-num-seats) Karten.
-
-	  Ich bitte um verbindliche Zusagen per Email.
-
-Wie üblich: reservierte Karten sind an der Abendkasse selber abzuholen
-und zu bezahlen. Reserviert wurde auf »Karl Voit«. Vergünstigungen
-bekommst du mit AKCard, Studentenausweis (Alterslimit!) oder (nur für
-den *Eintritt* ins Theatercafe) bis zu 20% durch die Kabanussis.
-
-Wir freuen uns!
-
-
-
-Wenn du in Zukunft keine solchen Emails mehr von mir bekommen
-möchtest, so schick' mir bitte ein Email. Du wirst dann von der
-Kabarett-Emailliste entfernt.
-
-#+END_QUOTE
-
-*** NEXT Kabarett-Reminder an alle angemeldeten
-SCHEDULED: <%(my-capture-prompt \"ISO-Datum Erinnerungsemail\" 'my-reminder-date)>
-:PROPERTIES:
-:BLOCKER: %(my-capture-insert 'my-event-date)-k-email1
-:ID: %(my-capture-insert 'my-event-date)-k-email2
-:END:
-
-#+BEGIN_QUOTE
-Erinnerung: Kabarett %(my-capture-insert 'my-artist) am %(my-capture-insert 'my-event-date)
-
-Hallo Kabarettinteressierter!
-
-Du hast dich bei mir für das kommende Kabarett angemeldet:
-
-  Wer:    %(my-capture-insert 'my-artist)
-  Was:    \"%(my-capture-insert 'my-programname)\"
-  Wann:   %(my-capture-insert 'my-event-date) 19:15 Abendkassa
-  Wo:     %(my-capture-insert 'my-location)
-
-Wie üblich: reservierte Karten sind an der Abendkasse selber abzuholen
-und zu bezahlen. Reserviert wurde auf »Karl Voit«. Vergünstigungen
-bekommst du mit AKCard, Studentenausweis (Alterslimit!) oder (nur für
-den *Eintritt* ins Theatercafe) bis zu 20% durch die Kabanussis.
-
-Wir freuen uns!
-
-#+END_QUOTE
-
-*** <%(my-capture-insert 'my-event-date) 19:00-20:00> Kabarett-Vorglühen              :@Stadt:
-:PROPERTIES:
-:ID: %(my-capture-insert 'my-event-date)-kabarettvorgluehen
-:END:
-
-*** <%(my-capture-insert 'my-event-date) 20:00-23:30> %(my-capture-insert 'my-artist): \"%(my-capture-insert 'my-programname)\" (%(my-capture-insert 'my-location), DND) :@Stadt:
-:PROPERTIES:
-:ID: %(my-capture-insert 'my-event-date)-kabarettabend
-:END:
-
-- http://members.aon.at/hinwider/S.4_Kuenstler.htm
-#+BEGIN_QUOTE
-#+END_QUOTE
-")
-
-
-  (setq my-capture-template-contact "** %(my-capture-prompt \"Vorname\" 'my-firstname) %(my-capture-prompt \"Nachname\" 'my-lastname)     :%(my-capture-insert 'my-firstname)%(my-capture-insert 'my-lastname):
-:PROPERTIES:
-:TYPE: %(my-capture-selection '(\"person\" \"company\") 'my-person-or-company)
-:TITLE:
-:EMAIL: %(my-capture-prompt \"Email\" 'my-email)
-:URL:
-:MOBILE: 0043/
-:HOMEPHONE:
-:WORKPHONE:
-:PHONE:
-:COMPANY:
-:STREET:
-:POSTALCODE:
-:CITY:
-:COUNTRY: Österreich
-:PHOTOGRAPH: [[photo:%(my-capture-insert 'my-firstname)%(my-capture-insert 'my-lastname).jpg]]
-:BORN:
-:ITOLDTHEM_EMAIL:
-:ITOLDTHEM_ADDRESS:
-:ITOLDTHEM_PHONE:
-:ADDRESS_CHANGE_METHOD:
-:END:
-
-- Erstkontakt:
-
-\n\n")
-
-  (setq my-capture-template-releasenotes "***** NEXT [#A] Release Notes Sprint 2016-%(my-capture-prompt \"Sprint\" 'my-sprint) [0/7]
-SCHEDULED: %(my-capture-prompt-date \"Friday\" 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-sprint-release-notes
-:NOTordered: t
-:END:
-
-| Release   | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Successor created]] | [[https://product.infonova.at/jira/plugins/servlet/project-config/IPD/versions][Jira Released]] | [[https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel][Notes done]] | am Nexus | URL sent | Notes |
-|-----------+-------------------+---------------+------------+----------+-------+-------|
-
-****** Status
-
-#+BEGIN_SRC sh :results output :wrap quote
-c:/Users/karl.voit/src/jira-defect-analysis.py/jira-defect-analysis.py
 #+END_SRC
 
-****** NEXT Defects closen (mit Scrum-Master)
-SCHEDULED: %(my-capture-prompt-date \"Wednesday\" 'my-wednesday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
-:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified(NEXT) release-notes-process-2016-%(my-capture-insert 'my-sprint)-tasks-and-stories(NEXT)
-:END:
-
-****** NEXT Create Jira Successor
-SCHEDULED: %(my-capture-prompt-date \"Thursday\" 'my-thursday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-create-jira-release-successors
-:END:
-
-****** WAITING [#A] \"Release Info\"-Channel: all defects closed
-SCHEDULED: %(my-capture-insert 'my-thursday)
-:PROPERTIES:
-:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified
-:END:
-
-****** WAITING Tasks: Fixversion löschen; Stories: nicht in Service Packs
-SCHEDULED: %(my-capture-insert 'my-thursday)
-:PROPERTIES:
-:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-defects-closed
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-tasks-and-stories
-:END:
-
-- Doku-Defects (die nicht in Release Notes sollen): alle Fixversions löschen
-
-****** NEXT Release Notes Review
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-reviewed
-:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created(NEXT)
-:END:
-
-****** WAITING Release Notes erstellen
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created
-:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-beno-notified
-:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-finished-mattermost(NEXT) release-notes-process-2016-%(my-capture-insert 'my-sprint)-releases-on-nexus(WAITING) release-notes-process-2016-%(my-capture-insert 'my-sprint)-PDF-released(WAITING)
-:END:
-
-https://product.infonova.at/jira/browse/IPD/?selectedTab=com.atlassian.jira.jira-projects-plugin:versions-panel
-
-- replace-regexp
-  : &create.*
-
-****** WAITING [#A] \"Release Info\"-Channel: Release Notes verkünden
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-finished-mattermost
-:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-created
-:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent(NEXT)
-:END:
-
-
-****** NEXT Release-Note-Orgmode-Struktur für nächsten Sprint erstellen (capture)
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-next-orgmode-struct-done
-:END:
-
-****** WAITING [#A] Releases am Nexus verfügbar
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-releases-on-nexus
-:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent(NEXT)
-:END:
-
-****** WAITING [#A] PDF am Partnerportal verfügbar (Nusa)
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-PDF-released
-:END:
-
-****** WAITING [#A] Release Note Email verschicken
-SCHEDULED: %(my-capture-insert 'my-friday)
-:PROPERTIES:
-:ID: release-notes-process-2016-%(my-capture-insert 'my-sprint)-release-notes-sent
-:BLOCKER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-releases-on-nexus release-notes-process-2016-%(my-capture-insert 'my-sprint)-PDF-released
-:TRIGGER: release-notes-process-2016-%(my-capture-insert 'my-sprint)-sprint-release-notes(DONE)
-:END:
-
-")
-
-
-  (setq my-capture-template-officehours "****** Arbeitsstunden von Karl Voit für 2016-%(my-capture-prompt \"Monat (zB 06)\" 'my-month)
-:PROPERTIES:
-:EXPORT_OPTIONS: toc:nil author:nil ^:nil *:nil timestamp:nil date:nil tags:nil
-:EXPORT_LATEX_CLASS: scrartcl
-:EXPORT_FILE_NAME: c:/Users/karl.voit/infonova/Stundenabrechnung/2016-%(my-capture-insert 'my-month)_Arbeitsstunden_Karl_Voit.pdf
-:END:
-
-#+BEGIN_SRC sh :exports results :results raw :prologue \"echo \\\"|      Datum | Tag | Kommt | MP Beginn | MP Ende |  Geht | Summe | Prozent |\\n|-\\\"\"
-grep ':OFFICE-SUMMARY:' /cygd*/c/Use*/karl*/sha*/all/org-m*/mem*/roylog*archive | grep 2016-%(my-capture-insert 'my-month) | sed 's/:OFFICE-SUMMARY: //' ;
-echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: \\$8 = '(my-percentage-of-hm-string-with-day \\$7 \\$2)\"
+Test of org-capture-templates
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq org-capture-templates
+`(
+  ("1" "first version with string" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+  ("2" "second version with variable" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+   ,my-capture-template-next :empty-lines 1)
+        ))
 #+END_SRC
 
-
-#+ATTR_LATEX: :width 2cm :float wrap :placement {r}{1.8\\textwidth}
-[[file:c:/Users/karl.voit/templates_labels/2016-07-12 Karl Voit - Unterschrift.pdf]]
-
-******* Process                :noexport:
-
-1. [X] Capture
-2. [ ] Execute babel code (C-c C-c)
-3. [ ] Update table (C-u C-u C-c C-c)
-4. [ ] Copy heading + body above
-5. [ ] Open [[file:c:/Users/karl.voit/infonova/Stundenabrechnung/2016-%(my-capture-insert 'my-month)_Arbeitsstunden_Karl_Voit.org]]
-6. [ ] Paste heading + body
-7. [ ] Export as PDF
-8. [ ] [[mailto:klaudija.ferencek-horvat@infonova.com?subject=Arbeitsstunden%20von%20Karl%20Voit%20fuer%202016-%(my-capture-insert 'my-month)&body=Hallo%20Klaudija!%0D%0A%0D%0AHier%20sind%20meine%20unterschriebenen%20und%20gescannten%20Stunden%20fuer%20den%20Monat%202016-%(my-capture-insert 'my-month).%0D%0A%0D%0AEinen%20schoenen%20Tag%20noch!&attachment=c:/Users/karl.voit/infonova/Stundenabrechnung/2016-%(my-capture-insert 'my-month)_Arbeitsstunden_Karl_Voit.pdf]]
-9. [ ] attach the PDF file
-
-\n\n")
-
-
-;;test  (setq org-capture-templates
-;;test	`(
-;;test	  ("1" "first version with string" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
-;;test	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-;;test	  ("2" "second version with variable" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
-;;test	   ,my-capture-template-next :empty-lines 1)
-;;test          ))
-
-  ;; ######################################################
-  ;; templates:  http://orgmode.org/org.html#Capture-templates
-  ;; elements:   http://orgmode.org/org.html#Template-elements
+org-capture-templates
+- templates:  http://orgmode.org/org.html#Capture-templates
+- elements:   http://orgmode.org/org.html#Template-elements
+#+BEGIN_SRC emacs-lisp
   (setq org-capture-templates
 	`(
 	  ("s" "shorts-todo" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 	  ("e" "Event" entry (file+headline "~/share/all/org-mode/misc.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("k" "Kabarett" entry (file+headline "~/share/all/org-mode/misc.org" "Events")
-	   ,my-capture-template-kabarett :empty-lines 1)
 	  ("b" "Bookmark" entry (file+headline "~/share/all/org-mode/notes.org" "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("c" "Contact" entry (file+headline "~/share/all/org-mode/contacts.org" "Inbox")
-	   ,my-capture-template-contact :empty-lines 1)
-	   ;;(file "~/.emacs.d/data/capture_contact.org") :empty-lines 1)
 	  ("p" "public voit" entry (file+headline "~/share/all/org-mode/public_voit.org" "Blogbeiträge")
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
 	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
@@ -3542,17 +3405,11 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
 	  ("i" "infonova Templates")
 	  ("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("in" "infonova Release Notes" entry (file+olp "~/share/all/org-mode/infonova.org" "Notes" "R6" "Processes" "Release-Notes" "Release Management & Defect Finalization")
-	   ,my-capture-template-releasenotes :empty-lines 1)
-	  ("iS" "infonova Stundenabrechnung" entry (file+olp "~/share/all/org-mode/infonova.org" "Notes" "Orga" "Arbeitszeiten" "Buchen mit roylog nach 2016-07-01")
-	   ,my-capture-template-officehours :empty-lines 1)
 	  ("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("ir" "r6 Templates")
 	  ("irs" "R6 shorts" entry (file+headline "~/share/all/org-mode/r6-stories.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("iru" "Userstory" entry (file+headline "~/share/all/org-mode/r6-stories.org" "New Stories")
-	   ,my-capture-template-r6story :empty-lines 1)
 	  ("f" "FH St. Pölten shorts" entry (file+headline "~/share/all/org-mode/fhsp.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 	  ;;("ii" "infonova IPD" entry (file+headline "~/share/all/org-mode/infonova.org" "IPDs")
@@ -3596,9 +3453,11 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
 	   ,my-capture-template-test :empty-lines 1)
 	  )
 	)
+#+END_SRC
 
+** org-tag-alist
 
-;;** org-tag-alist
+#+BEGIN_SRC emacs-lisp
   ;; Tags with fast selection keys
   ;; http://orgmode.org/org.html#Setting-tags
   (setq org-tag-alist (quote (
@@ -3634,11 +3493,15 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
 
 
   ;; ######################################################
-;;** babel
+#+END_SRC
 
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+** babel
 
-  ;; active Babel languages
+#+BEGIN_SRC emacs-lisp
+
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+;; active Babel languages
 (when (my-system-type-is-windows)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -3653,6 +3516,7 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
   )
 
 (when (my-system-type-is-gnu)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
@@ -3666,8 +3530,6 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
      (emacs-lisp . t)
      (ditaa . t)
      (dot . t)
-     (sql . t)
-     (restclient . t)
      ))
   )
 
@@ -3721,7 +3583,11 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
   ;;disabled;;       '((:epilogue . ":"))
   ;;disabled;;       )
 
-;;** habits
+#+END_SRC
+
+** habits
+
+#+BEGIN_SRC emacs-lisp
   ;; ######################################################
   ;; global STYLE property values for completion
   (setq org-global-properties (quote (("STYLE_ALL" . "habit"))))
@@ -3729,7 +3595,11 @@ echo \"#+TBLFM: \\$7 = '(my-calculate-office-hour-total \\$3 \\$6 \\$4 \\$5) :: 
   (setq org-habit-graph-column 50)
 
 
-;;** org-crypt
+#+END_SRC
+
+** org-crypt
+
+#+BEGIN_SRC emacs-lisp
 
   (when (my-system-type-is-gnu)
     (require 'org-crypt)
@@ -3790,7 +3660,11 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;** Org-Mobile
+#+END_SRC
+
+** Org-Mobile
+
+#+BEGIN_SRC emacs-lisp
   ;; http://orgmode.org/org.html#MobileOrg
   ;; directory where to store MobileOrg-files
   (setq org-directory "~/share/all/org-mode")
@@ -3812,7 +3686,11 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;** preserve top level node and tags when archiving
+#+END_SRC
+
+** preserve top level node and tags when archiving
+
+#+BEGIN_SRC emacs-lisp
   ;; http://orgmode.org/worg/org-hacks.html#sec-1-7-1
   (defun my-org-inherited-no-file-tags ()
     (let ((tags (org-entry-get nil "ALLTAGS" 'selective))
@@ -3839,7 +3717,11 @@ Null prefix argument turns off the mode."
           (org-set-tags-to tags)))))
 
 
-;;** org-link
+#+END_SRC
+
+** org-link
+
+#+BEGIN_SRC emacs-lisp
   (setq org-link-abbrev-alist
 	'(
 	  ("bib" . "~/archive/library/%s.bib")
@@ -3939,7 +3821,11 @@ Null prefix argument turns off the mode."
 
   ;; ######################################################
 
-;;** org-link-set-parameters
+#+END_SRC
+
+** org-link-set-parameters
+
+#+BEGIN_SRC emacs-lisp
 
   (defvar memacs-root "~/org/memacs/")
 
@@ -4025,13 +3911,17 @@ Null prefix argument turns off the mode."
           (org-next-link)
           (org-open-at-point))))))
 
-  (org-link-set-parameters
-   "tsfile"
-   :follow (lambda (path) (my-handle-tsfile-link path))
-   :help-echo "Opens the linked file with your default application")
+;; FIXXMEconfig (void-function org-link-set-parameters)   (org-link-set-parameters
+;; FIXXMEconfig (void-function org-link-set-parameters)    "tsfile"
+;; FIXXMEconfig (void-function org-link-set-parameters)    :follow (lambda (path) (my-handle-tsfile-link path))
+;; FIXXMEconfig (void-function org-link-set-parameters)    :help-echo "Opens the linked file with your default application")
 
 
-;;*** color links
+#+END_SRC
+
+*** color links
+
+#+BEGIN_SRC emacs-lisp
 ;; http://kitchingroup.cheme.cmu.edu/blog/2016/11/08/New-color-link-in-org-9-0-using-font-lock-to-color-the-text/
 
 ;; (require 's)
@@ -4075,8 +3965,16 @@ Null prefix argument turns off the mode."
 ;;                          :complete 'color-comp
 ;;                          :export 'color-link-export)
 
-;;** iCal
-;;*** iCal -> Org (disabled)
+#+END_SRC
+
+** iCal
+
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+
+*** iCal -> Org (disabled)
+
+#+BEGIN_SRC emacs-lisp
   ;;disabled;; ;; ######################################################
   ;;disabled;; ;; import iCal to Org-mode
   ;;disabled;; ;; http://ozymandias.dk/emacs/org-import-calendar.el
@@ -4087,7 +3985,11 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;*** Austrian Holidays
+#+END_SRC
+
+*** Austrian Holidays
+
+#+BEGIN_SRC emacs-lisp
   ;; from: http://paste.lisp.org/display/96464
   ;; ~/Notes/holidays.el
   (require 'holidays)
@@ -4121,7 +4023,11 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;*** org-agenda-exporter-settings
+#+END_SRC
+
+*** org-agenda-exporter-settings
+
+#+BEGIN_SRC emacs-lisp
   ;; customizing the agenda export of C-x C-w
   ;; http://orgmode.org/manual/Exporting-Agenda-Views.html
   (setq org-agenda-exporter-settings
@@ -4131,19 +4037,31 @@ Null prefix argument turns off the mode."
 	  (htmlize-output-type 'css)))
 
   ;; ######################################################
-;;*** time-zone for iCal
+#+END_SRC
+
+*** time-zone for iCal
+
+#+BEGIN_SRC emacs-lisp
   ;; setting timezone in order to get a correct iCal export
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-05/msg00134.html
   (setq org-icalendar-timezone "Europe/Vienna")
 
   ;; ######################################################
-;;*** setting destination file for iCal export
+#+END_SRC
+
+*** setting destination file for iCal export
+
+#+BEGIN_SRC emacs-lisp
   ;; http://lists.gnu.org/archive/html/emacs-orgmode/2009-05/msg00163.html
   ;; http://orgmode.org/worg/org-tutorials/org-google-sync.html
   ;;disabled; does not work
   ;;disabled;(setq org-combined-agenda-icalendar-file "~/public_html/orgmodevk478.ics")
 
-;;*** org-mycal-export-limit (disabled)
+#+END_SRC
+
+*** org-mycal-export-limit (disabled)
+
+#+BEGIN_SRC emacs-lisp
   ;; ######################################################
   ;;disabled;; ;; define filter. The filter is called on each entry in the agenda.
   ;;disabled;; ;; It defines a regexp to search for two timestamps, gets the start
@@ -4176,20 +4094,36 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;*** org-mode export of calendar events to Google
+#+END_SRC
+
+*** org-mode export of calendar events to Google
+
+#+BEGIN_SRC emacs-lisp
   ;; http://orgmode.org/worg/org-tutorials/org-google-sync.html
 
-;;*** define categories that should be excluded
+#+END_SRC
+
+*** define categories that should be excluded
+
+#+BEGIN_SRC emacs-lisp
   (setq org-export-exclude-category (list "google" "private"))
 
 
   ;; ######################################################
-;;*** ignore :noexport: entries in iCal-export
+#+END_SRC
+
+*** ignore :noexport: entries in iCal-export
+
+#+BEGIN_SRC emacs-lisp
   ;; http://comments.gmane.org/gmane.emacs.orgmode/36415
   (setq org-icalendar-honor-noexport-tag t)
 
   ;; ######################################################
-;;*** add tags to iCal-export
+#+END_SRC
+
+*** add tags to iCal-export
+
+#+BEGIN_SRC emacs-lisp
   ;; http://comments.gmane.org/gmane.emacs.orgmode/19148
   (setq org-icalendar-categories (quote (all-tags category)))
   ;;disabled;  '(org-icalendar-include-body 1000)
@@ -4203,7 +4137,11 @@ Null prefix argument turns off the mode."
 
 
   ;; ;; ######################################################
-;;** using alternative LaTeX exporter (disabled)
+#+END_SRC
+
+** using alternative LaTeX exporter (disabled)
+
+#+BEGIN_SRC emacs-lisp
   ;; ;(require 'org-export)
   ;; ;(require 'org-e-latex)
   ;; ;; invoke: M-x org-export-dispatch
@@ -4255,7 +4193,12 @@ Null prefix argument turns off the mode."
 
 
 
-;;** LaTeX-classes: scrartcl, scrartclsmall, ...
+#+END_SRC
+
+** LaTeX-classes: scrartcl, scrartclsmall, ...
+
+FIXXMEconfig: Lisp error: (void-variable org-latex-classes) -> disabled for now
+#+BEGIN_SRC emacs-lisp :tangle no
 
   ;; ######################################################
   ;; http://orgmode.org/org.html#Header-and-sectioning
@@ -4301,7 +4244,11 @@ Null prefix argument turns off the mode."
   ;;                ("\\section{%s}" . "\\section*{%s}")))
 
 
-;;** images
+#+END_SRC
+
+** images
+
+#+BEGIN_SRC emacs-lisp
 
   ;; ######################################################
   ;; From: Bastien <bzg@altern.org>
@@ -4325,7 +4272,11 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;** org-feed RSS (disabled)
+#+END_SRC
+
+** org-feed RSS (disabled)
+
+#+BEGIN_SRC emacs-lisp
   ;; org-feed - aggregating RSS feeds in news.org file:
   ;;disabled; (setq org-feed-alist
   ;;disabled;       '(
@@ -4341,12 +4292,20 @@ Null prefix argument turns off the mode."
 
 
   ;; ######################################################
-;;** Org-mode docu
+#+END_SRC
+
+** Org-mode docu
+
+#+BEGIN_SRC emacs-lisp
   (autoload 'info "info.el")
   (add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
 
 
-;;** Reference handling (Reftex)
+#+END_SRC
+
+** Reference handling (Reftex)
+
+#+BEGIN_SRC emacs-lisp
 
   ;; Default bibliography
   (setq reftex-default-bibliography '("~/archive/library/references.bib"))
@@ -4406,7 +4365,11 @@ Null prefix argument turns off the mode."
     (org-open-link-from-string (format "[[cite:%s]]" (reftex-citation t))))
 
 
-;;** calculating with dates and times
+#+END_SRC
+
+** calculating with dates and times
+
+#+BEGIN_SRC emacs-lisp
 
   ;; ######################################################
   ;; 2013-10-11
@@ -4474,7 +4437,11 @@ the result as a time value."
 	    `,@exprs))))
 
 
-;;** my-lazyblorg-test
+#+END_SRC
+
+** my-lazyblorg-test
+
+#+BEGIN_SRC emacs-lisp
   (if (my-system-type-is-gnu)
       (defun my-lazyblorg-test()
 	"Saves current blog entry to file and invoke lazyblorg process with it"
@@ -4504,12 +4471,20 @@ the result as a time value."
 	)
     )
 
-;;** orgaggregate
+#+END_SRC
+
+** orgaggregate
+
+#+BEGIN_SRC emacs-lisp
   ;; https://github.com/tbanel/orgaggregate
   (my-load-local-el "contrib/orgaggregate/orgtbl-aggregate.el")
   (my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
 
-;;** org-bullets
+#+END_SRC
+
+** org-bullets
+
+#+BEGIN_SRC emacs-lisp
 
   ;; nice looking bullets for headings
   (use-package org-bullets
@@ -4520,7 +4495,11 @@ the result as a time value."
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   )
 
-;;** org-table-sticky-header-mode
+#+END_SRC
+
+** org-table-sticky-header-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/cute-jumper/org-table-sticky-header
 ;; A minor mode to show the sticky header for org-mode tables.
 (use-package org-table-sticky-header
@@ -4530,7 +4509,11 @@ the result as a time value."
   (add-hook 'org-mode-hook 'org-table-sticky-header-mode)
   )
 
-;;** ob-async: asynchronous babel execution
+#+END_SRC
+
+** ob-async: asynchronous babel execution
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/astahlman/ob-async
 ;not yet available; (use-package ob-async
 ;not yet available;   ;; :disabled t
@@ -4539,7 +4522,11 @@ the result as a time value."
 ;not yet available;   (add-to-list 'org-ctrl-c-ctrl-c-hook 'ob-async-org-babel-execute-src-block)
 ;not yet available;   )
 
-;;** scimax/org-return
+#+END_SRC
+
+** scimax/org-return
+
+#+BEGIN_SRC emacs-lisp
 ;; http://irreal.org/blog/?p=6131
 ;; http://kitchingroup.cheme.cmu.edu/blog/2017/04/09/A-better-return-in-org-mode/
 
@@ -4575,13 +4562,13 @@ Use a prefix arg to get regular RET. "
         (setf (buffer-substring
                (line-beginning-position) (line-end-position)) "")
         (org-return)))
-     ((org-at-heading-p)
-      (if (not (string= "" (org-element-property :title (org-element-context))))
-          (progn (org-end-of-meta-data)
-                 (org-insert-heading))
-        (beginning-of-line)
-        (setf (buffer-substring
-               (line-beginning-position) (line-end-position)) "")))
+     ;;disabled;; ((org-at-heading-p)
+     ;;disabled;;  (if (not (string= "" (org-element-property :title (org-element-context))))
+     ;;disabled;;      (progn (org-end-of-meta-data)
+     ;;disabled;;             (org-insert-heading))
+     ;;disabled;;    (beginning-of-line)
+     ;;disabled;;    (setf (buffer-substring
+     ;;disabled;;           (line-beginning-position) (line-end-position)) "")))
      ((org-at-table-p)
       (if (-any?
            (lambda (x) (not (string= "" x)))
@@ -4601,22 +4588,28 @@ Use a prefix arg to get regular RET. "
 (define-key org-mode-map (kbd "RET")
   'scimax/org-return)
 
-;;** debug message: config orgmode finished.
-(message "############### DEBUG: config orgmode finished.")
+#+END_SRC
+
+** debug message: config orgmode finished.
+
+#+BEGIN_SRC emacs-lisp
+(message "→★ orgmode finished in %.2fs" (float-time (time-subtract (current-time) my-org-config-start-time)))
 
 ;; #############################################################################
-;;* misc modes/packages
+#+END_SRC
 
-;; #############################################################################
-;;** post-mode (disabled)
-;;disabled;; (setq post-variable-signature-source "~/daten/nobackup/funnies/good_sigs/allsigs.txt")
-;;disabled;; (setq post-signature-directory "~/daten/nobackup/funnies/good_sigs/")
+* misc modes/packages
 
+** DISABLED post-mode
 
+#+BEGIN_SRC emacs-lisp
+(setq post-variable-signature-source "~/daten/nobackup/funnies/good_sigs/allsigs.txt")
+(setq post-signature-directory "~/daten/nobackup/funnies/good_sigs/")
+#+END_SRC
 
+** MiniMap
 
-;; #############################################################################
-;;** MiniMap
+#+BEGIN_SRC emacs-lisp
 ;; http://www.emacswiki.org/emacs/MiniMap
 ;; MiniMap for Emacs
 ;;deactivated;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
@@ -4636,70 +4629,73 @@ Use a prefix arg to get regular RET. "
 
 
 ;; #############################################################################
-;;** TWiki (disabled)
-;; http://www.neilvandyke.org/erin-twiki-emacs/
-;; TWiki syntax highlighting
-;;disabled; ;(use-package erin))
-;;disabled; (my-load-local-el "contrib/erin.el")
+#+END_SRC
 
+** DISABLED TWiki
 
-;; #############################################################################
-;;** Twitter (disabled)
+- http://www.neilvandyke.org/erin-twiki-emacs/
+- TWiki syntax highlighting
+#+BEGIN_SRC emacs-lisp
+;(use-package erin))
+(my-load-local-el "contrib/erin.el")
+#+END_SRC
 
+** DISABLED Twitter
 
-;; ######################################################
-;; http://www.emacswiki.org/emacs/TwitteringMode
-;; http://citizen428.net/blog/2011/01/21/emacs-twittering-mode/
-;;disabled; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/twittering-mode/"))
-;;disabled; (use-package twittering-mode)
-;;disabled; (setq twittering-timer-interval 300)  ; Update your timeline each 300 seconds (5 minutes)
-;;disabled; (setq twittering-url-show-status nil) ; Keeps the echo area from showing all the http processes
-;;disabled; (setq twittering-icon-mode t)         ; Show icons
-;;disabled; (setq twittering-use-show-minibuffer-length t) ; Show character count in compose buffer
-;;disabled; ;; I added is.gd support myself, pull request sent.
-;;disabled; ;; standard options are tinyurl and toly
-;;disabled; ;(setq twittering-tinyurl-service 'is.gd)
-;;disabled; ;; See http://www.reverttoconsole.com/blog/nix/twitter-mode-for-emacs-with-oauth/
-;;disabled; (setq twittering-use-master-password t)
-;;disabled; ;; This tells twittering-mode which time line buffers
-;;disabled; ;; to open when starting
-;;disabled; (setq twittering-initial-timeline-spec-string
-;;disabled;       '(":friends"
-;;disabled;         ":replies"
-;;disabled;         ":direct_messages"
-;;disabled;         ":search/tugraz/"
-;;disabled;         ":search/tagstore/"
-;;disabled;	))
-;;disabled; ;; some key bindings
-;;disabled; (add-hook 'twittering-mode-hook
-;;disabled;           (lambda ()
-;;disabled;             (mapc (lambda (pair)
-;;disabled;                     (let ((key (car pair))
-;;disabled;                           (func (cdr pair)))
-;;disabled;                       (define-key twittering-mode-map
-;;disabled;                         (read-kbd-macro key) func)))
-;;disabled;                   '(("R" . twittering-native-retweet)
-;;disabled;                     ("l" . twittering-goto-next-thing)))))
-;;disabled; ;; enable spell check
-;;disabled; (add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
-;;disabled; ;; filter by regex  http://www.emacswiki.org/emacs/TwitteringMode -> "10 May 2011"
-;;disabled; (setq twittering-tweet-filters '("foobar42" "foobar 23"))
-;;disabled; (defun twittering-filter-tweets ()
-;;disabled;   (setq non-matching-statuses '())
-;;disabled;   (dolist (status twittering-new-tweets-statuses)
-;;disabled;     (setq matched-tweets 0)
-;;disabled;     (dolist (pat twittering-tweet-filters)
-;;disabled;       (if (string-match pat (cdr (assoc 'text status)))
-;;disabled;           (setq matched-tweets (+ 1 matched-tweets))))
-;;disabled;     (if (= 0 matched-tweets)
-;;disabled;         (setq non-matching-statuses (append non-matching-statuses `(,status)))))
-;;disabled;   (setq new-statuses non-matching-statuses))
-;;disabled; (add-hook 'twittering-new-tweets-hook 'twittering-filter-tweets)
-;;disabled;
+- http://www.emacswiki.org/emacs/TwitteringMode
+- http://citizen428.net/blog/2011/01/21/emacs-twittering-mode/
+#+BEGIN_SRC emacs-lisp
+ (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/twittering-mode/"))
+ (use-package twittering-mode)
+ (setq twittering-timer-interval 300)  ; Update your timeline each 300 seconds (5 minutes)
+ (setq twittering-url-show-status nil) ; Keeps the echo area from showing all the http processes
+ (setq twittering-icon-mode t)         ; Show icons
+ (setq twittering-use-show-minibuffer-length t) ; Show character count in compose buffer
+ ;; I added is.gd support myself, pull request sent.
+ ;; standard options are tinyurl and toly
+ ;(setq twittering-tinyurl-service 'is.gd)
+ ;; See http://www.reverttoconsole.com/blog/nix/twitter-mode-for-emacs-with-oauth/
+ (setq twittering-use-master-password t)
+ ;; This tells twittering-mode which time line buffers
+ ;; to open when starting
+ (setq twittering-initial-timeline-spec-string
+       '(":friends"
+         ":replies"
+         ":direct_messages"
+         ":search/tugraz/"
+         ":search/tagstore/"
+	))
+ ;; some key bindings
+ (add-hook 'twittering-mode-hook
+           (lambda ()
+             (mapc (lambda (pair)
+                     (let ((key (car pair))
+                           (func (cdr pair)))
+                       (define-key twittering-mode-map
+                         (read-kbd-macro key) func)))
+                   '(("R" . twittering-native-retweet)
+                     ("l" . twittering-goto-next-thing)))))
+ ;; enable spell check
+ (add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
+ ;; filter by regex  http://www.emacswiki.org/emacs/TwitteringMode -> "10 May 2011"
+ (setq twittering-tweet-filters '("foobar42" "foobar 23"))
+ (defun twittering-filter-tweets ()
+   (setq non-matching-statuses '())
+   (dolist (status twittering-new-tweets-statuses)
+     (setq matched-tweets 0)
+     (dolist (pat twittering-tweet-filters)
+       (if (string-match pat (cdr (assoc 'text status)))
+           (setq matched-tweets (+ 1 matched-tweets))))
+     (if (= 0 matched-tweets)
+         (setq non-matching-statuses (append non-matching-statuses `(,status)))))
+   (setq new-statuses non-matching-statuses))
+ (add-hook 'twittering-new-tweets-hook 'twittering-filter-tweets)
+#+END_SRC
 
-;; #############################################################################
-;;** UndoTree
-;; http://www.emacswiki.org/emacs/UndoTree
+** DISABLED UndoTree
+
+- http://www.emacswiki.org/emacs/UndoTree
+#+BEGIN_SRC emacs-lisp
 (use-package undo-tree
   ;; :disabled t
   :ensure t
@@ -4708,18 +4704,21 @@ Use a prefix arg to get regular RET. "
   :config ;; executed after loading package
   (autoload 'undo-tree "undo-tree.el")
 )
+#+END_SRC
 
+** DISABLED open-resource
 
+http://code.google.com/p/emacs-open-resource/
 
-;; #############################################################################
-;;** open-resource (disabled)
-;; http://code.google.com/p/emacs-open-resource/
-;;disabled; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
-;;disabled; (use-package open-resource)
-;;disabled; (global-set-key "\C-cr" 'open-resource)
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
+(use-package open-resource)
+(global-set-key "\C-cr" 'open-resource)
+#+END_SRC
 
-;; #############################################################################
-;;** whitespace-mode + style
+** whitespace-mode + style
+
+#+BEGIN_SRC emacs-lisp
 ;; from Twitter 2012-05-22: @emacs_knight
 ;;(when (or (my-system-type-is-gnu) (my-system-is-blanche))
 (whitespace-mode)
@@ -4728,7 +4727,11 @@ Use a prefix arg to get regular RET. "
 ;;  )
 
 ;; #############################################################################
-;;** (e)diff
+#+END_SRC
+
+** (e)diff
+
+#+BEGIN_SRC emacs-lisp
 ;; ediff from command line
 ;; http://www.emacswiki.org/emacs/EdiffMode
 ;; Usage: emacs -diff file1 file2
@@ -4741,14 +4744,22 @@ Use a prefix arg to get regular RET. "
 (add-to-list 'command-switch-alist '("diff" . command-line-diff))
 
 ;; #############################################################################
-;;** counting words
+#+END_SRC
+
+** counting words
+
+#+BEGIN_SRC emacs-lisp
 ;; http://www.emacswiki.org/emacs/WordCount
 ;; http://www.emacswiki.org/emacs/wc.el
 (my-load-local-el "contrib/wc.el")
 
 
 ;; #############################################################################
-;;** magit
+#+END_SRC
+
+** magit
+
+#+BEGIN_SRC emacs-lisp
 
 (use-package magit
   ;; :disabled t  ;; stop loading if 't'
@@ -4773,7 +4784,11 @@ Use a prefix arg to get regular RET. "
 
 
   ;; #############################################################################
-;;** git: highlight regions by last updated time (my-map c)
+#+END_SRC
+
+** git: highlight regions by last updated time (my-map c)
+
+#+BEGIN_SRC emacs-lisp
 
   ;; smeargle - Highlighting Regions by Last Updated Time
   ;; https://github.com/syohex/emacs-smeargle/
@@ -4781,7 +4796,7 @@ Use a prefix arg to get regular RET. "
   ;; M-x smeargle-age  -  Highlight regions by age of changes.
   ;; M-x smeargle-clear  - Clear overlays in current buffer
   ;OLD;(my-load-local-el "contrib/emacs-smeargle/smeargle.el")
-  ;OLD;(bind-key "c" #'smeargle my-map)
+  ;OLD;(bind-key "c" 'smeargle my-map)
   (use-package smeargle
     ;; :disabled t
     :ensure t
@@ -4794,7 +4809,11 @@ Use a prefix arg to get regular RET. "
   )
 
 ;; #############################################################################
-;;** recent files
+#+END_SRC
+
+** recent files
+
+#+BEGIN_SRC emacs-lisp
 ;; http://www.emacswiki.org/emacs-es/RecentFiles
 ;; recently files
 (autoload 'recentf "recentf.el")
@@ -4803,98 +4822,109 @@ Use a prefix arg to get regular RET. "
 
 
 ;; #############################################################################
-;;** ert (disabled)
-;; for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
-;;disabled;; (my-load-local-el "contrib/cl-lib.el")
-;;disabled;; (my-load-local-el "contrib/ert.el")
-;;disabled;; (my-load-local-el "contrib/ert-x.el")
+#+END_SRC
 
+** DISABLED ert
 
-;; #############################################################################
-;;** Confluence (disabled)
+for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
 
-;;disabled 2015-01-23;; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;   ;; ######################################################
-;;disabled 2015-01-23;;   ;; editing Confluence wiki pages (up to Confluence 3.x)
-;;disabled 2015-01-23;;   ;; https://code.google.com/p/confluence-el/
-;;disabled 2015-01-23;;   ;; M-x confluence-get-page
-;;disabled 2015-01-23;;   ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
-;;disabled 2015-01-23;;   (use-package confluence)
-;;disabled 2015-01-23;;   (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
-;;disabled 2015-01-23;;   (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;   (dolist (hook '(confluence-mode-hook))
-;;disabled 2015-01-23;;     (add-hook hook (lambda ()
-;;disabled 2015-01-23;; 		     (flyspell-mode 1)
-;;disabled 2015-01-23;; 		     (ispell-change-dictionary "british")
-;;disabled 2015-01-23;; 		     (flyspell-buffer)
-;;disabled 2015-01-23;; 		     ))
-;;disabled 2015-01-23;;     )
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;   (defun vk-open-as-confluence-page ()
-;;disabled 2015-01-23;;     "Takes current line (delimited by brackets, two spaces or pipe) and opens it as Confluence page in IR6 space"
-;;disabled 2015-01-23;;     (interactive)
-;;disabled 2015-01-23;;     (save-excursion
-;;disabled 2015-01-23;;       (re-search-backward "\\(\\] \\|  \\|\* \\|| \\)")  ;; search for "] " or "  " or "| "
-;;disabled 2015-01-23;;       (forward-char)
-;;disabled 2015-01-23;;       (forward-char)
-;;disabled 2015-01-23;;       (setq start-pos (point))
-;;disabled 2015-01-23;;       (re-search-forward "\\( \\[\\|  \\| |\\)")  ;; search for " [" or "  " or " |"
-;;disabled 2015-01-23;;       (backward-char)
-;;disabled 2015-01-23;;       (backward-char)
-;;disabled 2015-01-23;;       (setq end-pos (point))
-;;disabled 2015-01-23;;       (setq myname (buffer-substring start-pos end-pos))
-;;disabled 2015-01-23;; 					;(message "Confluence page name: [%s]" myname)
-;;disabled 2015-01-23;;       (confluence-get-page myname "IR6")
-;;disabled 2015-01-23;; 					;(confluence-get-page myname)
-;;disabled 2015-01-23;;       )
-;;disabled 2015-01-23;;     )
-;;disabled 2015-01-23;;  )
+#+BEGIN_SRC emacs-lisp
+(my-load-local-el "contrib/cl-lib.el")
+(my-load-local-el "contrib/ert.el")
+(my-load-local-el "contrib/ert-x.el")
+#+END_SRC
 
-;; #############################################################################
-;;** Outlook (disabled)
+** DISABLED Confluence
 
-;;disabled 2015-01-23;; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;  ;; ######################################################
-;;disabled 2015-01-23;;  ;; editing Outlook emails in Emacs
-;;disabled 2015-01-23;;  ;; http://www.emacswiki.org/emacs/MsOutlook
-;;disabled 2015-01-23;;  (my-load-local-el "contrib/outlookedit.el")
-;;disabled 2015-01-23;;  (use-package outlookedit)
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;  (defvar mno-get-outlook-body
-;;disabled 2015-01-23;;    "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
-;;disabled 2015-01-23;;  (defvar mno-put-outlook-body
-;;disabled 2015-01-23;;    "cscript //B //Job:putMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;  ;; ######################################################
-;;disabled 2015-01-23;;  ;; use mail-mode for email or usenet postings:
-;;disabled 2015-01-23;;  (add-to-list 'auto-mode-alist '("\\.\\(mail\\|email\\|posting\\)$" . mail-mode))
-;;disabled 2015-01-23;;  (dolist (hook '(mail-mode-hook))
-;;disabled 2015-01-23;;    (add-hook hook (lambda ()
-;;disabled 2015-01-23;;		     (mail-mode-auto-fill)
-;;disabled 2015-01-23;;		     (auto-fill-mode 1)
-;;disabled 2015-01-23;;		     (flyspell-mode 1)
-;;disabled 2015-01-23;;		     (ispell-change-dictionary "german8")
-;;disabled 2015-01-23;;		     (flyspell-buffer)
-;;disabled 2015-01-23;;		     ))
-;;disabled 2015-01-23;;    )
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;  ;; http://www.emacswiki.org/emacs/MailMode
-;;disabled 2015-01-23;;  (add-hook 'mail-mode-hook
-;;disabled 2015-01-23;;	    (lambda ()
-;;disabled 2015-01-23;;	      (font-lock-add-keywords nil
-;;disabled 2015-01-23;;				      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
-;;disabled 2015-01-23;;					 (0 'mail-multiply-quoted-text-face))
-;;disabled 2015-01-23;;					("^[ \t]*>[ \t]*>.*$"
-;;disabled 2015-01-23;;					 (0 'mail-double-quoted-text-face))))))
-;;disabled 2015-01-23;;
-;;disabled 2015-01-23;;  )
+disabled 2015-01-23
 
+#+BEGIN_SRC emacs-lisp
+when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 
-;; #############################################################################
-;;** xml-prettyprint commands
+ ;; ######################################################
+ ;; editing Confluence wiki pages (up to Confluence 3.x)
+ ;; https://code.google.com/p/confluence-el/
+ ;; M-x confluence-get-page
+ ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
+ (use-package confluence)
+ (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
+ (add-to-list 'auto-mode-alist '("\\.\\(confluence\\)$" . confluence-mode))
+
+ (dolist (hook '(confluence-mode-hook))
+   (add-hook hook (lambda ()
+       	     (flyspell-mode 1)
+       	     (ispell-change-dictionary "british")
+       	     (flyspell-buffer)
+       	     ))
+   )
+
+ (defun vk-open-as-confluence-page ()
+   "Takes current line (delimited by brackets, two spaces or pipe) and opens it as Confluence page in IR6 space"
+   (interactive)
+   (save-excursion
+     (re-search-backward "\\(\\] \\|  \\|\* \\|| \\)")  ;; search for "] " or "  " or "| "
+     (forward-char)
+     (forward-char)
+     (setq start-pos (point))
+     (re-search-forward "\\( \\[\\|  \\| |\\)")  ;; search for " [" or "  " or " |"
+     (backward-char)
+     (backward-char)
+     (setq end-pos (point))
+     (setq myname (buffer-substring start-pos end-pos))
+       				;(message "Confluence page name: [%s]" myname)
+     (confluence-get-page myname "IR6")
+       				;(confluence-get-page myname)
+     )
+   )
+)
+#+END_SRC
+
+** DISABLED Outlook
+
+disabled 2015-01-23
+
+#+BEGIN_SRC emacs-lisp
+when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
+
+;; ######################################################
+;; editing Outlook emails in Emacs
+;; http://www.emacswiki.org/emacs/MsOutlook
+(my-load-local-el "contrib/outlookedit.el")
+(use-package outlookedit)
+
+(defvar mno-get-outlook-body
+  "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
+(defvar mno-put-outlook-body
+  "cscript //B //Job:putMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
+
+;; ######################################################
+;; use mail-mode for email or usenet postings:
+(add-to-list 'auto-mode-alist '("\\.\\(mail\\|email\\|posting\\)$" . mail-mode))
+(dolist (hook '(mail-mode-hook))
+  (add-hook hook (lambda ()
+            (mail-mode-auto-fill)
+            (auto-fill-mode 1)
+            (flyspell-mode 1)
+            (ispell-change-dictionary "german8")
+            (flyspell-buffer)
+            ))
+  )
+
+;; http://www.emacswiki.org/emacs/MailMode
+(add-hook 'mail-mode-hook
+   (lambda ()
+     (font-lock-add-keywords nil
+       		      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
+       			 (0 'mail-multiply-quoted-text-face))
+       			("^[ \t]*>[ \t]*>.*$"
+       			 (0 'mail-double-quoted-text-face))))))
+
+)
+#+END_SRC
+
+** xml-prettyprint commands
+
+#+BEGIN_SRC emacs-lisp
 ;; http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
 (defun xml-pretty-print-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -4911,7 +4941,11 @@ by using nxml's indentation rules."
     (indent-region begin end))
   (message "Ah, much better!"))
 
-;;** my-xml-pretty-print
+#+END_SRC
+
+** my-xml-pretty-print
+
+#+BEGIN_SRC emacs-lisp
 (defun my-xml-pretty-print()
   "mark whole buffer and call xml-pretty-print-region"
   (interactive)
@@ -4922,29 +4956,36 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;;** auto-save (disabled)
-;; automatically save more often within certain modes:
-;; http://www.emacswiki.org/emacs/AutoSave
-;; http://www.litchie.net/programs/real-auto-save.html
-;; ... installed 2014-03-05 via Marmalade
-;(use-package real-auto-save)
-;(add-hook 'org-mode-hook 'turn-on-real-auto-save)
-;;; Auto save interval is 10 seconds by default. You can change it:
-;(when (my-system-is-powerplantwin)
-;  (setq real-auto-save-interval 10)
-;)
-;(when (my-system-type-is-gnu)
-;  (setq real-auto-save-interval 30)
-;)
+#+END_SRC
 
-;; #############################################################################
-;;** spray (speed-reading; my-map s)
+** DISABLED auto-save
+
+- automatically save more often within certain modes:
+- http://www.emacswiki.org/emacs/AutoSave
+- http://www.litchie.net/programs/real-auto-save.html
+  - ... installed 2014-03-05 via Marmalade
+
+#+BEGIN_SRC emacs-lisp
+(use-package real-auto-save)
+(add-hook 'org-mode-hook 'turn-on-real-auto-save)
+;; Auto save interval is 10 seconds by default. You can change it:
+(when (my-system-type-is-windows)
+  (setq real-auto-save-interval 10)
+)
+(when (my-system-type-is-gnu)
+  (setq real-auto-save-interval 30)
+)
+#+END_SRC
+
+** spray (speed-reading; my-map s)
+
+#+BEGIN_SRC emacs-lisp
 ;; A speed reading mode for Emacs.
 ;; The algorithm is taken from OpenSpritz
 ;; https://github.com/zk-phi/spray
 ;; ... installed 2014-06-13 via manual download from github (for testing)
 ;OLD;(my-load-local-el "contrib/spray/spray.el")
-;OLD;(bind-key "S" #'spray-mode my-map)
+;OLD;(bind-key "S" 'spray-mode my-map)
 (use-package spray
   ;; :disabled t
   :ensure t
@@ -4956,7 +4997,11 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;;** yafolding
+#+END_SRC
+
+** yafolding
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/zenozeng/yafolding.el
 ;; Folding based on identation
 ;;(my-load-local-el "contrib/yafolding/yafolding.el")
@@ -4981,7 +5026,11 @@ by using nxml's indentation rules."
 )
 
 ;; #############################################################################
-;;** full screen Emacs   (F12)
+#+END_SRC
+
+** full screen Emacs   (F12)
+
+#+BEGIN_SRC emacs-lisp
 ;; full-screen, naked Emacs without distractions
 ;; thanks to Bastien; adopted to my requirements
 ;; https://gist.github.com/bzg/8578998
@@ -5116,7 +5165,7 @@ by using nxml's indentation rules."
 	   ;;   '(fringe ((t (:background "black")))))
 
 	   ;;(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
-	   (bind-key "h" #'mode-line-in-header my-map)
+	   (bind-key "h" 'mode-line-in-header my-map)
 
 	   (message "Enjoy your concentration!")
 
@@ -5148,18 +5197,30 @@ by using nxml's indentation rules."
 
 
 ;; #############################################################################
-;;** browse-kill-ring (M-y)
+#+END_SRC
+
+** browse-kill-ring (M-y)
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/browse-kill-ring/browse-kill-ring
 ;; browse-kill-ring
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
 
-;;** pdf-mode
+#+END_SRC
+
+** pdf-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/mishoo/pdf-mode.el
 ;;2014-11-16 works but I disable it for now;; (my-load-local-el "contrib/pdf-mode/pdf-mode.el")
 
 
-;;** guide-key
+#+END_SRC
+
+** guide-key
+
+#+BEGIN_SRC emacs-lisp
 ;; via reddit -> https://github.com/kai2nenobu/guide-key
 (use-package guide-key
   ;; :disabled t  ;; stop loading if 't'
@@ -5170,7 +5231,11 @@ by using nxml's indentation rules."
 )
 
 
-;;** vcard-mode
+#+END_SRC
+
+** vcard-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; via https://github.com/dochang/vcard-mode
 (use-package vcard-mode
   ;; :disabled t  ;; stop loading if 't'
@@ -5180,7 +5245,11 @@ by using nxml's indentation rules."
   :mode ("\\.vc\\(f\\|ard\\)\\'" . vcard-mode)
 )
 
-;;** sunrise-mode
+#+END_SRC
+
+** sunrise-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 (use-package sunrise-commander
   :disabled t  ;; disabled 2015-08-31
@@ -5194,13 +5263,21 @@ by using nxml's indentation rules."
 )
 
 
-;;** RAML-mode
+#+END_SRC
+
+** RAML-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
-(when (my-system-is-powerplantwin)
+(when (my-system-type-is-windows)
   (my-load-local-el "contrib/raml-mode/raml-mode.el")
 )
 
-;;** synonyms (my-map S)
+#+END_SRC
+
+** synonyms (my-map S)
+
+#+BEGIN_SRC emacs-lisp
 ;; via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
 ;; The file names are absolute, not relative, locations
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
@@ -5217,7 +5294,11 @@ by using nxml's indentation rules."
   :bind (:map my-map ("S" . my-synonym-current-word))
 )
 
-;;** nyan-mode
+#+END_SRC
+
+** nyan-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
 ;; show the percentage within current buffer as Nyan Cat
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
@@ -5227,7 +5308,11 @@ by using nxml's indentation rules."
   (nyan-mode t)
 )
 
-;;** highlight-tail
+#+END_SRC
+
+** highlight-tail
+
+#+BEGIN_SRC emacs-lisp
 ;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
 ;; update settings via M-x highlight-tail-reload
 ;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
@@ -5243,7 +5328,11 @@ by using nxml's indentation rules."
   (highlight-tail-mode)
 )
 
-;;** anzu-mode (showing number of matches when searching)
+#+END_SRC
+
+** anzu-mode (showing number of matches when searching)
+
+#+BEGIN_SRC emacs-lisp
 (use-package anzu
 ;;  :disabled t  ;; disabled 2015-12-26 due issues with jumping cursor
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5252,7 +5341,11 @@ by using nxml's indentation rules."
   (global-anzu-mode +1)
 )
 
-;;** smart-mode-line (abbreviating paths, ...)
+#+END_SRC
+
+** smart-mode-line (abbreviating paths, ...)
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/Malabarba/smart-mode-line
 (use-package smart-mode-line
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5271,7 +5364,11 @@ by using nxml's indentation rules."
 )
 
 
-;;** display-time-mode
+#+END_SRC
+
+** display-time-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; http://emacs.stackexchange.com/questions/13227/easy-way-to-give-the-time-its-own-face-in-modeline
 (setq display-time-string-forms
       '((propertize (format-time-string "%A %F %R" now) 'face 'bold)))
@@ -5279,21 +5376,33 @@ by using nxml's indentation rules."
 (display-time-mode t)
 
 
-;;** dash
+#+END_SRC
+
+** dash
+
+#+BEGIN_SRC emacs-lisp
 ;; required by eno (and most probably others in future)
 (use-package dash
   :ensure t
   :defer 10
   )
 
-;;** edit-at-point
+#+END_SRC
+
+** edit-at-point
+
+#+BEGIN_SRC emacs-lisp
 ;; required by eno (and most probably others in future)
 (use-package edit-at-point
   :ensure t
   :defer 10
   )
 
-;;** eno-mode (ace-jump/easymotion provides "goto certain char in view")
+#+END_SRC
+
+** eno-mode: ace-jump/easymotion provides: goto certain char in view
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/enoson/eno.el
 (use-package eno
   ;; :disabled t
@@ -5304,23 +5413,31 @@ by using nxml's indentation rules."
   :bind (:map my-map ("RET" . eno-word-goto))
 )
 
-;;** Markdown
+#+END_SRC
+
+** Markdown
+
+#+BEGIN_SRC emacs-lisp
 ;; http://ikiwiki.info/tips/Emacs_and_markdown/
 (use-package markdown-mode
   ;;:disabled t
   :ensure t
-  :if (my-system-is-powerplantwin)
+  :if (my-system-type-is-windows)
   ;;:diminish whitespace-mode
   :defer 10
   :mode ("\\.md\\'" . markdown-mode)
 )
 
-;;** Ox-Reveal
+#+END_SRC
+
+** Ox-Reveal
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/yjwen/org-reveal
 (use-package ox-reveal
   ;;:disabled t
   :ensure t
-  ;;:if (my-system-is-powerplantwin)
+  ;;:if (my-system-type-is-windows)
   ;;:diminish whitespace-mode
   :defer 10
   :config
@@ -5328,7 +5445,7 @@ by using nxml's indentation rules."
   (cond ((my-system-type-is-gnu)
          (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
          (setq org-reveal-extra-css "file:///home/vk/.emacs.d/data/reveal_theme_night_local.css"))
-        ((my-system-is-powerplantwin)
+        ((my-system-type-is-windows)
          (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/data/reveal.js/")
          (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/data/reveal_theme_night_local.css"))
         (t
@@ -5374,14 +5491,18 @@ by using nxml's indentation rules."
   ;;   - solarized
 )
 
-;;** Swiper
+#+END_SRC
+
+** Swiper
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/abo-abo/swiper
 ;; http://pragmaticemacs.com/emacs/dont-search-swipe/
 ;; http://irreal.org/blog/?p=5340 -> swiper depends on ivy; ivy is much better than ido-mode/smex; example config
 (use-package swiper
   ;;:disabled t
   :ensure t
-  ;;:if (my-system-is-powerplantwin)
+  ;;:if (my-system-type-is-windows)
   ;;:diminish whitespace-mode
   ;;:defer 10
   :config
@@ -5401,7 +5522,11 @@ by using nxml's indentation rules."
   ;;(global-set-key "\C-s" 'swiper)
 )
 
-;;** char-menu (soecial character menu)
+#+END_SRC
+
+** char-menu (soecial character menu)
+
+#+BEGIN_SRC emacs-lisp
 ;; http://irreal.org/blog/?p=4926 -> https://github.com/mrkkrp/char-menu
 ;; add characters: "M-x customize-group char-menu RET"
 (use-package char-menu
@@ -5424,7 +5549,11 @@ by using nxml's indentation rules."
   (global-set-key [f7] 'char-menu)
 )
 
-;;** smartparens
+#+END_SRC
+
+** smartparens
+
+#+BEGIN_SRC emacs-lisp
 ;; nice overview: http://danmidwood.com/content/2014/11/21/animated-paredit.html
 ;; nice overview: https://ebzzry.github.io/emacs-pairs.html
 (use-package smartparens
@@ -5468,25 +5597,38 @@ by using nxml's indentation rules."
   (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
   )
 
-;;** counsel
+#+END_SRC
+
+** counsel
+
+#+BEGIN_SRC emacs-lisp
 (use-package counsel
   ;; :disabled t
   :ensure t
   ;;:if my-system-is-sherri
   ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
   ;;:defer 10
+  :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
   :config
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
 )
 
-;;** helm
+#+END_SRC
+
+** helm
+
+#+BEGIN_SRC emacs-lisp
 (use-package helm
   ;; :disabled t
   :ensure t
   :defer 10
 )
 
-;;** wttrin.el Weather in Emacs
+#+END_SRC
+
+** wttrin.el Weather in Emacs
+
+#+BEGIN_SRC emacs-lisp
 ;; http://pragmaticemacs.com/emacs/weather-in-emacs/
 ;; https://github.com/bcbcarl/emacs-wttrin
 (use-package wttrin
@@ -5496,20 +5638,24 @@ by using nxml's indentation rules."
   :init
   (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming" "malia"))
   (cond ((my-system-is-sherri)
-         (bind-key "w" #'(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
+         (bind-key "w" '(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
          )
-        ((my-system-is-powerplantwin)
-         (bind-key "w" #'(lambda () (interactive) (wttrin-query "unterpremstatten") (toggle-truncate-lines)) my-map)
+        ((my-system-type-is-windows)
+         (bind-key "w" '(lambda () (interactive) (wttrin-query "unterpremstatten") (toggle-truncate-lines)) my-map)
           )
         (t
-         (bind-key "w" #'(lambda () (interactive) (wttrin) (toggle-truncate-lines)) my-map)
+         (bind-key "w" '(lambda () (interactive) (wttrin) (toggle-truncate-lines)) my-map)
          )
         )
   )
 
         (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
 
-;;** git-timemachine
+#+END_SRC
+
+** git-timemachine
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/pidu/git-timemachine
 ;; n/p: previous/next state
 ;; q: quit
@@ -5545,7 +5691,11 @@ by using nxml's indentation rules."
         )
   )
 
-;;** pandoc-mode
+#+END_SRC
+
+** pandoc-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; http://joostkremers.github.io/pandoc-mode/
 ;; https://github.com/joostkremers/pandoc-mode
 (use-package pandoc-mode
@@ -5554,18 +5704,27 @@ by using nxml's indentation rules."
   :defer 10
 )
 
-;;** ox-clip - formatted copy to orgmode
+#+END_SRC
+
+** ox-clip - formatted copy to orgmode
+
+#+BEGIN_SRC emacs-lisp
 ;; http://melpa.org/#/ox-clip
 ;; https://libraries.io/emacs/ox-clip
 ;; https://github.com/jkitchin/scimax
 ;; use: M-x ox-clip-formatted-copy
 (use-package ox-clip
   ;; :disabled t
+  :if (not (my-system-is-karl-voit-at))
   :ensure t
   :defer 10
 )
 
-;;** bm - visible bookmarks
+#+END_SRC
+
+** bm - visible bookmarks
+
+#+BEGIN_SRC emacs-lisp
 ;; http://pragmaticemacs.com/emacs/use-visible-bookmarks-to-quickly-jump-around-a-file/
 (use-package bm
   :ensure t
@@ -5575,7 +5734,11 @@ by using nxml's indentation rules."
   :bind (:map my-map ("0" . bm-next))
   )
 
-;;** adoc-mode - asciidoc mode
+#+END_SRC
+
+** adoc-mode - asciidoc mode
+
+#+BEGIN_SRC emacs-lisp
 (use-package adoc-mode
   :ensure t
   :defer 5
@@ -5584,7 +5747,11 @@ by using nxml's indentation rules."
    'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
   )
 
-;;** suggest
+#+END_SRC
+
+** suggest
+
+#+BEGIN_SRC emacs-lisp
 ;; http://www.wilfred.me.uk/blog/2016/07/30/example-driven-development/
 ;; id:2016-08-04-suggest
 
@@ -5593,7 +5760,11 @@ by using nxml's indentation rules."
   :defer 5
   )
 
-;;** move-text
+#+END_SRC
+
+** move-text
+
+#+BEGIN_SRC emacs-lisp
 ;; tipp from http://irreal.org/blog/?p=5611
 ;; https://github.com/emacsfodder/move-text
 (my-load-local-el "contrib/move-text/move-text.el")
@@ -5602,7 +5773,11 @@ by using nxml's indentation rules."
 (global-set-key (kbd "M-,")          'move-text-up)
 (global-set-key (kbd "M-.")          'move-text-down)
 
-;;** command-log-mode
+#+END_SRC
+
+** command-log-mode
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/lewang/command-log-mode
 ;; used in screencast video: https://www.reddit.com/r/emacs/comments/4yhfn6/emacs_screencast_acelink_swiper_lispy_and_macros/
 ;;
@@ -5615,7 +5790,11 @@ by using nxml's indentation rules."
 (my-load-local-el "contrib/command-log-mode/command-log-mode.el")
 (require 'command-log-mode)
 
-;;** scss-mode
+#+END_SRC
+
+** scss-mode
+
+#+BEGIN_SRC emacs-lisp
 (use-package scss-mode
   ; Command line utility sass is required, see http://sass-lang.com/
   ; To install sass (haml):
@@ -5632,14 +5811,22 @@ by using nxml's indentation rules."
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
   )
 
-;;** json-mode
+#+END_SRC
+
+** json-mode
+
+#+BEGIN_SRC emacs-lisp
 (use-package json-mode
-  :if (my-system-is-powerplantwin)
+  :if (my-system-type-is-windows)
   :ensure t
   :defer 10
 )
 
-;;** mode-icons
+#+END_SRC
+
+** mode-icons
+
+#+BEGIN_SRC emacs-lisp
 ;; https://www.reddit.com/r/emacs/comments/5fjri7/how_to_use_git_logo_in_modeline_instead_of/
 ;; https://github.com/ryuslash/mode-icons
 (use-package mode-icons
@@ -5649,7 +5836,11 @@ by using nxml's indentation rules."
 )
 
 
-;;** unicode-fonts
+#+END_SRC
+
+** unicode-fonts
+
+#+BEGIN_SRC emacs-lisp
 ;; solved an issue where a host was using different-height-sized font for few special characters
 ;; see id:2016-08-19-unicode-enlarges-line-height
 (use-package unicode-fonts
@@ -5661,7 +5852,11 @@ by using nxml's indentation rules."
   (unicode-fonts-setup)
 )
 
-;;** org-protocol-capture-html
+#+END_SRC
+
+** org-protocol-capture-html
+
+#+BEGIN_SRC emacs-lisp
 ;; turn HTML into Org-mode
 ;; id:2016-07-10-inst-org-protocol-capture
 
@@ -5670,7 +5865,11 @@ by using nxml's indentation rules."
 (require 'org-protocol-capture-html)
 ;;disabled;  )
 
-;;** goto-chg - visit places of previous changes in current buffer (F5/F6)
+#+END_SRC
+
+** goto-chg - visit places of previous changes in current buffer (F5/F6)
+
+#+BEGIN_SRC emacs-lisp
 ;; http://pragmaticemacs.com/emacs/move-through-edit-points/
 ;; http://www.emacswiki.org/emacs/download/goto-chg.el
 (my-load-local-el "contrib/goto-chg.el")
@@ -5678,9 +5877,24 @@ by using nxml's indentation rules."
 (global-set-key [f5] 'goto-last-change)
 (global-set-key [f6] 'goto-last-change-reverse)
 
-;;* my helper functions
+#+END_SRC
 
-;;** my-org-mobile-push
+** buttercup (Elisp test suite)
+
+#+BEGIN_SRC emacs-lisp
+(use-package buttercup
+  :ensure t
+;  :if (my-system-is-floyd)
+  :defer 10
+  :config
+)
+#+END_SRC
+
+* my helper functions
+
+** my-org-mobile-push
+
+#+BEGIN_SRC emacs-lisp
 
 (defun my-org-mobile-push (&optional arg)
   (interactive)
@@ -5727,7 +5941,11 @@ by using nxml's indentation rules."
 
 
 
-;;** my-reset-org
+#+END_SRC
+
+** my-reset-org
+
+#+BEGIN_SRC emacs-lisp
 
 (defun my-reset-org ()
   "Clears all kinds of Org-mode caches and re-builds them if possible"
@@ -5752,12 +5970,20 @@ by using nxml's indentation rules."
    )
 )
 
-;;** message-outlook.el - sending mail with Outlook
+#+END_SRC
+
+** message-outlook.el - sending mail with Outlook
+
+#+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
   (my-load-local-el "contrib/message-outlook.el")
 )
 
-;;** my-search-method-according-to-numlines()
+#+END_SRC
+
+** my-search-method-according-to-numlines()
+
+#+BEGIN_SRC emacs-lisp
 
 ;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
 
@@ -5795,7 +6021,11 @@ by using nxml's indentation rules."
 
 ;; #############################################################################
 
-;;** my-export-month-agenda-to-png-via-screenshot
+#+END_SRC
+
+** my-export-month-agenda-to-png-via-screenshot
+
+#+BEGIN_SRC emacs-lisp
 ;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
 
 (defun my-export-month-agenda-to-png-via-screenshot()
@@ -5818,7 +6048,11 @@ by using nxml's indentation rules."
     )
   )
 
-;;** when being idle for 15 minutes, run my-reset-org
+#+END_SRC
+
+** when being idle for 15 minutes, run my-reset-org
+
+#+BEGIN_SRC emacs-lisp
 ;; id:2016-06-05-reset-things-after-15-min-idle
 ;; current-idle-time example: (0 420 1000 0)
 ;;disabled because it doesn't work;; (setq my-reset-org-previous-idle-time-invocation (current-time))
@@ -5847,7 +6081,11 @@ by using nxml's indentation rules."
 ;;(message (or (current-idle-time) (number-to-string 0)))
 
 
-;;** my-toggle-dark-bright-theme
+#+END_SRC
+
+** my-toggle-dark-bright-theme
+
+#+BEGIN_SRC emacs-lisp
 
 (defvar my-toggle-dark-bright-theme-status t
   "Toggle between dark emacs theme and bright emacs theme; nil means dark theme, t means bright theme")
@@ -5868,13 +6106,17 @@ by using nxml's indentation rules."
         )
   )
 
-;;** my-toggle-beginner-setup
+(global-set-key [(shift f1)] 'my-toggle-dark-bright-theme)
+
+#+END_SRC
+
+** my-toggle-beginner-setup
+
+#+BEGIN_SRC emacs-lisp
 
 (defvar my-toggle-beginner-setup-status nil
   "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
 ;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
-
-
 
 (defun my-emacs-normal-setup ()
   "Hide things for my normal usage"
@@ -5969,9 +6211,13 @@ by using nxml's indentation rules."
 
 (global-set-key [f1] 'my-toggle-beginner-setup)
 
-;;* Key bindings
+#+END_SRC
 
-;;** general navigation keys
+* Key bindings
+
+** general navigation keys
+
+#+BEGIN_SRC emacs-lisp
 (global-set-key [home] 'beginning-of-buffer)
 (global-set-key [end]  'end-of-buffer)
 
@@ -5994,18 +6240,34 @@ by using nxml's indentation rules."
 ;;(global-set-key (kbd "C-, s")          'workspace-goto)
 ;;(global-set-key (kbd "C-, ]")          'evil-jump-to-tag)
 (global-set-key (kbd "C-, n")          'neotree-toggle)
-;;** Magit status (my-map g)
+#+END_SRC
+
+** Magit status (my-map g)
+
+#+BEGIN_SRC emacs-lisp
 ;(bind-key "v" #'magit-status my-map)
 (bind-key "g" #'magit-status my-map)
-;;** fullscreen (F12)
+#+END_SRC
+
+** fullscreen (F12)
+
+#+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-gnu)
   (global-set-key [f12] 'my-toggle-naked-emacs)
 )
-;;** Elisp
+#+END_SRC
+
+** Elisp
+
+#+BEGIN_SRC emacs-lisp
 (bind-key "er" #'eval-region my-map)
 (bind-key "el" #'find-library my-map)
 (bind-key "ef" #'find-function-at-point my-map)
-;;** Toggle between split windows and a single window (my-map s)
+#+END_SRC
+
+** Toggle between split windows and a single window (my-map s)
+
+#+BEGIN_SRC emacs-lisp
 ;; http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 (defun my-toggle-windows-split()
   "Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
@@ -6021,11 +6283,19 @@ by using nxml's indentation rules."
   )
 
 ;2015-11-03: deactivated for synonym (bind-key "s" #'my-toggle-windows-split my-map)
-;;** boxquote (my-map [qQ])
+#+END_SRC
+
+** boxquote (my-map [qQ])
+
+#+BEGIN_SRC emacs-lisp
 ;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
 (bind-key "q" #'boxquote-region my-map)
 (bind-key "Q" #'boxquote-title my-map)
-;;** switching lines (my-map <up/down>)
+#+END_SRC
+
+** switching lines (my-map <up/down>)
+
+#+BEGIN_SRC emacs-lisp
 ;; http://whattheemacsd.com//editing-defuns.el-02.html
 (defun my-move-line-down ()
   (interactive)
@@ -6047,7 +6317,11 @@ by using nxml's indentation rules."
 (bind-key (kbd "<up>") #'my-move-line-up my-map)
 (bind-key (kbd "<down>") #'my-move-line-down my-map)
 
-;;** joining lines: (my-map j)
+#+END_SRC
+
+** joining lines: (my-map j)
+
+#+BEGIN_SRC emacs-lisp
 ;; http://whattheemacsd.com//key-bindings.el-03.html
 (bind-key "j" ;; join-line
   (lambda ()
@@ -6059,7 +6333,11 @@ by using nxml's indentation rules."
 
 (bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
 
-;;** web-jump (disabled)
+#+END_SRC
+
+** web-jump (disabled)
+
+#+BEGIN_SRC emacs-lisp
 ;;disabled;; ;; ######################################################
 ;;disabled;; ;; web-jump: C-c w
 ;;disabled;; ;; http://www.emacswiki.org/emacs/WebJump
@@ -6100,7 +6378,11 @@ by using nxml's indentation rules."
 ;;disabled;; 	  )
 
 
-;;** inserting time-stamps (my-map [dDtT])
+#+END_SRC
+
+** inserting time-stamps (my-map [dDtT])
+
+#+BEGIN_SRC emacs-lisp
 ;; 2011-04-20: C-j t ... timestamp
 ;;       http://www.sabren.net/articles/emacs.php3
 ;;       http://www.gnu.org/software/emacs/manual/html_node/emacs/Date-Display-Format.html
@@ -6167,19 +6449,35 @@ by using nxml's indentation rules."
 
 
 
-;;** recently files (my-map r)
+#+END_SRC
+
+** recently files (my-map r)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key "r" #'recentf-open-files my-map)
 
 
-;;** helm-do-grep (my-map G)
+#+END_SRC
+
+** helm-do-grep (my-map G)
+
+#+BEGIN_SRC emacs-lisp
 ;; helm-do-grep to grep in current folder
 (bind-key "G" #'helm-do-grep-ag my-map)
 
-;;** helm-org-headlines (my-map H)
+#+END_SRC
+
+** helm-org-headlines (my-map H)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key "H" #'helm-org-agenda-files-headings my-map)
 
 
-;;** command log mode (my-map k)
+#+END_SRC
+
+** command log mode (my-map k)
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/lewang/command-log-mode
 ;;(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
 (use-package command-log-mode
@@ -6203,33 +6501,49 @@ by using nxml's indentation rules."
 
 
 
-;;** Confluence/Outlook (disabled)
-;disabled; (when (or (my-system-is-powerplantlinux) (my-system-is-powerplantwin))
+#+END_SRC
+
+** Confluence/Outlook (disabled)
+
+#+BEGIN_SRC emacs-lisp
+;disabled; (when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 ;disabled;   (bind-key "C" #'vk-open-as-confluence-page my-map)
 ;disabled;   (bind-key "oe" #'mno-edit-outlook-message my-map)
 ;disabled;   (bind-key "os" #'mno-save-outlook-message my-map)
 ;disabled;   )
 
-;;** mark-ring-goto (my-map <left>)
+#+END_SRC
+
+** mark-ring-goto (my-map <left>)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
 
-;;** main.el (my-map .)
+#+END_SRC
+
+** open config.org file (my-map .)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key (kbd ".") (lambda()  ;; open main.el
 			       (interactive)
-			       (find-file "~/.emacs.d/main.el")
+			       (find-file "~/.emacs.d/config.org")
 			       )
           my-map
           )
 
 
-;;** org-mode teaser (my-map O)
+#+END_SRC
+
+** org-mode teaser (my-map O)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key (kbd "O") (lambda()
 			       (interactive)
                                (when (my-system-type-is-gnu)
                                  (find-file
                                "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
                                  )
-                               (when (my-system-is-powerplantwin)
+                               (when (my-system-type-is-windows)
                                  (find-file
                                "c:/Users/karl.voit/fromweb/src/org-mode-workshop/featureshow/org-mode-teaser.org")
                                  )
@@ -6237,7 +6551,11 @@ by using nxml's indentation rules."
           my-map
   )
 
-;;** org-mode manual (my-map o)
+#+END_SRC
+
+** org-mode manual (my-map o)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key (kbd "o") (lambda()
 			       (interactive)
                                (info "(org)")
@@ -6246,22 +6564,40 @@ by using nxml's indentation rules."
   )
 
 
-;; 2015-11-10 deactivated ;; ;;** OrgStruct folding
+;; 2015-11-10 deactivated ;;
+
+#+END_SRC
+
+** OrgStruct folding
+
+#+BEGIN_SRC emacs-lisp
 ;; 2015-11-10 deactivated ;; ;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
 ;; 2015-11-10 deactivated ;; (bind-key "[" (lambda () (interactive) (org-cycle t)) my-map)
 ;; 2015-11-10 deactivated ;; (bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
 
-;;** Org-mobile import (my-map i)
+#+END_SRC
+
+** Org-mobile import (my-map i)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key "i" (lambda ()
                          """foobar"""
                          (interactive) (my-mobile-org-import)) my-map )
-;;** Org-mobile push (my-map I)
+#+END_SRC
+
+** Org-mobile push (my-map I)
+
+#+BEGIN_SRC emacs-lisp
 
 
 (bind-key "I" #'my-org-mobile-push my-map)
 
 
-;;** Filter open Org-tasks by tag (my-map F)
+#+END_SRC
+
+** Filter open Org-tasks by tag (my-map F)
+
+#+BEGIN_SRC emacs-lisp
 ;; see id:2014-11-02-filter-org-tasks-by-tag
 
 (defun my-sparse-tree-with-tag-filter()
@@ -6282,17 +6618,29 @@ by using nxml's indentation rules."
   )
 (bind-key "F" #'my-sparse-tree-with-tag-filter my-map)
 
-;;** my-fix-drawer-order (my-map C)
+#+END_SRC
+
+** my-fix-drawer-order (my-map C)
+
+#+BEGIN_SRC emacs-lisp
 ;; searches for :END: followed by :PROPERTIES: (assuming first drawer
 ;; is :LOGBOOK: and toggles order of them
 (fset 'my-fix-drawer-order
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
 (bind-key "C" #'my-fix-drawer-order my-map)
 
-;;** my-title-capitalization (my-map C)
+#+END_SRC
+
+** my-title-capitalization (my-map C)
+
+#+BEGIN_SRC emacs-lisp
 (bind-key "c" #'title-capitalization my-map)
 
-;;** hippie-expand (M-/)
+#+END_SRC
+
+** hippie-expand (M-/)
+
+#+BEGIN_SRC emacs-lisp
 ;; http://emacswiki.org/emacs/HippieExpand
 
 ;; issues when overriding undo-tree-undo (C-/): http://emacs.stackexchange.com/questions/2530/global-key-binding-overriden-by-undo-tree
@@ -6303,7 +6651,11 @@ by using nxml's indentation rules."
 ;; could not make it work with C-/ - so I stick to M-/
 (global-set-key (kbd "M-/") 'hippie-expand)
 
-;;** neotree (f8)
+#+END_SRC
+
+** neotree (f8)
+
+#+BEGIN_SRC emacs-lisp
 ;; https://github.com/jaypei/emacs-neotree
 ;; installed on 2015-03-22
 (use-package neotree
@@ -6314,12 +6666,20 @@ by using nxml's indentation rules."
 (global-set-key [f8] 'neotree-toggle)
 )
 
-;;** org-mode-reftex-setup (my-map R)
+#+END_SRC
+
+** org-mode-reftex-setup (my-map R)
+
+#+BEGIN_SRC emacs-lisp
 ;; see id:2015-05-14-disable-orgmode-reftex-autoload
 (bind-key (kbd "R") #'org-mode-reftex-setup my-map)
 ;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
 
-;;** my-org-region-to-property (my-map p)
+#+END_SRC
+
+** my-org-region-to-property (my-map p)
+
+#+BEGIN_SRC emacs-lisp
 ;; see id:2015-05-28-ask-for-properties
 
 ;; OLD ;; ;; original function:
@@ -6381,7 +6741,11 @@ by using nxml's indentation rules."
 (bind-key (kbd "p") #'my-org-region-to-property my-map)
 
 
-;;** highlight-symbol (my-map h)
+#+END_SRC
+
+** highlight-symbol (my-map h)
+
+#+BEGIN_SRC emacs-lisp
 (use-package highlight-symbol
   :ensure t
   :defer 10
@@ -6394,7 +6758,11 @@ by using nxml's indentation rules."
 ;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 
 
-;;** mark word|line|sentence|sexp|defun
+#+END_SRC
+
+** mark word|line|sentence|sexp|defun
+
+#+BEGIN_SRC emacs-lisp
 
 
 (bind-key (kbd "mw") #'mark-word my-map)
@@ -6420,7 +6788,11 @@ by using nxml's indentation rules."
 (bind-key "m d" #'mark-defun my-map)
 
 
-;;** delete-trailing-whitespace (my-map SPC)
+#+END_SRC
+
+** delete-trailing-whitespace (my-map SPC)
+
+#+BEGIN_SRC emacs-lisp
 
   ;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
 ;  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
@@ -6429,19 +6801,26 @@ by using nxml's indentation rules."
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
-;;* autostart.bat.el
+#+END_SRC
+
+* autostart
+
+#+BEGIN_SRC emacs-lisp
+(message "→★ finished loading config.org (w/o autostart) in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
 ;(sleep-for 2)
 (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
-(message (concat "######### Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
+(message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
 (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
-(message "######### Creating agenda ...")
+(message "Creating agenda …")
 (my-org-agenda)
 
+#+END_SRC
 
-;;* custom variables
+* custom variables
 
+#+BEGIN_SRC emacs-lisp
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -6459,10 +6838,230 @@ by using nxml's indentation rules."
      (flyspell-default-dictionary . "german8")))))
 
 (setq truncate-lines t);; https://www.emacswiki.org/emacs/TruncateLines - M-x toggle-truncate-lines
+#+END_SRC
 
-(message "######### finished loading main.el.")
-;; Local Variables:
-;; eval: (orgstruct++-mode)
-;; End:
+* Profiling end
 
-;;; main.el ends here
+#+BEGIN_SRC emacs-lisp
+(message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
+#+END_SRC
+
+* Current key mappings (non-sorted)
+
+#+BEGIN_SRC sh :results raw  :exports results :prologue "echo \"| *key* | *function* |\n|-\""
+cd ~/.emacs.d
+## extracting define-keys and global-set-keys:
+egrep '(global-set|define)-key' *el | \
+## getting rid of file names:
+egrep -v '^.*\.el:( )+?;' | \
+## remove my-map lines:
+grep -v "my-map" | \
+## remove global-set-key string:
+sed "s/.*global-set-key /| /" | \
+## remove define-key string:
+sed "s/.*define-key \(.*\)-map /| \1 /" | \
+## remove define-key string for maps without dashes:
+sed "s/.*define-key \(.*\)map /| \1 /" | \
+## replace kbd-function calls with their parameter:
+sed 's/(kbd "\(.*\)")/\1/' | \
+## replace single quotes with column separator:
+sed "s/'/| /" | \
+## replace quotes with tilde:
+sed 's/"/~/g' | \
+## remove final closing parenthesis:
+sed ':a;N;$!ba;s/)*\n/\n/g' | \
+## add tilde to function names:
+sed 's/ | \(.*\)/ | ~\1~/' | \
+## add final column separator as last characters:
+sed ':a;N;$!ba;s/\n/ |\n/g'
+#+END_SRC
+
+* Current key mappings (sorted)
+
+** Mappings not using my-map
+
+#+BEGIN_SRC sh :results raw  :exports results :prologue "echo \"| *key* | *function* |\n|-\""
+cd ~/.emacs.d
+## extracting define-keys and global-set-keys:
+egrep '(global-set|define)-key' *el | \
+## getting rid of file names:
+egrep -v '^.*\.el:( )+?;' | \
+## remove my-map lines:
+grep -v "my-map" | \
+## remove global-set-key string:
+sed "s/.*global-set-key /| /" | \
+## remove define-key string:
+sed "s/.*define-key \(.*\)-map /| \1 /" | \
+## remove define-key string for maps without dashes:
+sed "s/.*define-key \(.*\)map /| \1 /" | \
+## replace kbd-function calls with their parameter:
+sed 's/(kbd "\(.*\)")/\1/' | \
+## replace single quotes with column separator:
+sed "s/'/| /" | \
+## replace quotes with tilde:
+sed 's/"/~/g' | \
+## remove final closing parenthesis:
+sed ':a;N;$!ba;s/)*\n/\n/g' | \
+## add tilde to function names:
+sed 's/ | \(.*\)/ | ~\1~/' | \
+## add final column separator as last characters:
+sed ':a;N;$!ba;s/\n/ |\n/g' | \
+## sort lines and omit double ones:
+sort | uniq
+#+END_SRC
+
+#+RESULTS:
+| *key*                        | *function*                                              |
+|------------------------------+---------------------------------------------------------|
+| C-, l                        | ~avy-goto-line~                                         |
+| C-, n                        | ~neotree-toggle~                                        |
+| C-, w                        | ~avy-goto-word-0~                                       |
+| C-c %                        | ~org-mark-ring-push~                                    |
+| C-c <down>                   | ~org-mark-ring-push~                                    |
+| C-c <left>                   | ~org-mark-ring-goto~                                    |
+| C-f                          | ~(lambda () (interactive) (forward-line 5~              |
+| C-n                          | ~scroll-up-command~                                     |
+| C-p                          | ~scroll-down-command~                                   |
+| C-s-SPC                      | ~mode-line-in-header~                                   |
+| M-,                          | ~move-text-up~                                          |
+| M-.                          | ~move-text-down~                                        |
+| M-/                          | ~hippie-expand~                                         |
+| M-x                          | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~ |
+| [(shift f1)]                 | ~my-toggle-dark-bright-theme~                           |
+| [C-left]                     | ~backward-word~                                         |
+| [C-right]                    | ~forward-word~                                          |
+| [M-c]                        | ~capitalize-word~                                       |
+| [M-l]                        | ~downcase-word~                                         |
+| [M-u]                        | ~upcase-word~                                           |
+| [S-left]                     | ~backward-word~                                         |
+| [S-right]                    | ~forward-word~                                          |
+| [end]                        | ~end-of-buffer~                                         |
+| [f12]                        | ~my-toggle-naked-emacs~                                 |
+| [f1]                         | ~my-toggle-beginner-setup~                              |
+| [f5]                         | ~goto-last-change~                                      |
+| [f6]                         | ~goto-last-change-reverse~                              |
+| [f7]                         | ~char-menu~                                             |
+| [f8]                         | ~neotree-toggle)~                                       |
+| [f8]                         | ~neotree-toggle~                                        |
+| [home]                       | ~beginning-of-buffer~                                   |
+| [remap fill-paragraph]       |                                                         |
+| global [tool-bar pdf-button] |                                                         |
+| global ~\C-cc~               | ~org-capture~                                           |
+| org-mode C-c (               | ~org-mode-reftex-search~                                |
+| org-mode C-c )               | ~reftex-citation~                                       |
+| org-mode RET                 |                                                         |
+| ~\C-ca~                      | ~org-agenda~                                            |
+| ~\C-cl~                      | ~org-store-link~                                        |
+| ~\C-cm~                      | ~my-memacs-org-agenda~                                  |
+| ~\C-s~                       | ~my-search-method-according-to-numlines~                |
+
+** Mapping from my-map outside of use-package
+
+- [ ] fix script
+
+#+BEGIN_SRC sh :results raw :exports results :prologue "echo '| \\texttt{C-c ,} | *function* | *comment* |\n|-'"
+cd ~/.emacs.d
+## extracting define-keys:
+egrep 'define-key' *el | \
+## getting rid of file names:
+egrep -v '^.*\.el:( )+?;' | \
+## grep only my-map lines:
+grep "my-map" | \
+## replace kbd-function calls with their parameter:
+sed 's/(kbd "\(.*\)")/\1/' | \
+## replace single ticks with column separator and tilde:
+sed "s/'/| ~/" | \
+## replace closing parenthesis with column separator:
+sed "s/)/~ | /" | \
+## replace quotes and <> with tilde:
+sed 's/["<>]/~/g' | \
+## remove semicolons:
+sed 's/;*//g' | \
+## add final column separator as last characters:
+sed ':a;N;$!ba;s/\n/|\n/g'
+#+END_SRC
+
+#+RESULTS:
+| \texttt{C-c ,} | *function* | *comment* |
+|----------------+------------+-----------|
+config.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
+main_before_moving_to_config.org.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
+main_sherri_before_configorg.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
+main_sherri_before_configorg_ORIG.el:  (define-key my-map ~P~ | ~pylookup-lookup~ |
+
+** Mapping from my-map within use-package
+
+#+BEGIN_SRC sh :results raw :exports results :prologue "echo '| \\texttt{C-c ,} | *function* | *comment* |\n|-'"
+cd ~/.emacs.d
+## extracting define-keys:
+egrep ':map my-map' *el | \
+## getting rid of file names:
+sed 's/.*://' | \
+grep '(' | sed 's/map my-map ("/|/' | sed 's/" \. / | /' |  sed 's/))/|/' | sort | uniq
+## replace kbd-function calls with their parameter:
+#sed 's/(kbd "\(.*\)")/\1/' | \
+## replace single ticks with column separator and tilde:
+#sed "s/'/| ~/" | \
+## replace closing parenthesis with column separator:
+#sed "s/)/~ | /" | \
+## replace quotes and <> with tilde:
+#sed 's/["<>]/~/g' | \
+## remove semicolons:
+#sed 's/;*//g' | \
+## add final column separator as last characters:
+#sed ':a;N;$!ba;s/\n/|\n/g'
+#+END_SRC
+
+#+RESULTS:
+| \texttt{C-c ,} | *function*              | *comment* |
+|----------------+-------------------------+-----------|
+| 0              | bm-next                 |           |
+| 8              | bm-toggle               |           |
+| 9              | bm-previous             |           |
+| RET            | eno-word-goto           |           |
+| S              | my-synonym-current-word |           |
+| SPC            | yankpad-insert          |           |
+| c              | smeargle                |           |
+| h              | highlight-symbol        |           |
+| s              | spray-mode              |           |
+
+
+** Mapping of F-keys
+
+id:2017-05-22-f-key-mapping
+
+#+BEGIN_SRC emacs-lisp :results output :tangle no :exports result
+(let ((ks '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"))
+      )
+  (dolist (k ks)
+    (prin1 (concat
+             "| " k
+             " | "
+             (symbol-name (lookup-key (current-global-map) (kbd k)))
+             "\n"))))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+"| <f1> | my-toggle-beginner-setup
+""| <f2> | 2C-command
+""| <f3> | kmacro-start-macro-or-insert-counter
+""| <f4> | kmacro-end-or-call-macro
+""| <f5> | goto-last-change
+""| <f6> | yankpad-map
+""| <f7> | char-menu
+""| <f8> | neotree-toggle
+""| <f9> | nil
+""| <f10> | menu-bar-open
+""| <f11> | toggle-frame-fullscreen
+""| <f12> | nil
+"
+#+end_example
+
+* Local Variables
+# Local Variables:
+# eval: (org-expiry-deinsinuate)
+# mode: auto-fill
+# mode: flyspell
+# eval: (ispell-change-dictionary "en_US")
+# End:
