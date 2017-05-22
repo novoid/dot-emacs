@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-22 19:01:47 vk>
+# Time-stamp: <2017-05-22 20:50:40 vk>
 # Source: https://github.com/novoid/dot-emacs
 # oe=ö ae=ä ue=ü OE=Ö AE=Ä UE=Ü sz=ß
 #+TODO: ACTIVE | DISABLED
@@ -1569,8 +1569,8 @@ Profiling Org-mode config loading time:
   ;;         ("M-o w" . highlight-phrase)))
 
 
-;; FIXXMEconfig (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
-;; FIXXMEconfig (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
+  (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
+  (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
@@ -1806,7 +1806,7 @@ Profiling Org-mode config loading time:
 
   ;;(add-to-list 'org-file-apps '("\\.odp" . system))
   ;;(add-to-list 'org-file-apps '("\\.odp" . mailcap))
-;; FIXXMEconfig  (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
+  (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
   ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
 
 #+END_SRC
@@ -3909,11 +3909,10 @@ Null prefix argument turns off the mode."
           (org-next-link)
           (org-open-at-point))))))
 
-;; FIXXMEconfig (void-function org-link-set-parameters)   (org-link-set-parameters
-;; FIXXMEconfig (void-function org-link-set-parameters)    "tsfile"
-;; FIXXMEconfig (void-function org-link-set-parameters)    :follow (lambda (path) (my-handle-tsfile-link path))
-;; FIXXMEconfig (void-function org-link-set-parameters)    :help-echo "Opens the linked file with your default application")
-
+(org-link-set-parameters
+ "tsfile"
+ :follow (lambda (path) (my-handle-tsfile-link path))
+ :help-echo "Opens the linked file with your default application")
 
 #+END_SRC
 
@@ -4195,53 +4194,56 @@ Null prefix argument turns off the mode."
 
 ** LaTeX-classes: scrartcl, scrartclsmall, ...
 
-FIXXMEconfig: Lisp error: (void-variable org-latex-classes) -> disabled for now
-#+BEGIN_SRC emacs-lisp :tangle no
+http://orgmode.org/org.html#Header-and-sectioning
 
-  ;; ######################################################
-  ;; http://orgmode.org/org.html#Header-and-sectioning
-  ;; customized LaTeX class
-  (add-to-list 'org-latex-classes
-               '("scrartcl"
-                 "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}"
-                 ("\\section\{%s\}" . "\\section*\{%s\}")
-                 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-                 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-  ;; 2014-10-16: does NOT work yet. Most probably because savetrees does not work well with inputenc
-  (add-to-list 'org-latex-classes
-               '("scrartclsmall"
-                 "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\{savetrees\}"
-                 ("\\section\{%s\}" . "\\section*\{%s\}")
-                 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-                 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-  ;; 2017-03-23: 2-column layout sans-serif for lyrics
-  (add-to-list 'org-latex-classes
-               '("lyrics"
-                 "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\{savetrees\}
-                  \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
-                 ("\\section\{%s\}" . "\\section*\{%s\}")
-                 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-                 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-  (add-to-list 'org-latex-classes
-               '("lyrics2"
-                 "\\documentclass\[a4paper,parskip=half,twocolumn\]\{scrartcl\}\\usepackage\{savetrees\}
-                  \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
-                 ("\\section\{%s\}" . "\\section*\{%s\}")
-                 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-                 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+#+BEGIN_SRC emacs-lisp
 
-  ;; ;; ######################################################
-  ;; ;; adding TUGRAZ letter export class format
-  ;; ;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
-  ;; (add-to-list 'org-export-latex-classes
-  ;;              '("TUGRAZletter"
-  ;;                "\\documentclass{scrlttr2}
-  ;;                 \\usepackage{tugrazletter}
-  ;;                 [NO-DEFAULT-PACKAGES]
-  ;;                 [EXTRA]"
-  ;;                ("\\section{%s}" . "\\section*{%s}")))
+  (with-eval-after-load 'ox-latex
 
+  (message (concat "################################################\norg-latex-classes = [" org-latex-classes "]"))
 
+    ;; customized LaTeX class
+    (add-to-list 'org-latex-classes
+                 '("scrartcl"
+                   "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}"
+                   ("\\section\{%s\}" . "\\section*\{%s\}")
+                   ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                   ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+    ;; 2014-10-16: does NOT work yet. Most probably because savetrees does not work well with inputenc
+    (add-to-list 'org-latex-classes
+                 '("scrartclsmall"
+                   "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\{savetrees\}"
+                   ("\\section\{%s\}" . "\\section*\{%s\}")
+                   ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                   ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+    ;; 2017-03-23: 2-column layout sans-serif for lyrics
+    (add-to-list 'org-latex-classes
+                 '("lyrics"
+                   "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\{savetrees\}
+                    \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
+                   ("\\section\{%s\}" . "\\section*\{%s\}")
+                   ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                   ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+    (add-to-list 'org-latex-classes
+                 '("lyrics2"
+                   "\\documentclass\[a4paper,parskip=half,twocolumn\]\{scrartcl\}\\usepackage\{savetrees\}
+                    \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
+                   ("\\section\{%s\}" . "\\section*\{%s\}")
+                   ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                   ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+
+    ;; ;; ######################################################
+    ;; ;; adding TUGRAZ letter export class format
+    ;; ;; compare: http://orgmode.org/worg/org-tutorials/org-latex-export.html
+    ;; (add-to-list 'org-export-latex-classes
+    ;;              '("TUGRAZletter"
+    ;;                "\\documentclass{scrlttr2}
+    ;;                 \\usepackage{tugrazletter}
+    ;;                 [NO-DEFAULT-PACKAGES]
+    ;;                 [EXTRA]"
+    ;;                ("\\section{%s}" . "\\section*{%s}")))
+
+   );; with-eval-after-load
 #+END_SRC
 
 ** images
