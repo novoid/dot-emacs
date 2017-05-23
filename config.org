@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-22 20:50:40 vk>
+# Time-stamp: <2017-05-23 20:53:48 vk>
 # Source: https://github.com/novoid/dot-emacs
 # oe=ö ae=ä ue=ü OE=Ö AE=Ä UE=Ü sz=ß
 #+TODO: ACTIVE | DISABLED
@@ -8,6 +8,7 @@
 - [ ] LaTeX: run config only if (file-exists-p "/usr/bin/latex") and
   so forth
   - [ ] locate binaries on Windows
+    - (locate-file "pdflatex" exec-path exec-suffixes 1)
   - [ ] locate binaries on Linux
 
 - flyspell bindkeys:
@@ -304,6 +305,306 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
   )
 #+END_SRC
 
+* System-specific paths
+
+http://www.emacswiki.org/emacs/MacOSTweaks#toc13
+
+#+BEGIN_SRC emacs-lisp
+;; setting path so that Emacs finds aspell and such
+(when (my-system-type-is-darwin)
+  (setenv "PATH"
+	  (concat (getenv "PATH")
+		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
+  (setq exec-path (append exec-path
+			  '("/opt/local/bin"
+			    "/usr/local/texlive/2010/bin/x86_64-darwin"
+			    "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
+			    )))
+  (add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
+
+  ;; 2011-04-20: allow typing of german umlauts in OS X by Alt-u followed by u,o,a,...
+  (setq mac-option-modifier nil)
+
+  (setq org-ditaa-jar-path "~/data/hosts/blanche/config/ditaa.jar")
+
+  ;; setting path to color-theme-mode.el from MacPorts
+  (add-to-list 'load-path "/opt/local/share/emacs/site-lisp/color-theme-6.6.0")
+  )
+#+END_SRC
+
+fix paste-issue (\344 instead of ä) on Windows 7:
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-windows)
+  (set-selection-coding-system 'iso-latin-1-dos)
+  )
+#+END_SRC
+
+ditaa
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
+  (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
+  )
+#+END_SRC
+
+
+setting path so that Emacs finds aspell and such:
+#+BEGIN_SRC emacs-lisp
+ (if (my-system-type-is-windows)
+
+     ;;disabled;(setenv "PATH"
+     ;;disabled;               (concat (getenv "PATH")
+     ;;disabled;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
+     (setq exec-path (append exec-path
+      			     '("C:/Program Files (x86)/Aspell/bin"
+      			       ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
+      			       ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
+      			       )))
+     ;;disabled;(add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
+
+  (
+   ;; on all other systems:
+   )
+  )
+#+END_SRC
+
+* Cygwin Paths (Windows)
+
+- http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
+- id:2014-01-31-cygwin-emacs
+
+- http://www.emacswiki.org/emacs/RobertAdesamConfig
+
+
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-windows)
+
+  (if (file-directory-p "c:/cygwin64/bin")
+  (add-to-list 'exec-path "c:/cygwin64/bin"))
+
+  (setenv "PATH"
+	  (concat
+	   ;;"c:\\cygwin64\\usr\\local\\bin" ";"  ;; Cygwin
+	   ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
+	   "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
+	   "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
+	   (getenv "PATH")))
+  ;;(setq exec-path (cons "c:/cygwin64/bin/" exec-path)) ;; Cygwin
+  (setq exec-path (cons "C:/Users/karl.voit/.babun/cygwin/bin/" exec-path)) ;; Babun
+  ;; Adding cygwin mounts
+  ;(use-package cygwin-mount)
+  ;(cygwin-mount-activate)
+  ;; Adding cygwin bash shell
+  ;;(setq shell-file-name "c:/cygwin64/bin/bash") ;; Cygwin
+  (setq shell-file-name "C:/Users/karl.voit/.babun/cygwin/bin/zsh") ;; Babun
+  (setenv "SHELL" shell-file-name)
+  (setq explicit-shell-file-name shell-file-name)
+  (setq ediff-shell shell-file-name)
+  (setq explicit-shell-args '("--login" "-i"))
+  (setq w32-quote-process-args ?\") ;"
+
+  ;; id:2015-11-02-tramp-windows-babel
+  (setq tramp-default-method "plink")
+
+  ;; id:2016-04-22-magit-not-working-on-windows
+  (setq cygwin-root-directory "c:/Users/karl.voit/.babun/cygwin")
+  ;; requires: setup-cygwin.el and cygwin-mount.el in the contrib dir:
+  (add-to-list 'load-path "~/.emacs.d/contrib/")
+  (require 'setup-cygwin)
+  )
+#+END_SRC
+
+* Looking for binaries
+
+- [X] collect examples Linux
+- [X] collect examples Windows
+- [X] create functions (my-binary-found "pdflatex")
+
+** my-binary-found(binaryname)
+
+=my-binary-found(binaryname)= returns the path where a binary
+executable can be found within the exec-path.
+
+It also checks certain operating system/binary combinations which
+aren't likely in the exec-path.
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-binary-found(binaryname)
+    "Returns the path where a binary executable can be found.
+
+It also checks certain operating system/binary combinations which aren't likely in the exec path."
+    (cond
+     ((and (my-system-type-is-windows) (string= binaryname "firefox"))
+      (when (file-exists-p "C:/Program Files (x86)/Mozilla Firefox/firefox.exe")
+        (concat "C:/Program Files (x86)/Mozilla Firefox/firefox.exe")
+        )
+      )
+     ((and (my-system-type-is-windows) (string= binaryname "python"))
+      (when (file-exists-p "C:/Python27/python.exe")
+        (concat "C:/Python27/python.exe")
+        )
+      )
+     ((and (my-system-type-is-windows) (string= binaryname "outlook"))
+      (when (file-exists-p "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE")
+        (concat "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE")
+        )
+      )
+     ;; this is the default check for all binaries which got no special handling above:
+     (t
+      (locate-file binaryname exec-path exec-suffixes 1))
+     ))
+#+END_SRC
+
+*Examples:*
+#+BEGIN_SRC emacs-lisp :tangle no
+  (message (concat "pdflatex found on: " (my-binary-found "pdflatex")))
+
+  (if (my-binary-found "pdflatex")
+    (message "LaTeX found")
+    (message "LaTeX not found")
+  )
+#+END_SRC
+
+** my-binary-not-found-list and my-eval-if-binary-or-warn()
+
+=my-eval-if-binary-or-warn (binaryname &optional warningtext)= checks
+if a binary can be found in the path via my-binary-found().
+
+If not found, a warning message is printed which can be defined as an
+optional parameter as well. Additionally, the not found binaries are
+collected in the variable my-binary-not-found-list.
+
+#+BEGIN_SRC emacs-lisp
+  (defvar my-binary-not-found-list nil
+    "Holds a list of binaries which could not be found via my-eval-if-binary-or-warn()"
+    )
+
+  (defun my-eval-if-binary-or-warn (binaryname &optional warningtext)
+    "Checks if a binary can be found in the path via my-binary-found().
+
+  If not found, a warning message is printed which can be defined as an optional parameter as well.
+  Additionally, the not found binaries are collected in the variable my-binary-not-found-list."
+    (or warningtext (setq warningtext (concat "»»» I could not locate the PATH-binary for: " binaryname)))
+    (let* ((binarypath (my-binary-found binaryname)))
+      (if binarypath
+         ;; binary was found in exec-path
+         (concat binarypath)
+        (progn
+          ;; binary NOT found in exec-path:
+          (message warningtext)
+          (if my-binary-not-found-list
+              (add-to-list 'my-binary-not-found-list binaryname)
+            (setq my-binary-not-found-list (list binaryname))
+            )
+          ))))
+#+END_SRC
+
+Example usages:
+#+BEGIN_SRC emacs-lisp :tangle no
+  (my-eval-if-binary-or-warn "yyy" "This is a warning text for yyy")
+  (my-eval-if-binary-or-warn "xxx")
+  (my-eval-if-binary-or-warn "xxx" "This is a warning text for xxx")
+  (my-eval-if-binary-or-warn "zzz" "This is a warning text for xxx")
+
+  (message "Binaries not found: %s" my-binary-not-found-list)
+#+END_SRC
+
+** DISABLED Example output for different hosts
+
+sherri output:
+#+BEGIN_EXAMPLE
+pdflatexTeX binary: /usr/bin/pdflatex
+python binary: /usr/bin/python
+firefox binary: /usr/bin/firefox
+chrome binary:
+aspell binary: /usr/bin/aspell
+ispell binary:
+pandoc binary: /usr/bin/pandoc
+ditaa binary: /usr/bin/ditaa
+gnuplot binary: /usr/bin/gnuplot
+git binary: /usr/bin/git
+Outlook binary:
+grep binary: /bin/grep
+scss binary: /usr/bin/scss
+ag binary: /usr/bin/ag
+biber binary: /usr/bin/biber
+#+END_EXAMPLE
+
+Windows output:
+#+BEGIN_EXAMPLE
+pdflatex binary: c:/Program Files/MiKTeX_2.9/miktex/bin/pdflatex.exe
+python binary:
+ipython binary:
+firefox binary:
+chrome binary:
+aspell binary:
+ispell binary:
+pandoc binary: c:/Users/karl.voit/AppData/Local/Pandoc/pandoc.exe
+ditaa binary:
+gnuplot binary:
+git binary:
+Outlook binary:
+grep binary:
+scss binary:
+ag binary:
+biber binary: c:/Program Files/MiKTeX_2.9/miktex/bin/biber.exe
+#+END_EXAMPLE
+
+: Binaries not found in checks above: (ag scss grep Outlook git gnuplot ditaa ispell aspell chrome firefox ipython python)
+
+After moving system-specific paths above this checks: only aspell was found:
+: Binaries not found in checks above: (ag scss grep Outlook git gnuplot ditaa ispell chrome firefox ipython python)
+
+... *but* on Windows, there are following things installed:
+- [ ] python
+- [ ] ipython
+- [ ] firefox
+- [ ] chrome
+- [ ] (a/i?)spell
+- [ ] Outlook
+  - real path: "C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE"
+  - also holds for OUTLOOK.EXE and OUTLOOK
+  - =where outlook= is also unsuccessful :-(
+
+#+BEGIN_SRC emacs-lisp
+  (message "★★★★★★★★★★")
+  (message (concat "pdflatex binary: " (my-binary-found "pdflatex")))
+  (message (concat "python binary: " (my-binary-found "python")))
+  (message (concat "ipython binary: " (my-binary-found "ipython")))
+  (message (concat "firefox binary: " (my-binary-found "firefox")))
+  (message (concat "chrome binary: " (my-binary-found "chrome")))
+  (message (concat "aspell binary: " (my-binary-found "aspell")))
+  (message (concat "ispell binary: " (my-binary-found "ispell")))
+  (message (concat "pandoc binary: " (my-binary-found "pandoc")))
+  (message (concat "ditaa binary: " (my-binary-found "ditaa")))
+  (message (concat "gnuplot binary: " (my-binary-found "gnuplot")))
+  (message (concat "git binary: " (my-binary-found "git")))
+  (message (concat "Outlook binary: " (my-binary-found "Outlook")))
+  (message (concat "grep binary: " (my-binary-found "grep")))
+  (message (concat "scss binary: " (my-binary-found "scss")))
+  (message (concat "ag binary: " (my-binary-found "ag")))
+  (message (concat "biber binary: " (my-binary-found "biber")))
+  (message "★★★★★★★★★★")
+#+END_SRC
+
+** Test queries
+
+#+BEGIN_SRC emacs-lisp
+;;(my-eval-if-binary-or-warn "pdflatex")
+;;(my-eval-if-binary-or-warn "python")
+(my-eval-if-binary-or-warn "ipython")
+;;(my-eval-if-binary-or-warn "firefox")
+(my-eval-if-binary-or-warn "chrome")
+;;(my-eval-if-binary-or-warn "aspell")
+;;(my-eval-if-binary-or-warn "pandoc")
+(my-eval-if-binary-or-warn "ditaa")
+;;(my-eval-if-binary-or-warn "gnuplot")
+(my-eval-if-binary-or-warn "git")
+(my-eval-if-binary-or-warn "outlook")
+(my-eval-if-binary-or-warn "grep")
+(my-eval-if-binary-or-warn "scss")
+(my-eval-if-binary-or-warn "ag")
+(my-eval-if-binary-or-warn "biber")
+#+END_SRC
 * Styling
 
 Interesting read: http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
@@ -434,7 +735,6 @@ http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
   )
 
 #+END_SRC
-
 * UTF-8 and codings
 
 #+BEGIN_SRC emacs-lisp
@@ -543,114 +843,6 @@ or:
 
 or for use-package():
 : :bind (:map my-map ("8" . bm-toggle))
-
-* System-specific paths
-
-http://www.emacswiki.org/emacs/MacOSTweaks#toc13
-
-#+BEGIN_SRC emacs-lisp
-;; setting path so that Emacs finds aspell and such
-(when (my-system-type-is-darwin)
-  (setenv "PATH"
-	  (concat (getenv "PATH")
-		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
-  (setq exec-path (append exec-path
-			  '("/opt/local/bin"
-			    "/usr/local/texlive/2010/bin/x86_64-darwin"
-			    "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
-			    )))
-  (add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
-
-  ;; 2011-04-20: allow typing of german umlauts in OS X by Alt-u followed by u,o,a,...
-  (setq mac-option-modifier nil)
-
-  (setq org-ditaa-jar-path "~/data/hosts/blanche/config/ditaa.jar")
-
-  ;; setting path to color-theme-mode.el from MacPorts
-  (add-to-list 'load-path "/opt/local/share/emacs/site-lisp/color-theme-6.6.0")
-  )
-#+END_SRC
-
-fix paste-issue (\344 instead of ä) on Windows 7:
-#+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
-  (set-selection-coding-system 'iso-latin-1-dos)
-  )
-#+END_SRC
-
-ditaa
-#+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-gnu)
-  (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
-  )
-#+END_SRC
-
-
-setting path so that Emacs finds aspell and such:
-#+BEGIN_SRC emacs-lisp
- (if (my-system-type-is-windows)
-
-     ;;disabled;(setenv "PATH"
-     ;;disabled;               (concat (getenv "PATH")
-     ;;disabled;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
-     (setq exec-path (append exec-path
-      			     '("C:/Program Files (x86)/Aspell/bin"
-      			       ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
-      			       ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
-      			       )))
-     ;;disabled;(add-to-list 'load-path "/opt/local/share/emacs/site-lisp")
-
-  (
-   ;; on all other systems:
-   )
-  )
-#+END_SRC
-
-* Cygwin Paths (Windows)
-
-- http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
-- id:2014-01-31-cygwin-emacs
-
-- http://www.emacswiki.org/emacs/RobertAdesamConfig
-
-
-#+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
-
-  (if (file-directory-p "c:/cygwin64/bin")
-  (add-to-list 'exec-path "c:/cygwin64/bin"))
-
-  (setenv "PATH"
-	  (concat
-	   ;;"c:\\cygwin64\\usr\\local\\bin" ";"  ;; Cygwin
-	   ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
-	   "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
-	   "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
-	   (getenv "PATH")))
-  ;;(setq exec-path (cons "c:/cygwin64/bin/" exec-path)) ;; Cygwin
-  (setq exec-path (cons "C:/Users/karl.voit/.babun/cygwin/bin/" exec-path)) ;; Babun
-  ;; Adding cygwin mounts
-  ;(use-package cygwin-mount)
-  ;(cygwin-mount-activate)
-  ;; Adding cygwin bash shell
-  ;;(setq shell-file-name "c:/cygwin64/bin/bash") ;; Cygwin
-  (setq shell-file-name "C:/Users/karl.voit/.babun/cygwin/bin/zsh") ;; Babun
-  (setenv "SHELL" shell-file-name)
-  (setq explicit-shell-file-name shell-file-name)
-  (setq ediff-shell shell-file-name)
-  (setq explicit-shell-args '("--login" "-i"))
-  (setq w32-quote-process-args ?\") ;"
-
-  ;; id:2015-11-02-tramp-windows-babel
-  (setq tramp-default-method "plink")
-
-  ;; id:2016-04-22-magit-not-working-on-windows
-  (setq cygwin-root-directory "c:/Users/karl.voit/.babun/cygwin")
-  ;; requires: setup-cygwin.el and cygwin-mount.el in the contrib dir:
-  (add-to-list 'load-path "~/.emacs.d/contrib/")
-  (require 'setup-cygwin)
-  )
-#+END_SRC
 
 * measure-time()
 
@@ -978,6 +1170,10 @@ http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp
 
 -------------
 
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "python")
+#+END_SRC
+
 BEGIN of elpy package
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
@@ -1087,14 +1283,15 @@ better flymake: http://stackoverflow.com/a/1621489
 
 END of elpy package
 #+BEGIN_SRC emacs-lisp
-)
+);; use-package
+);; if python binary found
 #+END_SRC
 
 * LaTeX
 
 BEGIN of LaTeX settings
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-gnu)
+(when (my-eval-if-binary-or-warn "pdflatex")
 #+END_SRC
 
 General LaTeX settings:
@@ -1311,21 +1508,20 @@ http://blog.zenspider.com/2007/03/locate-and-spotlight.html
 http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
 
 #+BEGIN_SRC emacs-lisp
+(setq firefox-path (my-eval-if-binary-or-warn "firefox"))
+(setq chrome-path (my-eval-if-binary-or-warn "google-chrome"))
+
 (cond
  ((my-system-type-is-darwin)
   (setq browse-url-browser-function 'browse-url-default-macosx-browser)
   )
- ((file-exists-p "/usr/bin/firefox")
+ (firefox-path
   (setq browse-url-browser-function 'browse-url-generic
-	browse-url-generic-program "/usr/bin/firefox")
+	browse-url-generic-program firefox-path)
   )
- ((file-exists-p "/usr/bin/iceweasel")
+ (chrome-path
   (setq browse-url-browser-function 'browse-url-generic
-	browse-url-generic-program "/usr/bin/iceweasel")
-  )
- ((file-exists-p "/usr/bin/google-chrome")
-  (setq browse-url-browser-function 'browse-url-generic
-	browse-url-generic-program "/usr/bin/google-chrome")
+	browse-url-generic-program chrome-path)
   )
  )
 #+END_SRC
@@ -1394,6 +1590,11 @@ https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
 #+END_SRC
 
 * flyspell
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "aspell")
+#+END_SRC
+
 
 setting path to flyspell-mode.el from MacPorts:
 #+BEGIN_SRC emacs-lisp
@@ -1491,6 +1692,10 @@ bind-keys:
 (bind-key "ff" 'flyspell-correct-word-before-point my-map)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+);; when aspell found
+#+END_SRC
+
 * flycheck
 
 - http://www.flycheck.org/en/latest/guide/quickstart.html
@@ -1533,10 +1738,12 @@ bind-keys:
 
 #+BEGIN_SRC emacs-lisp
 ;; gnuplot
-(use-package gnuplot
-  :ensure t
-  :defer 10
-  :if (my-system-type-is-gnu)
+(when (my-eval-if-binary-or-warn "gnuplot")
+  (use-package gnuplot
+    :ensure t
+    :defer 10
+    :if (my-system-type-is-gnu)
+  )
 )
 #+END_SRC
 
@@ -1612,6 +1819,7 @@ Profiling Org-mode config loading time:
                      )
         )
 
+(when (my-eval-if-binary-or-warn "pandoc")
   ;; https://github.com/kawabata/ox-pandoc
   (use-package ox-pandoc
     ;;:disabled t  ;; stop loading if 't'
@@ -1622,6 +1830,7 @@ Profiling Org-mode config loading time:
     ;; org-pandoc-menu-entry -> customize what is shown in menu
     ;; :mode "\\.rb\\'"
   )
+)
 
   (use-package ox-asciidoc
     ;;:disabled t  ;; stop loading if 't'
@@ -1913,6 +2122,7 @@ Profiling Org-mode config loading time:
   ;;(require 'ox-freemind)
   ;;(require 'ox-taskjuggler)
 
+(when (my-eval-if-binary-or-warn "pdflatex")
   ;; add bibtex to pdf export method:
   ;; http://orgmode.org/worg/exporters/anno-bib-template-worg.html#sec-5
   ;; see id:2015-03-21-org-reftex-export
@@ -1921,7 +2131,7 @@ Profiling Org-mode config loading time:
         "bibtex %b"
         "pdflatex -interaction nonstopmode -output-directory %o %f"
         "pdflatex -interaction nonstopmode -output-directory %o %f"))
-
+)
 
   ;; disabled 2015-03-22 because it did not help ;; ;; ######################################################
   ;; disabled 2015-03-22 because it did not help ;; ;; Guess the master file for FILENAME from currently open files according to their extension.
@@ -4136,7 +4346,7 @@ Null prefix argument turns off the mode."
   ;; ;; ######################################################
 #+END_SRC
 
-** using alternative LaTeX exporter (disabled)
+** DISABLED using alternative LaTeX exporter (disabled)
 
 #+BEGIN_SRC emacs-lisp
   ;; ;(require 'org-export)
@@ -4198,6 +4408,7 @@ http://orgmode.org/org.html#Header-and-sectioning
 
 #+BEGIN_SRC emacs-lisp
 
+(when (my-eval-if-binary-or-warn "pdflatex")
   (with-eval-after-load 'ox-latex
 
   (message (concat "################################################\norg-latex-classes = [" org-latex-classes "]"))
@@ -4244,6 +4455,7 @@ http://orgmode.org/org.html#Header-and-sectioning
     ;;                ("\\section{%s}" . "\\section*{%s}")))
 
    );; with-eval-after-load
+);; if pdflatex is found
 #+END_SRC
 
 ** images
@@ -5209,13 +5421,14 @@ by using nxml's indentation rules."
 
 #+END_SRC
 
-** pdf-mode
+** DISABLED pdf-mode
+
+- https://github.com/mishoo/pdf-mode.el
+
+2014-11-16 works but I disable it for now
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/mishoo/pdf-mode.el
-;;2014-11-16 works but I disable it for now;; (my-load-local-el "contrib/pdf-mode/pdf-mode.el")
-
-
+(my-load-local-el "contrib/pdf-mode/pdf-mode.el")
 #+END_SRC
 
 ** guide-key
@@ -5249,8 +5462,9 @@ by using nxml's indentation rules."
 
 ** sunrise-mode
 
+via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
+
 #+BEGIN_SRC emacs-lisp
-;; via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 (use-package sunrise-commander
   :disabled t  ;; disabled 2015-08-31
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5261,8 +5475,6 @@ by using nxml's indentation rules."
   ;; following:
   :mode ("\\.srvm\\'" . sr-virtual-mode)
 )
-
-
 #+END_SRC
 
 ** RAML-mode
@@ -5698,12 +5910,13 @@ by using nxml's indentation rules."
 #+BEGIN_SRC emacs-lisp
 ;; http://joostkremers.github.io/pandoc-mode/
 ;; https://github.com/joostkremers/pandoc-mode
-(use-package pandoc-mode
-  ;; :disabled t
-  :ensure nil
-  :defer 10
+(when (my-eval-if-binary-or-warn "pandoc")
+  (use-package pandoc-mode
+    ;; :disabled t
+    :ensure nil
+    :defer 10
+  )
 )
-
 #+END_SRC
 
 ** ox-clip - formatted copy to orgmode
@@ -5823,7 +6036,6 @@ by using nxml's indentation rules."
   :ensure t
   :defer 10
 )
-
 #+END_SRC
 
 ** mode-icons
@@ -5836,15 +6048,14 @@ by using nxml's indentation rules."
   :config
   (mode-icons-mode)
 )
-
-
 #+END_SRC
 
 ** unicode-fonts
 
+- solved an issue where a host was using different-height-sized font for few special characters
+- see id:2016-08-19-unicode-enlarges-line-height
+
 #+BEGIN_SRC emacs-lisp
-;; solved an issue where a host was using different-height-sized font for few special characters
-;; see id:2016-08-19-unicode-enlarges-line-height
 (use-package unicode-fonts
   ;;:disabled t
   :ensure t
@@ -5853,7 +6064,6 @@ by using nxml's indentation rules."
   :config
   (unicode-fonts-setup)
 )
-
 #+END_SRC
 
 ** org-protocol-capture-html
@@ -6472,18 +6682,18 @@ by using nxml's indentation rules."
 
 ** helm-do-grep (my-map G)
 
-#+BEGIN_SRC emacs-lisp
-;; helm-do-grep to grep in current folder
-(bind-key "G" #'helm-do-grep-ag my-map)
+helm-do-grep to grep in current folder
 
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "ag")
+  (bind-key "G" #'helm-do-grep-ag my-map)
+)
 #+END_SRC
 
 ** helm-org-headlines (my-map H)
 
 #+BEGIN_SRC emacs-lisp
 (bind-key "H" #'helm-org-agenda-files-headings my-map)
-
-
 #+END_SRC
 
 ** command log mode (my-map k)
@@ -6514,22 +6724,20 @@ by using nxml's indentation rules."
 
 #+END_SRC
 
-** Confluence/Outlook (disabled)
+** DISABLED Confluence/Outlook
 
 #+BEGIN_SRC emacs-lisp
-;disabled; (when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
-;disabled;   (bind-key "C" #'vk-open-as-confluence-page my-map)
-;disabled;   (bind-key "oe" #'mno-edit-outlook-message my-map)
-;disabled;   (bind-key "os" #'mno-save-outlook-message my-map)
-;disabled;   )
-
+(when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
+  (bind-key "C" #'vk-open-as-confluence-page my-map)
+  (bind-key "oe" #'mno-edit-outlook-message my-map)
+  (bind-key "os" #'mno-save-outlook-message my-map)
+  )
 #+END_SRC
 
 ** mark-ring-goto (my-map <left>)
 
 #+BEGIN_SRC emacs-lisp
 (bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
-
 #+END_SRC
 
 ** open config.org file (my-map .)
@@ -6579,13 +6787,14 @@ by using nxml's indentation rules."
 
 #+END_SRC
 
-** OrgStruct folding
+** DISABLED OrgStruct folding
 
+2014-03-19: OrgStruct-mode: folding and unfoldung:
+
+2015-11-10 deactivated:
 #+BEGIN_SRC emacs-lisp
-;; 2015-11-10 deactivated ;; ;; 2014-03-19: OrgStruct-mode: folding and unfoldung:
-;; 2015-11-10 deactivated ;; (bind-key "[" (lambda () (interactive) (org-cycle t)) my-map)
-;; 2015-11-10 deactivated ;; (bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
-
+(bind-key "[" (lambda () (interactive) (org-cycle t)) my-map)
+(bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
 #+END_SRC
 
 ** Org-mobile import (my-map i)
@@ -6819,14 +7028,18 @@ by using nxml's indentation rules."
 #+BEGIN_SRC emacs-lisp
 (message "→★ finished loading config.org (w/o autostart) in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
-;(sleep-for 2)
-(setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
-(message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
-(setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
+;; omit some things when running in batch-mode:
+(when (not noninteractive)
 
-(message "Creating agenda …")
-(my-org-agenda)
+  ;(sleep-for 2)
+  (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
+  (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
+  (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
+  (message "Creating agenda …")
+  (my-org-agenda)
+
+)
 #+END_SRC
 
 * custom variables
@@ -6851,9 +7064,10 @@ by using nxml's indentation rules."
 (setq truncate-lines t);; https://www.emacswiki.org/emacs/TruncateLines - M-x toggle-truncate-lines
 #+END_SRC
 
-* Profiling end
+* Closing and end for profiling
 
 #+BEGIN_SRC emacs-lisp
+(message "Binaries not found in checks above: %s" my-binary-not-found-list)
 (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 #+END_SRC
 
@@ -7035,7 +7249,6 @@ grep '(' | sed 's/map my-map ("/|/' | sed 's/" \. / | /' |  sed 's/))/|/' | sort
 | c              | smeargle                |           |
 | h              | highlight-symbol        |           |
 | s              | spray-mode              |           |
-
 
 ** Mapping of F-keys
 
