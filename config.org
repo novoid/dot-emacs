@@ -1,9 +1,23 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-23 20:53:48 vk>
+# Time-stamp: <2017-05-24 21:53:57 vk>
 # Source: https://github.com/novoid/dot-emacs
-# oe=ö ae=ä ue=ü OE=Ö AE=Ä UE=Ü sz=ß
 #+TODO: ACTIVE | DISABLED
 #+STARTUP: indent
+
+This is the GNU/Emacs config file of Karl Voit.
+
+The file is named =config.org=. My =init.el= got some nifty Elisp code
+that converts/tangles (only) the Elisp blocks (not marked with
+=:tangle no= or =DISABLED= keyword) into the =config.el=. This
+generated file is interpreted by my GNU/Emacs on startup.
+
+Originally, I found this process on
+http://www.holgerschurig.de/en/emacs-init-tangle/ However, I adapted
+its code and write additional features.
+
+-----------------------
+
+Some minor tasks I plan to do with my =config.org=:
 
 - [ ] LaTeX: run config only if (file-exists-p "/usr/bin/latex") and
   so forth
@@ -17,7 +31,14 @@
 - [ ] manually check blocks
   - 2017-05-22: checked until before Org
 
+- [ ] comment on headings and its content
+  - done before: "Elisp"
+
+- [ ] unify =my-elisp-dir= (below) with =my-user-emacs-directory= (init.el)
+
 * General settings
+
+Here, I do set some very general settings for my GNU/Emacs.
 
 profiling:
 #+BEGIN_SRC emacs-lisp
@@ -70,11 +91,25 @@ inhibit the startup screen
 (setq inhibit-startup-screen t)
 #+END_SRC
 
+English time-stamps in Org-mode (instead of localized German ones):
+- http://lists.gnu.org/archive/html/emacs-orgmode/2011-10/msg01046.html
+- «system locale to use for formatting time values (e.g., timestamps in Org mode files)»
+- "en_US.utf8" did not work for the weekday in the agenda!
+#+BEGIN_SRC emacs-lisp
+(setq system-time-locale "C")
+#+END_SRC
+
 ** Paths
+
+Just to make everything explicit (mostly for non-Linux systems),
+define my Emacs configuration directory within =my-elisp-dir=:
 
 #+BEGIN_SRC emacs-lisp
 (defvar my-elisp-dir "~/.emacs.d/")
 #+END_SRC
+
+=package-user-dir= holds the directory where Emacs package manager
+installs its local copies of the packages:
 
 #+BEGIN_SRC emacs-lisp
 (setq package-user-dir "~/.emacs.d/elpa")
@@ -91,20 +126,23 @@ inhibit the startup screen
 
 ** Server mode
 
-Start an Emacs server: new files can be visited via =emacsclient= (instead of parallel =emacs= instances):
+Start Emacs as a server process: new files can be visited via
+=emacsclient= (instead of parallel =emacs= instances). Therefore, I
+don't have to run multiple instances (which occupies RAM storage) and
+I am able to open new files instantly.
+
 #+BEGIN_SRC emacs-lisp
 (server-start)
 #+END_SRC
 
 ** Package
 
-configure packages:
-
+Configure the package manager of my GNU/Emacs.
 
 http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
 
 MELPA packages are usually built automatically from a project's
-repository; the Gnu repository has stable releases that are explicitly
+repository; the GNU repository has stable releases that are explicitly
 submitted to it.
 
 #+BEGIN_SRC emacs-lisp
@@ -148,7 +186,10 @@ Initialize packages:
 
 ** Upper/lower-case
 
-see id:2014-03-04-M-l-subword
+Many times, I do need to uppercase or lowercase a word. Those commands
+offer me quick shortcuts to do so.
+
+See: id:2014-03-04-M-l-subword
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key [M-l] 'downcase-word)
@@ -158,23 +199,18 @@ see id:2014-03-04-M-l-subword
 
 ** yes-or-no-p: prefer y/n
 
-http://twitter.com/emacs_knight/status/128339316417101825
-→ prefer y/n
+«True #Emacs Knights are lazy and hate typing yes/no - they prefer y/n
+instead. Use this (fset 'yes-or-no-p 'y-or-n-p) in your config.»
+... from: http://twitter.com/emacs_knight/status/128339316417101825
 
 #+BEGIN_SRC emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
-** Highlight matching parenthesis
+** Deletes duplicate entries of the history of the minibuffer
 
-http://wason21cn.blogspot.com/feeds/posts/default?orderby=updated
-
-#+BEGIN_SRC emacs-lisp
-(show-paren-mode t)
-#+END_SRC
-
-** deletes duplicate entries of history
-
+«If the value of this variable is t, that means when adding a new
+history element, all previous identical elements are deleted.» from:
 http://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-History.html
 
 #+BEGIN_SRC emacs-lisp
@@ -183,13 +219,17 @@ http://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-History.html
 
 ** Pasting with the mouse without moving the point
 
-http://sachachua.com/blog/2017/04/emacs-pasting-with-the-mouse-without-moving-the-point-mouse-yank-at-point/
+«middle-clicking pastes at the current location instead of moving it»
+from: http://sachachua.com/blog/2017/04/emacs-pasting-with-the-mouse-without-moving-the-point-mouse-yank-at-point/
 
 #+BEGIN_SRC emacs-lisp
 (setq mouse-yank-at-point t)
 #+END_SRC
 
-** Un-setting keys
+** Un-setting some keys
+
+Here, I do unset some keys I don't use so that they are not in my way
+when I accidentially use them:
 
 #+BEGIN_SRC emacs-lisp
 ;;   \C-v   scroll up
@@ -198,7 +238,7 @@ http://sachachua.com/blog/2017/04/emacs-pasting-with-the-mouse-without-moving-th
     (global-unset-key key))
 #+END_SRC
 
-** maximize frame window
+** Maximize frame window
 
 Details: id:2016-03-27-maximize-window-init.el
 
@@ -206,9 +246,14 @@ Details: id:2016-03-27-maximize-window-init.el
 (toggle-frame-maximized)
 #+END_SRC
 
-* my-load-local-el
+* my-load-local-el()
+
+Using this function, I am able to easily load lisp files within my
+Emacs config hierarchy. It contains minimal error handling for a
+missing file.
 
 from: http://www.zonix.de/html40/linux/emacsgnus.html
+
 #+BEGIN_SRC emacs-lisp
 (defun my-load-local-el (part)
   "load lisp file and warn if not found"
@@ -220,11 +265,15 @@ from: http://www.zonix.de/html40/linux/emacsgnus.html
 
 * my-system-is-FOOBAR
 
-Emacs config switch depending on hostname or operating system:
-https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
+Emacs config switch depending on hostname or operating system: Idea
+found here: [[https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/][Single dot emacs file and per-computer configuration | SIGQUIT]]
+
+This is so cool: with those functions, I am able to maintain one
+single Emacs configuration for /all/ of my hosts. If there is
+something I want to do or do not on a specific platform or host, those
+functions allow me to express my restrictions easily:
 
 #+BEGIN_SRC emacs-lisp
-
 ;; Get current system's name
 (defun my-insert-system-name()
   (interactive)
@@ -256,7 +305,12 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
   "Return true if system is GNU/Linux-based"
   (string-equal system-type "gnu/linux")
   )
+#+END_SRC
 
+Here are host-specific functions which I should *not* use if possible
+because with them, I lose some generic approach:
+
+#+BEGIN_SRC emacs-lisp
 (defun my-system-is-floyd-or-sherri ()
   "Return true if the system we are running on is floyd or sherri"
   (or
@@ -266,6 +320,7 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
     (string-equal system-name "sherri.lan")
     )
   )
+
 (defun my-system-is-sherri ()
   "Return true if the system we are running on is sherri"
   (or
@@ -273,6 +328,7 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
     (string-equal system-name "sherri.lan")
     )
   )
+
 (defun my-system-is-floyd ()
   "Return true if the system we are running on is floyd"
   (or
@@ -280,14 +336,17 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
     (string-equal system-name "floyd.lan")
     )
   )
+
 (defun my-system-is-blanche ()
   "Return true if the system we are running on is blanche"
   (or (string-equal system-name "blanche") (string-equal system-name "blanche.lan"))
   )
+
 (defun my-system-is-karl-voit-at ()
-  "Return true if the system we are running on is grmlvrs"
+  "Return true if the system we are running on is karl-voit.at"
   (string-equal system-name "friends.grml.info")
   )
+
 (defun my-system-is-powerplantlinux ()
   "Return true if the system we are running on is powerplant"
   (or
@@ -295,17 +354,14 @@ https://sigquit.wordpress.com/2008/09/28/single-dot-emacs-file/
    (string-equal system-name "powerplant.lan")
    )
   )
-;; DISABLED 2017-05-19 ;; (defun my-system-is-powerplantwin ()
-;; DISABLED 2017-05-19 ;;   "Return true if the system we are running on is powerplant"
-;; DISABLED 2017-05-19 ;;   (string-equal system-name "ATGRZ4043268X")
-;; DISABLED 2017-05-19 ;;   )
-(defun my-system-is-kva ()
-  "Return true if the system we are running on is karl-voit.at"
-  (string-equal system-name "friends.grml.info")
-  )
 #+END_SRC
 
 * System-specific paths
+
+The system PATH variable provides access to executables. However, I do
+tend to use programs which are not part of the PATH variable of the
+operating system as well. Therefore, I do extend the Emacs variable
+=exec-path= (further down and following headings).
 
 http://www.emacswiki.org/emacs/MacOSTweaks#toc13
 
@@ -329,13 +385,6 @@ http://www.emacswiki.org/emacs/MacOSTweaks#toc13
 
   ;; setting path to color-theme-mode.el from MacPorts
   (add-to-list 'load-path "/opt/local/share/emacs/site-lisp/color-theme-6.6.0")
-  )
-#+END_SRC
-
-fix paste-issue (\344 instead of ä) on Windows 7:
-#+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
-  (set-selection-coding-system 'iso-latin-1-dos)
   )
 #+END_SRC
 
@@ -369,9 +418,14 @@ setting path so that Emacs finds aspell and such:
 
 * Cygwin Paths (Windows)
 
+As mentioned in the chapter of system-specific paths, I do use
+programs which are not part of the PATH variable of the operating
+system. Cygwin executables (in form of [[http://babun.github.io/][babun]]) are one example of this
+kind of programs.
+
+Links:
 - http://gregorygrubbs.com/emacs/10-tips-emacs-windows/
 - id:2014-01-31-cygwin-emacs
-
 - http://www.emacswiki.org/emacs/RobertAdesamConfig
 
 
@@ -415,9 +469,15 @@ setting path so that Emacs finds aspell and such:
 
 * Looking for binaries
 
-- [X] collect examples Linux
-- [X] collect examples Windows
-- [X] create functions (my-binary-found "pdflatex")
+Some Emacs configuration snippets relate to external programs such as
+LaTeX. Instead of (a) blindly evaluating those snippets or (b) using
+per-host-configuration for them, I do prefer to check whether or not
+those programs are installed on the local host instead. This is just
+the sane way of doing those things.
+
+In detail, it gets a bit dirty for Windows, since there are some tools
+that are installed but not listed in the PATH environment =exec-path=.
+See below for some workarounds for that.
 
 ** my-binary-found(binaryname)
 
@@ -510,6 +570,8 @@ Example usages:
 
 ** DISABLED Example output for different hosts
 
+This heading ist just for collecting example outputs:
+
 sherri output:
 #+BEGIN_EXAMPLE
 pdflatexTeX binary: /usr/bin/pdflatex
@@ -588,6 +650,12 @@ After moving system-specific paths above this checks: only aspell was found:
 
 ** Test queries
 
+Here, I do probe for some tools mostly because I want to test my code
+above.
+
+When I am using tool-specific settings below, I do add comment
+characters to disable the check at this stage:
+
 #+BEGIN_SRC emacs-lisp
 ;;(my-eval-if-binary-or-warn "pdflatex")
 ;;(my-eval-if-binary-or-warn "python")
@@ -605,18 +673,21 @@ After moving system-specific paths above this checks: only aspell was found:
 (my-eval-if-binary-or-warn "ag")
 (my-eval-if-binary-or-warn "biber")
 #+END_SRC
+
 * Styling
+
+The (sub-)headings here deal with the visual appeal of my GNU/Emacs. I
+like dark themes and minimized interfaces. Therefore, I hide everyting
+I do not use.
 
 Interesting read: http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
 
 Show current column:
-
 #+BEGIN_SRC emacs-lisp
 (setq column-number-mode t)
 #+END_SRC
 
 Cursor settings:
-
 #+BEGIN_SRC emacs-lisp
 ;; Prevent the cursor from blinking
 ;(blink-cursor-mode 0)
@@ -624,7 +695,6 @@ Cursor settings:
 #+END_SRC
 
 Flat mode-line styling:
-
 2014-05-24: from http://www.reddit.com/r/emacs/comments/23l9oi/flat_modeline/
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'mode-line nil :box nil)
@@ -633,18 +703,21 @@ Flat mode-line styling:
 
 ** Themes
 
-#+BEGIN_SRC emacs-lisp
-;; https://github.com/hadronzoo/theme-changer
-;; set color theme according to day-time:
-;;disabled;; (setq calendar-location-name "Graz, AT")
-;;disabled;; (setq calendar-latitude 47.07)
-;;disabled;; (setq calendar-longitude 15.43)
-;;disabled;; (use-package theme-changer)
-;;disabled;; (change-theme 'whiteboard 'misterioso)  ;; day and night theme
+Since a couple of major versions, GNU/Emacs has a built-in theme
+manager. This is for dealing with the themes:
+
+- set color theme according to day-time:
+  - https://github.com/hadronzoo/theme-changer
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq calendar-location-name "Graz, AT")
+(setq calendar-latitude 47.07)
+(setq calendar-longitude 15.43)
+(use-package theme-changer)
+(change-theme 'whiteboard 'misterioso)  ;; day and night theme
 #+END_SRC
 
+My favorite dark themes: wombat, misterioso, zenburn, material
 #+BEGIN_SRC emacs-lisp
-;; my favorite dark themes: misterioso, zenburn, material
 (load-theme 'wombat t) ;; dark theme
 ;;   (load-theme 'misterioso t)
 ;;   (load-theme 'zenburn t)
@@ -652,18 +725,18 @@ Flat mode-line styling:
 ;;              issues with *bold* stuff in org-mode :-(
 #+END_SRC
 
+My favorite light themes: leuven, whiteboard, solarized-light,
 #+BEGIN_SRC emacs-lisp
-;; my favorite light themes: leuven, whiteboard, solarized-light,
 ;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
 ;;   (load-theme 'whiteboard t)
 ;;   (load-theme 'solarized-light t)
 #+END_SRC
 
+- enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
+- issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
+- M-x describe-face  -> show definition
+- C-u C-x =          -> show all font information
 #+BEGIN_SRC emacs-lisp
-  ;; enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
-  ;; issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
-  ;; M-x describe-face  -> show definition
-  ;; C-u C-x =          -> show all font information
 ;  (face-spec-set 'org-block-begin-line
 ;    '((t (:underline "#FFFFFF" :foreground "#404040" :background "#b3b3b3")))
 ;    "Face used for the line delimiting the begin of source blocks.")
@@ -687,28 +760,28 @@ Flat mode-line styling:
 
 #+END_SRC
 
+- 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
+  - from http://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
 #+BEGIN_SRC emacs-lisp
-;; 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
-;; from http://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
 ;;    (defadvice load-theme (before theme-dont-propagate activate) (mapcar #'disable-theme custom-enabled-themes))
-#+END_SRC
-
 #+END_SRC
 
 ** Only one window on startup
 
-http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
+«Make [current] WINDOW fill its frame.»
+- http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-startup-hook 'delete-other-windows t)
 #+END_SRC
 
-** Host-specific font size
+** Font sizes
+
+
+- 2011-04-20: increase/set font size
+  - http://www.emacswiki.org/emacs/SetFonts
 
 #+BEGIN_SRC emacs-lisp
-
-;; 2011-04-20: increase/set font size
-;; http://www.emacswiki.org/emacs/SetFonts
 (defun my-increase-fontsize ()
   (interactive)
   "Sets the font to bigger size"
@@ -719,7 +792,10 @@ http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
   "Sets the font to normal size"
   (set-face-attribute 'default (selected-frame) :height 100)
   )
+#+END_SRC
 
+Host-specific font size:
+#+BEGIN_SRC emacs-lisp
 (when (or (my-system-type-is-gnu) (my-system-type-is-windows))
   (my-increase-fontsize);; increase fonts on some hosts by default
   )
@@ -733,23 +809,31 @@ http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 (when (my-system-is-floyd)
   (set-face-attribute 'default (selected-frame) :height 110)
   )
-
 #+END_SRC
 * UTF-8 and codings
 
+Activate UTF-8 mode:
 #+BEGIN_SRC emacs-lisp
-
-;; Activate UTF-8 mode:
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+#+END_SRC
 
+When I paste from the Windows clipboard, I tend to get messed up
+Umlauts and special characters. This ought to fix it but I think that
+this does not work either:
+
+#+BEGIN_SRC emacs-lisp
 (cond ((my-system-type-is-windows)
        ;; on Windows, 'utf-8 does not work properly when system
        ;; clipboard gets yanked
        (setq selection-coding-system 'utf-16le-dos)
+
+       ;; For example: =\344= instead of =ä= on Windows 7:
+       ;;(set-selection-coding-system 'iso-latin-1-dos)
        )
+
       ((my-system-type-is-gnu)
        (set-selection-coding-system 'utf-8)
        )
@@ -757,7 +841,6 @@ http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
        (set-selection-coding-system 'utf-8)
        )
       )
-
 
 ;; 2013-12-10 IRC #Emacs
 (set-clipboard-coding-system 'utf-8)
@@ -775,7 +858,11 @@ http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
   (setq default-buffer-file-coding-system 'utf-8))
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+#+END_SRC
 
+FIXXME: what is this for?
+
+#+BEGIN_SRC emacs-lisp
 (defvar universal-coding-system-env-list '("PYTHONIOENCODING")
   "List of environment variables \\[universal-coding-system-argument] should set")
 
@@ -792,20 +879,26 @@ the same coding systems as Emacs."
     (dolist (extra-env universal-coding-system-env-list)
       (setenv extra-env (symbol-name (ad-get-arg 0))))
     ad-do-it))
-
-;; English time-stamps in Org-mode (instead of localized German ones):
-;; http://lists.gnu.org/archive/html/emacs-orgmode/2011-10/msg01046.html
-;;   system locale to use for formatting time values (e.g., timestamps in
-;;   Org mode files)
-;; "en_US.utf8" did not work for the weekday in the agenda!
-(setq system-time-locale "C")
 #+END_SRC
 
-* my-map
+* my-map: my own keyboard shortcut prefix
 
-About defining keys: http://ergoemacs.org/emacs/keyboard_shortcuts.html
+About defining keys: [[http://ergoemacs.org/emacs/keyboard_shortcuts.html][Emacs: How to Define Keys]]
 
-2015-11-10 replaced by bind-key below:
+If you are not satisfied with the default setup of Emacs keyboard
+shortcuts, you start with defining your own keyboard shortcuts
+(bindings).
+
+To avoid binding conflicts with libraries/packages, it is a good habit
+of using a keyboard shortcut prefix no-one else is using. So if you
+stick to this prefix, you've got your own «name-space» where you are
+able to define your bindings freely.
+
+My approach is to use =my-map= as a mapping which is bound to =C-c
+C-,=. So my personal bindings start with =C-c C-,= such as =C-c C-, -=
+for decreasing the font size of GNU/Emacs.
+
+2015-11-10: Following code was replaced by bind-key below:
 #+BEGIN_SRC emacs-lisp :tangle no
 ;; 2011-04-20, 2013-04-08: defining «C-c C-,» as my own prefix:
 ;; http://stackoverflow.com/questions/1024374/how-can-i-make-c-p-an-emacs-prefix-key-for-develperlysense
@@ -816,9 +909,8 @@ About defining keys: http://ergoemacs.org/emacs/keyboard_shortcuts.html
 (define-prefix-command 'my-map)
 #+END_SRC
 
-
+Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key package]]:
 #+BEGIN_SRC emacs-lisp
-;; from: https://github.com/jwiegley/dot-emacs/blob/master/init.el
 (require 'bind-key);; https://github.com/emacsattic/bind-key
 
 (bind-keys
@@ -832,7 +924,8 @@ About defining keys: http://ergoemacs.org/emacs/keyboard_shortcuts.html
  )
 #+END_SRC
 
-examples:
+
+Usage example:
 : (bind-key "m w" #'mark-word my-map)
 
 or:
@@ -845,6 +938,9 @@ or for use-package():
 : :bind (:map my-map ("8" . bm-toggle))
 
 * measure-time()
+
+From time to time, I want to measure, how long an Elisp snippet ran.
+This can be done with following code.
 
 from: http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-function-calls-in-emacs-lisp
 
@@ -859,6 +955,12 @@ from: http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-func
 * my helper functions
 
 ** DISABLED Infonova Functions for Working Hour Calculation
+
+I used this code to derive working hours until the company switched to
+a stupid new tool everybody hates. Yes, even worse than SAP.
+
+This is just for the record because it contains much Elisp sweat from
+my side:
 
 #+BEGIN_SRC emacs-lisp
 (defun my-extract-minutes-of-hm-string(hm-string)
@@ -955,7 +1057,8 @@ from: http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-func
 
 ** Proper English Title Capitalization of a Marked Region
 
-Read: http://www.karl-voit.at/2015/05/25/elisp-title-capitalization/
+Read http://www.karl-voit.at/2015/05/25/elisp-title-capitalization/
+where I wrote a verbose description of the topic and my solution.
 
 #+BEGIN_SRC emacs-lisp
 ;; additionally to the list defined in title-capitalization:
@@ -1020,9 +1123,12 @@ Read: http://www.karl-voit.at/2015/05/25/elisp-title-capitalization/
 		   )))
 #+END_SRC
 
-** my-toggle-windows-split
+** my-toggle-windows-split() → my-map |
 
-http://www.emacswiki.org/emacs/ToggleWindowSplit
+Toggle the windows split between horizontally and vertically. I
+usually don't use it though.
+
+From: http://www.emacswiki.org/emacs/ToggleWindowSplit
 
 #+BEGIN_SRC emacs-lisp
 (defun my-toggle-windows-split ()
@@ -1055,12 +1161,17 @@ i.e. change right window to bottom, or change bottom window to right."
 (bind-key "|" 'my-toggle-windows-split my-map)
 #+END_SRC
 
-** my-yank-windows (my-map y)
+** my-yank-windows → my-map y
+
+Yanking from the windows clipboard results in messed up lists. When
+using this special yank function, common list formatting is fixed for
+Org-mode syntax.
 
 - id:2016-05-22-my-yank-windows
 
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
+
   (defun my-yank-windows ()
     "yanks from clipboard and replaces typical (list) markup"
     (interactive)
@@ -1079,11 +1190,17 @@ i.e. change right window to bottom, or change bottom window to right."
     )
 
   (bind-key "y" 'my-yank-windows my-map)
-  )
 
+)
 #+END_SRC
 
-** my-fill-or-unfill (paragraph)
+** my-fill-or-unfill() paragraph
+
+=M-q= does fix paragraph formatting and is one of my most favorite
+commands in GNU/Emacs. If you need to go back to «one line per
+paragraph», this function offers a toggle function for =M-q=. Applied
+twice, it re-formats the current paragraph to one line. Very handy for
+copy/paste to web forms or such where you need one paragraph per line.
 
 - http://endlessparentheses.com/fill-and-unfill-paragraphs-with-a-single-key.html
 
@@ -1100,10 +1217,13 @@ i.e. change right window to bottom, or change bottom window to right."
 
 (global-set-key [remap fill-paragraph]
                 'my-fill-or-unfill)
-
 #+END_SRC
 
-** my-open-in-external-app
+** my-open-in-external-app()
+
+Some times, I want to use an external application for opening a
+certain file instead of opening it in Emacs. This can be done using
+following function:
 
 - http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
   - open dired file in external app (specified by the operating system)
@@ -1133,7 +1253,8 @@ i.e. change right window to bottom, or change bottom window to right."
        ((string-equal system-type "darwin")
         (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)) )  myFileList) )
        ((string-equal system-type "gnu/linux")
-        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
+        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList)
+) ) ) ) )
 #+END_SRC
 
 * Elisp
@@ -1156,6 +1277,13 @@ http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp
 
 #+BEGIN_SRC emacs-lisp
 (add-hook 'emacs-lisp-mode-hook 'turn-off-auto-fill)
+#+END_SRC
+
+When editing code that uses parenthesis, enabling this does highlight
+the matching parenthesis:
+
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode t)
 #+END_SRC
 
 * Python
@@ -6295,10 +6423,9 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 
 #+END_SRC
 
-** my-toggle-dark-bright-theme
+** my-toggle-dark-bright-theme -> S-F1
 
 #+BEGIN_SRC emacs-lisp
-
 (defvar my-toggle-dark-bright-theme-status t
   "Toggle between dark emacs theme and bright emacs theme; nil means dark theme, t means bright theme")
 
@@ -6319,13 +6446,11 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   )
 
 (global-set-key [(shift f1)] 'my-toggle-dark-bright-theme)
-
 #+END_SRC
 
 ** my-toggle-beginner-setup
 
 #+BEGIN_SRC emacs-lisp
-
 (defvar my-toggle-beginner-setup-status nil
   "state of Emacs setup which is least confusing for beginners. t means beginner, nil means normal")
 ;;(make-variable-buffer-local 'my-toggle-beginner-setup-status)
@@ -6335,8 +6460,8 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   (interactive)
   (if (functionp 'tool-bar-mode) (tool-bar-mode -1)) ;; hide icons
   (menu-bar-mode 0) ;; hide menu-bar
-  (when (not (my-system-is-kva))
-    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode! :-)
+  (when (not (my-system-is-karl-voit-at))
+    (scroll-bar-mode 0) ;; hide scroll-bar, I do have Nyan-mode instead!
     )
   (setq debug-on-quit t);; show debug information on canceling endless loops and so forth
 
