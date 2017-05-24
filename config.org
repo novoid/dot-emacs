@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-24 21:53:57 vk>
+# Time-stamp: <2017-05-24 22:00:40 vk>
 # Source: https://github.com/novoid/dot-emacs
 #+TODO: ACTIVE | DISABLED
 #+STARTUP: indent
@@ -35,6 +35,8 @@ Some minor tasks I plan to do with my =config.org=:
   - done before: "Elisp"
 
 - [ ] unify =my-elisp-dir= (below) with =my-user-emacs-directory= (init.el)
+
+- [ ] re-write README.org
 
 * General settings
 
