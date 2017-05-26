@@ -3868,41 +3868,46 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
   ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
   (setq org-agenda-category-icon-alist nil)
-  (when (my-system-type-is-windows)
+  ;(when (my-system-type-is-windows)
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-		  '("r6" "C:/Users/karl.voit/infonova/templates_logos/R6-logo_18x12.jpg" nil nil :ascent center)
+		  '("r6" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		  '("infonova" "C:/Users/karl.voit/infonova/templates_logos/R6-logo_18x12.jpg" nil nil :ascent center)
+		  '("infonova" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
 		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
-    )
-  (when (and (my-system-type-is-gnu) (not (my-system-is-karl-voit-at)))
+  ;  )
+
+  ;(when (and (my-system-type-is-gnu) (not (my-system-is-karl-voit-at)))
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("contacts" "/usr/share/icons/oxygen/16x16/places/user-identity.png" nil nil :ascent center)
-		 ;;/usr/share/icons/gnome/16x16/emotes/face-smile.png
+		 '("contacts" (concat my-user-emacs-directory "data/user-identity.png") nil nil :ascent center)
+		     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("public_voit" "/usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png" nil nil :ascent center)
+		 '("public_voit" (concat my-user-emacs-directory "data/application-rss+xml.png") nil nil :ascent center)
+                 ;; /usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("misc" "/usr/share/icons/oxygen/16x16/emblems/emblem-new.png" nil nil :ascent center)
+		 '("misc" (concat my-user-emacs-directory "data/emblem-new.png") nil nil :ascent center)
+                 ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("hardware" "/usr/share/icons/oxygen/16x16/devices/camera-photo.png" nil nil :ascent center)
+		 '("hardware" (concat my-user-emacs-directory "data/camera-photo.png") nil nil :ascent center)
+                 ;; /usr/share/icons/oxygen/16x16/devices/camera-photo.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("bwg" "/usr/share/icons/oxygen/16x16/actions/go-home.png" nil nil :ascent center)
+		 '("bwg" (concat my-user-emacs-directory "data/go-home.png") nil nil :ascent center)
+                 ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
 		  )
-    )
+   ; )
 
 #+END_SRC
 
