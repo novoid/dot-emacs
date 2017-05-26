@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-26 14:36:38 vk>
+# Time-stamp: <2017-05-26 20:34:55 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -1356,7 +1356,6 @@ save to user dictionary without asking:
 flyspell.el <http://kaolin.unice.fr/~serrano/>
 #+BEGIN_SRC emacs-lisp :tangle no
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
-;(define-key global-map [(f10)] 'flyspell-mode)
 #+END_SRC
 
 Dictionary settings:
@@ -1430,12 +1429,16 @@ Modes for programming languages; check spelling only in comments/strings
 
 bind-keys:
 #+BEGIN_SRC emacs-lisp
-(bind-key "fm" 'flyspell-mode my-map)
+(define-key global-map [(f5)] 'flyspell-mode)
+(bind-key "fm" 'flyspell-mode my-map);; also mapped to F5
 (bind-key "fr" 'flyspell-region my-map)
-(bind-key "fl" 'my-toggle-ispell-language my-map)
+(bind-key "fl" 'my-toggle-ispell-language my-map);; also mapped to Shift-F5
+(define-key global-map [(shift f5)] 'my-toggle-ispell-language)
 (bind-key "ft" 'my-toggle-ispell-language my-map);; can't remember if l(anguage) or t(oggle)
 (bind-key "fn" 'flyspell-goto-next-error my-map)
+(define-key global-map [(f6)] 'flyspell-goto-next-error)
 (bind-key "ff" 'flyspell-correct-word-before-point my-map)
+(define-key global-map [(f7)] 'flyspell-correct-word-before-point)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -4541,6 +4544,8 @@ was referred to]].
 
   ;; http://superuser.com/questions/71786/can-i-create-a-link-to-a-specific-email-message-in-outlook
   ;; id:2016-05-03-outlook-links
+(when (my-eval-if-binary-or-warn "outlook")
+
   (org-add-link-type "outlook" 'org-outlook-open)
 
   (defun org-outlook-open (id)
@@ -4552,10 +4557,7 @@ was referred to]].
                        "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE"
                        (concat "/select " "outlook:" id))
     )
-
-
-  ;; ######################################################
-
+)
 #+END_SRC
 
 ** org-link-set-parameters
@@ -6474,7 +6476,7 @@ be of some use.»
           "Ǔ" "ǔ" "Ǚ" "ǚ" "Ž" "ž" "Ǯ" "ǯ")
          ("Umlaute"  "ä" "ö" "ü" "Ä" "Ö" "Ü" "ß")
         ))
-  (global-set-key [f7] 'char-menu)
+  (global-set-key [f4] 'char-menu)
 )
 #+END_SRC
 
@@ -6831,8 +6833,8 @@ https://github.com/rolandwalker/unicode-fonts
 #+BEGIN_SRC emacs-lisp
 (my-load-local-el "contrib/goto-chg.el")
 (require 'goto-chg)
-(global-set-key [f5] 'goto-last-change)
-(global-set-key [f6] 'goto-last-change-reverse)
+(global-set-key [f2] 'goto-last-change)
+(global-set-key [f3] 'goto-last-change-reverse)
 #+END_SRC
 
 ** highlight-symbol → my-map h
@@ -7537,7 +7539,7 @@ a configurable list of functions.»
 (global-set-key (kbd "M-/") 'hippie-expand)
 #+END_SRC
 
-** neotree → F8
+** neotree → F9
 
 [[https://github.com/jaypei/emacs-neotree][NeoTree]] offers a file tree side-panel like NerdTree for Vim.
 
@@ -7549,7 +7551,7 @@ installed on 2015-03-22
   :ensure t
   :defer 20
   :config ;; executed after loading package
-(global-set-key [f8] 'neotree-toggle)
+  (global-set-key [f9] 'neotree-toggle)
 )
 #+END_SRC
 
@@ -7877,6 +7879,26 @@ grep '(' | sed 's/map my-map ("/|/' | sed 's/" \. / | /' |  sed 's/))/|/' | sort
 
 id:2017-05-22-f-key-mapping
 
+New mapping for F-keys: id:2017-05-26-new-F-key-bindings
+| Key        | New binding                        |
+|------------+------------------------------------|
+| <f1>       | my-toggle-beginner-setup           |
+| Shift-<f1> | my-toggle-dark-bright-theme        |
+| <f2>       | goto-last-change                   |
+| <f3>       | goto-last-change-reverse           |
+| <f4>       | char-menu                          |
+|------------+------------------------------------|
+| <f5>       | flyspell-mode                      |
+| Shift-f5   | my-toggle-ispell-language          |
+| <f6>       | flyspell-goto-next-error           |
+| <f7>       | flyspell-correct-word-before-point |
+| <f8>       |                                    |
+|------------+------------------------------------|
+| <f9>       | neotree-toggle                     |
+| <f10>      | menu-bar-open                      |
+| <f11>      | toggle-frame-fullscreen            |
+| <f12>      | my-toggle-naked-emacs              |
+
 #+BEGIN_SRC emacs-lisp :results output :tangle no :exports result
 (let ((ks '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"))
       )
@@ -7891,17 +7913,17 @@ id:2017-05-22-f-key-mapping
 #+RESULTS:
 #+begin_example
 "| <f1> | my-toggle-beginner-setup
-""| <f2> | 2C-command
-""| <f3> | kmacro-start-macro-or-insert-counter
-""| <f4> | kmacro-end-or-call-macro
-""| <f5> | goto-last-change
-""| <f6> | yankpad-map
-""| <f7> | char-menu
-""| <f8> | neotree-toggle
+""| <f2> | goto-last-change
+""| <f3> | goto-last-change-reverse
+""| <f4> | char-menu
+""| <f5> | flyspell-mode
+""| <f6> | flyspell-goto-next-error
+""| <f7> | flyspell-correct-word-before-point
+""| <f8> | nil
 ""| <f9> | nil
 ""| <f10> | menu-bar-open
 ""| <f11> | toggle-frame-fullscreen
-""| <f12> | nil
+""| <f12> | my-toggle-naked-emacs
 "
 #+end_example
 
