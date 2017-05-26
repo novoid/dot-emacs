@@ -1,42 +1,45 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-24 22:00:40 vk>
-# Source: https://github.com/novoid/dot-emacs
+# Time-stamp: <2017-05-26 14:36:38 vk>
+# Source:     https://github.com/novoid/dot-emacs
+# License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
 #+STARTUP: indent
 
 This is the GNU/Emacs config file of Karl Voit.
 
-The file is named =config.org=. My =init.el= got some nifty Elisp code
-that converts/tangles (only) the Elisp blocks (not marked with
-=:tangle no= or =DISABLED= keyword) into the =config.el=. This
-generated file is interpreted by my GNU/Emacs on startup.
+This file is named =config.org=. My =init.el= got some nifty Elisp code
+that converts/tangles (only) the Elisp blocks into the =config.el=.
+This generated file is interpreted by my GNU/Emacs on startup.
+
+Note that all Elisp blocks part of a =DISABLED= heading or which are
+marked with =:tangle no= won't be tangled to the =config.el= file.
+Unfortunately, within the Org-mode rendering of GitHub, you won't see
+the =DISABLED= keyword nor the =:tangle no= parameter of the babel
+blocks. Please get the Org-mode file and open it in your Emacs directly.
 
 Originally, I found this process on
 http://www.holgerschurig.de/en/emacs-init-tangle/ However, I adapted
 its code and write additional features.
 
+Links that start with =id:= won't work for you because they link to my
+personal Org-mode files.
+
 -----------------------
 
 Some minor tasks I plan to do with my =config.org=:
 
-- [ ] LaTeX: run config only if (file-exists-p "/usr/bin/latex") and
-  so forth
-  - [ ] locate binaries on Windows
-    - (locate-file "pdflatex" exec-path exec-suffixes 1)
-  - [ ] locate binaries on Linux
+- [-] comment on headings and its content
+  - [X] the rest
+  - [X] key-bindings
+  - [ ] Org-mode. NEXT: org-mode-hook
+  - [X] Misc modes/packages
+  - [X] my functions II
 
 - flyspell bindkeys:
   - [ ] create a hydra some day
 
-- [ ] manually check blocks
-  - 2017-05-22: checked until before Org
-
-- [ ] comment on headings and its content
-  - done before: "Elisp"
-
-- [ ] unify =my-elisp-dir= (below) with =my-user-emacs-directory= (init.el)
-
-- [ ] re-write README.org
+- [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
+- [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
 
 * General settings
 
@@ -101,22 +104,6 @@ English time-stamps in Org-mode (instead of localized German ones):
 (setq system-time-locale "C")
 #+END_SRC
 
-** Paths
-
-Just to make everything explicit (mostly for non-Linux systems),
-define my Emacs configuration directory within =my-elisp-dir=:
-
-#+BEGIN_SRC emacs-lisp
-(defvar my-elisp-dir "~/.emacs.d/")
-#+END_SRC
-
-=package-user-dir= holds the directory where Emacs package manager
-installs its local copies of the packages:
-
-#+BEGIN_SRC emacs-lisp
-(setq package-user-dir "~/.emacs.d/elpa")
-#+END_SRC
-
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
@@ -146,6 +133,13 @@ http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_
 MELPA packages are usually built automatically from a project's
 repository; the GNU repository has stable releases that are explicitly
 submitted to it.
+
+=package-user-dir= holds the directory where Emacs package manager
+installs its local copies of the packages:
+
+#+BEGIN_SRC emacs-lisp
+(setq package-user-dir (concat my-user-emacs-directory "elpa"))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (package-initialize)
@@ -240,6 +234,21 @@ when I accidentially use them:
     (global-unset-key key))
 #+END_SRC
 
+** delete-trailing-whitespace before saving
+
+I don't see any use of trailing whitespace. Previously, I had a
+function to remove them mapped to =my-map SPC= but then I found out
+that adding this as a general =before-save-hook= does the job
+automatically:
+
+#+BEGIN_SRC emacs-lisp
+;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
+;  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
+
+;; 2016-02-06: https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
 ** Maximize frame window
 
 Details: id:2016-03-27-maximize-window-init.el
@@ -259,7 +268,7 @@ from: http://www.zonix.de/html40/linux/emacsgnus.html
 #+BEGIN_SRC emacs-lisp
 (defun my-load-local-el (part)
   "load lisp file and warn if not found"
-  (let ((fullname (concat my-elisp-dir part)))
+  (let ((fullname (concat my-user-emacs-directory part)))
     (if (file-exists-p fullname)
 	(load fullname)
       (message (format "Loading %s (source)...failed" fullname)))))
@@ -432,40 +441,41 @@ Links:
 
 
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
+  (when (my-system-type-is-windows)
 
-  (if (file-directory-p "c:/cygwin64/bin")
-  (add-to-list 'exec-path "c:/cygwin64/bin"))
+    (if (file-directory-p "c:/cygwin64/bin")
+        (add-to-list 'exec-path "c:/cygwin64/bin"))
 
-  (setenv "PATH"
-	  (concat
-	   ;;"c:\\cygwin64\\usr\\local\\bin" ";"  ;; Cygwin
-	   ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
-	   "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
-	   "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
-	   (getenv "PATH")))
-  ;;(setq exec-path (cons "c:/cygwin64/bin/" exec-path)) ;; Cygwin
-  (setq exec-path (cons "C:/Users/karl.voit/.babun/cygwin/bin/" exec-path)) ;; Babun
-  ;; Adding cygwin mounts
-  ;(use-package cygwin-mount)
-  ;(cygwin-mount-activate)
-  ;; Adding cygwin bash shell
-  ;;(setq shell-file-name "c:/cygwin64/bin/bash") ;; Cygwin
-  (setq shell-file-name "C:/Users/karl.voit/.babun/cygwin/bin/zsh") ;; Babun
-  (setenv "SHELL" shell-file-name)
-  (setq explicit-shell-file-name shell-file-name)
-  (setq ediff-shell shell-file-name)
-  (setq explicit-shell-args '("--login" "-i"))
-  (setq w32-quote-process-args ?\") ;"
+    (setenv "PATH"
+            (concat
+             ;;"c:\\cygwin64\\usr\\local\\bin" ";"  ;; Cygwin
+             ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
+             "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
+             "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
+             (getenv "PATH")))
+    ;;(setq exec-path (cons "c:/cygwin64/bin/" exec-path)) ;; Cygwin
+    (setq exec-path (cons "C:/Users/karl.voit/.babun/cygwin/bin/" exec-path)) ;; Babun
+    ;; Adding cygwin mounts
+    ;(use-package cygwin-mount)
+    ;(cygwin-mount-activate)
+    ;; Adding cygwin bash shell
+    ;;(setq shell-file-name "c:/cygwin64/bin/bash") ;; Cygwin
+    (setq shell-file-name "C:/Users/karl.voit/.babun/cygwin/bin/zsh") ;; Babun
+    (setenv "SHELL" shell-file-name)
+    (setq explicit-shell-file-name shell-file-name)
+    (setq ediff-shell shell-file-name)
+    (setq explicit-shell-args '("--login" "-i"))
+    (setq w32-quote-process-args ?\")
 
-  ;; id:2015-11-02-tramp-windows-babel
-  (setq tramp-default-method "plink")
+    ;; id:2015-11-02-tramp-windows-babel
+    (setq tramp-default-method "plink")
 
-  ;; id:2016-04-22-magit-not-working-on-windows
-  (setq cygwin-root-directory "c:/Users/karl.voit/.babun/cygwin")
-  ;; requires: setup-cygwin.el and cygwin-mount.el in the contrib dir:
-  (add-to-list 'load-path "~/.emacs.d/contrib/")
-  (require 'setup-cygwin)
+    ;; id:2016-04-22-magit-not-working-on-windows
+    (setq cygwin-root-directory "c:/Users/karl.voit/.babun/cygwin")
+    ;; requires: setup-cygwin.el and cygwin-mount.el in the contrib dir:
+    (add-to-list 'load-path (concat my-user-emacs-directory "contrib/")
+      (require 'setup-cygwin)
+    )
   )
 #+END_SRC
 
@@ -668,14 +678,59 @@ characters to disable the check at this stage:
 ;;(my-eval-if-binary-or-warn "pandoc")
 (my-eval-if-binary-or-warn "ditaa")
 ;;(my-eval-if-binary-or-warn "gnuplot")
-(my-eval-if-binary-or-warn "git")
-(my-eval-if-binary-or-warn "outlook")
+;;(my-eval-if-binary-or-warn "git")
+;;(my-eval-if-binary-or-warn "outlook")
 (my-eval-if-binary-or-warn "grep")
-(my-eval-if-binary-or-warn "scss")
+;;(my-eval-if-binary-or-warn "scss")
 (my-eval-if-binary-or-warn "ag")
 (my-eval-if-binary-or-warn "biber")
 #+END_SRC
 
+* System-specific browse-url-browser
+
+Here, I do hard-code my preferred browser that is used when I open
+URLs within Emacs:
+
+http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
+
+#+BEGIN_SRC emacs-lisp
+(setq firefox-path (my-eval-if-binary-or-warn "firefox"))
+(setq chrome-path (my-eval-if-binary-or-warn "google-chrome"))
+
+(cond
+ ((my-system-type-is-darwin)
+  (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+  )
+ (firefox-path
+  (setq browse-url-browser-function 'browse-url-generic
+	browse-url-generic-program firefox-path)
+  )
+ (chrome-path
+  (setq browse-url-browser-function 'browse-url-generic
+	browse-url-generic-program chrome-path)
+  )
+ )
+#+END_SRC
+
+http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "chromium-browser")
+#+END_SRC
+
+https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
+- Edit-server for Chrome
+#+BEGIN_SRC emacs-lisp :tangle no
+;(use-package edit-server)
+(my-load-local-el "contrib/edit-server.el")
+(edit-server-start)
+
+(if (locate-library "edit-server")
+    (progn
+      (use-package edit-server)
+      (setq edit-server-new-frame nil)
+      (edit-server-start)))
+#+END_SRC
 * Styling
 
 The (sub-)headings here deal with the visual appeal of my GNU/Emacs. I
@@ -862,7 +917,19 @@ this does not work either:
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+END_SRC
 
-FIXXME: what is this for?
+From: https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs
+#+BEGIN_QUOTE
+[…] One problem with the universal coding system argument is that it
+only cares about Emacs’s settings, not those of your shell or system.
+That’s a problem, because tools like Python use the environment
+variable PYTHONIOENCODING to set the coding system for the Python
+interpreter.
+
+I have written the following code that advises the
+universal-coding-system-argument function so it also, temporarily for
+just that command, sets a user-supplied list of environment variables
+to the coding system. […]
+#+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
 (defvar universal-coding-system-env-list '("PYTHONIOENCODING")
@@ -897,7 +964,7 @@ stick to this prefix, you've got your own «name-space» where you are
 able to define your bindings freely.
 
 My approach is to use =my-map= as a mapping which is bound to =C-c
-C-,=. So my personal bindings start with =C-c C-,= such as =C-c C-, -=
+C-,= . So my personal bindings start with =C-c C-,= such as =C-c C-, -=
 for decreasing the font size of GNU/Emacs.
 
 2015-11-10: Following code was replaced by bind-key below:
@@ -939,7 +1006,11 @@ or:
 or for use-package():
 : :bind (:map my-map ("8" . bm-toggle))
 
-* measure-time()
+* My helper functions (part I)
+
+Here I defined some functions I am using in the configuration below.
+
+** measure-time()
 
 From time to time, I want to measure, how long an Elisp snippet ran.
 This can be done with following code.
@@ -954,9 +1025,7 @@ from: http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-func
      (message " Execution time: %.06f" (float-time (time-since time)))))
 #+END_SRC
 
-* my helper functions
-
-** DISABLED Infonova Functions for Working Hour Calculation
+** DISABLED Functions for Working Hour Calculation
 
 I used this code to derive working hours until the company switched to
 a stupid new tool everybody hates. Yes, even worse than SAP.
@@ -1057,7 +1126,7 @@ my side:
 ;; #############################################################################
 #+END_SRC
 
-** Proper English Title Capitalization of a Marked Region
+** my-title-capitalization(): Proper English Title Capitalization of a Marked Region → my-map C
 
 Read http://www.karl-voit.at/2015/05/25/elisp-title-capitalization/
 where I wrote a verbose description of the topic and my solution.
@@ -1123,6 +1192,10 @@ where I wrote a verbose description of the topic and my solution.
 		     (buffer-string))
 		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
 		   )))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "c" #'title-capitalization my-map)
 #+END_SRC
 
 ** my-toggle-windows-split() → my-map |
@@ -1258,473 +1331,15 @@ following function:
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList)
 ) ) ) ) )
 #+END_SRC
+* Spell checking
 
-* Elisp
+«[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
+minor mode.»
 
-separate color for highlightning () brackets:
-http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
-#+BEGIN_SRC emacs-lisp :tangle no
-;; ######################################################
-(defface paren-face
-  '((((class color) (background dark))
-     (:foreground "grey30"))
-    (((class color) (background light))
-     (:foreground "grey60")))
-  "Face used to dim parentheses.")
-(defun egoge-dim-parens ()
-  (font-lock-add-keywords nil
-			  '(("(\\|)" . 'paren-face))))
-(add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'emacs-lisp-mode-hook 'turn-off-auto-fill)
-#+END_SRC
-
-When editing code that uses parenthesis, enabling this does highlight
-the matching parenthesis:
-
-#+BEGIN_SRC emacs-lisp
-(show-paren-mode t)
-#+END_SRC
-
-* Python
-
-- misc stuff from: https://github.com/jorgenschaefer/elpy/wiki/
-
-| key      | command                  |
-|----------+--------------------------|
-| F5       | flymake-goto-prev-error  |
-| F6       | flymake-goto-next-error  |
-| my-map P | pylookup                 |
-
--------------
-
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "python")
-#+END_SRC
-
-BEGIN of elpy package
-#+BEGIN_SRC emacs-lisp
-(use-package elpy
-  ;; :disabled t ;; stop loading if 't'
-  :ensure t
-  ;;:if (or (my-system-type-is-gnu) (my-system-type-is-windows))
-  :mode ("\\.py\\'" . elpy-mode)
-  :config ;; executed after loading package
-#+END_SRC
-
-enable elpy and use ipython:
-#+BEGIN_SRC emacs-lisp
-  ;;(when (my-system-type-is-gnu)
-    (elpy-enable)
-    (elpy-use-ipython)
-  ;;  )
-#+END_SRC
-
-auto-mode-list:
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
-#+END_SRC
-
-
-http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
-Ropemacs:
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'load-path "~/.emacs.d/vendor/pymacs-0.24-beta2")
-(use-package pymacs)
-(pymacs-load "ropemacs" "rope-")
-(setq ropemacs-enable-autoimport t)
-#+END_SRC
-
-- auto-complete mode:
-  - [ ] check why disabled in my config
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'load-path "~/.emacs.d/vendor/auto-complete-1.2")
-(use-package auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/vendor/auto-complete-1.2/dict")
-(ac-config-default)
-#+END_SRC
-
-
-PyFlakes:
-#+BEGIN_SRC emacs-lisp
-(setq python-check-command "pyflakes")
-#+END_SRC
-
-
-Flymake
-- fix flymake (PEP8): ignore E501 (long lines)
-- see id:2015-04-04-flymake and http://stackoverflow.com/a/1393590
-- looks similar: http://people.cs.uct.ac.za/~ksmith/2011/better-python-flymake-integration-in-emacs.html
-#+BEGIN_SRC emacs-lisp
-  (when (load "flymake" t)
-    (defun flymake-pyflakes-init ()
-      (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                         'flymake-create-temp-inplace))
-             (local-file (file-relative-name
-                          temp-file
-                          (file-name-directory buffer-file-name))))
-        (list "~/bin/pycheckers"  (list local-file))))
-    (add-to-list 'flymake-allowed-file-name-masks
-                 '("\\.py\\'" flymake-pyflakes-init)))
-#+END_SRC
-
-better flymake: http://stackoverflow.com/a/1621489
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'python-mode-hook
-      (lambda ()
-        (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
-        (local-set-key [f5] 'flymake-goto-prev-error)
-        (local-set-key [f6] 'flymake-goto-next-error)
-        ))
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp
-  ;; ######################################################
-  ;; pylookup: https://github.com/tsgates/pylookup
-  ;; add pylookup to your loadpath, ex) ~/.emacs.d/pylookup
-  (setq pylookup-dir "~/.emacs.d/contrib/pylookup")
-  (add-to-list 'load-path pylookup-dir)
-  ;; load pylookup when compile time
-;  (eval-when-compile (require 'pylookup))
-  ;; set executable file and db file
-  (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
-  (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
-  ;; set search option if you want
-  ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
-
-  ;; to speedup, just load it on demand
-  (autoload 'pylookup-lookup "pylookup"
-    "Lookup SEARCH-TERM in the Python HTML indexes." t)
-
-  ;; MANUALLY run the DB update on LOCAL resources:
-  ;; 1) install Debian package "python-doc"
-  ;; 2) run: ~/.emacs.d/contrib/pylookup/pylookup.py -u ~doc/python2.7/html
-  (autoload 'pylookup-update "pylookup"
-    "Run pylookup-update and create the database at `pylookup-db-file'." t)
-
-  (define-key my-map "P" 'pylookup-lookup)
-
-#+END_SRC
-
-
-END of elpy package
-#+BEGIN_SRC emacs-lisp
-);; use-package
-);; if python binary found
-#+END_SRC
-
-* LaTeX
-
-BEGIN of LaTeX settings
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "pdflatex")
-#+END_SRC
-
-General LaTeX settings:
-#+BEGIN_SRC emacs-lisp
-(autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
-(setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
-(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill) ;; word-wrap in TeX files
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-;(setq-default TeX-master nil);; 2015-03-22 deactivated because it doesn't seem to have any influence: id:2013-12-31-org-master-file
-(make-variable-buffer-local 'TeX-master) ;; I think this is need because the variable is not buffer local until Auctex is active
-#+END_SRC
-
-
-Synctex: http://www.bleedingmind.com/index.php/2010/06/17/synctex-on-linux-and-mac-os-x-with-emacs/
-#+BEGIN_SRC emacs-lisp
-(add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-(setq TeX-source-correlate-method 'synctex)
-#+END_SRC
-
-Define system-specific PDF viewers:
-#+BEGIN_SRC emacs-lisp
-(defun okular-make-url () (concat
-      		     "file://"
-      		     (expand-file-name (funcall file (TeX-output-extension) t)
-      				       (file-name-directory (TeX-master-file)))
-      		     "#src:"
-      		     (TeX-current-line)
-      		     (TeX-current-file-name-master-relative))
-       "./"
-       (TeX-current-file-name-master-relative)
-       )
-
-(defun skim-make-url () (
-      		   concat
-      		   (TeX-current-line)
-      		   " "
-      		   (expand-file-name (funcall file (TeX-output-extension) t)
-      				     (file-name-directory (TeX-master-file)))
-      		   " "
-      		   (buffer-file-name))
-       )
-
-(setq TeX-view-program-list '(
-      			("Okular" "okular --unique %u")
-      			("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %q")
-      			)
-      )
-
-(when (my-system-type-is-gnu)
-  (setq TeX-view-program-selection '((output-pdf "Okular") (output-dvi "Okular")))
-  (eval-after-load "tex"
-    '(add-to-list 'TeX-expand-list '("%u" okular-make-url))
-    )
-  )
-
-(when (my-system-type-is-darwin)
-  (setq TeX-view-program-selection '((output-pdf "Skim")))
-  (eval-after-load "tex"
-    '(add-to-list 'TeX-expand-list '("%q" skim-make-url))
-    )
-  )
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook ‘LaTeX-mode-hook
-(lambda ()
-  (add-to-list ‘TeX-expand-list
-  ‘(“%u” okular-make-url))))
-#+END_SRC
-
-
-http://www.tug.org/pipermail/macostex-archives/2005-November/018997.html
-- reftex
-- TeX-fold-mode
-#+BEGIN_SRC emacs-lisp
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-(add-hook 'LaTeX-mode-hook '(lambda () (TeX-fold-mode 1)))
-#+END_SRC
-
-
-biblatex and AucTeX
-http://www.mail-archive.com/auctex@gnu.org/msg04137.html
-#+BEGIN_SRC emacs-lisp
-(eval-after-load "tex"
-  '(add-to-list 'TeX-command-list
-      	  '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber") t))
-
-(defun TeX-run-Biber (name command file)
-  "Create a process for NAME using COMMAND to format FILE with Biber."
-  (let ((process (TeX-run-command name command file)))
-    (setq TeX-sentinel-function 'TeX-Biber-sentinel)
-    (if TeX-process-asynchronous
-        process
-      (TeX-synchronous-sentinel name file process))))
-
-(defun TeX-Biber-sentinel (process name)
-  "Cleanup TeX output buffer after running Biber."
-  (goto-char (point-max))
-  (cond
-   ;; Check whether Biber reports any warnings or errors.
-   ((re-search-backward (concat
-      		   "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
-      		   "\\(warnings?\\|error messages?\\))") nil t)
-    ;; Tell the user their number so that she sees whether the
-    ;; situation is getting better or worse.
-    (message (concat "Biber finished with %s %s. "
-      	       "Type `%s' to display output.")
-             (match-string 1) (match-string 2)
-             (substitute-command-keys
-      	"\\\\[TeX-recenter-output-buffer]")))
-   (t
-    (message (concat "Biber finished successfully. "
-      	       "Run LaTeX again to get citations right."))))
-  (setq TeX-command-next TeX-command-default))
-#+END_SRC
-
-
-- http://staff.science.uva.nl/~dominik/Tools/cdlatex/
-- CDLaTeX - more LaTeX functionality
-- http://orgmode.org/org.html#CDLaTeX-mode
-#+BEGIN_SRC emacs-lisp :tangle no
-(when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
-  (my-load-local-el "contrib/cdlatex.el")
-  )
-#+END_SRC
-
-org-mode-reftex-setup
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun org-mode-reftex-setup ()
-  (setq TeX-master t)
-  (load-library "reftex")
-  (and (buffer-file-name)
-     (file-exists-p (buffer-file-name))
-     (progn
-       (reftex-parse-all)
-       (reftex-set-cite-format "[[cite:%l][%l]]")))
-  (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
-  (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
-(add-hook 'org-mode-hook 'org-mode-reftex-setup)
-#+END_SRC
-
-
-- http://www.gnu.org/software/auctex/manual/reftex.html#SEC48
-- Specify my bibtex folder
-  - *does not work* :-(
-  - tested with tagstore.org
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq reftex-bibpath-environment-variables
-      '("~/archive/library/"))
-#+END_SRC
-
-- 2015-03-22 - see also id:2013-12-31-org-master-file
-- http://www.emacswiki.org/emacs/AUCTeX
-  - disabled 2015-03-22 because it did not help
-#+BEGIN_SRC emacs-lisp :tangle no
-(defun guess-TeX-master (filename)
-    "Guess the master file for FILENAME from currently open files according to their extension."
-    (let ((candidate nil)
-          (filename (file-name-nondirectory filename)))
-      (save-excursion
-        (dolist (buffer (buffer-list))
-          (with-current-buffer buffer
-            (let ((name (buffer-name))
-                  (file buffer-file-name))
-              ;(if (and file (string-match "\\.\(org\|tex\)$" file))
-              (if (and file (string-match "\\.org$" file))
-                  (progn
-                    (goto-char (point-min))
-                    (if (re-search-forward (concat "\\\\input{" filename "}") nil t)
-                        (setq candidate file))
-                    (if (re-search-forward (concat "\\\\include{" (file-name-sans-extension filename) "}") nil t)
-                        (setq candidate file))))))))
-      (if candidate
-          (message "TeX master document: %s" (file-name-nondirectory candidate)))
-      candidate))
-
-;; ONLY for special file modes with a recognized extension!
-;; Causes Lisp error (that's a afact) when used with buffers like *scratch* (that's my guess)
-;;(setq TeX-master (guess-TeX-master (buffer-file-name)))
-#+END_SRC
-
-
-END of LaTeX settings
-#+BEGIN_SRC emacs-lisp
-  )
-#+END_SRC
-
-* DISABLED OS X: mdfind (find via spotlight)
-
-http://blog.zenspider.com/2007/03/locate-and-spotlight.html
-
-#+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-darwin)
-  (defun locate-make-mdfind-command-line (search-string)
-    (list "mdfind" (concat "kMDItemDisplayName=*" search-string "*")))
-  (defun spotlight ()
-    "Search for files by name using spotlight"
-    (interactive)
-    (let ((locate-command "mdfind")
-	  (locate-make-command-line 'locate-make-mdfind-command-line))
-      (call-interactively 'locate nil)))
-  (defun spotlight-full ()
-    "Search using spotlight"
-    (interactive)
-    (let ((locate-command "mdfind"))
-      (call-interactively 'locate nil)))
-  )
-#+END_SRC
-
-* system-specific browse-url-browser
-
-http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-
-#+BEGIN_SRC emacs-lisp
-(setq firefox-path (my-eval-if-binary-or-warn "firefox"))
-(setq chrome-path (my-eval-if-binary-or-warn "google-chrome"))
-
-(cond
- ((my-system-type-is-darwin)
-  (setq browse-url-browser-function 'browse-url-default-macosx-browser)
-  )
- (firefox-path
-  (setq browse-url-browser-function 'browse-url-generic
-	browse-url-generic-program firefox-path)
-  )
- (chrome-path
-  (setq browse-url-browser-function 'browse-url-generic
-	browse-url-generic-program chrome-path)
-  )
- )
-#+END_SRC
-
-http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links-to-sites-in-google-chrome
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "chromium-browser")
-#+END_SRC
-
-https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
-- Edit-server for Chrome
-#+BEGIN_SRC emacs-lisp :tangle no
-;(use-package edit-server)
-(my-load-local-el "contrib/edit-server.el")
-(edit-server-start)
-
-(if (locate-library "edit-server")
-    (progn
-      (use-package edit-server)
-      (setq edit-server-new-frame nil)
-      (edit-server-start)))
-#+END_SRC
-
-* Snippets
-
-** yasnippet
-
-#+BEGIN_SRC emacs-lisp
-(use-package yasnippet
-  :demand t
-  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :diminish yas-minor-mode
-  :defer 15
-  :config
-  (yas-load-directory "~/.emacs.d/snippets/")
-  (yas-global-mode 1)
-  ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
-  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-  ;;(autoload 'yas-minor-mode "yasnippet")
-
-  ;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
-  ;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
-  ;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
-  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
-  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
-
-)
-#+END_SRC
-
-** yankpad
-
-- id:2016-08-08-yankpad-test
-- https://github.com/Kungsgeten/yankpad
-#+BEGIN_SRC emacs-lisp
-(use-package yankpad
-  :ensure t
-  :defer 10
-  :init
-  (setq yankpad-file "~/org/yankpad.org")
-  :bind (:map my-map ("SPC" . yankpad-insert))
-  :config
-  ;; (bind-key "<f6>" 'yankpad-map))
-)
-#+END_SRC
-
-* flyspell
-
+Please do evaluate this only if "aspell" is found on the system:
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "aspell")
 #+END_SRC
-
 
 setting path to flyspell-mode.el from MacPorts:
 #+BEGIN_SRC emacs-lisp
@@ -1787,7 +1402,9 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
   )
 #+END_SRC
 
-my-toggle-ispell-language
+=my-toggle-ispell-language()= because I use two languages and switch
+between them:
+
 #+BEGIN_SRC emacs-lisp
 (defun my-toggle-ispell-language ()
   (interactive)
@@ -1796,8 +1413,7 @@ my-toggle-ispell-language
     (ispell-change-dictionary lang)))
 #+END_SRC
 
-
-- modes for programming languages; check spelling only in comments/strings
+Modes for programming languages; check spelling only in comments/strings
   - http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook          'c-mode-hook 'flyspell-prog-mode)
@@ -1828,6 +1444,10 @@ bind-keys:
 
 * flycheck
 
+«[[http://www.flycheck.org/][Flycheck]] is a modern on-the-fly syntax checking extension for GNU
+Emacs, intended as replacement for the older Flymake extension which
+is part of GNU Emacs.»
+
 - http://www.flycheck.org/en/latest/guide/quickstart.html
 - 2016-11-05: converted to use-package according to http://www.flycheck.org/en/latest/user/installation.html#use-package
 #+BEGIN_SRC emacs-lisp
@@ -1840,31 +1460,547 @@ bind-keys:
   )
 #+END_SRC
 
-* DISABLED tabbar
+* Snippets
+
+German blog article on snippet systems: http://www.karl-voit.at/Textbausteine/
+
+I do recommend to use snippet systems for quickly inserting static
+(words/numbers, sentences, paragraphs, ...) or dynamic (current
+date/time) text.
+
+Most snippets, I do define in a system-wide tool so that I am able to
+use them in every program. Some snippets I do define and use only
+within Emacs. Yasnippet and yankpad offers me very advanced
+functionality to define and use most elaborate snippets. Those
+snippets vary from simple ones (e.g., check-lists for packing for
+vacations) to rather advanced ones (e.g., a complete lecture
+organization with many tasks and their dependencies).
+
+** yasnippet
+
+[[https://github.com/joaotavora/yasnippet][Yasnippet]] is the snippet tool to use within Emacs:
 
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-gnu)
-    (my-load-local-el "contrib/tabbar.el")
-  )
-#+END_SRC
+(use-package yasnippet
+  :demand t
+  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :diminish yas-minor-mode
+  :defer 15
+  :config
+  (yas-load-directory (concat my-user-emacs-directory "snippets/"))
+  (yas-global-mode 1)
 
-* REST
+  ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
+  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
+  ;;(autoload 'yas-minor-mode "yasnippet")
 
-- REST client: https://github.com/pashky/restclient.el
-#+BEGIN_SRC emacs-lisp
-(use-package restclient
-  :disabled t  ;; stop loading if 't'
-  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  :defer 10
-  :if (my-system-type-is-windows)
-  :init ;; executed before loading package
-  (my-load-local-el "contrib/2del/restclient/json-reformat.el")
-  ;;(my-load-local-el "contrib/restclient/restclient.el")
-  ;; :mode "\\.rb\\'"
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; https://capitaomorte.github.io/yasnippet/faq.html#sec-4
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; How to I use alternative keys, i.e. not TAB?
+  ;;disabled 2015-04-01 - issues did not vanish;; ;; see id:2015-02-01-yas-expand-not-TAB
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+  ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
+
 )
 #+END_SRC
 
+** yankpad
+
+[[https://github.com/Kungsgeten/yankpad][yankpad]] is an add-on that enables easy management of yasnippet
+snippets within an Org-mode file. I do define Org-mode-independent
+snippets with the basic yasnippet methods. Any snippet that is used
+within Org-mode only is defined in my yankpad file.
+
+- see also: [[id:2016-08-08-yankpad-test]]
+#+BEGIN_SRC emacs-lisp
+(use-package yankpad
+  :ensure t
+  :defer 10
+  :init
+  (setq yankpad-file "~/org/yankpad.org")
+  :bind (:map my-map ("SPC" . yankpad-insert))
+  :config
+  ;; (bind-key "<f6>" 'yankpad-map))
+)
+#+END_SRC
+* Elisp
+
+This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Elisp][Elisp]] code.
+
+separate color for highlightning () brackets:
+http://compgroups.net/comp.emacs/to-use-special-color-for-brackets-in-emacs-lisp-mo/222015
+#+BEGIN_SRC emacs-lisp :tangle no
+;; ######################################################
+(defface paren-face
+  '((((class color) (background dark))
+     (:foreground "grey30"))
+    (((class color) (background light))
+     (:foreground "grey60")))
+  "Face used to dim parentheses.")
+(defun egoge-dim-parens ()
+  (font-lock-add-keywords nil
+			  '(("(\\|)" . 'paren-face))))
+(add-hook 'emacs-lisp-mode-hook 'egoge-dim-parens)
+#+END_SRC
+
+Do not use [[https://www.emacswiki.org/emacs/AutoFillMode][Auto Fill Mode]] for Lisp mode:
+#+BEGIN_SRC emacs-lisp
+(add-hook 'emacs-lisp-mode-hook 'turn-off-auto-fill)
+#+END_SRC
+
+When editing code that uses parenthesis, enabling this does highlight
+the matching parenthesis:
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode t)
+#+END_SRC
+
+** DISABLED ert
+
+for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
+
+#+BEGIN_SRC emacs-lisp
+(my-load-local-el "contrib/cl-lib.el")
+(my-load-local-el "contrib/ert.el")
+(my-load-local-el "contrib/ert-x.el")
+#+END_SRC
+
+** DISABLED buttercup - Elisp test suite
+
+#+BEGIN_QUOTE
+[[https://github.com/jorgenschaefer/emacs-buttercup][Buttercup]] is a behavior-driven development framework for testing Emacs
+Lisp code. It allows to group related tests so they can share common
+set-up and tear-down code, and allows the programmer to “spy” on
+functions to ensure they are called with the right arguments during
+testing.
+
+The framework is heavily inspired by [[https://jasmine.github.io/edge/introduction.html][Jasmine]].
+#+END_QUOTE
+
+Disabled for now because I do not use it at the moment.
+
+#+BEGIN_SRC emacs-lisp
+(use-package buttercup
+  :ensure t
+;  :if (my-system-is-floyd)
+  :defer 10
+  :config
+)
+#+END_SRC
+
+** smartparens - highlight corresponding parens
+
+- nice overview of different hightlight modes: http://danmidwood.com/content/2014/11/21/animated-paredit.html
+- nice overview: https://ebzzry.github.io/emacs-pairs.html (Dead link as of 2017-05-26)
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens
+  :disabled t
+  :init
+  (smartparens-global-mode 1)
+  (show-smartparens-global-mode +1)
+
+  :bind (;; ("M-n" . sp-next-sexp)
+         ;; ("M-p" . sp-previous-sexp)
+         ("M-f" . sp-forward-sexp)
+         ("M-b" . sp-backward-sexp)
+         )
+
+  :config
+  ;; Enable smartparens everywhere
+  (use-package smartparens-config)
+
+  ;; ;; Require and disable paredit because some packages rely on it.
+  ;; (use-package paredit)
+  ;; (disable-paredit-mode)
+
+  (setq
+   smartparens-strict-mode t
+   sp-autoinsert-if-followed-by-word t
+   sp-autoskip-closing-pair 'always
+   ;;sp-base-key-bindings 'paredit
+   sp-hybrid-kill-entire-symbol nil)
+
+  ;; (sp-use-paredit-bindings)
+
+  ;; (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+  ;;   (sp-local-pair "*" "*" :bind "C-*")
+  ;;   (sp-local-tag "2" "**" "**")
+  ;;   (sp-local-tag "s" "```scheme" "```")
+  ;;   (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+  ;; ;; Close a backtick with another backtick in clojure-mode
+  ;; (sp-local-pair 'clojure-mode "`" "`" :when '(sp-in-string-p))
+
+  (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
+  )
+
+#+END_SRC
+** Elisp: → my-map er|el|ef
+
+Misc bindings for Elisp:
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "er" #'eval-region my-map)
+(bind-key "el" #'find-library my-map)
+(bind-key "ef" #'find-function-at-point my-map)
+#+END_SRC
+* Python
+
+This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]] code. Python
+is the programming language I prefer for [[https://github.com/novoid/][my private projects]]. I do
+like its easy-to-read syntax, providing a high level of
+maintainability. It also ships with a large set of libraries.
+
+Misc stuff is taken from: https://github.com/jorgenschaefer/elpy/wiki/
+
+Some keyboard commands (summary):
+
+| Key      | Command                  |
+|----------+--------------------------|
+| F5       | flymake-goto-prev-error  |
+| F6       | flymake-goto-next-error  |
+| my-map P | pylookup                 |
+
+-------------
+
+The code blocks here are only executed when python is found on the current system:
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "python")
+#+END_SRC
+
+[[https://github.com/jorgenschaefer/elpy][Elpy]] provides a very cool programming experience for Python code.
+
+BEGIN of elpy package
+#+BEGIN_SRC emacs-lisp
+(use-package elpy
+  ;; :disabled t ;; stop loading if 't'
+  :ensure t
+  ;;:if (or (my-system-type-is-gnu) (my-system-type-is-windows))
+  :mode ("\\.py\\'" . elpy-mode)
+  :config ;; executed after loading package
+#+END_SRC
+
+enable elpy and use ipython:
+#+BEGIN_SRC emacs-lisp
+(elpy-enable)
+(elpy-use-ipython)
+#+END_SRC
+
+auto-mode-list for Python files:
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
+#+END_SRC
+
+[[https://github.com/python-rope/ropemacs][ropemacs]] is an evironment that provides advanced things such as refactoring:
+
+http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
+Ropemacs:
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'load-path (concat my-user-emacs-directory "vendor/pymacs-0.24-beta2"))
+(use-package pymacs)
+(pymacs-load "ropemacs" "rope-")
+(setq ropemacs-enable-autoimport t)
+#+END_SRC
+
+- auto-complete mode:
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'load-path (concat my-user-emacs-directory "vendor/auto-complete-1.2"))
+(use-package auto-complete-config)
+(add-to-list 'ac-dictionary-directories (concat my-user-emacs-directory "vendor/auto-complete-1.2/dict"))
+(ac-config-default)
+#+END_SRC
+
+[[https://pypi.python.org/pypi/pyflakes][Pyflakes]] is a simple program which checks Python source files for errors:
+#+BEGIN_SRC emacs-lisp
+(setq python-check-command "pyflakes")
+#+END_SRC
+
+#+BEGIN_QUOTE
+[[https://www.emacswiki.org/emacs/FlyMake][FlyMake]] performs on-the-fly syntax checks on the files being edited
+using the external syntax check tool (usually the compiler).
+Highlights erroneous lines and displays associated error messages.
+
+Unfortunately, this project is outdated and last change was 3 years ago.
+
+For a modern alternative, check out Flycheck.
+#+END_QUOTE
+
+- fix flymake (PEP8): ignore E501 (long lines)
+- see id:2015-04-04-flymake and http://stackoverflow.com/a/1393590
+- looks similar: http://people.cs.uct.ac.za/~ksmith/2011/better-python-flymake-integration-in-emacs.html
+#+BEGIN_SRC emacs-lisp :tangle no
+  (when (load "flymake" t)
+    (defun flymake-pyflakes-init ()
+      (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                         'flymake-create-temp-inplace))
+             (local-file (file-relative-name
+                          temp-file
+                          (file-name-directory buffer-file-name))))
+        (list "~/bin/pycheckers"  (list local-file))))
+    (add-to-list 'flymake-allowed-file-name-masks
+                 '("\\.py\\'" flymake-pyflakes-init)))
+#+END_SRC
+
+better than flymake (and maintained): http://stackoverflow.com/a/1621489
+[[https://www.emacswiki.org/emacs/Flycheck][Flycheck]]
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'python-mode-hook
+      (lambda ()
+        (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
+        (local-set-key [f5] 'flymake-goto-prev-error)
+        (local-set-key [f6] 'flymake-goto-next-error)
+        ))
+#+END_SRC
+
+[[https://github.com/tsgates/pylookup][pylookup]]: Emacs mode for searching python documents with convenience
+
+#+BEGIN_SRC emacs-lisp
+  ;; add pylookup to your loadpath, ex) ~/.emacs.d/pylookup
+  (setq pylookup-dir (concat my-user-emacs-directory "contrib/pylookup"))
+  (add-to-list 'load-path pylookup-dir)
+  ;; load pylookup when compile time
+;  (eval-when-compile (require 'pylookup))
+  ;; set executable file and db file
+  (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
+  (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
+  ;; set search option if you want
+  ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
+
+  ;; to speedup, just load it on demand
+  (autoload 'pylookup-lookup "pylookup"
+    "Lookup SEARCH-TERM in the Python HTML indexes." t)
+
+  ;; MANUALLY run the DB update on LOCAL resources:
+  ;; 1) install Debian package "python-doc"
+  ;; 2) run: ~/.emacs.d/contrib/pylookup/pylookup.py -u ~doc/python2.7/html
+  (autoload 'pylookup-update "pylookup"
+    "Run pylookup-update and create the database at `pylookup-db-file'." t)
+
+  (define-key my-map "P" 'pylookup-lookup)
+#+END_SRC
+
+
+END of elpy package
+#+BEGIN_SRC emacs-lisp
+);; use-package
+);; if python binary found
+#+END_SRC
+
+* LaTeX
+
+[[https://en.wikipedia.org/wiki/LaTeX][LaTeX]] is a powerful text setting system I use for creating letters,
+books, presentations, and so forth.
+
+AucTeX is an awesome handy mode for working with TeX code.
+
+BEGIN of LaTeX settings (only if "pdflatex" is found on the system):
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "pdflatex")
+#+END_SRC
+
+General LaTeX settings:
+#+BEGIN_SRC emacs-lisp
+(autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
+
+(setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-auto-fill) ;; word-wrap in TeX files
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+
+;(setq-default TeX-master nil);; 2015-03-22 deactivated because it doesn't seem to have any influence: id:2013-12-31-org-master-file
+(make-variable-buffer-local 'TeX-master) ;; I think this is need because the variable is not buffer local until Auctex is active
+#+END_SRC
+
+
+Synctex is a nice add-on that synchronizes the editing tool
+(Emacs/AucTeX) with a PDF viewing tool (e.g., Okular):
+http://www.bleedingmind.com/index.php/2010/06/17/synctex-on-linux-and-mac-os-x-with-emacs/
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "synctex")
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (setq TeX-source-correlate-method 'synctex)
+)
+#+END_SRC
+
+Define system-specific PDF viewers and further Synctex settings:
+#+BEGIN_SRC emacs-lisp
+(defun okular-make-url () (concat
+      		     "file://"
+      		     (expand-file-name (funcall file (TeX-output-extension) t)
+      				       (file-name-directory (TeX-master-file)))
+      		     "#src:"
+      		     (TeX-current-line)
+      		     (TeX-current-file-name-master-relative))
+       "./"
+       (TeX-current-file-name-master-relative)
+       )
+
+(defun skim-make-url () (
+      		   concat
+      		   (TeX-current-line)
+      		   " "
+      		   (expand-file-name (funcall file (TeX-output-extension) t)
+      				     (file-name-directory (TeX-master-file)))
+      		   " "
+      		   (buffer-file-name))
+       )
+
+(setq TeX-view-program-list '(
+      			("Okular" "okular --unique %u")
+      			("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %q")
+      			)
+      )
+
+(when (my-system-type-is-gnu)
+  (setq TeX-view-program-selection '((output-pdf "Okular") (output-dvi "Okular")))
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-expand-list '("%u" okular-make-url))
+    )
+  )
+
+(when (my-system-type-is-darwin)
+  (setq TeX-view-program-selection '((output-pdf "Skim")))
+  (eval-after-load "tex"
+    '(add-to-list 'TeX-expand-list '("%q" skim-make-url))
+    )
+  )
+#+END_SRC
+
+https://tex.stackexchange.com/questions/60170/how-to-set-up-okular-for-forward-backward-search-with-tex-live-2011-not-trivia
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook ‘LaTeX-mode-hook
+(lambda ()
+  (add-to-list ‘TeX-expand-list
+  ‘(“%u” okular-make-url))))
+#+END_SRC
+
+
+[[https://staff.fnwi.uva.nl/c.dominik/Tools/cdlatex/][CDLaTeX is a minor mode for Emacs supporting fast insertion of
+environment templates and math stuff in LaTeX.]]
+
+I tried it once but do not use it any more.
+
+- http://orgmode.org/org.html#CDLaTeX-mode
+#+BEGIN_SRC emacs-lisp :tangle no
+(when (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
+  (my-load-local-el "contrib/cdlatex.el")
+  )
+#+END_SRC
+
+[[https://www.gnu.org/software/auctex/reftex.html][RefTeX]] is the package for LaTeX that does manage references.
+
+http://www.tug.org/pipermail/macostex-archives/2005-November/018997.html
+- reftex
+- TeX-fold-mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+(add-hook 'LaTeX-mode-hook '(lambda () (TeX-fold-mode 1)))
+#+END_SRC
+
+[[https://www.ctan.org/pkg/biblatex?lang=en][BibLaTeX]] provides bibliographic facilities. Biber is a moder
+implementation of it. I prefer it for generating references and
+its indexes.
+
+http://www.mail-archive.com/auctex@gnu.org/msg04137.html
+#+BEGIN_SRC emacs-lisp
+(eval-after-load "tex"
+  '(add-to-list 'TeX-command-list
+      	  '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber") t))
+
+(defun TeX-run-Biber (name command file)
+  "Create a process for NAME using COMMAND to format FILE with Biber."
+  (let ((process (TeX-run-command name command file)))
+    (setq TeX-sentinel-function 'TeX-Biber-sentinel)
+    (if TeX-process-asynchronous
+        process
+      (TeX-synchronous-sentinel name file process))))
+
+(defun TeX-Biber-sentinel (process name)
+  "Cleanup TeX output buffer after running Biber."
+  (goto-char (point-max))
+  (cond
+   ;; Check whether Biber reports any warnings or errors.
+   ((re-search-backward (concat
+      		   "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
+      		   "\\(warnings?\\|error messages?\\))") nil t)
+    ;; Tell the user their number so that she sees whether the
+    ;; situation is getting better or worse.
+    (message (concat "Biber finished with %s %s. "
+      	       "Type `%s' to display output.")
+             (match-string 1) (match-string 2)
+             (substitute-command-keys
+      	"\\\\[TeX-recenter-output-buffer]")))
+   (t
+    (message (concat "Biber finished successfully. "
+      	       "Run LaTeX again to get citations right."))))
+  (setq TeX-command-next TeX-command-default))
+#+END_SRC
+
+- http://www.gnu.org/software/auctex/manual/reftex.html#SEC48
+- Specify my bibtex folder
+  - *does not work* :-(
+  - tested with tagstore.org
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq reftex-bibpath-environment-variables
+      '("~/archive/library/"))
+#+END_SRC
+
+- 2015-03-22 - see also id:2013-12-31-org-master-file
+- http://www.emacswiki.org/emacs/AUCTeX
+  - disabled 2015-03-22 because it did not help
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun guess-TeX-master (filename)
+    "Guess the master file for FILENAME from currently open files according to their extension."
+    (let ((candidate nil)
+          (filename (file-name-nondirectory filename)))
+      (save-excursion
+        (dolist (buffer (buffer-list))
+          (with-current-buffer buffer
+            (let ((name (buffer-name))
+                  (file buffer-file-name))
+              ;(if (and file (string-match "\\.\(org\|tex\)$" file))
+              (if (and file (string-match "\\.org$" file))
+                  (progn
+                    (goto-char (point-min))
+                    (if (re-search-forward (concat "\\\\input{" filename "}") nil t)
+                        (setq candidate file))
+                    (if (re-search-forward (concat "\\\\include{" (file-name-sans-extension filename) "}") nil t)
+                        (setq candidate file))))))))
+      (if candidate
+          (message "TeX master document: %s" (file-name-nondirectory candidate)))
+      candidate))
+
+;; ONLY for special file modes with a recognized extension!
+;; Causes Lisp error (that's a afact) when used with buffers like *scratch* (that's my guess)
+;;(setq TeX-master (guess-TeX-master (buffer-file-name)))
+#+END_SRC
+
+END of LaTeX settings
+#+BEGIN_SRC emacs-lisp
+  )
+#+END_SRC
 * GnuPlot
+
+«[[http://www.gnuplot.info/][Gnuplot]] is a portable command-line driven graphing utility for Linux,
+OS/2, MS Windows, OSX, VMS, and many other platforms.»
+
+Also very handy when [[http://orgmode.org/worg/org-tutorials/org-plot.html][visualizing table data within Org-mode]]! (see
+Org-mode/babel configuration)
+
+Example: place the cursor within the table and evaluate
+=org-plot/gnuplot= or use the keyboard shortcut =C-c " g=
+
+#+plot: ind:1 deps:(2) type:2d with:"impulse lw 6" set:"yrange [0:]" title "Test-Plot"
+| When             | How many |
+|------------------+----------|
+| [2016-11-17 Thu] |        3 |
+| [2016-11-23 Wed] |        4 |
+| [2016-12-10 Sat] |        1 |
 
 #+BEGIN_SRC emacs-lisp
 ;; gnuplot
@@ -1879,7 +2015,20 @@ bind-keys:
 
 * Org-mode
 
-- additionally: http://stackoverflow.com/questions/3622603/org-mode-setup-problem-when-trying-to-use-capture
+[[http://orgmode.org/][Org-mode]] is my digital life. I do almost anything within Org-mode:
+http://karl-voit.at/tags/emacs/
+
+I am doing Personal Information Management (PIM) for decades, tried
+many different methods and tools. With Org-mode my quest for the best
+PIM-tool out there finally came to an end. It's an endless pile of
+Lego-bricks from where I can draw some bricks and assemble it to meet my
+requirements. Therefore, Org-mode is something different for
+everybody. It depends, what Lego bricks you took and how you combined
+them. Org-mode scales well from a simple outliner or todo-list up to
+something very, very big.
+
+Almost half of my Emacs configuration deals with Org-mode. Fasten your
+seat belt and dive into my rabbit hole of Org …
 
 Profiling Org-mode config loading time:
 #+BEGIN_SRC emacs-lisp
@@ -1887,25 +2036,28 @@ Profiling Org-mode config loading time:
 (message "★→ Org-mode")
 #+END_SRC
 
-** load Org and misc contrib packages
+** Load Org and misc contrib packages
 
+Since a couple of major releases GNU/Emacs comes with an Org-mode
+version built in. However, I do prefer the [[http://orgmode.org/cgit.cgi/org-mode.git/log/?h=maint]["maint" branch]] of the
+[[http://orgmode.org/cgit.cgi/org-mode.git/][Org-mode Git repository]] instead. See also [[http://orgmode.org/manual/Installation.html][Installation - The Org
+Manual]].
+
+Note that the Org-mode paths to my manually installed Org-mode are set
+within =init.el= already.
+
+assign file extensions to Org-mode:
 #+BEGIN_SRC emacs-lisp
-
-;; set paths to manually installed Org-mode (from git)
-(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
-(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
-
-;; assign file extensions to Org-mode
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
+#+END_SRC
 
-(setq org-babel-safe-header-args nil);; 2014-10-29 test
+2014-10-29 test
+#+BEGIN_SRC emacs-lisp
+(setq org-babel-safe-header-args nil)
+#+END_SRC
 
-  ;;  :bind ("M-o l" . highlight-lines-matching-regexp)
-  ;;  :bind (("M-o l" . highlight-lines-matching-regexp)
-  ;;         ("M-o r" . highlight-regexp)
-  ;;         ("M-o w" . highlight-phrase)))
-
-
+Loading contributed packages:
+#+BEGIN_SRC emacs-lisp
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
   (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
@@ -1921,73 +2073,52 @@ Profiling Org-mode config loading time:
   ;; managing bookmarks with Org-mode
   ;; http://orgmode.org/worg/org-contrib/org-protocol.html
   (autoload 'org-protocol "org-protocol")
-
-  ;; org-favtable
-  ;;deactivated; (require 'org-favtable)
-  ;;deactivated; (setq org-favtable-id "my-favtable")
-  ;;deactivated; (global-set-key (kbd "C-+") 'org-favtable)
-
-  ;; Enable org modules
-  (setq org-modules (quote
-                     (org-bbdb
-	     	          org-bibtex
-                      org-crypt
-                      org-gnus
-                      org-id
-                      org-info
-                      org-habit
-                      org-inlinetask
-                      org-irc
-                      org-mew
-                      org-mhe
-                      org-protocol
-                      org-rmail
-                      org-vm
-                      org-wl
-                      org-w3m
-                      )
-                     )
-        )
-
-(when (my-eval-if-binary-or-warn "pandoc")
-  ;; https://github.com/kawabata/ox-pandoc
-  (use-package ox-pandoc
-    ;;:disabled t  ;; stop loading if 't'
-    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    :defer 10
-    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
-    :init ;; executed before loading package
-    ;; org-pandoc-menu-entry -> customize what is shown in menu
-    ;; :mode "\\.rb\\'"
-  )
-)
-
-  (use-package ox-asciidoc
-    ;;:disabled t  ;; stop loading if 't'
-    ;;:ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    :defer 10
-    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
-    :init ;; executed before loading package
-    ;; org-pandoc-menu-entry -> customize what is shown in menu
-    ;; :mode "\\.rb\\'"
-  )
-
 #+END_SRC
 
-** general Org-mode settings
+[[http://orgmode.org/worg/org-contrib/org-favtable.html][org-favtable]]:
+I was not able to find the advantage of favtables in comparison to
+search or =id=-links:
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'org-favtable)
+(setq org-favtable-id "my-favtable")
+(global-set-key (kbd "C-+") 'org-favtable)
+#+END_SRC
 
+Enable misc org modules:
 #+BEGIN_SRC emacs-lisp
+(setq org-modules (quote
+                   (org-bbdb
+        	        org-bibtex
+                    org-crypt
+                    org-gnus
+                    org-id
+                    org-info
+                    org-habit
+                    org-inlinetask
+                    org-irc
+                    org-mew
+                    org-mhe
+                    org-protocol
+                    org-rmail
+                    org-vm
+                    org-wl
+                    org-w3m
+                    )
+                   )
+      )
+#+END_SRC
 
-  ;; http://www.reddit.com/r/emacs/comments/2m4b7j/help_setting_orgmode_as_the_default_major_mode/
-  ;; 2014-12-07
-  (add-to-list 'auto-mode-alist '("'" . org-mode) t)
+** General Org-mode settings
 
-  ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
-  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-  (add-hook 'org-mode-hook 'yas-minor-mode-on)
-  (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
+http://www.reddit.com/r/emacs/comments/2m4b7j/help_setting_orgmode_as_the_default_major_mode/ -
+«This will make it that any file without an auto-mode alist entry gets
+associated with org-mode by default.»
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("'" . org-mode) t)
+#+END_SRC
 
-
+Lots of general flags and variables:
+#+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t);; Might cause performance issues; http://orgmode.org/manual/Clean-view.html
   (setq org-enforce-todo-dependencies t)
   (setq org-blank-before-new-entry (quote ((heading . t)
@@ -2016,70 +2147,90 @@ Profiling Org-mode config loading time:
   (setq org-hide-leading-stars t)
   (setq org-adapt-indentation nil);; do not indent drawers/body according to heading level
 
-  ;; default state for repeating/recurring events
-  ;; see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
-  (setq org-todo-repeat-to-state "NEXT")
+#+END_SRC
 
-  ;; http://orgmode.org/org.html show blocked tasks in agenda in gray color
+Default state for repeating/recurring events
+  - see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-repeat-to-state "NEXT")
+#+END_SRC
+
+http://orgmode.org/org.html - show blocked tasks in agenda in gray color
+- OR: hide blocked tasks completely:
+  - http://nflath.com/2010/03/org-mode-2/
+  - http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
+#+BEGIN_SRC emacs-lisp
   ;;disabled;(setq org-agenda-dim-blocked-tasks t)
-  ;; OR: hide blocked tasks completely:
-  ;; http://nflath.com/2010/03/org-mode-2/
-  ;; http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
   (setq org-agenda-dim-blocked-tasks 'invisible)
+#+END_SRC
 
-
-  ;; smart navigation
+Smart navigation: begin/end of line is different for headings, list items, …
+#+BEGIN_SRC emacs-lisp
   (setq org-special-ctrl-a/e t)
   (setq org-special-ctrl-k t)
+#+END_SRC
 
-  ;; smart yanking
-  (setq org-yank-adjusted-subtrees t);; https://www.gnu.org/software/emacs/manual/html_node/org/Structure-editing.html
+Smart yanking: https://www.gnu.org/software/emacs/manual/html_node/org/Structure-editing.html
+#+BEGIN_SRC emacs-lisp
+  (setq org-yank-adjusted-subtrees t)
+#+END_SRC
 
-  ;; until 2016-11-10, the defaults were OK to me
-  ;; with update to Org 9, jumping from agenda to hidden heading reveales only heading but not ancestors as before
+- until 2016-11-10, the defaults were OK to me
+  - with update to Org 9, jumping from agenda to hidden heading reveales only heading but not ancestors as before
+#+BEGIN_SRC emacs-lisp
   (setq org-show-context-detail
         '((agenda . lineage) ;; instead of "local"
           (bookmark-jump . lineage)
           (isearch . lineage)
           (default . ancestors))
         )
+#+END_SRC
 
-  ;; ######################################################
-  ;; set the timestamps of expiry.el to inactive ones
-  ;; http://comments.gmane.org/gmane.emacs.orgmode/20934
+Set the timestamps of =expiry.el= to inactive ones:
+http://comments.gmane.org/gmane.emacs.orgmode/20934
+#+BEGIN_SRC emacs-lisp
   (setq org-expiry-inactive-timestamps t)
+#+END_SRC
 
-  ;; ######################################################
-  ;; http://orgmode.org/Changes.html -> New option org-catch-invisible-edits
-  ;; prevent accidental deleting of hole subtrees or similar
+Prevent accidental deleting of hole subtrees or similar
+  - http://orgmode.org/Changes.html -> New option org-catch-invisible-edits
+#+BEGIN_SRC emacs-lisp
   (setq org-catch-invisible-edits "smart")
+#+END_SRC
 
-  ;; ######################################################
-  ;; from Eric Schulte <eric.schulte@gmx.com>
-  ;;      Newsgroups: gmane.emacs.orgmode
-  ;;      Subject: Re: org mode in press
-  ;;      Date: Sat, 28 Jan 2012 10:06:08 -0700
-  ;;      Message-ID: <87ipjv92pr.fsf@gmx.com>
-  ;; syntax highlighting in source code:
-  ;; 2014-04-04: set to nil in order to avoid performance issues!
-  ;; 2015-12-26: set to t to test again these days
-  (setq org-src-fontify-natively t)
+syntax highlighting in source code:
+: from Eric Schulte <eric.schulte@gmx.com>
+:      Newsgroups: gmane.emacs.orgmode
+:      Subject: Re: org mode in press
+:      Date: Sat, 28 Jan 2012 10:06:08 -0700
+:      Message-ID: <87ipjv92pr.fsf@gmx.com>
+- 2014-04-04: set to nil in order to avoid performance issues!
+- 2015-12-26: set to t to test again these days
+  - seems to be OK now
+#+BEGIN_SRC emacs-lisp
+(setq org-src-fontify-natively t)
+#+END_SRC
+
+Use IDO for target completion:
+#+BEGIN_SRC emacs-lisp
+  (setq org-completion-use-ido t)
+#+END_SRC
 
 
-
-  (setq org-completion-use-ido t);; Use IDO for target completion
-
-
-  ;; disable property inheritance (in order to seed up)
-  ;; https://www.gnu.org/software/emacs/manual/html_node/org/Property-inheritance.html
+Disable property inheritance (in order to seed up)
+- https://www.gnu.org/software/emacs/manual/html_node/org/Property-inheritance.html
+#+BEGIN_SRC emacs-lisp
   (setq org-use-property-inheritance nil)
+#+END_SRC
 
-  (setq org-tags-match-list-sublevels nil);; https://www.gnu.org/software/emacs/manual/html_node/org/Matching-tags-and-properties.html
+https://www.gnu.org/software/emacs/manual/html_node/org/Matching-tags-and-properties.html
+#+BEGIN_SRC emacs-lisp
+  (setq org-tags-match-list-sublevels nil)
+#+END_SRC
 
-
-  ;; ######################################################
-  ;; automatically change to DONE when all children are done
-  ;; http://orgmode.org/org.html#Breaking-down-tasks
+automatically change status of a heading to =DONE= when all children are done:
+http://orgmode.org/org.html#Breaking-down-tasks
+#+BEGIN_SRC emacs-lisp
   ;;deactivated because WAITING got changed to TODO;; (defun org-summary-todo (n-done n-not-done)
   ;;deactivated because WAITING got changed to TODO;;   "Switch entry to DONE when all subentries are done, to TODO otherwise."
   ;;deactivated because WAITING got changed to TODO;;   (let (org-log-done org-log-states)   ; turn off logging
@@ -2087,40 +2238,53 @@ Profiling Org-mode config loading time:
   ;;deactivated because WAITING got changed to TODO;; (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   ;; statistic cookies count ALL subtasks not only direkt ones
   (setq org-hierarchical-todo-statistics t)
+#+END_SRC
 
-
-
-  ;; ######################################################
+Prevent auto-filling for source code:
+#+BEGIN_SRC emacs-lisp
   ;(setq org-src-prevent-auto-filling t)
+#+END_SRC
 
-  ;; ######################################################
-  ;; 2013-09-13:
-  ;; From: Release Notes v8.1
-  ;; http://orgmode.org/worg/agenda-optimization.html
+From: Release Notes v8.1: http://orgmode.org/worg/agenda-optimization.html
+#+BEGIN_SRC emacs-lisp
   (setq org-agenda-ignore-drawer-properties '(effort appt stats));; agenda performance
+#+END_SRC
 
-  ;; automatically CREATED properties
+Automatically write =CREATED= properties in the =PROPERTIES= drawer:
+#+BEGIN_SRC emacs-lisp
   (org-expiry-insinuate)
   ;; not checked yet: (setq org-expiry-handler-function 'org-expiry-archive-subtree)
+#+END_SRC
 
-  ;; ######################################################
-  ;; checking org-mode syntax:
-  ;;(require 'org-lint)
+Checking org-mode syntax:
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'org-lint)
+#+END_SRC
 
-  ;; ######################################################
-  ;; stop the mouse cursor from highlighting lines in the agenda
-  ;; http://orgmode.org/worg/org-faq.html
+Stop the mouse cursor from highlighting lines in the agenda: http://orgmode.org/worg/org-faq.html
+#+BEGIN_SRC emacs-lisp
   (add-hook 'org-finalize-agenda-hook
             (lambda () (remove-text-properties
                         (point-min) (point-max) '(mouse-face t))))
+#+END_SRC
 
-  ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
-  (setq org-ellipsis " ⤵")
-  ;; on some computers, this results in higher line height as
-  ;;   described on http://emacs.stackexchange.com/questions/251/line-height-with-unicode-characters
-  ;; id:2016-08-19-unicode-enlarges-line-height
+Changing the default ellipsis to something that can't be mixed up with
+normal characters: http://endlessparentheses.com/changing-the-org-mode-ellipsis.html
 
-  ;; https://twitter.com/_wilfredh/status/708046038200950787
+Note: on some computers, this results in higher line height as described on http://emacs.stackexchange.com/questions/251/line-height-with-unicode-characters
+See: id:2016-08-19-unicode-enlarges-line-height
+
+#+BEGIN_SRC emacs-lisp
+(setq org-ellipsis " ⤵")
+#+END_SRC
+
+Open corresponding =.org_archive= file with ~ff-find-other-file~
+
+https://twitter.com/_wilfredh/status/708046038200950787 « =M-x
+describe-function= shows the docstring, which mentions
+ff-other-file-alist.»
+#+BEGIN_SRC emacs-lisp
+  ;;
   (defvar my-cpp-other-file-alist
   '(("\\.org\\'" (".org_archive"))
     ;;("\\.ipp\\'" (".hpp" ".cpp"))
@@ -2132,70 +2296,75 @@ Profiling Org-mode config loading time:
     ;;("\\.h\\'" (".c"))
     ))
   (setq-default ff-other-file-alist 'my-cpp-other-file-alist)
-  ;; open corresponding .org_archive file with ~ff-find-other-file~
+#+END_SRC
 
-  ;; http://orgmode.org/manual/The-Export-Dispatcher.html
-  (setq org-export-initial-scope 'subtree);; export subtree (by default)
-
+Yasnippet settings:
+http://yasnippet.googlecode.com/svn/trunk/doc/index.html
+#+BEGIN_SRC emacs-lisp
+  ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
+  (add-hook 'org-mode-hook 'yas-minor-mode-on)
+  (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 #+END_SRC
 
 ** org-file-apps -> open files in external apps
 
 #+BEGIN_SRC emacs-lisp
-
   ;;(add-to-list 'org-file-apps '("\\.odp" . system))
   ;;(add-to-list 'org-file-apps '("\\.odp" . mailcap))
   (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
   ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
-
 #+END_SRC
 
 ** general key bindings
 
+Standard key bindings:
 #+BEGIN_SRC emacs-lisp
-
-  ;; http://doc.norang.ca/org-mode.html
-  ;;
-  ;; Standard key bindings
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
 ;;obsolete:  (global-set-key "\C-cb" 'org-iswitchb)
+#+END_SRC
 
-  ;; unset C-c , (org-priority) because I get confused when I mistype C-c C-,
+unset C-c , (org-priority) because I get confused when I mistype C-c C-,
+#+BEGIN_SRC emacs-lisp
   ;;(global-unset-key (kbd "C-c ,"))
   (global-set-key (kbd "C-c ,") 'my-map)
+#+END_SRC
 
-  ;; ######################################################
-  ;; remembering positions
+Remembering positions:
+#+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c %") 'org-mark-ring-push)
   (global-set-key (kbd "C-c <left>") 'org-mark-ring-goto)
   (global-set-key (kbd "C-c <down>") 'org-mark-ring-push)
+#+END_SRC
 
-  ;;disabled;(setq mac-command-modifier 'apple)
-  ;;disabled;(global-set-key [(<apple> <up>)] 'org-move-subtree-up)
-  ;;disabled;(global-set-key "\S-<down>" 'org-move-subtree-down)
-  ;;disabled;(global-set-key "\S-<left>" 'org-do-promote)
-  ;;disabled;(global-set-key "\S-<right>" 'org-do-demote)
+MISC Apple bindings
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mac-command-modifier 'apple)
+(global-set-key [(<apple> <up>)] 'org-move-subtree-up)
+(global-set-key "\S-<down>" 'org-move-subtree-down)
+(global-set-key "\S-<left>" 'org-do-promote)
+(global-set-key "\S-<right>" 'org-do-demote)
+#+END_SRC
 
-  ;; ######################################################
-  ;; Org-mode keys for Mac
-  ;; I wanted to map Alt-left|right|... but Alt has to be used by the
-  ;; system in order to type umlauts :-(
-  ;;disabled;(setq mac-command-modifier 'apple)
-  ;;disabled;(global-set-key [(<apple> <up>)] 'org-move-subtree-up)
-  ;;disabled;(global-set-key "\S-<down>" 'org-move-subtree-down)
-  ;;disabled;(global-set-key "\S-<left>" 'org-do-promote)
-  ;;disabled;(global-set-key "\S-<right>" 'org-do-demote)
+Org-mode keys for Mac
+- I wanted to map Alt-left|right|... but Alt has to be used by the
+  system in order to type umlauts :-(
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq mac-command-modifier 'apple)
+(global-set-key [(<apple> <up>)] 'org-move-subtree-up)
+(global-set-key "\S-<down>" 'org-move-subtree-down)
+(global-set-key "\S-<left>" 'org-do-promote)
+(global-set-key "\S-<right>" 'org-do-demote)
+#+END_SRC
 
-
-  ;; ######################################################
-  ;; fix broken mapping (because of prelude and so on)
-  ;;disabled;;2014-01-19;;(defun my-org-mode-hook ()
-  ;;disabled;;2014-01-19;;  (define-key prelude-mode-map (kbd "C-c +") nil)
-  ;;disabled;;2014-01-19;;  (define-key prelude-mode-map (kbd "C-c -") nil)
-  ;;disabled;;2014-01-19;;  )
-  ;;disabled;;2014-01-19;;(add-hook 'org-mode-hook 'my-org-mode-hook)
-
+fix broken mapping (because of prelude and so on).
+- disabled 2014-01-19
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun my-org-mode-hook ()
+  (define-key prelude-mode-map (kbd "C-c +") nil)
+  (define-key prelude-mode-map (kbd "C-c -") nil)
+  )
+(add-hook 'org-mode-hook 'my-org-mode-hook)
 #+END_SRC
 
 ** org-mode-hook
@@ -2274,6 +2443,47 @@ Profiling Org-mode config loading time:
 
 
 
+#+END_SRC
+
+Export subtree (by default) instead of whole buffer:
+http://orgmode.org/manual/The-Export-Dispatcher.html
+#+BEGIN_SRC emacs-lisp
+(setq org-export-initial-scope 'subtree)
+#+END_SRC
+
+*** ox-pandoc - Export via Pandoc
+
+https://github.com/kawabata/ox-pandoc - «This is another exporter that
+translates Org-mode file to various other formats via Pandoc.»
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "pandoc")
+  (use-package ox-pandoc
+    ;;:disabled t  ;; stop loading if 't'
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    :defer 10
+    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
+    :init ;; executed before loading package
+    ;; org-pandoc-menu-entry -> customize what is shown in menu
+    ;; :mode "\\.rb\\'"
+  )
+)
+#+END_SRC
+
+*** ox-asciidoc - Export to AsciiDoc
+
+https://github.com/yashi/org-asciidoc - «An Org Mode Exporter Backend For AsciiDoc»
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-asciidoc
+    ;;:disabled t  ;; stop loading if 't'
+    ;;:ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    :defer 10
+    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
+    :init ;; executed before loading package
+    ;; org-pandoc-menu-entry -> customize what is shown in menu
+    ;; :mode "\\.rb\\'"
+  )
 #+END_SRC
 
 ** TODO keywords + faces
@@ -2498,13 +2708,14 @@ Profiling Org-mode config loading time:
   ;; ######################################################
 #+END_SRC
 
-** my-url-linkify (my-map u)
+** my-url-linkify → my-map u
+
+Replaces URL with Org-mode link including description
+- see id:2014-03-09-inbox-to-bookmarks
+- 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
+- see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
 
 #+BEGIN_SRC emacs-lisp
-  ;; replaces URL with Org-mode link including description
-  ;; see id:2014-03-09-inbox-to-bookmarks
-  ;; 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
-  ;; see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
   (defun my-www-get-page-title (url)
     "retrieve title of web page.
 from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
@@ -2523,6 +2734,7 @@ from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html
                         ))
       )
     )
+
   (defun my-url-linkify ()
     "Make URL at cursor point into an Org-mode link.
 If there's a text selection, use the text selection as input.
@@ -2560,17 +2772,15 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
     )
 
   (bind-key "u" 'my-url-linkify my-map)
-
-;; ######################################################
 #+END_SRC
 
-** my-insert-orgmode-url-from-clipboard (my-map U)
+** my-insert-orgmode-url-from-clipboard → my-map U
+
+Inserts URL from clipboard and retrieves title as Org-mode link
+- see id:2014-08-10-bookmarks-with-orgmode
+- 2015-05-22: Via email arjan: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
 #+BEGIN_SRC emacs-lisp
-  ;; inserts URL from clipboard and retrieves title as Org-mode link
-  ;; see id:2014-08-10-bookmarks-with-orgmode
-  ;; 2015-05-22: Via email arjan: http://www.rexim.me/emacs-as-bookmark-manager-links.html
-
   (defun straight-string (s)
     ;; Spliting the string and then concatenating it back.
     (mapconcat #'(lambda (x) x) (split-string s) " "))
@@ -2636,16 +2846,14 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
                             (buffer-string))))))
 
   (bind-key "U" 'my-insert-orgmode-url-from-clipboard my-map)
-
-
 #+END_SRC
 
-** my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard (my-map l)
+** my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard → my-map l
+
+Inserts public voit URL from clipboard and jumps to its Org-mode heading:
+- 2015-05-23: adapted from: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
 #+BEGIN_SRC emacs-lisp
-  ;; inserts public voit URL from clipboard and jumps to its Org-mode heading
-  ;; 2015-05-23: adapted from: http://www.rexim.me/emacs-as-bookmark-manager-links.html
-
   (defun my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard ()
     "Retrieves an URL from the clipboard, gets its Org-mode source,
      extracts the ID of the article and jumps to its Org-mode heading"
@@ -2694,9 +2902,105 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
       )
     )
 
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
+#+END_SRC
 
-;; ######################################################
+** helm-do-grep-ag: grep within files → my-map G
+
+FIXXME: move to Org settings
+
+[[help:helm-do-grep-ag][Preconfigured helm for grepping with AG in `default-directory'.]]
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "ag")
+  (bind-key "G" #'helm-do-grep-ag my-map)
+)
+#+END_SRC
+
+** helm-org-agenda-files-headings: grep within headings → my-map H
+
+FIXXME: move to Org settings
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "H" #'helm-org-agenda-files-headings my-map)
+#+END_SRC
+
+** Inserting active/inactive time-stamps → my-map [dDtT]
+
+FIXXME: move to Org settings
+
+- 2011-04-20: C-j t ... timestamp
+  - http://www.sabren.net/articles/emacs.php3
+  - http://www.gnu.org/software/emacs/manual/html_node/emacs/Date-Display-Format.html
+  - COMBINED WITH:
+    - 2012-12-09:
+      : From: Russell Adams <RLAdams@AdamsInfoServ.Com>
+      :       Newsgroups: gmane.emacs.orgmode
+      :       Subject: Re: Using org-mode for laboratory notes.
+      :       Date: Wed, 19 Sep 2012 12:08:21 -0500
+      :       Message-ID: <20120919170820.GC31853@cardamom.adamsinfoserv.com>
+
+#+BEGIN_SRC emacs-lisp
+;; Insert immediate timestamp
+(defun my-insert-timestamp()
+  "Insert the current time in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+	(org-insert-time-stamp nil t nil)
+	(insert " ")
+	)
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+  )
+
+(bind-key "t" #'my-insert-timestamp my-map)
+
+(defun my-insert-timestamp-inactive()
+  "Insert the current time in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+	(org-insert-time-stamp nil t t)
+	(insert " ")
+	)
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+  )
+
+(bind-key "T" #'my-insert-timestamp-inactive my-map)
+
+;; 2012-12-23: C-j d ... datestamp
+(defun my-insert-datestamp()
+  "Insert the current date in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+	(org-insert-time-stamp nil nil nil)
+	(insert " ")
+	)
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+  )
+
+(bind-key "d" #'my-insert-datestamp my-map)
+
+(defun my-insert-datestamp-inactive()
+  "Insert the current date in yyyy-mm-dd format."
+  (interactive "*")
+  (if (eq major-mode 'org-mode)
+      (progn
+	(org-insert-time-stamp nil nil t)
+	(insert " ")
+	)
+    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    )
+  )
+
+(bind-key "D" #'my-insert-datestamp-inactive my-map)
 #+END_SRC
 
 ** bookmarks (my-map b)
@@ -3032,7 +3336,14 @@ Late deadlines first, then scheduled, then non-late deadlines"
                             )
                            ;;(org-agenda-skip-function '(my-skip-tag "lp"))
 			  )))
-                 nil ("~/org/agenda.html"))
+                 nil ("~/org/agenda_180d_filtered.html"))
+
+		("w" "weekly detail agenda"
+		 ((agenda "weekly detail agenda"
+			  ((org-agenda-span 7)
+			   (org-agenda-time-grid nil)
+			  )))
+                 nil ("~/org/agenda_7d.html"))
 
 		;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
 		;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
@@ -4026,6 +4337,87 @@ Null prefix argument turns off the mode."
   ;; ######################################################
 #+END_SRC
 
+*** DISABLED my-org-mobile-push() - pushing to org-mobile
+
+The function generates misc files for MobileOrg.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-mobile-push (&optional arg)
+  (interactive)
+  ;; when called with universal argument (C-u), Emacs will be closed
+  ;;      after pushing to files
+  ;; save original agenda in temporary variable
+  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+  ;; set agenda for MobileOrg (omit some agenda
+  ;; views I do not need on my phone):
+  (setq org-agenda-custom-commands
+        (quote (
+
+                ("1" "1 month"
+                 ((agenda "1 month"
+                          ((org-agenda-ndays 31)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           )
+                          )))
+
+                ("B" "borrowed" tags "+borrowed"
+                 (
+                  (org-agenda-overriding-header "borrowed or lend")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                ("$" "Besorgungen" tags "+Besorgung"
+                 (
+                  (org-agenda-overriding-header "Besorgungen")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                )))
+  ;; generate MobileOrg export:
+  (org-mobile-push)
+  ;; restore previously saved agenda:
+  (setq org-agenda-custom-commands
+        ORIGSAVED-org-agenda-custom-commands)
+  (if (equal arg '(4))
+      ;; save buffers and exit emacs;; FIXXME: not working yet
+      (save-buffers-kill-terminal 't)
+    )
+  )
+#+END_SRC
+
+*** DISABLED MobileOrg push → my-map I
+
+FIXXME: move to Org settings
+
+As of 2017-04, I moved from [[https://github.com/matburt/mobileorg-android/wiki][MobileOrg]] to [[http://www.orgzly.com/][Orgzly]] for mobile viewing
+data within my Org-mode data. Therefore, this function is not of any
+use any more:
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "I" #'my-org-mobile-push my-map)
+#+END_SRC
+
+*** MobileOrg import → my-map i
+
+FIXXME: move to Org settings
+
+On my Android phone, I use [[https://github.com/matburt/mobileorg-android/wiki][MobileOrg]] to capture stuff. Following
+binding brings me the most current captured items into my =inbox.org=:
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "i" (lambda ()
+                         """foobar"""
+                         (interactive) (my-mobile-org-import)) my-map )
+#+END_SRC
+
+Note that even though I use [[http://www.orgzly.com/][Orgzly]] to /view/ Org-mode data on my
+Android phone, I use MobileOrg to capture. This might change in
+future, when I am able to choose whether or not single [[https://syncthing.net/][SyncThing]]
+folders gets synced on WiFi or on 4G networks (instead of all or
+nothing). Take a look at [[https://github.com/syncthing/syncthing-android/issues/888][my feature wish report]] and [[https://github.com/syncthing/syncthing-android/issues/511][the other issue it
+was referred to]].
+
 ** preserve top level node and tags when archiving
 
 #+BEGIN_SRC emacs-lisp
@@ -4640,15 +5032,18 @@ http://orgmode.org/org.html#Header-and-sectioning
 
 #+BEGIN_SRC emacs-lisp
   (autoload 'info "info.el")
-  (add-to-list 'Info-additional-directory-list "~/.emacs.d/contrib/org-mode/doc/")
-
-
+  (add-to-list 'Info-additional-directory-list (concat my-user-emacs-directory "contrib/org-mode/doc/"))
 #+END_SRC
 
-** Reference handling (Reftex)
+** Reftex + org-mode-reftex-setup() → my-map R
+
+I do manage references to white papers and books using a self-made
+concept based on RefTeX and Org-mode.
+
+If I'd start all over again, I'd take a look at [[https://github.com/jkitchin/org-ref][org-ref]] which was not
+around yet back then.
 
 #+BEGIN_SRC emacs-lisp
-
   ;; Default bibliography
   (setq reftex-default-bibliography '("~/archive/library/references.bib"))
 
@@ -4705,8 +5100,27 @@ http://orgmode.org/org.html#Header-and-sectioning
     ;;jump to the notes for the paper pointed to at from reftex search
     (interactive)
     (org-open-link-from-string (format "[[cite:%s]]" (reftex-citation t))))
+#+END_SRC
 
+my own org-mode-reftex-setup()
 
+See also: id:2015-05-14-disable-orgmode-reftex-autoload
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun org-mode-reftex-setup ()
+  (setq TeX-master t)
+  (load-library "reftex")
+  (and (buffer-file-name)
+     (file-exists-p (buffer-file-name))
+     (progn
+       (reftex-parse-all)
+       (reftex-set-cite-format "[[cite:%l][%l]]")))
+  (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+  (define-key org-mode-map (kbd "C-c (") 'org-mode-reftex-search))
+(add-hook 'org-mode-hook 'org-mode-reftex-setup)
+
+(bind-key (kbd "R") #'org-mode-reftex-setup my-map)
+;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
 #+END_SRC
 
 ** calculating with dates and times
@@ -4932,6 +5346,140 @@ Use a prefix arg to get regular RET. "
 
 #+END_SRC
 
+** Org-Reveal - generate nice presentations out of Org-mode
+
+https://github.com/yjwen/org-reveal
+#+BEGIN_QUOTE
+- =Reveal.js= is a tool for creating good-looking HTML presentations, authored by Hakim El Hattab.
+- For an example of a reveal.js presentation, see [[http://lab.hakim.se/reveal-js/#/][here]].
+- =Org-Reveal= exports your Org documents to reveal.js presentations.
+- With Org-reveal, you can create beautiful presentations with 3D effects from simple but powerful Org contents.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-reveal
+  ;;:disabled t
+  :ensure t
+  ;;:if (my-system-type-is-windows)
+  ;;:diminish whitespace-mode
+  :defer 10
+  :config
+
+  ;;(setq org-reveal-root "file:///d:/reveal.js")
+  (cond ((my-system-type-is-gnu)
+         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+         (setq org-reveal-extra-css "file:///home/vk/.emacs.d/data/reveal_theme_night_local.css"))
+        ((my-system-type-is-windows)
+         (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/data/reveal.js/")
+         (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/data/reveal_theme_night_local.css"))
+        (t
+         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
+    )
+
+  ;; my preferred defaults:
+  (setq org-reveal-hlevel 2)
+  (setq org-reveal-postamble "<p> Created by Karl. </p>")
+  (setq org-reveal-center nil)
+  (setq org-reveal-progress t)
+  (setq org-reveal-history nil)
+  (setq org-reveal-control t)
+  (setq org-reveal-keyboard t)
+  (setq org-reveal-overview nil)
+  (setq org-reveal-transition "default")
+  ;; - transitions:
+  ;;   - default
+  ;;   - cube
+  ;;   - page
+  ;;   - concave
+  ;;   - zoom
+  ;;   - linear
+  ;;   - fade
+  ;;   - none
+  (setq org-reveal-theme "night")
+  ;; - Styles:
+  ;;   - black (default)
+  ;;   - white
+  ;;   - league
+  ;;     - gray one
+  ;;   - sky
+  ;;     - nice bright one
+  ;;   - beige
+  ;;     - nice bright one
+  ;;   - simple
+  ;;     - bright
+  ;;   - serif
+  ;;     - old school
+  ;;   - blood
+  ;;     - cool!
+  ;;   - *night*
+  ;;     - very nice
+  ;;   - moon
+  ;;   - solarized
+)
+#+END_SRC
+
+** ox-clip - formatted copy from Org-mode to system clipboard
+
+#+BEGIN_QUOTE
+[[http://melpa.org/#/ox-clip][This module]] copies selected regions in org-mode as formatted text on the
+clipboard that can be pasted into other applications. When not in org-mode,
+the htmlize library is used instead.
+
+For Windows the html-clip-w32.py script will be installed. It works pretty
+well, but I noticed that the hyperlinks in the TOC to headings don't work,
+and strike-through doesn't seem to work. I have no idea how to fix either
+issue.
+
+Mac OSX needs textutils and pbcopy, which should be part of the base install.
+
+Linux needs a relatively modern xclip. https://github.com/astrand/xclip
+
+There is one command: `ox-clip-formatted-copy' that should work across
+Windows, Mac and Linux.
+
+(require 'htmlize)
+#+END_QUOTE
+
+- https://libraries.io/emacs/ox-clip
+- https://github.com/jkitchin/scimax
+- use: M-x ox-clip-formatted-copy
+
+#+BEGIN_SRC emacs-lisp
+  (when (or
+         (and (my-system-type-is-gnu) (my-eval-if-binary-or-warn "xclip") (not (my-system-is-karl-voit-at)))
+         (and (my-system-type-is-darwin) (my-eval-if-binary-or-warn "textutils") (my-eval-if-binary-or-warn "pbcopy"))
+         (my-system-type-is-windows);; For Windows the html-clip-w32.py script will be installed.
+         )
+    (use-package ox-clip
+      ;; :disabled t
+      ;;:if
+      :ensure t
+      :defer 10
+      )
+    )
+#+END_SRC
+
+** DISABLED org-protocol-capture-html - turn HTML into Org-mode
+
+https://github.com/alphapapa/org-protocol-capture-html
+#+BEGIN_QUOTE
+org-protocol is awesome, but browsers do a pretty poor job of turning
+a page’s HTML content into plain-text. However, Pandoc supports
+converting from HTML to org-mode, so we can use it to turn HTML into
+Org-mode content! It can even turn HTML tables into Org tables!
+#+END_QUOTE
+
+- see: id:2016-07-10-inst-org-protocol-capture
+- I disabled the package because I do have to play around with it to
+  make it work on my hosts.
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "pandoc")
+  (my-load-local-el "contrib/org-protocol-capture-html/org-protocol-capture-html.el")
+  (require 'org-protocol-capture-html)
+)
+#+END_SRC
+
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
@@ -4939,10 +5487,26 @@ Use a prefix arg to get regular RET. "
 
 ;; #############################################################################
 #+END_SRC
+* Misc modes/packages
 
-* misc modes/packages
+** DISABLED tabbar
+
+«[[https://www.emacswiki.org/emacs/TabBarMode][Tabbar]] is an emacs minor mode that displays a tab bar at the top,
+similar to the idea of web browser’s tabs.»
+
+I just did not think that the screen space was used wisely for the
+minor advantage.
+
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
+    (my-load-local-el "contrib/tabbar.el")
+  )
+#+END_SRC
 
 ** DISABLED post-mode
+
+=post-mode= was used for composing Usenet postings which I do in
+[[http://slrn.sourceforge.net/][slrn]] since decades and not within Emacs as before.
 
 #+BEGIN_SRC emacs-lisp
 (setq post-variable-signature-source "~/daten/nobackup/funnies/good_sigs/allsigs.txt")
@@ -4951,13 +5515,11 @@ Use a prefix arg to get regular RET. "
 
 ** MiniMap
 
+«[[http://www.emacswiki.org/emacs/MiniMap][Minimap]] is a feature provided by the Sublime editor. It shows a
+smaller, “minibar”, display of the current buffer alongside the main
+editing window.»
+
 #+BEGIN_SRC emacs-lisp
-;; http://www.emacswiki.org/emacs/MiniMap
-;; MiniMap for Emacs
-;;deactivated;; (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/minimap"))
-;;deactivated;; ;;(autoload 'minimap "minimap.el")
-;;deactivated;; (use-package minimap.el)
-;;deactivated;; (setq minimap-window-location 'right)
 (use-package minimap
   :disabled t
   :if (my-system-type-is-gnu)
@@ -4966,17 +5528,15 @@ Use a prefix arg to get regular RET. "
   :defer 10
   :config ;; executed after loading package
   (setq minimap-window-location 'right)
+  ;;deactivated;; (setq minimap-window-location 'right)
 )
-
-
-
-;; #############################################################################
 #+END_SRC
 
 ** DISABLED TWiki
 
+TWiki syntax highlighting
 - http://www.neilvandyke.org/erin-twiki-emacs/
-- TWiki syntax highlighting
+
 #+BEGIN_SRC emacs-lisp
 ;(use-package erin))
 (my-load-local-el "contrib/erin.el")
@@ -4986,8 +5546,12 @@ Use a prefix arg to get regular RET. "
 
 - http://www.emacswiki.org/emacs/TwitteringMode
 - http://citizen428.net/blog/2011/01/21/emacs-twittering-mode/
+
+I shortly tested Emacs as a Twitter client but did not find advantages
+enough to use it instead of the Twitter webpage.
+
 #+BEGIN_SRC emacs-lisp
- (add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/twittering-mode/"))
+ (add-to-list 'load-path (expand-file-name (concat my-user-emacs-directory "contrib/twittering-mode/")))
  (use-package twittering-mode)
  (setq twittering-timer-interval 300)  ; Update your timeline each 300 seconds (5 minutes)
  (setq twittering-url-show-status nil) ; Keeps the echo area from showing all the http processes
@@ -5037,6 +5601,10 @@ Use a prefix arg to get regular RET. "
 ** DISABLED UndoTree
 
 - http://www.emacswiki.org/emacs/UndoTree
+
+Some people prefer the undo-tree visualization and method for undoing
+things in Emacs.
+
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
   ;; :disabled t
@@ -5051,58 +5619,79 @@ Use a prefix arg to get regular RET. "
 ** DISABLED open-resource
 
 http://code.google.com/p/emacs-open-resource/
+«It uses recentf's files buffer to provide a nice interface for
+selecting found files. Files are searched using the "find" utility in
+Unix. The results are filtered with grep for unwanted patterns and
+with awk to return relative paths (relative paths are shorter and thus
+more readable).»
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/emacs-open-resource-read-only"))
+(add-to-list 'load-path (expand-file-name (concat my-user-emacs-directory "contrib/emacs-open-resource-read-only")))
 (use-package open-resource)
 (global-set-key "\C-cr" 'open-resource)
 #+END_SRC
 
 ** whitespace-mode + style
 
+https://www.emacswiki.org/emacs/WhiteSpace
+
+«This package is a minor mode to visualize blanks (TAB, (HARD) SPACE and NEWLINE).»
+
+- from Twitter 2012-05-22: @emacs_knight
+
 #+BEGIN_SRC emacs-lisp
-;; from Twitter 2012-05-22: @emacs_knight
 ;;(when (or (my-system-type-is-gnu) (my-system-is-blanche))
 (whitespace-mode)
 (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
   ;;(face trailing lines-tail) whitespace-line-column 80) ;; highlight long lines tails (setq whitespace-style
 ;;  )
-
-;; #############################################################################
 #+END_SRC
 
 ** (e)diff
 
+Visualizing differences of files.
+
+- http://www.emacswiki.org/emacs/EdiffMode
+
+ediff from command line usage: =emacs -diff file1 file2=
+
 #+BEGIN_SRC emacs-lisp
-;; ediff from command line
-;; http://www.emacswiki.org/emacs/EdiffMode
-;; Usage: emacs -diff file1 file2
-(defun command-line-diff (switch)
-  (let ((file1 (pop command-line-args-left))
-	(file2 (pop command-line-args-left)))
-    ;;    (ediff file1 file2)))
-    (ediff-merge-files file1 file2)))
+(when (my-eval-if-binary-or-warn "diff")
+  (defun command-line-diff (switch)
+    (let ((file1 (pop command-line-args-left))
+  	(file2 (pop command-line-args-left)))
+      ;;    (ediff file1 file2)))
+      (ediff-merge-files file1 file2)))
 
-(add-to-list 'command-switch-alist '("diff" . command-line-diff))
-
-;; #############################################################################
+  (add-to-list 'command-switch-alist '("diff" . command-line-diff))
+)
 #+END_SRC
 
-** counting words
+** Counting words → M-=
+
+Counting lines, words, characters.
+
+- http://www.emacswiki.org/emacs/WordCount
+- http://www.emacswiki.org/emacs/wc.el
 
 #+BEGIN_SRC emacs-lisp
-;; http://www.emacswiki.org/emacs/WordCount
-;; http://www.emacswiki.org/emacs/wc.el
 (my-load-local-el "contrib/wc.el")
-
-
-;; #############################################################################
 #+END_SRC
 
-** magit
+** magit → my-map g       + smeargle (highlighting)
+
+«[[https://github.com/magit/magit][Magit]] is an interface to the version control system Git, implemented
+as an Emacs package. Magit aspires to be a complete Git porcelain.
+While we cannot (yet) claim that Magit wraps and improves upon each
+and every Git command, it is complete enough to allow even experienced
+Git users to perform almost all of their daily version control tasks
+directly from within Emacs. While many fine Git clients exist, only
+Magit and Git itself deserve to be called porcelains.»
+
+Some people start using Emacs just to be able to use this nifty Git
+interface of Magit.
 
 #+BEGIN_SRC emacs-lisp
-
 (use-package magit
   ;; :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5122,21 +5711,20 @@ http://code.google.com/p/emacs-open-resource/
     (interactive)
     (kill-buffer)
     (jump-to-register :magit-fullscreen))
-
-
-
-  ;; #############################################################################
 #+END_SRC
 
-** git: highlight regions by last updated time (my-map c)
+#+BEGIN_SRC emacs-lisp
+(bind-key "g" #'magit-status my-map)
+#+END_SRC
+
+
+- smeargle - Highlighting Regions by Last Updated Time (my-map c)
+  - https://github.com/syohex/emacs-smeargle/
+  - M-x smeargle  -  Highlight regions by last updated time.
+  - M-x smeargle-age  -  Highlight regions by age of changes.
+  - M-x smeargle-clear  - Clear overlays in current buffer
 
 #+BEGIN_SRC emacs-lisp
-
-  ;; smeargle - Highlighting Regions by Last Updated Time
-  ;; https://github.com/syohex/emacs-smeargle/
-  ;; M-x smeargle  -  Highlight regions by last updated time.
-  ;; M-x smeargle-age  -  Highlight regions by age of changes.
-  ;; M-x smeargle-clear  - Clear overlays in current buffer
   ;OLD;(my-load-local-el "contrib/emacs-smeargle/smeargle.el")
   ;OLD;(bind-key "c" 'smeargle my-map)
   (use-package smeargle
@@ -5146,47 +5734,38 @@ http://code.google.com/p/emacs-open-resource/
     :config ;; executed after loading package
     :bind (:map my-map ("c" . smeargle))
   )
-
-
-  )
-
-;; #############################################################################
 #+END_SRC
 
-** recent files
+End of use-package of magit:
 
 #+BEGIN_SRC emacs-lisp
-;; http://www.emacswiki.org/emacs-es/RecentFiles
-;; recently files
+)
+#+END_SRC
+
+** Recent files
+
+«[[https://www.emacswiki.org/emacs/RecentFiles][Recentf]] is a minor mode that builds a list of recently opened files.
+This list is is automatically saved across sessions on exiting Emacs -
+you can then access this list through a command or the menu.»
+
+#+BEGIN_SRC emacs-lisp
 (autoload 'recentf "recentf.el")
 (recentf-mode 1)
 (setq recentf-max-menu-items 50)
-
-
-;; #############################################################################
 #+END_SRC
 
-** DISABLED ert
+** DISABLED Confluence: vk-open-as-confluence-page() → my-map C
 
-for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
+Editing Confluence wiki pages (up to Confluence 3.x)
+- https://code.google.com/p/confluence-el/
+- =M-x confluence-get-page=
 
-#+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/cl-lib.el")
-(my-load-local-el "contrib/ert.el")
-(my-load-local-el "contrib/ert-x.el")
-#+END_SRC
-
-** DISABLED Confluence
-
-disabled 2015-01-23
+Unfortunately, Altlassian moved away from a Wiki style editing mode to
+a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 
 #+BEGIN_SRC emacs-lisp
-when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
+(when (my-system-type-is-windows)
 
- ;; ######################################################
- ;; editing Confluence wiki pages (up to Confluence 3.x)
- ;; https://code.google.com/p/confluence-el/
- ;; M-x confluence-get-page
  ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/contrib/confluence-el-1.5/"))
  (use-package confluence)
  (setq confluence-url "http://product.infonova.at/confluence/rpc/xmlrpc")
@@ -5218,19 +5797,27 @@ when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
        				;(confluence-get-page myname)
      )
    )
+
+  (bind-key "C" #'vk-open-as-confluence-page my-map)
+
 )
 #+END_SRC
 
-** DISABLED Outlook
+** message-outlook.el - sending mail with Outlook
 
-disabled 2015-01-23
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "outlook")
+  (my-load-local-el "contrib/message-outlook.el")
+)
+#+END_SRC
+
+** DISABLED Editing Outlook emails in Emacs
+
+- http://www.emacswiki.org/emacs/MsOutlook
 
 #+BEGIN_SRC emacs-lisp
 when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 
-;; ######################################################
-;; editing Outlook emails in Emacs
-;; http://www.emacswiki.org/emacs/MsOutlook
 (my-load-local-el "contrib/outlookedit.el")
 (use-package outlookedit)
 
@@ -5264,45 +5851,9 @@ when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 )
 #+END_SRC
 
-** xml-prettyprint commands
+** DISABLED Periodically auto-save buffers
 
-#+BEGIN_SRC emacs-lisp
-;; http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
-(defun xml-pretty-print-region (begin end)
-  "Pretty format XML markup in region. You need to have nxml-mode
-http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
-this.  The function inserts linebreaks to separate tags that have
-nothing but whitespace between them.  It then indents the markup
-by using nxml's indentation rules."
-  (interactive "r")
-  (save-excursion
-    (nxml-mode)
-    (goto-char begin)
-    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
-      (backward-char) (insert "\n"))
-    (indent-region begin end))
-  (message "Ah, much better!"))
-
-#+END_SRC
-
-** my-xml-pretty-print
-
-#+BEGIN_SRC emacs-lisp
-(defun my-xml-pretty-print()
-  "mark whole buffer and call xml-pretty-print-region"
-  (interactive)
-  (mark-whole-buffer)
-  (xml-pretty-print-region);; FIXXME: provide (begin end)
-  )
-
-
-
-;; #############################################################################
-#+END_SRC
-
-** DISABLED auto-save
-
-- automatically save more often within certain modes:
+Automatically save buffers more often within certain modes:
 - http://www.emacswiki.org/emacs/AutoSave
 - http://www.litchie.net/programs/real-auto-save.html
   - ... installed 2014-03-05 via Marmalade
@@ -5319,15 +5870,14 @@ by using nxml's indentation rules."
 )
 #+END_SRC
 
-** spray (speed-reading; my-map s)
+** spray (speed-reading region) → my-map s
+
+A speed reading mode for Emacs.
+- The algorithm is taken from OpenSpritz
+- https://github.com/zk-phi/spray
+- ... installed 2014-06-13 via manual download from github (for testing)
 
 #+BEGIN_SRC emacs-lisp
-;; A speed reading mode for Emacs.
-;; The algorithm is taken from OpenSpritz
-;; https://github.com/zk-phi/spray
-;; ... installed 2014-06-13 via manual download from github (for testing)
-;OLD;(my-load-local-el "contrib/spray/spray.el")
-;OLD;(bind-key "S" 'spray-mode my-map)
 (use-package spray
   ;; :disabled t
   :ensure t
@@ -5335,23 +5885,16 @@ by using nxml's indentation rules."
   :config ;; executed after loading package
   :bind (:map my-map ("s" . spray-mode))
 )
-
-
-
-;; #############################################################################
 #+END_SRC
 
-** yafolding
+** yafolding - Folding based on identation → M-RET C-TAB
+
+- https://github.com/zenozeng/yafolding.el
+
+I do use this folding method for Python source code. It is not perfect
+but most of the time, it's a good companion to me.
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/zenozeng/yafolding.el
-;; Folding based on identation
-;;(my-load-local-el "contrib/yafolding/yafolding.el")
-;;(add-to-list 'auto-mode-alist '("\\.xml$" . yafolding-mode))
-;;(add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
-;;(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
-;;(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
-
 (use-package yafolding
   :ensure t
   :defer 10
@@ -5360,25 +5903,28 @@ by using nxml's indentation rules."
   :config ;; executed after loading package
 
   (add-to-list 'auto-mode-alist '("\\.xml$" . nxml-mode))
+  ;;(add-to-list 'auto-mode-alist '("\\.xml$" . yafolding-mode))
   ;;(global-set-key (kbd "<C-S-return>") 'yafolding-toggle-all)
   ;;(global-set-key (kbd "<C-return>") 'yafolding-toggle-element)
   :bind (("<M-S-return>" . yafolding-toggle-all)
          ("<M-return>" . yafolding-toggle-element)
          ("<C-Tab>" . yafolding-toggle-element))
 )
-
-;; #############################################################################
 #+END_SRC
 
-** full screen Emacs   (F12)
+** Naked full screen Emacs → my-map F12
+
+I love to work in full-screen mode where nothing is distracting me
+from the information I am working with: the content of Emacs.
+
+Thanks to Bastien; adopted to my requirements: https://gist.github.com/bzg/8578998
+
+Conditions when loading:
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-;; full-screen, naked Emacs without distractions
-;; thanks to Bastien; adopted to my requirements
-;; https://gist.github.com/bzg/8578998
-
-(when (my-system-type-is-gnu)
-
   (defvar my-toggle-naked-emacs-status nil
     "state of fullscreen/naked Emacs mode. t means fullscreen, nil means normal")
   (make-variable-buffer-local 'my-toggle-naked-emacs-status)
@@ -5533,38 +6079,53 @@ by using nxml's indentation rules."
 	   )
 	  )
     )
-)
-
-;; #############################################################################
-
-
-;; #############################################################################
 #+END_SRC
 
-** browse-kill-ring (M-y)
+map it to F12 and end condition of loading:
+#+BEGIN_SRC emacs-lisp
+  (global-set-key [f12] 'my-toggle-naked-emacs)
+)
+#+END_SRC
+
+** browse-kill-ring → M-y
+
+https://github.com/browse-kill-ring/browse-kill-ring
+
+«Are you tired of using the endless keystrokes of =C-y M-y M-y M-y …=
+to get at that bit of text you killed thirty-seven kills ago? Ever
+wish you could just look through everything you've killed recently to
+find out if you killed that piece of text that you think you killed,
+but you're not quite sure? If so, then =browse-kill-ring= is the Emacs
+extension for you.»
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/browse-kill-ring/browse-kill-ring
-;; browse-kill-ring
 (require 'browse-kill-ring)
 (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
-
 #+END_SRC
 
-** DISABLED pdf-mode
+** DISABLED pdf-mode - Edit raw PDF files in Emacs
 
-- https://github.com/mishoo/pdf-mode.el
+«[[https://github.com/mishoo/pdf-mode.el][pdf-mode]] is a major mode for editing PDF files in Emacs. It's not
+perfect, but it should be a good starting point. It might be useful
+for the poor souls who are working on generating PDF; definitely
+useful to me.»
 
-2014-11-16 works but I disable it for now
+2014-11-16 works at a quick test but I disable it for now since I
+don't need it for now.
 
 #+BEGIN_SRC emacs-lisp
 (my-load-local-el "contrib/pdf-mode/pdf-mode.el")
 #+END_SRC
 
-** guide-key
+** guide-key - displays the available key bindings automatically
+
+«[[https://github.com/kai2nenobu/guide-key][guide-key.el]] displays the available key bindings automatically and
+dynamically. guide-key aims to be an alternative of one-key.el.»
+
+This is great: when I do press my prefix for =my-map= and wait a bit,
+I get a popup buffer that tells me what bindings I am able to use.
 
 #+BEGIN_SRC emacs-lisp
-;; via reddit -> https://github.com/kai2nenobu/guide-key
 (use-package guide-key
   ;; :disabled t  ;; stop loading if 't'
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5572,14 +6133,15 @@ by using nxml's indentation rules."
   (setq guide-key/guide-key-sequence '("C-c C-,"))
   (guide-key-mode 1)  ; Enable guide-key-mode
 )
-
-
 #+END_SRC
 
 ** vcard-mode
 
+https://github.com/dochang/vcard-mode
+
+«This package provides a major mode to edit vCard files in Emacs.»
+
 #+BEGIN_SRC emacs-lisp
-;; via https://github.com/dochang/vcard-mode
 (use-package vcard-mode
   ;; :disabled t  ;; stop loading if 't'
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
@@ -5587,16 +6149,16 @@ by using nxml's indentation rules."
   :pin manual
   :mode ("\\.vc\\(f\\|ard\\)\\'" . vcard-mode)
 )
-
 #+END_SRC
 
-** sunrise-mode
+** DISABLED sunrise-mode - file management like midnight commander or FreeCommander
 
 via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 
+disabled 2015-08-31 since I don't use it for now.
+
 #+BEGIN_SRC emacs-lisp
 (use-package sunrise-commander
-  :disabled t  ;; disabled 2015-08-31
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
   :mode ("\\.py\\'" . elpy-mode)
   ;; 3) Choose some unused extension for files to be opened in Sunrise VIRTUAL
@@ -5607,59 +6169,85 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 )
 #+END_SRC
 
-** RAML-mode
+** DISABLED RAML-mode
+
+- via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
+- [[https://en.wikipedia.org/wiki/RAML_%2528software%2529][What is RAML?]] (RESTful API Modeling Language)
 
 #+BEGIN_SRC emacs-lisp
-;; via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
 (when (my-system-type-is-windows)
   (my-load-local-el "contrib/raml-mode/raml-mode.el")
 )
-
 #+END_SRC
 
-** synonyms (my-map S)
+** Synonyms → my-map S
+
+- via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
+- The file names are absolute, not relative, locations
+  - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
 
 #+BEGIN_SRC emacs-lisp
-;; via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
-;; The file names are absolute, not relative, locations
-;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
-(use-package synonyms
-  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  :init ;; executed before loading package
-  (setq synonyms-file        "~/.emacs.d/data/mthes10/mthesaur.txt")
-  (setq synonyms-cache-file  "~/.emacs.d/data/vkcachefile")
-  :config
-  (defun my-synonym-current-word ()
-    "Lookup synonyms for current word."
-    (interactive)
-    (synonyms-lookup (thing-at-point 'word) nil nil))
-  :bind (:map my-map ("S" . my-synonym-current-word))
+(if (file-exists-p (concat my-user-emacs-directory "data/mthes10/mthesaur.txt"))
+  (use-package synonyms
+    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    :init ;; executed before loading package
+    (setq synonyms-file        (concat my-user-emacs-directory "data/mthes10/mthesaur.txt"))
+    (setq synonyms-cache-file  (concat my-user-emacs-directory "data/vkcachefile"))
+    :config
+    (defun my-synonym-current-word ()
+      "Lookup synonyms for current word."
+      (interactive)
+      (synonyms-lookup (thing-at-point 'word) nil nil))
+    :bind (:map my-map ("S" . my-synonym-current-word))
+  )
+(message (concat "»»» I could not locate \"" my-user-emacs-directory "data/mthes10/mthesaur.txt\""))
 )
-
 #+END_SRC
 
-** nyan-mode
+** nyan-mode - Nyan Cat instead of scroll bar
+
+«[[https://github.com/TeMPOraL/nyan-mode/][Nyan Mode]] is an analog indicator of your position in the buffer. The
+Cat should go from left to right in your mode-line, as you move your
+point from 0% to 100%.»
+
+via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
+
+This seems to be a bit silly but it is actually quite useful for me. I
+usually do work with a ninety degree tilted monitor where horizontal
+space is limited but vertical space not. By disabling the scroll bar
+for Emacs (see further above) and using the Nyan cat as a replacement
+for it, I can save precious horizontal space.
 
 #+BEGIN_SRC emacs-lisp
-;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
-;; show the percentage within current buffer as Nyan Cat
-;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
 (use-package nyan-mode
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :config
   (nyan-mode t)
 )
-
 #+END_SRC
 
-** highlight-tail
+** DISABLED highlight-tail
+
+https://melpa.org/#/highlight-tail
+#+BEGIN_QUOTE
+This minor-mode draws a tail in real time, when you write.  It
+changes the background color of some last typed characters and
+smoothly fade them out to the background color.
+
+So from now on, your Emacs will be even more sexy! ;o )
+
+If you do not understand what I mean, check the animation:
+http://nic-nac-project.net/~necui/img/htshow.gif
+#+END_QUOTE
+
+- via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
+  - IMHO it is not totally useless: visualizing the current point
+    where I type just like a fading cursor
+- update settings via M-x highlight-tail-reload
+- disabled 2015-12-26 due *issues with jumping cursor*
 
 #+BEGIN_SRC emacs-lisp
-;; via https://www.reddit.com/r/emacs/comments/3xoins/totally_useless_and_utterly_awesome_packages/
-;; update settings via M-x highlight-tail-reload
-;;     - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
 (use-package highlight-tail
-  :disabled t  ;; disabled 2015-12-26 due issues with jumping cursor
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :init
   (setq highlight-tail-colors '(("#1c1c1c" . 0)
@@ -5669,26 +6257,32 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   :config
   (highlight-tail-mode)
 )
-
 #+END_SRC
 
-** anzu-mode (showing number of matches when searching)
+** anzu-mode - showing number of matches when searching
+
+«[[https://github.com/syohex/emacs-anzu][anzu.el]] is an Emacs port of anzu.vim. anzu.el provides a minor mode
+which displays current match and total matches information in the
+mode-line in various search modes.»
+
+I love this visualization.
 
 #+BEGIN_SRC emacs-lisp
 (use-package anzu
-;;  :disabled t  ;; disabled 2015-12-26 due issues with jumping cursor
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :diminish anzu-mode
   :config
   (global-anzu-mode +1)
 )
-
 #+END_SRC
 
-** smart-mode-line (abbreviating paths, ...)
+** smart-mode-line - abbreviating paths, …
+
+«[[https://github.com/Malabarba/smart-mode-line][Smart Mode Line]] is a sexy mode-line for Emacs. It aims to be easy to
+read from small to large monitors by using colors, a prefix feature,
+and smart truncation.»
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/Malabarba/smart-mode-line
 (use-package smart-mode-line
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :config
@@ -5697,55 +6291,65 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   ;; hiding minor modes from mode line (don't forget the leading space)
   (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
   ;; replacing path names with abbrevations:
-  (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":ED:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^~/share/all/org-mode" ":org:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^~/frankie/src/lazyblorg" ":lb:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/share/all/org-mode" ":org:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":EMACS:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/share/all/org-mode" ":ORG:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/frankie/src/lazyblorg" ":LB:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/share/all/org-mode" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/" "~/") t)
   (smart-mode-line-enable)
 )
-
-
 #+END_SRC
 
-** display-time-mode
+** display-time-mode - Enable the display of time in the modeline
+
+http://www.emacswiki.org/emacs/DisplayTime
+- via: http://emacs.stackexchange.com/questions/13227/easy-way-to-give-the-time-its-own-face-in-modeline
 
 #+BEGIN_SRC emacs-lisp
-;; http://emacs.stackexchange.com/questions/13227/easy-way-to-give-the-time-its-own-face-in-modeline
 (setq display-time-string-forms
       '((propertize (format-time-string "%A %F %R" now) 'face 'bold)))
-;; http://www.emacswiki.org/emacs/DisplayTime
 (display-time-mode t)
-
-
 #+END_SRC
 
 ** DISABLED dash
 
+https://github.com/magnars/dash.el «A modern list api for Emacs. No 'cl required.»
+
+- required by =eno= (and most probably others in future)
+- disabled because I do not use =eno= for now
+
 #+BEGIN_SRC emacs-lisp
-;; required by eno (and most probably others in future)
 (use-package dash
   :ensure t
   :defer 10
   )
-
 #+END_SRC
 
 ** DISABLED edit-at-point
 
+- required by =eno= (and most probably others in future)
+- disabled because I do not use =eno= for now
+
 #+BEGIN_SRC emacs-lisp
-;; required by eno (and most probably others in future)
 (use-package edit-at-point
   :ensure t
   :defer 10
   )
-
 #+END_SRC
 
 ** DISABLED eno-mode: ace-jump/easymotion provides: goto certain char in view
 
+https://github.com/enoson/eno.el
+#+BEGIN_QUOTE
+ace-jump/easymotion provides "goto certain char in view", which let us
+moving without mouse, but it's still not efficient or intuitive
+enough, so I create this package to not just goto but also
+edit(copy,cut..) any word/symbol/string/paren/line in view by directly
+selecting hints, similar to ace-jump/easymotion but don't need to
+enter the leading char.
+#+END_QUOTE
+
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/enoson/eno.el
 (use-package eno
   ;; :disabled t
   :ensure t
@@ -5754,13 +6358,13 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   ;;  :config ;; executed after loading package
   :bind (:map my-map ("RET" . eno-word-goto))
 )
-
 #+END_SRC
 
-** Markdown
+** markdown-mode
+
+via: http://ikiwiki.info/tips/Emacs_and_markdown/
 
 #+BEGIN_SRC emacs-lisp
-;; http://ikiwiki.info/tips/Emacs_and_markdown/
 (use-package markdown-mode
   ;;:disabled t
   :ensure t
@@ -5769,78 +6373,24 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   :defer 10
   :mode ("\\.md\\'" . markdown-mode)
 )
-
 #+END_SRC
 
-** Ox-Reveal
+** swiper - ivy-enhanced alternative to isearch
+
+#+BEGIN_QUOTE
+flexible, simple tools for minibuffer completion in Emacs
+
+[[https://github.com/abo-abo/swiper][This repository]] contains:
+
+1. *Ivy*, a generic completion mechanism for Emacs.
+2. *Counsel*, a collection of Ivy-enhanced versions of common Emacs commands.
+3. *Swiper*, an Ivy-enhanced alternative to isearch.
+#+END_QUOTE
+
+- http://pragmaticemacs.com/emacs/dont-search-swipe/
+- http://irreal.org/blog/?p=5340 -> swiper depends on ivy; ivy is much better than ido-mode/smex; example config
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/yjwen/org-reveal
-(use-package ox-reveal
-  ;;:disabled t
-  :ensure t
-  ;;:if (my-system-type-is-windows)
-  ;;:diminish whitespace-mode
-  :defer 10
-  :config
-  ;;(setq org-reveal-root "file:///d:/reveal.js")
-  (cond ((my-system-type-is-gnu)
-         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
-         (setq org-reveal-extra-css "file:///home/vk/.emacs.d/data/reveal_theme_night_local.css"))
-        ((my-system-type-is-windows)
-         (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/data/reveal.js/")
-         (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/data/reveal_theme_night_local.css"))
-        (t
-         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
-    )
-  (setq org-reveal-hlevel 2)
-  (setq org-reveal-postamble "<p> Created by Karl. </p>")
-  (setq org-reveal-center nil)
-  (setq org-reveal-progress t)
-  (setq org-reveal-history nil)
-  (setq org-reveal-control t)
-  (setq org-reveal-keyboard t)
-  (setq org-reveal-overview nil)
-  (setq org-reveal-transition "default")
-  ;; - transitions:
-  ;;   - default
-  ;;   - cube
-  ;;   - page
-  ;;   - concave
-  ;;   - zoom
-  ;;   - linear
-  ;;   - fade
-  ;;   - none
-  (setq org-reveal-theme "night")
-  ;; - Styles:
-  ;;   - black (default)
-  ;;   - white
-  ;;   - league
-  ;;     - gray one
-  ;;   - sky
-  ;;     - nice bright one
-  ;;   - beige
-  ;;     - nice bright one
-  ;;   - simple
-  ;;     - bright
-  ;;   - serif
-  ;;     - old school
-  ;;   - blood
-  ;;     - cool!
-  ;;   - *night*
-  ;;     - very nice
-  ;;   - moon
-  ;;   - solarized
-)
-
-#+END_SRC
-
-** Swiper
-
-#+BEGIN_SRC emacs-lisp
-;; https://github.com/abo-abo/swiper
-;; http://pragmaticemacs.com/emacs/dont-search-swipe/
-;; http://irreal.org/blog/?p=5340 -> swiper depends on ivy; ivy is much better than ido-mode/smex; example config
 (use-package swiper
   ;;:disabled t
   :ensure t
@@ -5863,14 +6413,45 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   ;(bind-key "C-s" 'swiper)
   ;;(global-set-key "\C-s" 'swiper)
 )
-
 #+END_SRC
 
-** char-menu (soecial character menu)
+** counsel - Ivy-enhanced versions of common Emacs commands → M-x    → my-map J
+
+#+BEGIN_QUOTE
+flexible, simple tools for minibuffer completion in Emacs
+
+[[https://github.com/abo-abo/swiper][This repository]] contains:
+
+1. *Ivy*, a generic completion mechanism for Emacs.
+2. *Counsel*, a collection of Ivy-enhanced versions of common Emacs commands.
+3. *Swiper*, an Ivy-enhanced alternative to isearch.
+#+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
-;; http://irreal.org/blog/?p=4926 -> https://github.com/mrkkrp/char-menu
-;; add characters: "M-x customize-group char-menu RET"
+(use-package counsel
+  ;; :disabled t
+  :ensure t
+  ;;:if my-system-is-sherri
+  ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
+  ;;:defer 10
+  :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
+  :config
+  (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
+)
+#+END_SRC
+
+** char-menu - insert special characters → F7
+
+«[[https://github.com/mrkkrp/char-menu][This package]] allows to insert arbitrary symbols in Emacs in a very
+efficient and straightforward way. Whether you ever need to insert
+only a couple of proper punctuation symbols or you're a Unicode geek
+who likes all sorts of arrows and fancy math symbols, this package may
+be of some use.»
+
+- via http://irreal.org/blog/?p=4926
+- add characters: "M-x customize-group char-menu RET"
+
+#+BEGIN_SRC emacs-lisp
 (use-package char-menu
   ;;:disabled t
   :ensure t
@@ -5890,74 +6471,25 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
         ))
   (global-set-key [f7] 'char-menu)
 )
-
 #+END_SRC
 
-** smartparens
+** helm - completion and selection narrowing
 
-#+BEGIN_SRC emacs-lisp
-;; nice overview: http://danmidwood.com/content/2014/11/21/animated-paredit.html
-;; nice overview: https://ebzzry.github.io/emacs-pairs.html
-(use-package smartparens
-  :disabled t
-  :init
-  (smartparens-global-mode 1)
-  (show-smartparens-global-mode +1)
+This is something that really pushes Emacs usability.
 
-  :bind (;; ("M-n" . sp-next-sexp)
-         ;; ("M-p" . sp-previous-sexp)
-         ("M-f" . sp-forward-sexp)
-         ("M-b" . sp-backward-sexp)
-         )
+https://github.com/emacs-helm/helm
 
-  :config
-  ;; Enable smartparens everywhere
-  (use-package smartparens-config)
+«Emacs incremental completion and selection narrowing framework https://emacs-helm.github.io/helm/»
 
-  ;; ;; Require and disable paredit because some packages rely on it.
-  ;; (use-package paredit)
-  ;; (disable-paredit-mode)
-
-  (setq
-   smartparens-strict-mode t
-   sp-autoinsert-if-followed-by-word t
-   sp-autoskip-closing-pair 'always
-   ;;sp-base-key-bindings 'paredit
-   sp-hybrid-kill-entire-symbol nil)
-
-  ;; (sp-use-paredit-bindings)
-
-  ;; (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-  ;;   (sp-local-pair "*" "*" :bind "C-*")
-  ;;   (sp-local-tag "2" "**" "**")
-  ;;   (sp-local-tag "s" "```scheme" "```")
-  ;;   (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
-
-  ;; ;; Close a backtick with another backtick in clojure-mode
-  ;; (sp-local-pair 'clojure-mode "`" "`" :when '(sp-in-string-p))
-
-  (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
-  )
-
-#+END_SRC
-
-** counsel
-
-#+BEGIN_SRC emacs-lisp
-(use-package counsel
-  ;; :disabled t
-  :ensure t
-  ;;:if my-system-is-sherri
-  ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
-  ;;:defer 10
-  :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
-  :config
-  (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
-)
-
-#+END_SRC
-
-** helm
+#+BEGIN_QUOTE
+Helm is an Emacs framework for incremental completions and narrowing
+selections. It helps to rapidly complete file names, buffer names, or
+any other Emacs interactions requiring selecting an item from a list
+of possible choices. Helm is a fork of anything.el, which was
+originally written by Tamas Patrovic and can be considered to be its
+successor. Helm cleans the legacy code that is leaner, modular, and
+unchained from constraints of backward compatibility.
+#+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
@@ -5965,14 +6497,14 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   :ensure t
   :defer 10
 )
-
 #+END_SRC
 
-** wttrin.el Weather in Emacs
+** wttrin - Weather in Emacs → my-map w
+
+- http://pragmaticemacs.com/emacs/weather-in-emacs/
+- https://github.com/bcbcarl/emacs-wttrin
 
 #+BEGIN_SRC emacs-lisp
-;; http://pragmaticemacs.com/emacs/weather-in-emacs/
-;; https://github.com/bcbcarl/emacs-wttrin
 (use-package wttrin
   :ensure t
   :commands (wttrin)
@@ -5991,55 +6523,73 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
         )
   )
 
-        (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
-
 #+END_SRC
 
-** git-timemachine
+** git-timemachine - Step through historic versions
+
+- https://github.com/pidu/git-timemachine
+
+#+BEGIN_QUOTE
+Step through historic versions of git controlled file using everyone's
+favourite editor
+
+Visit a git-controlled file and issue =M-x git-timemachine= (or bind
+it to a keybinding of your choice). If you just need to toggle the
+time machine you can use =M-x git-timemachine-toggle=.
+
+Use the following keys to navigate historic version of the file
+
+| p | Visit previous historic version                                         |
+| n | Visit next historic version                                             |
+| w | Copy the abbreviated hash of the current historic version               |
+| W | Copy the full hash of the current historic version                      |
+| g | Goto nth revision                                                       |
+| q | Exit the time machine.                                                  |
+| b | Run magit-blame on the currently visited revision (if magit available). |
+#+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/pidu/git-timemachine
-;; n/p: previous/next state
-;; q: quit
-(use-package git-timemachine
-  :ensure t
-  :defer 15
-  :init
-  (cond ((my-system-type-is-gnu)
+(when (my-eval-if-binary-or-warn "git")
 
-         ;; http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html -> start from selected revision instead of HEAD
-         (defun my-git-timemachine-show-selected-revision ()
-           "Show last (current) revision of file."
-           (interactive)
-           (let (collection)
-             (setq collection
-                   (mapcar (lambda (rev)
-                             ;; re-shape list for the ivy-read
-                             (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
-                           (git-timemachine--revisions)))
-             (ivy-read "commits:"
-                       collection
-                       :action (lambda (rev)
-                                 (git-timemachine-show-revision rev)))))
+  (use-package git-timemachine
+    :ensure t
+    :defer 15
+    :init
 
-         (defun my-git-timemachine ()
-           "Open git snapshot with the selected version.  Based on ivy-mode."
-           (interactive)
-           (unless (featurep 'git-timemachine)
-             (require 'git-timemachine))
-           (git-timemachine--start #'my-git-timemachine-show-selected-revision))
+        ;; http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html -> start from selected revision instead of HEAD
+        (defun my-git-timemachine-show-selected-revision ()
+          "Show last (current) revision of file."
+          (interactive)
+          (let (collection)
+            (setq collection
+                  (mapcar (lambda (rev)
+                            ;; re-shape list for the ivy-read
+                            (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
+                          (git-timemachine--revisions)))
+            (ivy-read "commits:"
+                      collection
+                      :action (lambda (rev)
+                                (git-timemachine-show-revision rev)))))
 
-         )
+        (defun my-git-timemachine ()
+          "Open git snapshot with the selected version.  Based on ivy-mode."
+          (interactive)
+          (unless (featurep 'git-timemachine)
+            (require 'git-timemachine))
+          (git-timemachine--start #'my-git-timemachine-show-selected-revision))
+
         )
-  )
-
+)
 #+END_SRC
 
-** pandoc-mode
+** DISABLED pandoc-mode - An Emacs minor mode for interacting with Pandoc
+
+- http://joostkremers.github.io/pandoc-mode/
+- https://github.com/joostkremers/pandoc-mode
+
+Cool package but I don't need it at the moment. Therefore disabled.
 
 #+BEGIN_SRC emacs-lisp
-;; http://joostkremers.github.io/pandoc-mode/
-;; https://github.com/joostkremers/pandoc-mode
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package pandoc-mode
     ;; :disabled t
@@ -6049,28 +6599,34 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 )
 #+END_SRC
 
-** ox-clip - formatted copy to orgmode
+** bm - visible bookmarks → my-map 8|9|0
 
-- http://melpa.org/#/ox-clip
-- https://libraries.io/emacs/ox-clip
-- https://github.com/jkitchin/scimax
-- use: M-x ox-clip-formatted-copy
+https://github.com/joodland/bm
+#+BEGIN_QUOTE
+This package provides visible, buffer local, bookmarks and the ability
+to jump forward and backward to the next bookmark.
+
+It was created because I missed the bookmarks from M$ Visual Studio in
+GNU Emacs. I think they provide an easy way to navigate in a buffer.
+
+Features:
+
+- Auto remove bookmark after jump to it by bm-next or bm-previous:
+- Cycle through bookmarks in all open buffers in LIFO order
+- Toggle bookmarks. Jump to next/previous bookmark.
+- Setting bookmarks based on a regexp. (Useful when searching logfiles.)
+- Mouse navigation.
+- Annotate bookmarks.
+- Different wrapping modes.
+- Different bookmarks styles, line-only, fringe-only or both.
+- Persistent bookmarks (buffer local), also in non-file buffers (info) and indirect buffers.
+- List bookmarks (in all buffers) in a separate buffer.
+- Cycle through bookmarks in all open buffers.
+#+END_QUOTE
+
+via: http://pragmaticemacs.com/emacs/use-visible-bookmarks-to-quickly-jump-around-a-file/
 
 #+BEGIN_SRC emacs-lisp
-  (when (not (my-system-is-karl-voit-at))
-    (use-package ox-clip
-      ;; :disabled t
-      ;;:if
-      :ensure t
-      :defer 10
-      )
-    )
-#+END_SRC
-
-** bm - visible bookmarks
-
-#+BEGIN_SRC emacs-lisp
-;; http://pragmaticemacs.com/emacs/use-visible-bookmarks-to-quickly-jump-around-a-file/
 (use-package bm
   :ensure t
   :defer 5
@@ -6078,10 +6634,22 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   :bind (:map my-map ("9" . bm-previous))
   :bind (:map my-map ("0" . bm-next))
   )
-
 #+END_SRC
 
 ** adoc-mode - asciidoc mode
+
+https://github.com/sensorflo/adoc-mode/wiki
+#+BEGIN_QUOTE
+[[http://www.methods.co.nz/asciidoc/][AsciiDoc]] is a text document format for writing short documents,
+articles, books and UNIX man pages. AsciiDoc files can be translated
+to HTML and DocBook markups.
+
+[[https://github.com/sensorflo/adoc-mode/wiki][adoc-mode]] is an Emacs major mode for editing AsciiDoc files. It
+emphasizes on the idea that the document is highlighted so it pretty
+much looks like the final output. What must be bold is bold, what must
+be italic is italic etc. Meta characters are naturally still visible,
+but in a faint way, so they can be easily ignored.
+#+END_QUOTE
 
 #+BEGIN_SRC emacs-lisp
 (use-package adoc-mode
@@ -6091,71 +6659,114 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   (add-to-list
    'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
   )
-
 #+END_SRC
 
-** suggest
+** DISABLED suggest - suggest Elisp for given input and output
+
+Oh, this is really cool: http://www.wilfred.me.uk/blog/2016/07/30/example-driven-development/
+- “Hey $COLLEAGUE, is there any function that takes this list and returns a list like this?”
+
+Just read the web page - it's hard to explain otherwise.
+
+Disabled for now until I want to impress someone using my Emacs power ;-)
+
+=M-x suggest=
+
+I ran into "suggest--possibilities: Symbol's value as variable is
+void: it" when ~C-c C-c~: See id:2016-08-04-suggest
 
 #+BEGIN_SRC emacs-lisp
-;; http://www.wilfred.me.uk/blog/2016/07/30/example-driven-development/
-;; id:2016-08-04-suggest
-
 (use-package suggest
   :ensure t
   :defer 5
   )
-
 #+END_SRC
 
-** move-text
+** DISABLED move-text - move line up/down → M-, | M-.
+
+«[[https://github.com/emacsfodder/move-text][MoveText]] is extracted from Basic edit toolkit. It allows you to move
+the current line using M-up / M-down (or any other bindings you
+choose) if a region is marked, it will move the region instead.»
+
+- tipp from http://irreal.org/blog/?p=5611
+
+I don't use it for now. Maybe after I got the requirement more often
+and memorize the commands.
 
 #+BEGIN_SRC emacs-lisp
-;; tipp from http://irreal.org/blog/?p=5611
-;; https://github.com/emacsfodder/move-text
 (my-load-local-el "contrib/move-text/move-text.el")
 (require 'move-text)
 ;; (move-text-default-bindings)
 (global-set-key (kbd "M-,")          'move-text-up)
 (global-set-key (kbd "M-.")          'move-text-down)
-
 #+END_SRC
 
-** command-log-mode
+** command-log-mode → my-map k
+
+https://github.com/lewang/command-log-mode - «Show event history and
+command history of some or all buffers.»
+
+Used in screencast video: https://www.reddit.com/r/emacs/comments/4yhfn6/emacs_screencast_acelink_swiper_lispy_and_macros/
+
+To see the log buffer, call M-x clm/open-command-log-buffer.
+
+The key strokes in the log are decorated with ISO9601 timestamps on
+the property `:time' so if you want to convert the log for
+screencasting purposes you could use the time stamp as a key into
+the video beginning.
+
+How to use:
+1. =M-x command-log-mode=
+2. =my-map k=
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/lewang/command-log-mode
-;; used in screencast video: https://www.reddit.com/r/emacs/comments/4yhfn6/emacs_screencast_acelink_swiper_lispy_and_macros/
-;;
-;; To see the log buffer, call M-x clm/open-command-log-buffer.
-;;
-;; The key strokes in the log are decorated with ISO9601 timestamps on
-;; the property `:time' so if you want to convert the log for
-;; screencasting purposes you could use the time stamp as a key into
-;; the video beginning.
-(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
-(require 'command-log-mode)
+;;(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
+(use-package command-log-mode
+  :disabled t
+  :ensure t
+  :defer 10
+  :diminish command-log-mode
+  :config ;; executed after loading package
+  (add-hook 'LaTeX-mode-hook 'command-log-mode)
+)
 
+(bind-key "k" #'clm/open-command-log-buffer my-map)
+#+END_SRC
+
+A test for starting the mode probably together with the command-log-buffer:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun my-start-command-log-mode()
+  "load the command-log mode and start it."
+  (interactive "*")
+  ;; M-x clm/open-command-log-buffer
+  (clm/open-command-log-buffer)
+)
 #+END_SRC
 
 ** scss-mode
 
-#+BEGIN_SRC emacs-lisp
-(use-package scss-mode
-  ; Command line utility sass is required, see http://sass-lang.com/
-  ; To install sass (haml):
-  ; gem install haml
-  ;
-  ; Also make sure sass location is in emacs PATH, example:
-  ; (setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))
-  ; or customize `scss-sass-command' to point to your sass executable.
-  :if (my-system-is-floyd-or-sherri)
-  :ensure t
-  :defer 10
-  :config
-  (autoload 'scss-mode "scss-mode")
-  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
-  )
+https://github.com/antonj/scss-mode - «Major mode for editing [[http://sass-lang.com/][SCSS]] files in Emacs.»
 
+Command line utility sass is required, see http://sass-lang.com/
+
+To install sass (haml): =gem install haml=
+
+Also make sure sass location is in emacs PATH, example:
+=(setq exec-path (cons (expand-file-name "~/.gem/ruby/1.8/bin") exec-path))=
+or =customize `scss-sass-command'= to point to your sass executable.
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "sass")
+  (use-package scss-mode
+    ;;:if (my-system-is-floyd-or-sherri)
+    :ensure t
+    :defer 10
+    :config
+    (autoload 'scss-mode "scss-mode")
+    (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+    )
+)
 #+END_SRC
 
 ** json-mode
@@ -6168,11 +6779,15 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 )
 #+END_SRC
 
-** mode-icons
+** mode-icons - Show icons instead of mode names
+
+https://github.com/ryuslash/mode-icons
+
+via: https://www.reddit.com/r/emacs/comments/5fjri7/how_to_use_git_logo_in_modeline_instead_of/
+
+This enhances the style of Emacs IMHO.
 
 #+BEGIN_SRC emacs-lisp
-;; https://www.reddit.com/r/emacs/comments/5fjri7/how_to_use_git_logo_in_modeline_instead_of/
-;; https://github.com/ryuslash/mode-icons
 (use-package mode-icons
   :ensure t
   :config
@@ -6180,7 +6795,9 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 )
 #+END_SRC
 
-** unicode-fonts
+** unicode-fonts - Configure Unicode fonts
+
+https://github.com/rolandwalker/unicode-fonts
 
 - solved an issue where a host was using different-height-sized font for few special characters
 - see id:2016-08-19-unicode-enlarges-line-height
@@ -6196,139 +6813,78 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 )
 #+END_SRC
 
-** org-protocol-capture-html
+** goto-chg - visit places of previous changes in current buffer → F5|F6
+
+- http://www.emacswiki.org/emacs/download/goto-chg.el
+  - Goto the point of the most recent edit in the buffer.
+  - When repeated, goto the second most recent edit, etc.
+  - Negative argument, C-u -, for reverse direction.
+  - Works by looking into buffer-undo-list to find points of edit.
+
+- via: http://pragmaticemacs.com/emacs/move-through-edit-points/
 
 #+BEGIN_SRC emacs-lisp
-;; turn HTML into Org-mode
-;; id:2016-07-10-inst-org-protocol-capture
-
-;;disabled;(when (my-system-type-is-gnu)
-(my-load-local-el "contrib/org-protocol-capture-html/org-protocol-capture-html.el")
-(require 'org-protocol-capture-html)
-;;disabled;  )
-
-#+END_SRC
-
-** goto-chg - visit places of previous changes in current buffer (F5/F6)
-
-#+BEGIN_SRC emacs-lisp
-;; http://pragmaticemacs.com/emacs/move-through-edit-points/
-;; http://www.emacswiki.org/emacs/download/goto-chg.el
 (my-load-local-el "contrib/goto-chg.el")
 (require 'goto-chg)
 (global-set-key [f5] 'goto-last-change)
 (global-set-key [f6] 'goto-last-change-reverse)
-
 #+END_SRC
 
-** buttercup (Elisp test suite)
+** highlight-symbol → my-map h
+
+This package does highlight all occurrences of a given word. Very
+handy when programming: visualize all occurrences of a variable/function.
 
 #+BEGIN_SRC emacs-lisp
-(use-package buttercup
+(use-package highlight-symbol
   :ensure t
-;  :if (my-system-is-floyd)
   :defer 10
-  :config
-)
-#+END_SRC
-
-* my helper functions
-
-** my-org-mobile-push
-
-#+BEGIN_SRC emacs-lisp
-
-(defun my-org-mobile-push (&optional arg)
-  (interactive)
-  ;; when called with universal argument (C-u), Emacs will be closed
-  ;;      after pushing to files
-  ;; save original agenda in temporary variable
-  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
-  ;; set agenda for MobileOrg (omit some agenda
-  ;; views I do not need on my phone):
-  (setq org-agenda-custom-commands
-        (quote (
-
-                ("1" "1 month"
-                 ((agenda "1 month"
-                          ((org-agenda-ndays 31)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-entry-types '(:timestamp :sexp))
-                           )
-                          )))
-
-                ("B" "borrowed" tags "+borrowed"
-                 (
-                  (org-agenda-overriding-header "borrowed or lend")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                ("$" "Besorgungen" tags "+Besorgung"
-                 (
-                  (org-agenda-overriding-header "Besorgungen")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                )))
-  ;; generate MobileOrg export:
-  (org-mobile-push)
-  ;; restore previously saved agenda:
-  (setq org-agenda-custom-commands
-        ORIGSAVED-org-agenda-custom-commands)
-  (if (equal arg '(4))
-      ;; save buffers and exit emacs;; FIXXME: not working yet
-      (save-buffers-kill-terminal 't)
-    )
+  ;;(bind-key (kbd "h") #'highlight-symbol my-map)
+  :bind (:map my-map ("h" . highlight-symbol))
   )
-
-
-
+;; original: (global-set-key [(control f3)] 'highlight-symbol)
+;; original: (global-set-key [f3] 'highlight-symbol-next)
+;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
+;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 #+END_SRC
+** restclient
 
-** my-reset-org
+[[https://github.com/pashky/restclient.el][GitHub - pashky/restclient.el: HTTP REST client tool for emacs]]
+
+The restclient here is particular handy when it is combined with the
+Org-mode: see use of =ob-restclient.el= within the Org-mode headings.
+
+This way, I am able to write REST requests right beneath my Org-mode
+documentation. The REST answers are added there as well. This tool
+also allows for using variables. More flexibility is almost impossible.
+;-)
 
 #+BEGIN_SRC emacs-lisp
-
-(defun my-reset-org ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (org-element-cache-reset)
-   (org-refile-cache-clear)
-   (org-refile-get-targets)
-   (when (my-buffer-exists "*Org Agenda*")
-     (kill-buffer "*Org Agenda*")
-     (org-agenda-list)
-     )
-   )
-  )
-
-(defun my-reset-org-and-mobile-push ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (my-reset-org)
-   (my-org-mobile-push)
-   )
+(use-package restclient
+  :disabled t  ;; stop loading if 't'
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :defer 10
+  :if (my-system-type-is-windows)
+  :init ;; executed before loading package
+  (my-load-local-el "contrib/2del/restclient/json-reformat.el")
+  ;;(my-load-local-el "contrib/restclient/restclient.el")
+  ;; :mode "\\.rb\\'"
 )
-
 #+END_SRC
 
-** message-outlook.el - sending mail with Outlook
+* My helper functions (part II)
+
+Here I defined some functions I am using interactively and probably
+map to keys in the next section.
+
+** my-search-method-according-to-numlines() → C-s
+
+Choose the best/fastest search method depending on the maximum number
+of lines of the current buffer.
+
+Read http://karl-voit.at/2016/04/09/chosing-emacs-search-method/ for the whole story.
 
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
-  (my-load-local-el "contrib/message-outlook.el")
-)
-
-#+END_SRC
-
-** my-search-method-according-to-numlines()
-
-#+BEGIN_SRC emacs-lisp
-
-;; see id:2016-04-09-chosing-emacs-search-method for the whole story!
-
 ;;see below;; (defun my-search-method-according-to-numlines ()
 ;;see below;;   "Determines the number of lines of current buffer and chooses a search method accordingly"
 ;;see below;;   (interactive)
@@ -6360,16 +6916,16 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 
 (global-set-key "\C-s" 'my-search-method-according-to-numlines)
 ;;(global-set-key "\C-s" 'isearch-forward)
-
-;; #############################################################################
-
 #+END_SRC
 
-** my-export-month-agenda-to-png-via-screenshot
+** DISABLED my-export-month-agenda-to-png-via-screenshot()
+
+Generates my agenda and creates a screenshot with it. I used this as a
+workaround before I customized my agenda export to HTML.
+
+- id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
 
 #+BEGIN_SRC emacs-lisp
-;; id:2016-04-12-my-export-month-agenda-to-png-via-screenshot
-
 (defun my-export-month-agenda-to-png-via-screenshot()
   (interactive)
   (when (my-system-is-sherri)
@@ -6389,68 +6945,16 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
     (message (concat "Screenshot done (" myoutput ")"))
     )
   )
-
 #+END_SRC
 
-** when being idle for 15 minutes, run my-reset-org
+** my-toggle-beginner-setup() → F1
 
-#+BEGIN_SRC emacs-lisp
-;; id:2016-06-05-reset-things-after-15-min-idle
-;; current-idle-time example: (0 420 1000 0)
-;;disabled because it doesn't work;; (setq my-reset-org-previous-idle-time-invocation (current-time))
-;;disabled because it doesn't work;; (run-with-idle-timer (* 60 15) t (lambda ()
-;;disabled because it doesn't work;;                                    (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
-;;disabled because it doesn't work;;                                        (sit-for 2)
-;;disabled because it doesn't work;;                                      (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-;;disabled because it doesn't work;;                                        (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
-;;disabled because it doesn't work;;                                        (sit-for 10);; give user 10s to press a button to prevent this
-;;disabled because it doesn't work;;                                        (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
-;;disabled because it doesn't work;;                                          (my-reset-org)
-;;disabled because it doesn't work;;                                          (setq my-reset-org-previous-idle-time-invocation (current-time))
-;;disabled because it doesn't work;;                                          (message (concat "my-reset-org finished at " (current-time-string)))
-;;disabled because it doesn't work;;                                          )
-;;disabled because it doesn't work;;                                        )
-;;disabled because it doesn't work;;                                      )
-;;disabled because it doesn't work;;                                    ))
+When I am working with Emacs, I do not use the menu bar nor the icon
+bar, for example. Those things got hidden in my configuration.
 
-;;(defun mytest ()
-;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
-;;       (message "yes")
-;;       )
-;;     )
-;;
-;;(sit-for 3)
-;;(message (or (current-idle-time) (number-to-string 0)))
-
-
-#+END_SRC
-
-** my-toggle-dark-bright-theme -> S-F1
-
-#+BEGIN_SRC emacs-lisp
-(defvar my-toggle-dark-bright-theme-status t
-  "Toggle between dark emacs theme and bright emacs theme; nil means dark theme, t means bright theme")
-
-(defun my-toggle-dark-bright-theme ()
-  "Toggle between dark emacs theme and bright emacs theme"
-  (interactive)
-  (cond (my-toggle-dark-bright-theme-status
-         (message "Loading bright theme")
-         (disable-theme 'wombat)
-         (setq my-toggle-dark-bright-theme-status nil)
-         )
-        (t
-         (message "Loading dark theme")
-         (load-theme 'wombat t) ;; dark theme
-         (setq my-toggle-dark-bright-theme-status t)
-         )
-        )
-  )
-
-(global-set-key [(shift f1)] 'my-toggle-dark-bright-theme)
-#+END_SRC
-
-** my-toggle-beginner-setup
+However, when I teach Emacs to people not familiar with the vast
+amount of customizations, I use the following functions to toggle my
+setup to look like a default Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (defvar my-toggle-beginner-setup-status nil
@@ -6523,7 +7027,7 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   ;;                          ))))
   (define-key global-map [tool-bar pdf-button]
     '(menu-item "Export to PDF" org-latex-export-to-pdf
-                :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
+                :image (image :type png :file (concat my-user-emacs-directory "data/icon_PDF_16x16.png"))
                 ))
 )
 
@@ -6549,404 +7053,66 @@ via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
   )
 
 (global-set-key [f1] 'my-toggle-beginner-setup)
-
 #+END_SRC
 
-* Key bindings
+** my-toggle-dark-bright-theme() → S-F1
 
-** my-map
-
-=C-c ,= is defined by Org-mode and must be re-defined here:
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c C-,") 'my-map)
-(global-set-key (kbd "C-c ,") 'my-map)
-#+END_SRC
-
-** general navigation keys
+Some times, I do have to switch from my default dark theme to a bright
+one in order to get a decent result for a projector or similar.
 
 #+BEGIN_SRC emacs-lisp
-(global-set-key [home] 'beginning-of-buffer)
-(global-set-key [end]  'end-of-buffer)
+(defvar my-toggle-dark-bright-theme-status t
+  "Toggle between dark emacs theme and bright emacs theme; nil means dark theme, t means bright theme")
 
-(global-set-key [C-left] 'backward-word)
-(global-set-key [C-right] 'forward-word)
-(global-set-key [S-left] 'backward-word)
-(global-set-key [S-right] 'forward-word)
-
-;; 2016-03-23: PageUp/Down (instead of line up/down) for keyboards
-;; without PgUp/Dn-keys:
-(global-set-key (kbd "C-p") 'scroll-down-command)
-(global-set-key (kbd "C-n") 'scroll-up-command)
-
-;; https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/czntjs2
-(global-set-key (kbd "C-, l")          'avy-goto-line)
-(global-set-key (kbd "C-, w")          'avy-goto-word-0)
-;;(global-set-key (kbd "C-, .")          'winner-redo)
-;;(global-set-key (kbd "C-, m")          'winner-undo)
-;;(global-set-key (kbd "C-, w")          'ace-window)
-;;(global-set-key (kbd "C-, s")          'workspace-goto)
-;;(global-set-key (kbd "C-, ]")          'evil-jump-to-tag)
-(global-set-key (kbd "C-, n")          'neotree-toggle)
-#+END_SRC
-
-** Magit status (my-map g)
-
-#+BEGIN_SRC emacs-lisp
-;(bind-key "v" #'magit-status my-map)
-(bind-key "g" #'magit-status my-map)
-#+END_SRC
-
-** fullscreen (F12)
-
-#+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-gnu)
-  (global-set-key [f12] 'my-toggle-naked-emacs)
-)
-#+END_SRC
-
-** Elisp
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "er" #'eval-region my-map)
-(bind-key "el" #'find-library my-map)
-(bind-key "ef" #'find-function-at-point my-map)
-#+END_SRC
-
-** Toggle between split windows and a single window (my-map s)
-
-#+BEGIN_SRC emacs-lisp
-;; http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
-(defun my-toggle-windows-split()
-  "Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
+(defun my-toggle-dark-bright-theme ()
+  "Toggle between dark emacs theme and bright emacs theme"
   (interactive)
-  (if (not (window-minibuffer-p (selected-window)))
-      (progn
-	(if (< 1 (count-windows))
-	    (progn
-	      (window-configuration-to-register ?u)
-	      (delete-other-windows))
-	  (jump-to-register ?u))))
-					;(my-iswitchb-close)
+  (cond (my-toggle-dark-bright-theme-status
+         (message "Loading bright theme")
+         (disable-theme 'wombat)
+         (setq my-toggle-dark-bright-theme-status nil)
+         )
+        (t
+         (message "Loading dark theme")
+         (load-theme 'wombat t) ;; dark theme
+         (setq my-toggle-dark-bright-theme-status t)
+         )
+        )
   )
 
-;2015-11-03: deactivated for synonym (bind-key "s" #'my-toggle-windows-split my-map)
+(global-set-key [(shift f1)] 'my-toggle-dark-bright-theme)
 #+END_SRC
 
-** boxquote (my-map [qQ])
+** my-toggle-windows-split() - Toggle between split windows and a single window
+
+http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 
 #+BEGIN_SRC emacs-lisp
-;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
-(bind-key "q" #'boxquote-region my-map)
-(bind-key "Q" #'boxquote-title my-map)
-#+END_SRC
-
-** switching lines (my-map <up/down>)
-
-#+BEGIN_SRC emacs-lisp
-;; http://whattheemacsd.com//editing-defuns.el-02.html
-(defun my-move-line-down ()
-  (interactive)
-  (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (transpose-lines 1))
-    (forward-line)
-    (move-to-column col)))
-
-(defun my-move-line-up ()
-  (interactive)
-  (let ((col (current-column)))
-    (save-excursion
-      (forward-line)
-      (transpose-lines -1))
-    (move-to-column col)))
-
-(bind-key (kbd "<up>") #'my-move-line-up my-map)
-(bind-key (kbd "<down>") #'my-move-line-down my-map)
-
-#+END_SRC
-
-** joining lines: (my-map j)
-
-#+BEGIN_SRC emacs-lisp
-;; http://whattheemacsd.com//key-bindings.el-03.html
-(bind-key "j" ;; join-line
-  (lambda ()
+  (defun my-toggle-windows-split()
+    "Switch back and forth between one window and whatever split of
+  windows we might have in the frame. The idea is to maximize the
+  current buffer, while being able to go back to the previous split
+  of windows in the frame simply by calling this command again."
     (interactive)
-    (join-line -1))
-  my-map
-)
-
-
-(bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
-
-#+END_SRC
-
-** web-jump (disabled)
-
-#+BEGIN_SRC emacs-lisp
-;;disabled;; ;; ######################################################
-;;disabled;; ;; web-jump: C-c w
-;;disabled;; ;; http://www.emacswiki.org/emacs/WebJump
-;;disabled;; ;; http://www.neilvandyke.org/webjump/
-;;disabled;; ;; https://github.com/thefury/site-lisp/blob/master/dotemacs.el
-;;disabled;; ;; http://whattheemacsd.com//my-misc.el-01.html (Urban Dictionary)
-;;disabled;; (require 'webjump)
-;;disabled;; (bind-key "w" #'webjump my-map)
-;;disabled;; (setq webjump-sites ;(append   ;; append instead of overwrite
-;;disabled;;       '(
-;;disabled;; 	;; ------------------------------------------------------------------
-;;disabled;; 	("Emacs Lisp List" . "anc.ed.ac.uk/~stephen/emacs/ell.html")
-;;disabled;; 	("Ohio State Emacs Lisp Archive" .
-;;disabled;; 	 [simple-query "www.cis.ohio-state.edu/emacs-lisp/"
-;;disabled;; 		       "neutral.verbum.org/search?q=" "&archive=archive"])
-;;disabled;; 	("PGP Key Server" .
-;;disabled;; 	 [simple-query "pgp.mit.edu"
-;;disabled;; 		       "pgp.mit.edu:11371/pks/lookup?op=index&search=" ""])
-;;disabled;; 	;; my own jumps
-;;disabled;; 	("Org-mode docu" . "http://orgmode.org/org.html")
-;;disabled;; 	("Org-mode mailinglist" .
-;;disabled;; 	 [simple-query "orgmode.org"
-;;disabled;; 		       "http://search.gmane.org/?group=gmane.emacs.orgmode&query=" ""])
-;;disabled;; 	("Debian Bug Number" .
-;;disabled;; 	 [simple-query "www.debian.org/Bugs/"
-;;disabled;; 		       "bugs.debian.org/cgi-bin/bugreport.cgi?bug="
-;;disabled;; 		       ""])
-;;disabled;; 	("EmacsWiki" .
-;;disabled;; 	 [simple-query "www.emacswiki.org/cgi-bin/wiki.pl"
-;;disabled;; 		       "www.emacswiki.org/cgi-bin/wiki.pl?search="
-;;disabled;; 		       "&dosearch=1"])
-;;disabled;; 	("Google" .
-;;disabled;; 	 [simple-query "www.google.at" "www.google.at/search?q=" ""])
-;;disabled;; 	("IMDB" .
-;;disabled;; 	 [simple-query "www.imdb.com" "www.imdb.com/Find?select=All&for=" ""])
-;;disabled;; 	;; ------------------------------------------------------------------
-;;disabled;; 	) webjump-sample-sites ;)  ;; append instead of overwrite
-;;disabled;; 	  )
-
-
-#+END_SRC
-
-** inserting time-stamps (my-map [dDtT])
-
-#+BEGIN_SRC emacs-lisp
-;; 2011-04-20: C-j t ... timestamp
-;;       http://www.sabren.net/articles/emacs.php3
-;;       http://www.gnu.org/software/emacs/manual/html_node/emacs/Date-Display-Format.html
-;; COMBINED WITH:
-;; 2012-12-09:
-;; From: Russell Adams <RLAdams@AdamsInfoServ.Com>
-;;       Newsgroups: gmane.emacs.orgmode
-;;       Subject: Re: Using org-mode for laboratory notes.
-;;       Date: Wed, 19 Sep 2012 12:08:21 -0500
-;;       Message-ID: <20120919170820.GC31853@cardamom.adamsinfoserv.com>
-;; Insert immediate timestamp
-(defun my-insert-timestamp()
-  "Insert the current time in yyyy-mm-dd format."
-  (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-	(org-insert-time-stamp nil t nil)
-	(insert " ")
-	)
-    (insert (format-time-string "%Y-%m-%d" (current-time)))
+    (if (not (window-minibuffer-p (selected-window)))
+        (progn
+          (if (< 1 (count-windows))
+              (progn
+                (window-configuration-to-register ?u)
+                (delete-other-windows))
+            (jump-to-register ?u))))
+                                          ;(my-iswitchb-close)
     )
-  )
-(bind-key "t" #'my-insert-timestamp my-map)
-
-(defun my-insert-timestamp-inactive()
-  "Insert the current time in yyyy-mm-dd format."
-  (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-	(org-insert-time-stamp nil t t)
-	(insert " ")
-	)
-    (insert (format-time-string "%Y-%m-%d" (current-time)))
-    )
-  )
-(bind-key "T" #'my-insert-timestamp-inactive my-map)
-
-;; 2012-12-23: C-j d ... datestamp
-(defun my-insert-datestamp()
-  "Insert the current date in yyyy-mm-dd format."
-  (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-	(org-insert-time-stamp nil nil nil)
-	(insert " ")
-	)
-    (insert (format-time-string "%Y-%m-%d" (current-time)))
-    )
-  )
-(bind-key "d" #'my-insert-datestamp my-map)
-
-(defun my-insert-datestamp-inactive()
-  "Insert the current date in yyyy-mm-dd format."
-  (interactive "*")
-  (if (eq major-mode 'org-mode)
-      (progn
-	(org-insert-time-stamp nil nil t)
-	(insert " ")
-	)
-    (insert (format-time-string "%Y-%m-%d" (current-time)))
-    )
-  )
-(bind-key "D" #'my-insert-datestamp-inactive my-map)
-
-
-
 #+END_SRC
 
-** recently files (my-map r)
+** my-sparse-tree-with-tag-filter() - ask for a tag and filter open Org-tasks → my-map F
+
+The code asks for one or more tags and derives a sparse tree with all
+related open headings.
+
+See: id:2014-11-02-filter-org-tasks-by-tag
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "r" #'recentf-open-files my-map)
-
-
-#+END_SRC
-
-** helm-do-grep (my-map G)
-
-helm-do-grep to grep in current folder
-
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "ag")
-  (bind-key "G" #'helm-do-grep-ag my-map)
-)
-#+END_SRC
-
-** helm-org-headlines (my-map H)
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "H" #'helm-org-agenda-files-headings my-map)
-#+END_SRC
-
-** command log mode (my-map k)
-
-#+BEGIN_SRC emacs-lisp
-;; https://github.com/lewang/command-log-mode
-;;(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
-(use-package command-log-mode
-  :disabled t
-  :ensure t
-  :defer 10
-  :diminish command-log-mode
-  :config ;; executed after loading package
-  (add-hook 'LaTeX-mode-hook 'command-log-mode)
-)
-
-
-;; (defun my-start-command-log-mode()
-;;   "load the command-log mode and start it."
-;;   (interactive "*")
-;;   ;; M-x clm/open-command-log-buffer
-;;   (clm/open-command-log-buffer)
-;; )
-
-(bind-key "k" #'clm/open-command-log-buffer my-map)
-
-
-
-#+END_SRC
-
-** DISABLED Confluence/Outlook
-
-#+BEGIN_SRC emacs-lisp
-(when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
-  (bind-key "C" #'vk-open-as-confluence-page my-map)
-  (bind-key "oe" #'mno-edit-outlook-message my-map)
-  (bind-key "os" #'mno-save-outlook-message my-map)
-  )
-#+END_SRC
-
-** mark-ring-goto (my-map <left>)
-
-#+BEGIN_SRC emacs-lisp
-(bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
-#+END_SRC
-
-** open config.org file (my-map .)
-
-#+BEGIN_SRC emacs-lisp
-(bind-key (kbd ".") (lambda()  ;; open main.el
-			       (interactive)
-			       (find-file "~/.emacs.d/config.org")
-			       )
-          my-map
-          )
-
-
-#+END_SRC
-
-** org-mode teaser (my-map O)
-
-#+BEGIN_SRC emacs-lisp
-(bind-key (kbd "O") (lambda()
-			       (interactive)
-                               (when (my-system-type-is-gnu)
-                                 (find-file
-                               "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
-                                 )
-                               (when (my-system-type-is-windows)
-                                 (find-file
-                               "c:/Users/karl.voit/fromweb/src/org-mode-workshop/featureshow/org-mode-teaser.org")
-                                 )
-			       )
-          my-map
-  )
-
-#+END_SRC
-
-** org-mode manual (my-map o)
-
-#+BEGIN_SRC emacs-lisp
-(bind-key (kbd "o") (lambda()
-			       (interactive)
-                               (info "(org)")
-			       )
-  my-map
-  )
-
-
-;; 2015-11-10 deactivated ;;
-
-#+END_SRC
-
-** DISABLED OrgStruct folding
-
-2014-03-19: OrgStruct-mode: folding and unfoldung:
-
-2015-11-10 deactivated:
-#+BEGIN_SRC emacs-lisp
-(bind-key "[" (lambda () (interactive) (org-cycle t)) my-map)
-(bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
-#+END_SRC
-
-** Org-mobile import (my-map i)
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "i" (lambda ()
-                         """foobar"""
-                         (interactive) (my-mobile-org-import)) my-map )
-#+END_SRC
-
-** Org-mobile push (my-map I)
-
-#+BEGIN_SRC emacs-lisp
-
-
-(bind-key "I" #'my-org-mobile-push my-map)
-
-
-#+END_SRC
-
-** Filter open Org-tasks by tag (my-map F)
-
-#+BEGIN_SRC emacs-lisp
-;; see id:2014-11-02-filter-org-tasks-by-tag
-
 (defun my-sparse-tree-with-tag-filter()
   "asks for a tag and generates sparse tree for all open tasks in current Org buffer
   that are associated with this tag"
@@ -6967,44 +7133,412 @@ helm-do-grep to grep in current folder
 
 #+END_SRC
 
-** my-fix-drawer-order (my-map C)
+** xml-pretty-print-region(…)
+
+http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
 
 #+BEGIN_SRC emacs-lisp
-;; searches for :END: followed by :PROPERTIES: (assuming first drawer
-;; is :LOGBOOK: and toggles order of them
+(defun xml-pretty-print-region (begin end)
+  "Pretty format XML markup in region. You need to have nxml-mode
+http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+this.  The function inserts linebreaks to separate tags that have
+nothing but whitespace between them.  It then indents the markup
+by using nxml's indentation rules."
+  (interactive "r")
+  (save-excursion
+    (nxml-mode)
+    (goto-char begin)
+    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+      (backward-char) (insert "\n"))
+    (indent-region begin end))
+  (message "Ah, much better!"))
+#+END_SRC
+
+** my-xml-pretty-print() - for the whole buffer
+
+#+BEGIN_SRC emacs-lisp
+(defun my-xml-pretty-print()
+  "mark whole buffer and call xml-pretty-print-region"
+  (interactive)
+  (mark-whole-buffer)
+  (xml-pretty-print-region);; FIXXME: provide (begin end)
+  )
+#+END_SRC
+
+** my-reset-org() - reset some Org-mode stuff
+
+This function summarizes some other functions that clear up the
+current Org-mode, re-building some caches and so fort.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-reset-org ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (org-element-cache-reset)
+   (org-refile-cache-clear)
+   (org-refile-get-targets)
+   (when (my-buffer-exists "*Org Agenda*")
+     (kill-buffer "*Org Agenda*")
+     (org-agenda-list)
+     )
+   )
+  )
+#+END_SRC
+
+** DISABLED when being idle for 15 minutes, run my-reset-org()
+
+- See id:2016-06-05-reset-things-after-15-min-idle
+
+current-idle-time example: (0 420 1000 0)
+
+Disabled because it doesn't work:
+#+BEGIN_SRC emacs-lisp
+(setq my-reset-org-previous-idle-time-invocation (current-time))
+(run-with-idle-timer (* 60 15) t (lambda ()
+                                   (if (< 2 (float-time (time-since my-reset-org-previous-idle-time-invocation)))
+                                       (sit-for 2)
+                                     (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+                                       (message "Idle for 15 minutes, invoking my-reset-org in 10 seconds ...")
+                                       (sit-for 10);; give user 10s to press a button to prevent this
+                                       (when (< (nth 1 (current-idle-time)) (* 60 16));; run only once per idle period
+                                         (my-reset-org)
+                                         (setq my-reset-org-previous-idle-time-invocation (current-time))
+                                         (message (concat "my-reset-org finished at " (current-time-string)))
+                                         )
+                                       )
+                                     )
+                                   ))
+
+;;(defun mytest ()
+;;     (when (< (nth 1 (or (current-idle-time) (list 0 0 0 0)))) (* 60 16));; run only once per idle period
+;;       (message "yes")
+;;       )
+;;     )
+;;
+;;(sit-for 3)
+;;(message (or (current-idle-time) (number-to-string 0)))
+#+END_SRC
+
+** DISABLED OS X: mdfind (find via spotlight)
+
+Code of this heading does provide access to the macOS spotlight search
+engine for Emacs. I did not use it quite often, as long as I was using
+macOS on my computers.
+
+http://blog.zenspider.com/2007/03/locate-and-spotlight.html
+
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-darwin)
+  (defun locate-make-mdfind-command-line (search-string)
+    (list "mdfind" (concat "kMDItemDisplayName=*" search-string "*")))
+  (defun spotlight ()
+    "Search for files by name using spotlight"
+    (interactive)
+    (let ((locate-command "mdfind")
+	  (locate-make-command-line 'locate-make-mdfind-command-line))
+      (call-interactively 'locate nil)))
+  (defun spotlight-full ()
+    "Search using spotlight"
+    (interactive)
+    (let ((locate-command "mdfind"))
+      (call-interactively 'locate nil)))
+  )
+#+END_SRC
+
+* Key bindings
+
+In this heading, I do define many key bindings.
+
+** my-map, the ressurection → C-c C-,
+
+=C-c ,= is defined by Org-mode and must be re-defined here, after Org-mode has messed it up:
+
+(There might be a better way but this is my current workaround.)
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c C-,") 'my-map)
+(global-set-key (kbd "C-c ,") 'my-map)
+#+END_SRC
+
+** general navigation keys: Home, End, forward/backward word, scrolling
+
+Home/End should behave like everywhere else:
+#+BEGIN_SRC emacs-lisp
+(global-set-key [home] 'beginning-of-buffer)
+(global-set-key [end]  'end-of-buffer)
+#+END_SRC
+
+Move back/forward word is essential to me:
+#+BEGIN_SRC emacs-lisp
+(global-set-key [C-left] 'backward-word)
+(global-set-key [C-right] 'forward-word)
+#+END_SRC
+
+2016-03-23: PageUp/Down (instead of line up/down) for keyboards without PgUp/Dn-keys:
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-p") 'scroll-down-command)
+(global-set-key (kbd "C-n") 'scroll-up-command)
+#+END_SRC
+
+I tried some of those but they did not stick:
+#+BEGIN_SRC emacs-lisp :tangle no
+;; https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/czntjs2
+;;(global-set-key (kbd "C-, l")          'avy-goto-line)
+;;(global-set-key (kbd "C-, w")          'avy-goto-word-0)
+;;(global-set-key (kbd "C-, .")          'winner-redo)
+;;(global-set-key (kbd "C-, m")          'winner-undo)
+;;(global-set-key (kbd "C-, w")          'ace-window)
+;;(global-set-key (kbd "C-, s")          'workspace-goto)
+;;(global-set-key (kbd "C-, ]")          'evil-jump-to-tag)
+;;(global-set-key (kbd "C-, n")          'neotree-toggle)
+#+END_SRC
+
+=C-f= jumps 5 lines:
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
+#+END_SRC
+
+** boxquote → my-map [qQ]
+
+[[https://www.emacswiki.org/emacs/BoxQuote][Box quote]] does something like this:
+: ,----
+: | This is an example.
+: `----
+
+#+BEGIN_SRC emacs-lisp
+;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
+(bind-key "q" #'boxquote-region my-map)
+(bind-key "Q" #'boxquote-title my-map)
+#+END_SRC
+
+** switching lines → my-map <up/down>
+
+http://whattheemacsd.com//editing-defuns.el-02.html
+
+Swapping two lines:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-move-line-down ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines 1))
+    (forward-line)
+    (move-to-column col)))
+
+(defun my-move-line-up ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines -1))
+    (move-to-column col)))
+
+(bind-key (kbd "<up>") #'my-move-line-up my-map)
+(bind-key (kbd "<down>") #'my-move-line-down my-map)
+#+END_SRC
+
+** joining lines → my-map j
+
+Joining the current line with the next one: http://whattheemacsd.com//key-bindings.el-03.html
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "j"
+  (lambda ()
+    (interactive)
+    (join-line -1))
+  my-map
+)
+#+END_SRC
+
+** DISABLED web-jump → my-map w
+
+«[[https://www.emacswiki.org/emacs/WebJump][WebJump]] is a programmable Web hotlist (or bookmark) facility that
+uses Emacs completion to select a hotlist item and can prompt for
+query and option parameters.»
+
+- http://www.neilvandyke.org/webjump/
+- https://github.com/thefury/site-lisp/blob/master/dotemacs.el
+- http://whattheemacsd.com//my-misc.el-01.html (Urban Dictionary)
+
+#+BEGIN_SRC emacs-lisp
+(require 'webjump)
+(bind-key "w" #'webjump my-map)
+(setq webjump-sites ;(append   ;; append instead of overwrite
+      '(
+	;; ------------------------------------------------------------------
+	("Emacs Lisp List" . "anc.ed.ac.uk/~stephen/emacs/ell.html")
+	("Ohio State Emacs Lisp Archive" .
+	 [simple-query "www.cis.ohio-state.edu/emacs-lisp/"
+		       "neutral.verbum.org/search?q=" "&archive=archive"])
+	("PGP Key Server" .
+	 [simple-query "pgp.mit.edu"
+		       "pgp.mit.edu:11371/pks/lookup?op=index&search=" ""])
+	;; my own jumps
+	("Org-mode docu" . "http://orgmode.org/org.html")
+	("Org-mode mailinglist" .
+	 [simple-query "orgmode.org"
+		       "http://search.gmane.org/?group=gmane.emacs.orgmode&query=" ""])
+	("Debian Bug Number" .
+	 [simple-query "www.debian.org/Bugs/"
+		       "bugs.debian.org/cgi-bin/bugreport.cgi?bug="
+		       ""])
+	("EmacsWiki" .
+	 [simple-query "www.emacswiki.org/cgi-bin/wiki.pl"
+		       "www.emacswiki.org/cgi-bin/wiki.pl?search="
+		       "&dosearch=1"])
+	("Google" .
+	 [simple-query "www.google.at" "www.google.at/search?q=" ""])
+	("IMDB" .
+	 [simple-query "www.imdb.com" "www.imdb.com/Find?select=All&for=" ""])
+	;; ------------------------------------------------------------------
+	) webjump-sample-sites ;)  ;; append instead of overwrite
+	  )
+
+
+#+END_SRC
+
+** Show recently files → my-map r
+
+[[help:recentf-open-files][Show a dialog to open a recent file.]]
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "r" #'recentf-open-files my-map)
+#+END_SRC
+
+** DISABLED Outlook: edit/save message → my-map oe|os
+
+Some interaction with Outlook:
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "outlook")
+  (bind-key "oe" #'mno-edit-outlook-message my-map)
+  (bind-key "os" #'mno-save-outlook-message my-map)
+  )
+#+END_SRC
+
+** org-mark-ring-goto() → my-map <left>
+
+[[help:org-mark-ring-goto][Jump to the previous position in the mark ring.]]
+
+#+BEGIN_SRC emacs-lisp
+(bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
+#+END_SRC
+
+** open this config.org file → my-map .
+
+Very handy to modify my config file: open it ;-)
+
+#+BEGIN_SRC emacs-lisp
+(bind-key (kbd ".") (lambda()  ;; open main.el
+			       (interactive)
+			       (find-file (concat my-user-emacs-directory "config.org"))
+			       )
+          my-map
+          )
+#+END_SRC
+
+** open org-mode manual → my-map o
+
+One of the benefits of Emacs is, that it comes with its complete
+manual. Same holds for the Org-mode. With this shortcut, I am able to
+navigate through the org manual instantly:
+
+#+BEGIN_SRC emacs-lisp
+(bind-key (kbd "o") (lambda()
+			       (interactive)
+                               (info "(org)")
+			       )
+  my-map
+  )
+#+END_SRC
+
+** open my org-mode teaser → my-map O
+
+I've written an org-mode teaser file which can be found on
+https://github.com/novoid/org-mode-workshop
+
+With this keyboard shortcut, I am able to quickly open the teaser
+file.
+
+#+BEGIN_SRC emacs-lisp
+(bind-key (kbd "O") (lambda()
+			       (interactive)
+                               (when (my-system-type-is-gnu)
+                                 (find-file
+                               "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
+                                 )
+                               (when (my-system-type-is-windows)
+                                 (find-file
+                               "c:/Users/karl.voit/fromweb/src/org-mode-workshop/featureshow/org-mode-teaser.org")
+                                 )
+			       )
+          my-map
+  )
+
+#+END_SRC
+
+** DISABLED OrgStruct folding
+
+Until 2017-05, I was using [[http://orgmode.org/manual/Orgstruct-mode.html][the Orgstruct minor mode]] for navigating
+through my Emacs config file. With migrating my old =main.el= to this
+=config.org=, the Orgstruct mode got obsolete for me.
+
+Following commands offer a better usability for folding and unfolding
+in OrgStruct mode:
+
+2015-11-10 deactivated:
+#+BEGIN_SRC emacs-lisp
+(bind-key "[" (lambda () (interactive) (org-cycle t)) my-map)
+(bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
+#+END_SRC
+
+** DISABLED my-fix-drawer-order() → my-map C
+
+I once noticed broken =PROPERTIES= drawers because of a bug in the
+Org-mode version I was using back then. Unfortunately, it messed up my
+drawers unnoticed for some time. For fixing the most common stuff, I
+created a macro and stored it here.
+
+It searches for =:END:= followed by =:PROPERTIES:= (assuming first drawer
+is =:LOGBOOK:= and toggles order of them:
+
+#+BEGIN_SRC emacs-lisp
 (fset 'my-fix-drawer-order
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 58 69 78 68 58 17 10 58 80 82 79 80 69 82 84 73 69 83 58 return 1 67108896 19 58 69 78 68 58 5 23 18 58 76 79 71 66 79 79 75 58 return 25 return down] 0 "%d")) arg)))
 (bind-key "C" #'my-fix-drawer-order my-map)
-
 #+END_SRC
 
-** my-title-capitalization (my-map C)
+** hippie-expand → M-/
+
+«[[http://emacswiki.org/emacs/HippieExpand][HippieExpand]] looks at the word before point and tries to expand it in
+various ways including expanding from a fixed list (like
+`‘expand-abbrev’’), expanding from matching text found in a buffer
+(like `‘dabbrev-expand’’) or expanding in ways defined by your own
+functions. Which of these it tries and in what order is controlled by
+a configurable list of functions.»
+
+- issues when overriding undo-tree-undo (C-/):
+  http://emacs.stackexchange.com/questions/2530/global-key-binding-overriden-by-undo-tree
+- http://stackoverflow.com/questions/5332221/globally-overriding-emacs-keybindings
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "c" #'title-capitalization my-map)
-
-#+END_SRC
-
-** hippie-expand (M-/)
-
-#+BEGIN_SRC emacs-lisp
-;; http://emacswiki.org/emacs/HippieExpand
-
-;; issues when overriding undo-tree-undo (C-/): http://emacs.stackexchange.com/questions/2530/global-key-binding-overriden-by-undo-tree
-;; http://stackoverflow.com/questions/5332221/globally-overriding-emacs-keybindings
 ;(add-hook 'undo-tree-mode (lambda () (local-unset-key "C-/")))
 ;;failed;(global-set-key (kbd "C-c /") 'hippie-expand)
 
-;; could not make it work with C-/ - so I stick to M-/
+;; I could not make it work with C-/ - so I stick to M-/
 (global-set-key (kbd "M-/") 'hippie-expand)
-
 #+END_SRC
 
-** neotree (f8)
+** neotree → F8
+
+[[https://github.com/jaypei/emacs-neotree][NeoTree]] offers a file tree side-panel like NerdTree for Vim.
+
+installed on 2015-03-22
 
 #+BEGIN_SRC emacs-lisp
-;; https://github.com/jaypei/emacs-neotree
-;; installed on 2015-03-22
 (use-package neotree
   ;; :disabled t
   :ensure t
@@ -7012,48 +7546,26 @@ helm-do-grep to grep in current folder
   :config ;; executed after loading package
 (global-set-key [f8] 'neotree-toggle)
 )
-
 #+END_SRC
 
-** org-mode-reftex-setup (my-map R)
+** my-org-region-to-property() → my-map p
+
+This is ultra-handy for writing properties. For example for my
+contact management =contacts.org= I maintain properties such as phone
+numbers. When I mark a (changed) phone number within the body of a
+heading and invoke this function, I get asked for an existing property
+and the marked region gets the new value for this property.
+
+Please do read [[http://karl-voit.at/2016/12/23/my-org-region-to-property/][my blog article on this topic]] for all the details.
+You're gonna like it.
+
+See: id:2015-05-28-ask-for-properties
+
+Version that tries to read only properties of current entry:
+- From: "Antoine R. Dumont" <antoine.romain.dumont@gmail.com>
+- http://article.gmane.org/gmane.emacs.orgmode/106364
 
 #+BEGIN_SRC emacs-lisp
-;; see id:2015-05-14-disable-orgmode-reftex-autoload
-(bind-key (kbd "R") #'org-mode-reftex-setup my-map)
-;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
-
-#+END_SRC
-
-** my-org-region-to-property (my-map p)
-
-#+BEGIN_SRC emacs-lisp
-;; see id:2015-05-28-ask-for-properties
-
-;; OLD ;; ;; original function:
-;; OLD ;; (defun my-org-region-to-property (&optional property)
-;; OLD ;;   (interactive)
-;; OLD ;;   ;; if no region is defined, do nothing
-;; OLD ;;   (if (use-region-p)
-;; OLD ;;       ;; if a region string is found, ask for a property and set property to
-;; OLD ;;       ;; the string in the region
-;; OLD ;;       (let ((val (replace-regexp-in-string
-;; OLD ;;                   "\\`[ \t\n]*" ""
-;; OLD ;;                   (replace-regexp-in-string "[ \t\n]*\\'" ""
-;; OLD ;;                                             (substring (buffer-string)
-;; OLD ;;                                                        (- (region-beginning) 1)
-;; OLD ;;                                                        (region-end))))
-;; OLD ;;                  )
-;; OLD ;;             ;; if none was stated by user, read property from user
-;; OLD ;;             (prop (or property
-;; OLD ;;                       (org-read-property-name))))
-;; OLD ;;         ;; set property
-;; OLD ;;         (org-set-property prop val))))
-
-;; ----------------------------------------------------
-
-;; version that tries to read only properties of current entry:
-;; From: "Antoine R. Dumont" <antoine.romain.dumont@gmail.com>
-;; http://article.gmane.org/gmane.emacs.orgmode/106364
 (defun org-read-entry-property-name ()
   "Read a property name from the current entry."
   (let ((completion-ignore-case t)
@@ -7086,32 +7598,14 @@ helm-do-grep to grep in current folder
         (org-set-property prop val))))
 
 (bind-key (kbd "p") #'my-org-region-to-property my-map)
-
-
 #+END_SRC
 
-** highlight-symbol (my-map h)
+** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
+
+With these commands, I get great shortcuts to put the current word,
+line, sentence, sexp or defun into the marked region:
 
 #+BEGIN_SRC emacs-lisp
-(use-package highlight-symbol
-  :ensure t
-  :defer 10
-  ;;(bind-key (kbd "h") #'highlight-symbol my-map)
-  :bind (:map my-map ("h" . highlight-symbol))
-  )
-;; original: (global-set-key [(control f3)] 'highlight-symbol)
-;; original: (global-set-key [f3] 'highlight-symbol-next)
-;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
-;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
-
-
-#+END_SRC
-
-** mark word|line|sentence|sexp|defun
-
-#+BEGIN_SRC emacs-lisp
-
-
 (bind-key (kbd "mw") #'mark-word my-map)
 
 (defun mark-line (&optional arg)
@@ -7133,24 +7627,12 @@ helm-do-grep to grep in current folder
 (bind-key "m s" #'mark-sentence my-map)
 (bind-key "m x" #'mark-sexp my-map)
 (bind-key "m d" #'mark-defun my-map)
-
-
-#+END_SRC
-
-** delete-trailing-whitespace (my-map SPC)
-
-#+BEGIN_SRC emacs-lisp
-
-  ;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
-;  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
-
-;; 2016-02-06: https://www.reddit.com/r/emacs/comments/445w6s/whats_some_small_thing_in_your_dotemacs_that_you/
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-
 #+END_SRC
 
 * autostart
+
+At the end of loading most of my configuration, I want to execute some
+things, some of them only in interactive mode.
 
 #+BEGIN_SRC emacs-lisp
 (message "→★ finished loading config.org (w/o autostart) in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
@@ -7170,6 +7652,9 @@ helm-do-grep to grep in current folder
 #+END_SRC
 
 * custom variables
+
+This somehow got written by Emacs. Honestly, I am not sure whether or
+not I should keep this here. Well, it does not hurt either.
 
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
@@ -7193,12 +7678,20 @@ helm-do-grep to grep in current folder
 
 * Closing and end for profiling
 
+This is the end of the Elisp blocks to be tangled. Finishing up
+loading my configuration (famous last words):
+
 #+BEGIN_SRC emacs-lisp
-(message "Binaries not found in checks above: %s" my-binary-not-found-list)
+(message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
 (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 #+END_SRC
 
-* Current key mappings (non-sorted)
+* Current key mappings (sorted)
+
+Here are some blocks that try to extract keyboard bindings from the
+configuration file here.
+
+** Mappings not using my-map (non-sorted output)
 
 #+BEGIN_SRC sh :results raw  :exports results :prologue "echo \"| *key* | *function* |\n|-\""
 cd ~/.emacs.d
@@ -7228,9 +7721,7 @@ sed 's/ | \(.*\)/ | ~\1~/' | \
 sed ':a;N;$!ba;s/\n/ |\n/g'
 #+END_SRC
 
-* Current key mappings (sorted)
-
-** Mappings not using my-map
+** Mappings not using my-map (sorted output)
 
 #+BEGIN_SRC sh :results raw  :exports results :prologue "echo \"| *key* | *function* |\n|-\""
 cd ~/.emacs.d

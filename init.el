@@ -1,10 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2017-05-24 19:40:38 karl.voit>
+;; Time-stamp:    <2017-05-26 14:37:05 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
-;; License:       This file is licensed under the GPL v2.
+;; License:       This file is licensed under the GPL v3.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -17,14 +17,13 @@
 ;; log starting time to come up with a duration afterwards
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 
-;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
-(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
-(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
-(require 'org)
-
 ;; user-emacs-directory on Windows is "c:/Users/karl.voit/AppData/Roaming/.emacs.d/" which I don't want to use
 (setq my-user-emacs-directory "~/.emacs.d/")
 
+;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp" t))
+(require 'org)
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -85,10 +84,12 @@ Note the weekly scope of the command's precision.")
 	      (add-to-list 'body-list body)
 	      ))))
       (with-temp-file output-file
-        (insert ";; ============================================================\n")
+	;; Thanks for http://irreal.org/blog/?p=6236 and https://github.com/marcowahl/.emacs.d/blob/master/init.org for the read-only-trick:
+        (insert ";; config.el --- This is the GNU/Emacs config file of Karl Voit. -*- eval: (read-only-mode 1) -*-\n")
+        (insert ";; ======================================================================================\n")
         (insert ";; Don't edit this file, edit config.org' instead ...\n")
-        (insert ";; Auto-generated at " (format-time-string current-date-time-format (current-time)) " on host " system-name "\n")
-        (insert ";; ============================================================\n\n")
+        (insert ";; Auto-generated at " (format-time-string current-date-time-format (current-time)) "on host " system-name "\n")
+        (insert ";; ======================================================================================\n\n")
         (insert (apply 'concat (reverse body-list))))
       (message "—————• Wrote %s" output-file))))
 
