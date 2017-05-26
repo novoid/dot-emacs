@@ -22,7 +22,7 @@
 
 ;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
 (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp" t))
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
 (require 'org)
 
 ;; =======================================================================================
