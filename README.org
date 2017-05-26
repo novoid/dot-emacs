@@ -2,32 +2,43 @@
 
 ** General Structure
 
-In my home directory, there is this folder named ~$HOME/.emacs.d~. It
-contains a symbolic link ~init.el~ which points to the host-specific
-~init-HOSTNAME.el~ file.
+As of 2017-05, I moved my Emacs configuration format from [[http://orgmode.org/manual/Orgstruct-mode.html][OrgStruct
+mode]] to Org-mode babel + tangle. Originally, I found this process on
+http://www.holgerschurig.de/en/emacs-init-tangle/ However, I adapted
+its code and write additional features. I also simplified the file
+structure, threw away old stuff and added tons of comments for my
+configuration.
 
-My ~init-HOSTNAME.el~ files are very minimal. Each one holds
-custom-set-variables which I want to keep separate on each host. And
-then it includes the host-independent ~main.el~ configuration file.
+Now, my Emacs configuration is in a file named =config.org=. My
+=init.el= got some nifty Elisp code that converts/tangles (only) the
+Elisp blocks into the =config.el=. This generated file is interpreted
+by my GNU/Emacs on startup.
+
+** Stuff Which Is Not Contained in the Git Repository
 
 Please take a look at my ~.gitignore~ file that contains some things I
 did *not* add to this git repository for a variety of reasons but are
 necessary for my configuration. Most important here is the directory
 ~contrib~ which holds a number of external packages:
 
-- Currently (2016-04-24), this directory holds:
+- Currently (2017-05-26), this directory holds:
+  - cygwin-mount.el
   - ews-orgmode/
+  - goto-chg.el
   - message-outlook.el
+  - move-text/
   - ob-restclient.el/
   - orgaggregate/
   - org.el
   - [[https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el][org-import-calendar.el]]
   - [[http://Orgmode.org][org-mode]]/
+  - org-protocol-capture-html/
   - outlookedit.el
   - outshine/
   - pdf-mode/
   - [[http://taesoo.org/proj/pylookup.html][pylookup]]/
   - raml-mode/
+  - setup-cygwin.el
   - sunrise-commander/
   - vcard-mode/
   - [[http://www.emacswiki.org/emacs/wc.el][wc.el]]
@@ -45,22 +56,13 @@ You should only adopt Elisp code you need and understand to avoid
 [[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs Bankruptcy]].
 
 Therefore: please feel free to look up certain tricks and functions
-and add it to your configuration.
+and add it to your configuration. But don't use my repository as is
+and expect it to run on your host.
 
 ** Best Navigation Experience
 
-My ~main.el~ file is quite large. I would not be able to navigate it
-myself without [[http://orgmode.org/manual/Orgstruct-mode.html][Orgstruct minor mode]]. If you don't know it yet: it's a
-minor mode which uses Org-mode elements such as headings in - this
-case - Elisp comment lines.
-
-If you open my ~main.el~ file with org-struct-mode installed, go to
-the next line that starts with ~;;* General settings~ and apply ~C-u
-C-u TAB~. The huge mass of Elisp code gets folded nicely according to
-headings within Elisp comments.
-
-On every line that begins with ~;;*~ you can press ~TAB~ or other
-basic Org-mode shortcuts.
+For navigating through my =config.org= file, please do open it in
+Emacs so that you are able to collapse and expand headings.
 
 ** Host-Names
 
@@ -112,7 +114,6 @@ On 2016-04-24, I had following packages installed via elpa:
 ls -1 $HOME/.emacs.d/elpa | egrep -v '(archives|gnupg|.txt)'
 #+END_SRC
 
-#+RESULTS:
 #+begin_example
 anzu-20160404.2218
 async-20160223.146
@@ -182,6 +183,6 @@ manager. I am using the Org Maint version from git directly (within my
 ** License
 
 The code provided here is licensed under a GPL v3 license: see
-license.txt for details. Some smaller parts from other authors but
+=license.txt= for details. Some smaller parts from other authors but
 included in my configuration might have a different license. Please
 check the source - it's included in the comments.
