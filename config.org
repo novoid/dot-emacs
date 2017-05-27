@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-27 18:40:11 vk>
+# Time-stamp: <2017-05-27 20:29:27 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -3341,9 +3341,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			  )))
                  nil ("~/org/agenda_180d_filtered.html"))
 
-		("w" "weekly detail agenda"
-		 ((agenda "weekly detail agenda"
-			  ((org-agenda-span 7)
+		("D" "detail agenda"
+		 ((agenda "detail agenda"
+			  ((org-agenda-span 31)
 			   (org-agenda-time-grid nil)
 			  )))
                  nil ("~/org/agenda_details.html"))
