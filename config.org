@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-27 20:29:27 vk>
+# Time-stamp: <2017-05-27 20:50:08 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -3865,21 +3865,33 @@ Late deadlines first, then scheduled, then non-late deadlines"
   )
 #+END_SRC
 
-** icons (categories)
+** Agenda category icons
+
+There is the possibility of adding icons to categories:
+http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
+
+This is a neat way of beautifying the agenda.
+
+Unfortunately, the clean way of defining the data directory relatively
+to the path stored in =my-user-emacs-directory= does not work:
+: (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
+
+I don't know how to fix this and so I stick with the hard coded path
+and with a bleeding heart.
 
 #+BEGIN_SRC emacs-lisp
-
-  ;; adding icons to categories: http://julien.danjou.info/blog/2010/icon-category-support-in-org-mode
   (setq org-agenda-category-icon-alist nil)
   ;(when (my-system-type-is-windows)
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-		  '("r6" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
+;;		  '("r6" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
+		  '("r6" "~/.emacs.d/data/R6-logo_18x12.jpg" nil nil :ascent center)
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		  '("infonova" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
+;;		  '("infonova" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
+		  '("infonova" "~/.emacs.d/data/R6-logo_18x12.jpg" nil nil :ascent center)
 		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
@@ -3891,27 +3903,31 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("contacts" (concat my-user-emacs-directory "data/user-identity.png") nil nil :ascent center)
+;;		 '("contacts" (concat my-user-emacs-directory "data/user-identity.png") nil nil :ascent center)
+		 '("contacts" "~/.emacs.d/data/user-identity.png" nil nil :ascent center)
 		     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("public_voit" (concat my-user-emacs-directory "data/application-rss+xml.png") nil nil :ascent center)
+;;		 '("public_voit" (concat my-user-emacs-directory "data/application-rss+xml.png") nil nil :ascent center)
+		 '("public_voit" "~/.emacs.d/data/application-rss+xml.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("misc" (concat my-user-emacs-directory "data/emblem-new.png") nil nil :ascent center)
+;;		 '("misc" (concat my-user-emacs-directory "data/emblem-new.png") nil nil :ascent center)
+		 '("misc" "~/.emacs.d/data/emblem-new.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("hardware" (concat my-user-emacs-directory "data/camera-photo.png") nil nil :ascent center)
+;;		 '("hardware" (concat my-user-emacs-directory "data/camera-photo.png") nil nil :ascent center)
+		 '("hardware" "~/.emacs.d/data/camera-photo.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/devices/camera-photo.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("bwg" (concat my-user-emacs-directory "data/go-home.png") nil nil :ascent center)
+;;		 '("bwg" (concat my-user-emacs-directory "data/go-home.png") nil nil :ascent center)
+		 '("bwg" "~/.emacs.d/data/go-home.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
 		  )
    )
-
 #+END_SRC
 
 ** calfw (disabled)
