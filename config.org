@@ -3886,7 +3886,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ;;		 )
   ;  )
 
-  ;(when (and (my-system-type-is-gnu) (not (my-system-is-karl-voit-at)))
+  (when (and (not (my-system-type-is-windows)) (not (my-system-is-karl-voit-at)))
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
@@ -3910,7 +3910,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 		 '("bwg" (concat my-user-emacs-directory "data/go-home.png") nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
 		  )
-   ; )
+   )
 
 #+END_SRC
 
