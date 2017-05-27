@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-26 20:34:55 vk>
+# Time-stamp: <2017-05-27 18:40:11 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -5496,6 +5496,9 @@ Org-mode content! It can even turn HTML tables into Org tables!
 #+END_SRC
 * Misc modes/packages
 
+Misc sources for packages:
+- 2017-05: [[https://www.reddit.com/r/emacs/comments/6dk5tv/what_are_some_packages_you_once_used_but_have/][What are some packages you once used but have found a better alternative? : emacs]]
+
 ** DISABLED tabbar
 
 «[[https://www.emacswiki.org/emacs/TabBarMode][Tabbar]] is an emacs minor mode that displays a tab bar at the top,
@@ -5924,7 +5927,11 @@ but most of the time, it's a good companion to me.
 I love to work in full-screen mode where nothing is distracting me
 from the information I am working with: the content of Emacs.
 
-Thanks to Bastien; adopted to my requirements: https://gist.github.com/bzg/8578998
+There are some packages out there that provide this functionality such
+as [[https://github.com/joostkremers/writeroom-mode][writeroom-mode]] or [[https://github.com/joaotavora/darkroom][darkroom-mode]] (see discussion of them [[https://www.reddit.com/r/emacs/comments/6dk5tv/what_are_some_packages_you_once_used_but_have/][here]]).
+
+The code below was written by Bastien Guerry and adopted by me to meet
+my requirements: https://gist.github.com/bzg/8578998
 
 Conditions when loading:
 #+BEGIN_SRC emacs-lisp
