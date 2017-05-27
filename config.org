@@ -3346,7 +3346,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 			  ((org-agenda-span 7)
 			   (org-agenda-time-grid nil)
 			  )))
-                 nil ("~/org/agenda_7d.html"))
+                 nil ("~/org/agenda_details.html"))
 
 		;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
 		;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
