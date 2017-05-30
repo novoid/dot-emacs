@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2017-05-27 20:50:21 vk>
+;; Time-stamp:    <2017-05-30 21:54:22 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -129,7 +129,9 @@ Note the weekly scope of the command's precision.")
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(safe-local-variable-values
    (quote
-    ((eval org-expiry-deinsinuate)
+    ((TeX-master . "misc")
+     (TeX-master . "references")
+     (eval org-expiry-deinsinuate)
      (eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
