@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-30 21:53:31 vk>
+# Time-stamp: <2017-05-31 19:38:02 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -1615,7 +1615,6 @@ The code blocks here are only executed when python is found on the current syste
 BEGIN of elpy package
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
-  ;; :disabled t ;; stop loading if 't'
   :ensure t
   ;;:if (or (my-system-type-is-gnu) (my-system-type-is-windows))
   :mode ("\\.py\\'" . elpy-mode)
@@ -4932,7 +4931,6 @@ A minor mode to show the sticky header for org-mode tables.
 - https://github.com/cute-jumper/org-table-sticky-header
 #+BEGIN_SRC emacs-lisp
 (use-package org-table-sticky-header
-  ;; :disabled t
   :ensure t
   :config
   (add-hook 'org-mode-hook 'org-table-sticky-header-mode)
@@ -5123,13 +5121,9 @@ translates Org-mode file to various other formats via Pandoc.»
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package ox-pandoc
-    ;;:disabled t  ;; stop loading if 't'
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 10
     ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
-    :init ;; executed before loading package
-    ;; org-pandoc-menu-entry -> customize what is shown in menu
-    ;; :mode "\\.rb\\'"
   )
 )
 #+END_SRC
@@ -5140,13 +5134,8 @@ https://github.com/yashi/org-asciidoc - «An Org Mode Exporter Backend For Ascii
 
 #+BEGIN_SRC emacs-lisp
   (use-package ox-asciidoc
-    ;;:disabled t  ;; stop loading if 't'
     ;;:ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 10
-    ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
-    :init ;; executed before loading package
-    ;; org-pandoc-menu-entry -> customize what is shown in menu
-    ;; :mode "\\.rb\\'"
   )
 #+END_SRC
 
@@ -5162,10 +5151,8 @@ https://github.com/yjwen/org-reveal
 
 #+BEGIN_SRC emacs-lisp
 (use-package ox-reveal
-  ;;:disabled t
   :ensure t
   ;;:if (my-system-type-is-windows)
-  ;;:diminish whitespace-mode
   :defer 10
   :config
 
@@ -5255,8 +5242,7 @@ Windows, Mac and Linux.
          (my-system-type-is-windows);; For Windows the html-clip-w32.py script will be installed.
          )
     (use-package ox-clip
-      ;; :disabled t
-      ;;:if
+        ;;:if
       :ensure t
       :defer 10
       )
@@ -5519,7 +5505,6 @@ https://github.com/astahlman/ob-async
 - [ ] re-check availability
 #+BEGIN_SRC emacs-lisp
 (use-package ob-async
-  ;; :disabled t
   :ensure t
   :config
   (add-to-list 'org-ctrl-c-ctrl-c-hook 'ob-async-org-babel-execute-src-block)
@@ -5994,9 +5979,7 @@ things in Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package undo-tree
-  ;; :disabled t
   :ensure t
-  ;;:if (or (my-system-type-is-gnu) (my-system-type-is-darwin))
   :diminish undo-tree-mode
   :config ;; executed after loading package
   (autoload 'undo-tree "undo-tree.el")
@@ -6080,7 +6063,6 @@ interface of Magit.
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
-  ;; :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
   ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
@@ -6115,7 +6097,6 @@ interface of Magit.
   ;OLD;(my-load-local-el "contrib/emacs-smeargle/smeargle.el")
   ;OLD;(bind-key "c" 'smeargle my-map)
   (use-package smeargle
-    ;; :disabled t
     :ensure t
     :defer 10
     :config ;; executed after loading package
@@ -6266,7 +6247,6 @@ A speed reading mode for Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package spray
-  ;; :disabled t
   :ensure t
   :defer 10
   :config ;; executed after loading package
@@ -6518,7 +6498,6 @@ I get a popup buffer that tells me what bindings I am able to use.
 
 #+BEGIN_SRC emacs-lisp
 (use-package guide-key
-  ;; :disabled t  ;; stop loading if 't'
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
   :config ;; executed after loading package
   (setq guide-key/guide-key-sequence '("C-c C-,"))
@@ -6534,7 +6513,6 @@ https://github.com/dochang/vcard-mode
 
 #+BEGIN_SRC emacs-lisp
 (use-package vcard-mode
-  ;; :disabled t  ;; stop loading if 't'
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
   :load-path "contrib/vcard-mode/" ;; relative to emacs dir
   :pin manual
@@ -6742,7 +6720,6 @@ enter the leading char.
 
 #+BEGIN_SRC emacs-lisp
 (use-package eno
-  ;; :disabled t
   :ensure t
   ;;  :diminish eno
   :defer 11
@@ -6757,10 +6734,8 @@ via: http://ikiwiki.info/tips/Emacs_and_markdown/
 
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
-  ;;:disabled t
   :ensure t
   :if (my-system-type-is-windows)
-  ;;:diminish whitespace-mode
   :defer 10
   :mode ("\\.md\\'" . markdown-mode)
 )
@@ -6783,11 +6758,8 @@ flexible, simple tools for minibuffer completion in Emacs
 
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
-  ;;:disabled t
   :ensure t
   ;;:if (my-system-type-is-windows)
-  ;;:diminish whitespace-mode
-  ;;:defer 10
   :config
 
   (setq ivy-display-style 'fancy) ;; fancy highlighting
@@ -6820,11 +6792,7 @@ flexible, simple tools for minibuffer completion in Emacs
 
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
-  ;; :disabled t
   :ensure t
-  ;;:if my-system-is-sherri
-  ;;:if (or (my-system-is-floyd-or-sherri) (my-system-is-powerplantlinux))
-  ;;:defer 10
   :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
   :config
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
@@ -6844,7 +6812,6 @@ be of some use.»
 
 #+BEGIN_SRC emacs-lisp
 (use-package char-menu
-  ;;:disabled t
   :ensure t
 ;;  :if (my-system-type-is-gnu)
   :defer 10
@@ -6884,7 +6851,6 @@ unchained from constraints of backward compatibility.
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
-  ;; :disabled t
   :ensure t
   :defer 10
 )
@@ -6983,7 +6949,6 @@ Cool package but I don't need it at the moment. Therefore disabled.
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package pandoc-mode
-    ;; :disabled t
     :ensure nil
     :defer 10
   )
@@ -7113,15 +7078,13 @@ How to use:
 #+BEGIN_SRC emacs-lisp
 ;;(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
 (use-package command-log-mode
-  :disabled t
   :ensure t
   :defer 10
   :diminish command-log-mode
   :config ;; executed after loading package
   (add-hook 'LaTeX-mode-hook 'command-log-mode)
+  (bind-key "k" #'clm/open-command-log-buffer my-map)
 )
-
-(bind-key "k" #'clm/open-command-log-buffer my-map)
 #+END_SRC
 
 A test for starting the mode probably together with the command-log-buffer:
@@ -7195,7 +7158,6 @@ https://github.com/rolandwalker/unicode-fonts
 
 #+BEGIN_SRC emacs-lisp
 (use-package unicode-fonts
-  ;;:disabled t
   :ensure t
   :if (my-system-is-floyd)
   :defer 10
@@ -7238,7 +7200,7 @@ handy when programming: visualize all occurrences of a variable/function.
 ;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
 ;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 #+END_SRC
-** restclient
+** DISABLED restclient
 
 [[https://github.com/pashky/restclient.el][GitHub - pashky/restclient.el: HTTP REST client tool for emacs]]
 
@@ -7252,7 +7214,6 @@ also allows for using variables. More flexibility is almost impossible.
 
 #+BEGIN_SRC emacs-lisp
 (use-package restclient
-  :disabled t  ;; stop loading if 't'
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :defer 10
   :if (my-system-type-is-windows)
@@ -7940,7 +7901,6 @@ installed on 2015-03-22
 
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
-  ;; :disabled t
   :ensure t
   :defer 20
   :config ;; executed after loading package
@@ -8270,7 +8230,6 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 
 * Local Variables
 # Local Variables:
-# eval: (org-expiry-deinsinuate)
 # mode: auto-fill
 # mode: flyspell
 # eval: (ispell-change-dictionary "en_US")
