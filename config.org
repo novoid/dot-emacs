@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-05-31 19:38:02 vk>
+# Time-stamp: <2017-06-03 09:58:51 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -471,6 +471,7 @@ Adding cygwin bash shell
 #+BEGIN_SRC emacs-lisp
           ;;(setq shell-file-name "c:/cygwin64/bin/bash") ;; Cygwin
           (setq shell-file-name (concat cygwin-root-directory "bin/zsh")) ;; Babun
+          ;;(setq shell-file-name (concat cygwin-root-directory "bin/bash")) ;; Babun
           (setenv "SHELL" shell-file-name)
           (setq explicit-shell-file-name shell-file-name)
           (setq ediff-shell shell-file-name)
@@ -7074,7 +7075,10 @@ and memorize the commands.
 (global-set-key (kbd "M-.")          'move-text-down)
 #+END_SRC
 
-** command-log-mode → my-map k
+** DISABLED command-log-mode → my-map k
+
+2017-06-01: package was unavailable → disabled for now since I don't
+use it anyway.
 
 https://github.com/lewang/command-log-mode - «Show event history and
 command history of some or all buffers.»
