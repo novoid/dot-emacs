@@ -4765,6 +4765,23 @@ TODOs, called “habits”.»
 
 *** org-agenda-exporter-settings
 
+I export my agendas defined in =org-agenda-custom-commands= that have
+an export file associated (as of 2017-06-03:
+=agenda_180d_filtered.html= and =agenda_details.html=) using a daily
+[[https://en.wikipedia.org/wiki/Cron][cronjob]] that looks like:
+
+: 0 4 * * * /usr/bin/emacs --batch --load /home/vk/.emacs.d/init.el --eval '(progn (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files)) (org-store-agenda-views))' >/dev/null 2>&1
+
+As you can see, I override =org-agenda-files= with both, my work and
+my non-work agenda files. Otherwise, I'd get the host-specific
+non-work-only agenda which I don't want to see in my exported agenda
+HTML files.
+
+The generated HTML files are placed in a directory that gets
+automatically synced via [[https://syncthing.net/][Syncthing]] to my Android phone. The phone has
+browser bookmarks set for the agenda files and my desktop has icons
+for those bookmarks. This is how I access my agenda files on my phone.
+
 customizing the agenda export of =C-x C-w=
 - http://orgmode.org/manual/Exporting-Agenda-Views.html
 #+BEGIN_SRC emacs-lisp
