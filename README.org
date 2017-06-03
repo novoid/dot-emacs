@@ -14,6 +14,8 @@ Now, my Emacs configuration is in a file named =config.org=. My
 Elisp blocks into the =config.el=. This generated file is interpreted
 by my GNU/Emacs on startup.
 
+Please do read [[http://karl-voit.at/2017/06/03/emacs-org][my blog article on how this Emacs configuration works]].
+
 ** Stuff Which Is Not Contained in the Git Repository
 
 Please take a look at my ~.gitignore~ file that contains some things I
