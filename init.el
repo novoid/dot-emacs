@@ -1,10 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2017-05-30 21:54:22 vk>
+;; Time-stamp:    <2017-06-15 14:50:24 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
-;; License:       This file is licensed under the GPL v3.
+;; License:       This file is licensed under the GPL v2.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -17,13 +17,14 @@
 ;; log starting time to come up with a duration afterwards
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 
+;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
+(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
+(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
+(require 'org)
+
 ;; user-emacs-directory on Windows is "c:/Users/karl.voit/AppData/Roaming/.emacs.d/" which I don't want to use
 (setq my-user-emacs-directory "~/.emacs.d/")
 
-;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
-(require 'org)
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -84,12 +85,10 @@ Note the weekly scope of the command's precision.")
 	      (add-to-list 'body-list body)
 	      ))))
       (with-temp-file output-file
-	;; Thanks for http://irreal.org/blog/?p=6236 and https://github.com/marcowahl/.emacs.d/blob/master/init.org for the read-only-trick:
-        (insert ";; config.el --- This is the GNU/Emacs config file of Karl Voit. -*- eval: (read-only-mode 1) -*-\n")
-        (insert ";; ======================================================================================\n")
+        (insert ";; ============================================================\n")
         (insert ";; Don't edit this file, edit config.org' instead ...\n")
-        (insert ";; Auto-generated at " (format-time-string current-date-time-format (current-time)) "on host " system-name "\n")
-        (insert ";; ======================================================================================\n\n")
+        (insert ";; Auto-generated at " (format-time-string current-date-time-format (current-time)) " on host " system-name "\n")
+        (insert ";; ============================================================\n\n")
         (insert (apply 'concat (reverse body-list))))
       (message "—————• Wrote %s" output-file))))
 
@@ -127,6 +126,9 @@ Note the weekly scope of the command's precision.")
  '(org-contacts-birthday-property "BORN" t)
  '(org-contacts-files "~/share/all/org-mode/contacts.org" t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
+ '(package-selected-packages
+   (quote
+    (yasnippet buttercup yankpad yafolding wttrin use-package unicode-fonts undo-tree synonyms suggest spray smeargle smart-mode-line scss-mode restclient request-deferred ox-reveal ox-pandoc ox-clip ox-asciidoc org-table-sticky-header org-bullets nyan-mode neotree mode-icons markdown-mode magit json-mode highlight-symbol helm gnuplot git-timemachine flycheck eno elpy counsel char-menu bm anzu alert adoc-mode)))
  '(safe-local-variable-values
    (quote
     ((TeX-master . "misc")
@@ -136,6 +138,7 @@ Note the weekly scope of the command's precision.")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-03 09:58:51 vk>
+# Time-stamp: <2017-06-15 15:29:42 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -1301,6 +1301,8 @@ Please do evaluate this only if "aspell" is found on the system:
 (when (my-eval-if-binary-or-warn "aspell")
 #+END_SRC
 
+** General settings
+
 setting path to flyspell-mode.el from MacPorts:
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-darwin)
@@ -1313,12 +1315,15 @@ save to user dictionary without asking:
 (setq ispell-silently-savep t)
 #+END_SRC
 
+** flyspell
+
 flyspell.el <http://kaolin.unice.fr/~serrano/>
 #+BEGIN_SRC emacs-lisp :tangle no
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checking" t)
 #+END_SRC
 
-Dictionary settings:
+** Dictionary Settings
+
 - http://www.linuxfaq.de/f/cache/146.html
 #+BEGIN_SRC emacs-lisp
 ;(set-default 'ispell-local-dictionary my-german-ispell-dictionary)
@@ -1360,6 +1365,8 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
     (dolist (elem langs) (ring-insert lang-ring elem)))
   )
 #+END_SRC
+
+** my-toggle-ispell-language() → S-F5
 
 =my-toggle-ispell-language()= because I use two languages and switch
 between them:
@@ -1405,6 +1412,8 @@ Modes for programming languages; check spelling only in comments/strings
 (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
 #+END_SRC
 
+** Keybindings
+
 bind-keys:
 #+BEGIN_SRC emacs-lisp
 (define-key global-map [(f5)] 'flyspell-mode)
@@ -1418,6 +1427,8 @@ bind-keys:
 (bind-key "ff" 'flyspell-correct-word-before-point my-map)
 (define-key global-map [(f7)] 'flyspell-correct-word-before-point)
 #+END_SRC
+
+** End of aspell
 
 #+BEGIN_SRC emacs-lisp
 );; when aspell found
@@ -3617,9 +3628,15 @@ Defining memacs variables:
 
 =my-handle-tsfile-link (querystring)=
 - 2016-12-31 by John Kitchin
+
 #+BEGIN_SRC emacs-lisp
   (defun my-handle-tsfile-link (querystring)
-    ;;(message (concat "querystring: " querystring))
+    (message (concat "DEBUG1: querystring: " querystring))
+    (message (concat "DEBUG2: "
+                            "grep \""
+                            querystring
+                            "\" "
+                            (concat memacs-root memacs-file-pattern)))
     ;; get a list of hits
     (let ((queryresults (split-string
                          (s-trim
@@ -3630,6 +3647,7 @@ Defining memacs variables:
                             "\" "
                             (concat memacs-root memacs-file-pattern))))
                          "\n" t)))
+      (message (concat "DEBUG3: queryresults: " (car queryresults)))
       ;; check length of list (number of lines)
       (cond
        ((= 0 (length queryresults))
@@ -5546,12 +5564,12 @@ http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-i
 
 Redirect stderr to stdout in order to see it in the results:
 id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (if (my-system-type-is-gnu)
   ;outdated: org-babel-sh-command was removed with org-mode v8.3:
   ;outdated;  (setq org-babel-sh-command
   ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
-  (setq shell-file-name "~/.emacs.d/data/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
+  ;(setq shell-file-name "~/.emacs.d/data/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
   )
 #+END_SRC
 
@@ -5963,7 +5981,6 @@ editing window.»
 
 #+BEGIN_SRC emacs-lisp
 (use-package minimap
-  :disabled t
   :if (my-system-type-is-gnu)
   :ensure t
   :diminish minimap-mode
@@ -6867,6 +6884,7 @@ flexible, simple tools for minibuffer completion in Emacs
   :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
   :config
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
+  (counsel-mode 1)
 )
 #+END_SRC
 
@@ -7274,6 +7292,7 @@ handy when programming: visualize all occurrences of a variable/function.
 ;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
 ;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
 #+END_SRC
+
 ** DISABLED restclient
 
 [[https://github.com/pashky/restclient.el][GitHub - pashky/restclient.el: HTTP REST client tool for emacs]]
