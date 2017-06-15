@@ -7297,6 +7297,20 @@ also allows for using variables. More flexibility is almost impossible.
   ;; :mode "\\.rb\\'"
 )
 #+END_SRC
+** neotree → F9
+
+[[https://github.com/jaypei/emacs-neotree][NeoTree]] offers a file tree side-panel like NerdTree for Vim.
+
+installed on 2015-03-22
+
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :ensure t
+  :defer 20
+  :config ;; executed after loading package
+  (global-set-key [f9] 'neotree-toggle)
+)
+#+END_SRC
 
 * My helper functions (part II)
 
@@ -7965,21 +7979,6 @@ a configurable list of functions.»
 
 ;; I could not make it work with C-/ - so I stick to M-/
 (global-set-key (kbd "M-/") 'hippie-expand)
-#+END_SRC
-
-** neotree → F9
-
-[[https://github.com/jaypei/emacs-neotree][NeoTree]] offers a file tree side-panel like NerdTree for Vim.
-
-installed on 2015-03-22
-
-#+BEGIN_SRC emacs-lisp
-(use-package neotree
-  :ensure t
-  :defer 20
-  :config ;; executed after loading package
-  (global-set-key [f9] 'neotree-toggle)
-)
 #+END_SRC
 
 ** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
