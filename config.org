@@ -3888,7 +3888,7 @@ files; on my other machines, start with my non-work-related files.
         (put 'my-toggle-agenda-files 'state t))))
 
 
-  (bind-key "A" 'my-togle-agenda-files my-map)
+  (bind-key "A" 'my-toggle-agenda-files my-map)
 
    (if (my-system-type-is-windows)
        (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
