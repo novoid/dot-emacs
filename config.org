@@ -1193,28 +1193,29 @@ Org-mode syntax.
 - id:2016-05-22-my-yank-windows
 
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
+  (when (my-system-type-is-windows)
 
-  (defun my-yank-windows ()
-    "yanks from clipboard and replaces typical (list) markup"
-    (interactive)
-    (let ((mybegin (point)))              ;; mark beginning of line as start point
-      (clipboard-yank)
-      (save-restriction
-        (narrow-to-region mybegin (point))  ;; ignore everything outside of region
-        (goto-char (point-min))
-        (while (search-forward "\"	" nil t)
-  	(replace-match "- " nil t))
-        (while (search-forward "o	" nil t)
-  	(replace-match "  - " nil t))
-        ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
-        ;; (replace-match "1. " nil t))
-        ))
-    )
+    (defun my-yank-windows ()
+      "yanks from clipboard and replaces typical (list) markup"
+      (interactive)
+      (let ((mybegin (point)))              ;; mark beginning of line as start point
+        (clipboard-yank)
+        (save-restriction
+          (narrow-to-region mybegin (point))  ;; ignore everything outside of region
+          (goto-char (point-min))
+          (while (search-forward "\"	" nil t)
+            (replace-match "- " nil t))
+          (while (search-forward "o	" nil t)
+            (replace-match "  - " nil t))
+          ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
+          ;; (replace-match "1. " nil t))
+          (recode-region (point-min) (point-max) 'latin-1 'windows-1252); fix char encoding, e.g.: \366 -> ö
+          ))
+      )
 
-  (bind-key "y" 'my-yank-windows my-map)
+    (bind-key "y" 'my-yank-windows my-map)
 
-)
+  )
 #+END_SRC
 
 ** my-fill-or-unfill() paragraph
