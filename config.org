@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-15 15:29:42 vk>
+# Time-stamp: <2017-06-15 17:31:26 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -6888,7 +6888,7 @@ flexible, simple tools for minibuffer completion in Emacs
 )
 #+END_SRC
 
-** char-menu - insert special characters → F7
+** char-menu - insert special characters → F4
 
 «[[https://github.com/mrkkrp/char-menu][This package]] allows to insert arbitrary symbols in Emacs in a very
 efficient and straightforward way. Whether you ever need to insert
@@ -6902,7 +6902,6 @@ be of some use.»
 #+BEGIN_SRC emacs-lisp
 (use-package char-menu
   :ensure t
-;;  :if (my-system-type-is-gnu)
   :defer 10
   :config
   (setq char-menu
