@@ -497,6 +497,37 @@ END of Cygwin/babun configuration
       )
 #+END_SRC
 
+** Starting GNU/Emacs on Windows
+
+First, I create a batch file which starts the =emacs.exe= with
+optional Org-mode files as parameters:
+
+=C:\Users\Karl.Voit\bin\windows-start-orgmode.bat=
+#+BEGIN_EXAMPLE
+REM Here, invoke some syncronization mechanism like Unison:
+REM "C:\Program Files\bin\unison-2.40.102-gtk.exe" grmlvrs
+
+REM As of 2017, I switched from Unison to Syncthing
+
+"C:\Program Files\emacs-24.5-bin-i686-mingw32\bin\emacs.exe"
+
+REM Re-syncing after leaving Emacs:
+REM "C:\Program Files\bin\unison-2.40.102-gtk.exe" grmlvrs
+
+REM End
+#+END_EXAMPLE
+
+This batch file is included in a Visual Basic file. This way, I am
+able to start my GNU/Emacs using misc app-launcher solutions: batch
+files are not listed in typical app-launchers whereas VBS files work
+at least with my [[https://autohotkey.com/docs/Hotstrings.htm][Hotstrings]]:
+
+=C:\Users\Karl.Voit\bin\orgmode.vbs= or in Cygwin =/home/karl.voit/bin/orgmode.vbs=
+#+BEGIN_EXAMPLE
+'HideBat.vbs
+CreateObject("Wscript.Shell").Run "C:\Users\Karl.Voit\bin\windows-start-orgmode.bat", 0, True
+#+END_EXAMPLE
+
 * Looking for binaries
 
 Some Emacs configuration snippets relate to external programs such as
