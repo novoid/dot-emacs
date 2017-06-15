@@ -2725,7 +2725,9 @@ Inserts URL from clipboard and retrieves title as Org-mode link
           ;; org-link. Can be extended.
           (replace-table '(("\\[" . "{")
                            ("\\]" . "}")
-                           ("&mdash;" . "—")))
+                           ("&mdash;" . "—")
+                           ("&amp;" . "&")
+                           ))
           ;; Maximum length of the title.
           (max-length 100)
           ;; Removing redundant whitespaces from the title.
