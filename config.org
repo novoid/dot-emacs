@@ -3838,7 +3838,7 @@ Definitions of non-work files:
 					          "~/share/all/org-mode/errors_public_voit.org"
 					          "~/share/all/org-mode/errors_orgmode_commits.org"
 					          "~/share/all/org-mode/fhsp.org"
-					          "~/src/lazyblorg/lazyblorg.org"
+					          "~/src/lazyblorg/wiki/Roadmap.org"
 					          "~/share/all/org-mode/memacs/roylog.org"
 					          ;;"~/share/all/org-mode/memacs/archive.org"
 					          "~/share/all/org-mode/memacs/bank.org"
