@@ -5971,6 +5971,7 @@ editing window.»
   :config ;; executed after loading package
   (setq minimap-window-location 'right)
   ;;deactivated;; (setq minimap-window-location 'right)
+  (global-set-key [f8] 'minimap-mode)
 )
 #+END_SRC
 
