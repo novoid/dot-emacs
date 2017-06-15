@@ -1372,6 +1372,24 @@ between them:
     (ispell-change-dictionary lang)))
 #+END_SRC
 
+** auto-dictionary-mode
+
+This mode determines the dictionary language for the current buffer
+according to the text found. It switches language automatically when
+you switch the language you're typing.
+
+What a relief for bilingual people like me (German/English).
+
+- from: https://github.com/nschum/auto-dictionary-mode
+
+#+BEGIN_SRC emacs-lisp
+(my-load-local-el "contrib/auto-dictionary-mode/auto-dictionary.el")
+(require 'auto-dictionary)
+(add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
+#+END_SRC
+
+** Spellchecking Source Code
+
 Modes for programming languages; check spelling only in comments/strings
   - http://www.lrde.epita.fr/cgi-bin/twiki/view/Projects/EmacsTricks
 #+BEGIN_SRC emacs-lisp :tangle no
