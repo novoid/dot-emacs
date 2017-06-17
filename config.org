@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-15 17:31:26 vk>
+# Time-stamp: <2017-06-17 09:20:28 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -7401,6 +7401,10 @@ PREVIOUS (simple) approach:
 ;;fancy search:  (global-set-key "\C-s" 'swiper)
 ;;normal search: (global-set-key "\C-s" 'isearch-forward)
 #+END_SRC
+
+On 2017-06-17, I stubled over an even more sophisticated setup for
+deciding on a search tool:
+https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-ivy.el
 
 ** my-toggle-beginner-setup() → F1
 
