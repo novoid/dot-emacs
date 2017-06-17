@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-17 09:20:28 vk>
+# Time-stamp: <2017-06-17 10:15:47 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -3831,17 +3831,17 @@ Definitions of non-work files:
 					            "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
 					            "c:/Users/karl.voit/share/all/org-mode/errors_orgmode_commits.org"
 					            ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
-					            "c:/Users/karl.voit/share/all/org-mode/references.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/references.org"
 					            ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
 					            "c:/Users/karl.voit/share/all/org-mode/memacs/error.org"
-					            "c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
-					            "c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
-					            "c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
-					            "c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
+					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
 					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
                                                  ))))
     (setq my-nonwork-agenda-files (append (quote (
-                                                  "~/share/all/org-mode/archive.org"
+                                            ;;"~/share/all/org-mode/archive.org"
 					          "~/share/all/org-mode/misc.org"
 					          "~/share/all/org-mode/issues.org"
 					          "~/share/all/org-mode/projects.org"
@@ -3858,24 +3858,24 @@ Definitions of non-work files:
 					          "~/share/all/org-mode/errors_orgmode_commits.org"
 					          "~/share/all/org-mode/fhsp.org"
 					          "~/src/lazyblorg/wiki/Roadmap.org"
-					          "~/share/all/org-mode/memacs/roylog.org"
+					          "~/share/all/org-mode/memacs/error.org"
+					          ;;"~/share/all/org-mode/memacs/roylog.org"
 					          ;;"~/share/all/org-mode/memacs/archive.org"
-					          "~/share/all/org-mode/memacs/bank.org"
+					          ;;"~/share/all/org-mode/memacs/bank.org"
 					          ;;"~/share/all/org-mode/memacs/datebk6.org"
 					          ;;"~/share/all/org-mode/memacs/delicious.org"
-					          "~/share/all/org-mode/memacs/error.org"
-					          "~/share/all/org-mode/memacs/files.org"
-					          "~/share/all/org-mode/memacs/GCal.org"
-					          "~/share/all/org-mode/memacs/git.org"
+					          ;;"~/share/all/org-mode/memacs/files.org"
+					          ;;"~/share/all/org-mode/memacs/GCal.org"
+					          ;;"~/share/all/org-mode/memacs/git.org"
 					          ;;"~/share/all/org-mode/memacs/ifiles.org"
-					          "~/share/all/org-mode/memacs/mbox.org"
-					          "~/share/all/org-mode/memacs/news.org"
-					          "~/share/all/org-mode/memacs/phonecalls.org"
-					          "~/share/all/org-mode/memacs/SMS.org"
-					          "~/share/all/org-mode/memacs/tweets.org"
+					          ;;"~/share/all/org-mode/memacs/mbox.org"
+					          ;;"~/share/all/org-mode/memacs/news.org"
+					          ;;"~/share/all/org-mode/memacs/phonecalls.org"
+					          ;;"~/share/all/org-mode/memacs/SMS.org"
+					          ;;"~/share/all/org-mode/memacs/tweets.org"
 					          ;;"~/share/all/org-mode/memacs/www.org"
-					          "~/share/all/org-mode/memacs/movies.org"
-					          "~/share/all/org-mode/memacs/Filmliste.org"
+					          ;;"~/share/all/org-mode/memacs/movies.org"
+					          ;;"~/share/all/org-mode/memacs/Filmliste.org"
                                                ))))
     )
 
