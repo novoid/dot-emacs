@@ -2738,6 +2738,7 @@ Inserts URL from clipboard and retrieves title as Org-mode link
                            ("\\]" . "}")
                            ("&mdash;" . "—")
                            ("&amp;" . "&")
+                           ("&#8211;" . "–")
                            ))
           ;; Maximum length of the title.
           (max-length 100)
