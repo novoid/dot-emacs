@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-17 10:15:47 vk>
+# Time-stamp: <2017-06-17 11:29:01 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -146,6 +146,13 @@ installs its local copies of the packages:
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 #+END_SRC
 
+Add [[https://github.com/jorgenschaefer/elpy][elpy repository]]:
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+#+END_SRC
+
+
 Bugfixing:
 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
 - https://github.com/nicferrier/elmarmalade/issues/55#issuecomment-166271364
@@ -164,7 +171,9 @@ Initialize packages:
 
 #+BEGIN_SRC emacs-lisp
 ;; 2015-11-25: https://github.com/jwiegley/use-package
-(require 'use-package)
+(eval-when-compile (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 ;; http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html
 (setq package-enable-at-startup nil)
@@ -1707,6 +1716,13 @@ Ropemacs:
 #+END_SRC
 
 - auto-complete mode:
+#+BEGIN_SRC emacs-lisp
+(use-package auto-complete
+  :ensure t
+)
+#+END_SRC
+
+
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'load-path (concat my-user-emacs-directory "vendor/auto-complete-1.2"))
 (use-package auto-complete-config)
@@ -5889,7 +5905,10 @@ navigate through the org manual instantly:
 Append the Org-mode documentation from the git repository to the info-paths:
 #+BEGIN_SRC emacs-lisp
   (autoload 'info "info.el")
-  (add-to-list 'Info-additional-directory-list (concat my-user-emacs-directory "contrib/org-mode/doc/"))
+  (eval-after-load 'info
+    ;;(add-to-list 'Info-additional-directory-list (concat my-user-emacs-directory "contrib/org-mode/doc/")) ;; causes "void-variable" error
+    (setq Info-additional-directory-list (concat my-user-emacs-directory "contrib/org-mode/doc/"))
+    )
 #+END_SRC
 
 Bind a keyboard shortcut to open the Org manual:
@@ -6884,7 +6903,6 @@ flexible, simple tools for minibuffer completion in Emacs
   :ensure t
   :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
   :config
-  (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
   (counsel-mode 1)
 )
 #+END_SRC
@@ -8044,6 +8062,8 @@ things, some of them only in interactive mode.
 ;; omit some things when running in batch-mode:
 (when (not noninteractive)
 
+  (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
+
   ;(sleep-for 2)
   (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
@@ -8328,5 +8348,4 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 # Local Variables:
 # mode: auto-fill
 # mode: flyspell
-# eval: (ispell-change-dictionary "en_US")
 # End:
