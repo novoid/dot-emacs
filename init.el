@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2017-06-17 10:17:02 vk>
+;; Time-stamp:    <2017-06-17 21:53:04 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -123,12 +123,16 @@ Note the weekly scope of the command's precision.")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-contacts-address-property "CITY" t)
+ '(org-contacts-birthday-property "BORN" t)
+ '(org-contacts-files "~/share/all/org-mode/contacts.org" t)
+ '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(safe-local-variable-values
    (quote
-    ((TeX-master . "misc")
+    ((eval ispell-change-dictionary "en_US")
+     (TeX-master . "misc")
      (TeX-master . "references")
-     (eval org-expiry-deinsinuate)
-     ))))
+     (eval org-expiry-deinsinuate)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
