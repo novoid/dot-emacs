@@ -4625,7 +4625,7 @@ This is a neat way of beautifying the agenda.
 
 Unfortunately, the clean way of defining the data directory relatively
 to the path stored in =my-user-emacs-directory= does not work:
-: (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
+: (concat my-user-emacs-directory "bin/R6-logo_18x12.jpg") nil nil :ascent center)
 
 I don't know how to fix this and so I stick with the hard coded path
 and with a bleeding heart.
@@ -4637,12 +4637,12 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-;;		  '("r6" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
-		  '("r6" "~/.emacs.d/data/R6-logo_18x12.jpg" nil nil :ascent center)
+;;		  '("r6" (concat my-user-emacs-directory "bin/R6-logo_18x12.jpg") nil nil :ascent center)
+		  '("r6" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		  '("infonova" (concat my-user-emacs-directory "data/R6-logo_18x12.jpg") nil nil :ascent center)
-		  '("infonova" "~/.emacs.d/data/R6-logo_18x12.jpg" nil nil :ascent center)
+;;		  '("infonova" (concat my-user-emacs-directory "bin/R6-logo_18x12.jpg") nil nil :ascent center)
+		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
 		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
@@ -4654,28 +4654,28 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("contacts" (concat my-user-emacs-directory "data/user-identity.png") nil nil :ascent center)
-		 '("contacts" "~/.emacs.d/data/user-identity.png" nil nil :ascent center)
+;;		 '("contacts" (concat my-user-emacs-directory "bin/user-identity.png") nil nil :ascent center)
+		 '("contacts" "~/.emacs.d/bin/user-identity.png" nil nil :ascent center)
 		     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("public_voit" (concat my-user-emacs-directory "data/application-rss+xml.png") nil nil :ascent center)
-		 '("public_voit" "~/.emacs.d/data/application-rss+xml.png" nil nil :ascent center)
+;;		 '("public_voit" (concat my-user-emacs-directory "bin/application-rss+xml.png") nil nil :ascent center)
+		 '("public_voit" "~/.emacs.d/bin/application-rss+xml.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("misc" (concat my-user-emacs-directory "data/emblem-new.png") nil nil :ascent center)
-		 '("misc" "~/.emacs.d/data/emblem-new.png" nil nil :ascent center)
+;;		 '("misc" (concat my-user-emacs-directory "bin/emblem-new.png") nil nil :ascent center)
+		 '("misc" "~/.emacs.d/bin/emblem-new.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("hardware" (concat my-user-emacs-directory "data/camera-photo.png") nil nil :ascent center)
-		 '("hardware" "~/.emacs.d/data/camera-photo.png" nil nil :ascent center)
+;;		 '("hardware" (concat my-user-emacs-directory "bin/camera-photo.png") nil nil :ascent center)
+		 '("hardware" "~/.emacs.d/bin/camera-photo.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/devices/camera-photo.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("bwg" (concat my-user-emacs-directory "data/go-home.png") nil nil :ascent center)
-		 '("bwg" "~/.emacs.d/data/go-home.png" nil nil :ascent center)
+;;		 '("bwg" (concat my-user-emacs-directory "bin/go-home.png") nil nil :ascent center)
+		 '("bwg" "~/.emacs.d/bin/go-home.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
 		  )
    )
@@ -5278,10 +5278,10 @@ https://github.com/yjwen/org-reveal
   ;;(setq org-reveal-root "file:///d:/reveal.js")
   (cond ((my-system-type-is-gnu)
          (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
-         (setq org-reveal-extra-css "file:///home/vk/.emacs.d/data/reveal_theme_night_local.css"))
+         (setq org-reveal-extra-css "file:///home/vk/.emacs.d/bin/reveal_theme_night_local.css"))
         ((my-system-type-is-windows)
-         (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/data/reveal.js/")
-         (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/data/reveal_theme_night_local.css"))
+         (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/bin/reveal.js/")
+         (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/bin/reveal_theme_night_local.css"))
         (t
          (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
     )
@@ -5600,7 +5600,7 @@ id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
   ;outdated: org-babel-sh-command was removed with org-mode v8.3:
   ;outdated;  (setq org-babel-sh-command
   ;outdated;        "~/bin/zsh_stderr_redirected_to_stdout.sh")
-  ;(setq shell-file-name "~/.emacs.d/data/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
+  ;(setq shell-file-name "~/.emacs.d/bin/zsh_stderr_redirected_to_stdout.sh");; id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
   )
 #+END_SRC
 
@@ -6678,12 +6678,12 @@ disabled 2015-08-31 since I don't use it for now.
   - e.g. /foobar/mthesaur.txt.cache, not mthesaur.txt.cache
 
 #+BEGIN_SRC emacs-lisp
-(if (file-exists-p (concat my-user-emacs-directory "data/mthes10/mthesaur.txt"))
+(if (file-exists-p (concat my-user-emacs-directory "bin/mthes10/mthesaur.txt"))
   (use-package synonyms
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :init ;; executed before loading package
-    (setq synonyms-file        (concat my-user-emacs-directory "data/mthes10/mthesaur.txt"))
-    (setq synonyms-cache-file  (concat my-user-emacs-directory "data/vkcachefile"))
+    (setq synonyms-file        (concat my-user-emacs-directory "bin/mthes10/mthesaur.txt"))
+    (setq synonyms-cache-file  (concat my-user-emacs-directory "bin/vkcachefile"))
     :config
     (defun my-synonym-current-word ()
       "Lookup synonyms for current word."
@@ -6691,7 +6691,7 @@ disabled 2015-08-31 since I don't use it for now.
       (synonyms-lookup (thing-at-point 'word) nil nil))
     :bind (:map my-map ("S" . my-synonym-current-word))
   )
-(message (concat "»»» I could not locate \"" my-user-emacs-directory "data/mthes10/mthesaur.txt\""))
+(message (concat "»»» I could not locate \"" my-user-emacs-directory "bin/mthes10/mthesaur.txt\""))
 )
 #+END_SRC
 
@@ -7514,11 +7514,11 @@ setup to look like a default Emacs.
   ;;          (lambda ()
   ;;            (define-key global-map [tool-bar pdf-button]
   ;;              '(menu-item "Export to PDF" org-latex-export-to-pdf
-  ;;                          :image (image :type png :file "~/.emacs.d/data/icon_PDF_16x16.png")
+  ;;                          :image (image :type png :file "~/.emacs.d/bin/icon_PDF_16x16.png")
   ;;                          ))))
   (define-key global-map [tool-bar pdf-button]
     '(menu-item "Export to PDF" org-latex-export-to-pdf
-                :image (image :type png :file (concat my-user-emacs-directory "data/icon_PDF_16x16.png"))
+                :image (image :type png :file (concat my-user-emacs-directory "bin/icon_PDF_16x16.png"))
                 ))
 )
 
