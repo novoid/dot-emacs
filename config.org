@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-17 11:29:01 vk>
+# Time-stamp: <2017-06-23 22:48:34 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -803,6 +803,10 @@ https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
       (setq edit-server-new-frame nil)
       (edit-server-start)))
 #+END_SRC
+
+2017-06-20: [[https://www.reddit.com/r/emacs/comments/6ha4tl/a_little_trick_with_eww/][A little trick with EWW : emacs]] - presents code to
+interactively select your browser of choice.
+
 * Styling
 
 The (sub-)headings here deal with the visual appeal of my GNU/Emacs. I
@@ -2389,6 +2393,7 @@ Here is a list of file extensions that should be openend outside of Emacs:
   ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
 #+END_SRC
 
+
 ** Styling
 
 Omit the headline-asterisks except the last one:
@@ -3051,6 +3056,7 @@ the result as a time value."
 		       (cdr expr))))
 	    `,@exprs))))
 #+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -3607,6 +3613,8 @@ Custom Link Completion
     "Concatenate STRINGS."
     (apply 'concat strings))
 #+END_SRC
+
+You might as well be interested in [[http://pragmaticemacs.com/emacs/insert-internal-org-mode-links-the-ivy-way/][Pragmatic Emacs: Insert internal org-mode links the ivy way]]
 
 *** Links to Outlook entities
 
@@ -6988,7 +6996,7 @@ be of some use.»
   :defer 10
   :config
   (setq char-menu
-        '("→" "…" "š" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
+        '("→" "…" "✓" "š" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
          ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
@@ -8381,7 +8389,7 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 | <f12>      | my-toggle-naked-emacs              |
 
 #+BEGIN_SRC emacs-lisp :results output :tangle no :exports result
-(let ((ks '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>" "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"))
+(let ((ks '("<f1>" "<S-f1>" "<f2>" "<S-f2>" "<f3>" "<S-f3>" "<f4>" "<S-f4>" "<f5>" "<S-f5>" "<f6>" "<S-f6>" "<f7>" "<S-f7>" "<f8>" "<S-f8>" "<f9>" "<S-f9>" "<f10>" "<S-f10>" "<f11>" "<S-f11>" "<f12>" "<S-f12>"))
       )
   (dolist (k ks)
     (prin1 (concat
@@ -8394,17 +8402,29 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 #+RESULTS:
 #+begin_example
 "| <f1> | my-toggle-beginner-setup
+""| <S-f1> | my-toggle-dark-bright-theme
 ""| <f2> | goto-last-change
+""| <S-f2> | nil
 ""| <f3> | goto-last-change-reverse
+""| <S-f3> | nil
 ""| <f4> | char-menu
+""| <S-f4> | nil
 ""| <f5> | flyspell-mode
+""| <S-f5> | my-toggle-ispell-language
 ""| <f6> | flyspell-goto-next-error
+""| <S-f6> | nil
 ""| <f7> | flyspell-correct-word-before-point
+""| <S-f7> | nil
 ""| <f8> | nil
-""| <f9> | nil
+""| <S-f8> | nil
+""| <f9> | neotree-toggle
+""| <S-f9> | nil
 ""| <f10> | menu-bar-open
+""| <S-f10> | nil
 ""| <f11> | toggle-frame-fullscreen
-""| <f12> | my-toggle-naked-emacs
+""| <S-f11> | nil
+""| <f12> | nil
+""| <S-f12> | nil
 "
 #+end_example
 
