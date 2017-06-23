@@ -20,3 +20,5 @@ config.el
 OUTDATED
 tutorial
 .gitignore
+var
+etc

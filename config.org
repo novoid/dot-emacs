@@ -106,17 +106,6 @@ English time-stamps in Org-mode (instead of localized German ones):
 (add-hook 'prelude-prog-mode-hook 'disable-guru-mode t)
 #+END_SRC
 
-** Server mode
-
-Start Emacs as a server process: new files can be visited via
-=emacsclient= (instead of parallel =emacs= instances). Therefore, I
-don't have to run multiple instances (which occupies RAM storage) and
-I am able to open new files instantly.
-
-#+BEGIN_SRC emacs-lisp
-(server-start)
-#+END_SRC
-
 ** Package
 
 Configure the package manager of my GNU/Emacs.
@@ -274,6 +263,31 @@ from: http://www.zonix.de/html40/linux/emacsgnus.html
     (if (file-exists-p fullname)
 	(load fullname)
       (message (format "Loading %s (source)...failed" fullname)))))
+#+END_SRC
+
+* no-littering
+
+From:
+- [[http://manuel-uberti.github.io/programming/2017/06/17/nolittering/][Manuel Uberti: Keeping your .emacs.d clean]]
+- https://github.com/tarsius/no-littering
+
+It sets some default paths in order to separate automatically created
+files and directories.
+
+#+BEGIN_SRC emacs-lisp
+(my-load-local-el "contrib/no-littering/no-littering.el")
+(require 'no-littering)
+#+END_SRC
+
+* Server mode
+
+Start Emacs as a server process: new files can be visited via
+=emacsclient= (instead of parallel =emacs= instances). Therefore, I
+don't have to run multiple instances (which occupies RAM storage) and
+I am able to open new files instantly.
+
+#+BEGIN_SRC emacs-lisp
+(server-start)
 #+END_SRC
 
 * my-system-is-FOOBAR
@@ -1484,11 +1498,11 @@ organization with many tasks and their dependencies).
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
   :demand t
-  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :mode ("/\\.emacs\\.d/etc/yasnippet/snippets/" . snippet-mode)
   :diminish yas-minor-mode
   :defer 15
   :config
-  (yas-load-directory (concat my-user-emacs-directory "snippets/"))
+  (yas-load-directory (concat my-user-emacs-directory "etc/yasnippet/snippets/"))
   (yas-global-mode 1)
 
   ;; http://yasnippet.googlecode.com/svn/trunk/doc/index.html
