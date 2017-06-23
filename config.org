@@ -2596,6 +2596,8 @@ Bind the key:
 This function summarizes some other functions that clear up the
 current Org-mode, re-building some caches and so fort.
 
+Take a look at =my-org-startup-visibility()= as well.
+
 #+BEGIN_SRC emacs-lisp
 (defun my-reset-org ()
   "Clears all kinds of Org-mode caches and re-builds them if possible"
@@ -2610,6 +2612,54 @@ current Org-mode, re-building some caches and so fort.
      )
    )
   )
+#+END_SRC
+
+*** my-org-startup-visibility()
+:PROPERTIES:
+:CREATED:  [2017-06-23 Fri 22:22]
+:END:
+
+Sometimes, I get a mess with all kinds of sub-hierarchies openend in
+my most important Org-mode buffers. When I want to get the startup
+visibility, I invoke this function to get a fresh environment again.
+
+Take a look at =my-reset-org()= as well.
+
+#+BEGIN_SRC emacs-lisp
+      (defun my-org-startup-visibility (&optional ignore)
+        "Sets the startup visibility in my most important buffers"
+        (interactive "P")
+        (save-window-excursion ;; Why save-excursion is not sufficient here: https://emacs.stackexchange.com/questions/24133/save-excursion-doesnt-restore-the-currently-visible-buffer
+          (when (my-buffer-exists "misc.org")
+            (switch-to-buffer "misc.org")
+            (org-set-startup-visibility)
+            )
+          (when (my-buffer-exists "projects.org")
+            (switch-to-buffer "projects.org")
+            (org-set-startup-visibility)
+            )
+          (when (my-buffer-exists "issues.org")
+            (switch-to-buffer "issues.org")
+            (org-set-startup-visibility)
+            )
+          (when (my-buffer-exists "contacts.org")
+            (switch-to-buffer "contacts.org")
+            (org-set-startup-visibility)
+            )
+          (when (my-buffer-exists "notes.org")
+            (switch-to-buffer "notes.org")
+            (org-set-startup-visibility)
+            )
+          (when (my-buffer-exists "hardware.org")
+            (switch-to-buffer "hardware.org")
+            (org-set-startup-visibility)
+            )
+          (when (my-buffer-exists "public_voit.org")
+            (switch-to-buffer "public_voit.org")
+            (org-set-startup-visibility)
+            )
+          )
+        )
 #+END_SRC
 
 *** DISABLED when being idle for 15 minutes, run my-reset-org()
