@@ -6291,7 +6291,7 @@ interface of Magit.
     :ensure t
     :defer 10
     :config ;; executed after loading package
-    :bind (:map my-map ("c" . smeargle))
+    ;;:bind (:map my-map ("c" . smeargle)) ;; CONFLICTS with my title capitalization
   )
 #+END_SRC
 
