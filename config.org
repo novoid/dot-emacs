@@ -5236,7 +5236,7 @@ BEGIN of LaTeX class definitions
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pdflatex")
   (with-eval-after-load 'ox-latex
-  (message (concat "################################################\norg-latex-classes = [" org-latex-classes "]"))
+  ;;(message (concat "################################################\norg-latex-classes = [" org-latex-classes "]"))
 #+END_SRC
 
 Customized «scrartcl»
