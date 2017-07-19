@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-06-23 22:48:34 vk>
+# Time-stamp: <2017-07-19 13:43:28 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -4785,6 +4785,11 @@ Memacs org-agenda shortcut
   ;;disabled because I needed "m";; (bind-key "m" 'my-memacs-org-agenda my-map)
   (global-set-key "\C-cm" 'my-memacs-org-agenda)
 #+END_SRC
+
+Or within a shell as separate Emacs instance:
+: /usr/bin/emacs --load /home/vk/.emacs.d/init.el --eval '(progn (my-memacs-org-agenda))'
+
+I aliased it within =~/.zshrc.local= to =memacs=
 
 *** DISABLED my-export-agenda()
 
