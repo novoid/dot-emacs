@@ -2611,6 +2611,7 @@ Take a look at =my-org-startup-visibility()= as well.
    (org-element-cache-reset)
    (org-refile-cache-clear)
    (org-refile-get-targets)
+   (setq org-agenda-tags-column (- (- (window-total-width) 3))) ;; total width minus 3
    (when (my-buffer-exists "*Org Agenda*")
      (kill-buffer "*Org Agenda*")
      (org-agenda-list)
