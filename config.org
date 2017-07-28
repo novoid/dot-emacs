@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-07-19 13:43:28 vk>
+# Time-stamp: <2017-07-28 11:01:12 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -7434,6 +7434,16 @@ installed on 2015-03-22
   :defer 20
   :config ;; executed after loading package
   (global-set-key [f9] 'neotree-toggle)
+)
+#+END_SRC
+
+** hydra
+
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :ensure t
+  :defer 10
+  :config ;; executed after loading package
 )
 #+END_SRC
 
