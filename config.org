@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-07-28 11:31:23 vk>
+# Time-stamp: <2017-08-04 11:05:46 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -1081,6 +1081,14 @@ or:
 
 or for use-package():
 : :bind (:map my-map ("8" . bm-toggle))
+
+-------------------
+
+Alternative tipp: in case you run out of keybinding spaces, you can
+take a look at hydra and the "defhydra hydra-k" method. Hydra lists a
+menu of options and the hydra-k offers a prefix for it.
+
+See 33min30s of the video linked in: [[http://irreal.org/blog/?p=6453][Irreal: Hydra Video]]
 
 * My helper functions (part I)
 
@@ -6735,7 +6743,7 @@ I get a popup buffer that tells me what bindings I am able to use.
 
 #+BEGIN_SRC emacs-lisp
 (use-package guide-key
-  :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :config ;; executed after loading package
   (setq guide-key/guide-key-sequence '("C-c C-,"))
   (guide-key-mode 1)  ; Enable guide-key-mode
@@ -7488,18 +7496,27 @@ installed on 2015-03-22
 
   ;; from hydra-examples.el vvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-  ;;** Example 4: toggle rarely used modes
+  ;;** Example 7: toggle with Ruby-style docstring
   (defvar whitespace-mode nil)
-  (global-set-key
-   (kbd "C-c C-v")
-   (defhydra hydra-toggle-simple (:color blue)
-     "toggle"
-     ("a" abbrev-mode "abbrev")
-     ("d" toggle-debug-on-error "debug")
-     ("f" auto-fill-mode "fill")
-     ("t" toggle-truncate-lines "truncate")
-     ("w" whitespace-mode "whitespace")
-     ("q" nil "cancel")))
+  (defhydra hydra-toggle (:color pink)
+    "
+  _f_ auto-fill-mode:    %`auto-fill-function
+  _t_ truncate-lines:    %`truncate-lines
+  _w_ whitespace-mode:   %`whitespace-mode
+  _l_ org link display:  %`org-descriptive-links
+  _a_ abbrev-mode:       %`abbrev-mode
+  _d_ debug-on-error:    %`debug-on-error
+  "
+    ("a" abbrev-mode nil)
+    ("d" toggle-debug-on-error nil)
+    ("f" auto-fill-mode nil)
+    ("t" toggle-truncate-lines nil)
+    ("w" whitespace-mode nil)
+    ("l" org-toggle-link-display nil)
+    ("q" nil "quit"))
+  ;; Recommended binding:
+  ;;(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+  (bind-key "M" #'hydra-toggle/body my-map)
 
   ;;** Example 9: s-expressions in the docstring
   ;; You can inline s-expresssions into the docstring like this:
