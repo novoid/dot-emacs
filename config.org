@@ -1,5 +1,5 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-08-04 11:05:46 vk>
+# Time-stamp: <2017-08-04 11:09:21 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -1684,7 +1684,7 @@ Misc bindings for Elisp:
 (bind-key "ef" #'find-function-at-point my-map)
 #+END_SRC
 
-** macroexpand
+** macrostep
 
 I found the [[https://github.com/joddie/macrostep][macrostep]] package through [[http://irreal.org/blog/?p=6442][the Irreal article John Wiegley and Sacha Chua on
 use-package]] which links [[https://www.youtube.com/watch?v=2TSKxxYEbII][2015-04-01 Emacs package highlight: use-package from YouTube]].
