@@ -1675,6 +1675,46 @@ Misc bindings for Elisp:
 (bind-key "el" #'find-library my-map)
 (bind-key "ef" #'find-function-at-point my-map)
 #+END_SRC
+
+** macroexpand
+
+I found the [[https://github.com/joddie/macrostep][macrostep]] package through [[http://irreal.org/blog/?p=6442][the Irreal article John Wiegley and Sacha Chua on
+use-package]] which links [[https://www.youtube.com/watch?v=2TSKxxYEbII][2015-04-01 Emacs package highlight: use-package from YouTube]].
+
+#+BEGIN_SRC emacs-lisp
+  (use-package macrostep
+    ;;:ensure t
+    :defer 15
+    :load-path "~/.emacs.d/contrib/macrostep/" ;; relative to emacs dir
+    :config ;; executed after loading package
+    (define-key emacs-lisp-mode-map (kbd "C-c e") 'macrostep-expand)
+  )
+#+END_SRC
+
+From the README:
+
+#+BEGIN_QUOTE
+   The standard keybindings in =macrostep-mode= are the following:
+
+    - e, =, RET  :: expand the macro form following point one step
+    - c, u, DEL  :: collapse the form following point
+    - q, C-c C-c :: collapse all expanded forms and exit macrostep-mode
+    - n, TAB     :: jump to the next macro form in the expansion
+    - p, M-TAB   :: jump to the previous macro form in the expansion
+
+    It's not very useful to enable and disable macrostep-mode
+    directly.  Instead, bind =macrostep-expand= to a key in
+    =emacs-lisp-mode-map=, for example C-c e:
+
+:  (define-key emacs-lisp-mode-map (kbd "C-c e") 'macrostep-expand)
+
+    You can then enter macrostep-mode and expand a macro form
+    completely by typing =C-c e e e ...= as many times as necessary.
+
+    Exit macrostep-mode by typing =q= or =C-c C-c=, or by successively
+    typing =c= to collapse all surrounding expansions.
+#+END_QUOTE
+
 * Python
 
 This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]] code. Python
