@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2017-06-17 21:53:04 vk>
+;; Time-stamp:    <2017-08-07 14:06:50 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -15,6 +15,13 @@
 
 
 ;; log starting time to come up with a duration afterwards
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 
 ;; user-emacs-directory on Windows is "c:/Users/karl.voit/AppData/Roaming/.emacs.d/" which I don't want to use
