@@ -1,5 +1,4 @@
 # -*- mode: org; coding: utf-8; -*-
-# Time-stamp: <2017-08-13 10:50:49 vk>
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
