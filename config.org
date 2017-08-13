@@ -4889,12 +4889,13 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-;;		  '("r6" (concat my-user-emacs-directory "bin/R6-logo_18x12.jpg") nil nil :ascent center)
 		  '("r6" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		  '("infonova" (concat my-user-emacs-directory "bin/R6-logo_18x12.jpg") nil nil :ascent center)
 		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
+		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		  '("detego" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
 		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
@@ -4906,27 +4907,22 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("contacts" (concat my-user-emacs-directory "bin/user-identity.png") nil nil :ascent center)
 		 '("contacts" "~/.emacs.d/bin/user-identity.png" nil nil :ascent center)
 		     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("public_voit" (concat my-user-emacs-directory "bin/application-rss+xml.png") nil nil :ascent center)
 		 '("public_voit" "~/.emacs.d/bin/application-rss+xml.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png
 		  )
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;		 '("misc" "~/.emacs.d/bin/emblem-new.png" nil nil :ascent center)
+;;                 ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
+;;		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("misc" (concat my-user-emacs-directory "bin/emblem-new.png") nil nil :ascent center)
-		 '("misc" "~/.emacs.d/bin/emblem-new.png" nil nil :ascent center)
-                 ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
-		  )
-    (add-to-list 'org-agenda-category-icon-alist
-;;		 '("hardware" (concat my-user-emacs-directory "bin/camera-photo.png") nil nil :ascent center)
 		 '("hardware" "~/.emacs.d/bin/camera-photo.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/devices/camera-photo.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-;;		 '("bwg" (concat my-user-emacs-directory "bin/go-home.png") nil nil :ascent center)
 		 '("bwg" "~/.emacs.d/bin/go-home.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
 		  )
@@ -8440,6 +8436,9 @@ things, some of them only in interactive mode.
 
   (message "Creating agenda …")
   (my-org-agenda)
+
+  (message "my-org-startup-visibility …")
+  (my-org-startup-visibility)
 
 )
 #+END_SRC
