@@ -942,6 +942,9 @@ Host-specific font size:
 (when (my-system-is-floyd)
   (set-face-attribute 'default (selected-frame) :height 110)
   )
+(when (my-system-is-sherri)
+  (set-face-attribute 'default (selected-frame) :height 110)
+  )
 #+END_SRC
 * UTF-8 and codings
 
