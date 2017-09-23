@@ -1875,6 +1875,38 @@ END of elpy package
 );; if python binary found
 #+END_SRC
 
+* dired
+
+Usually, I do file management in [[http://karl-voit.at/2015/12/14/screen-to-tmux/][tmux]] and zsh. There are my aliases,
+my functions, the features I like.
+
+Having a file manager in Emacs does have some advantages, I guess.
+Maybe I'll try it some day.
+
+Here are some minor tweaks related to file management in Emacs with
+dired.
+
+From [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: two window file management. From the documentation:
+#+BEGIN_QUOTE
+If non-nil, Dired tries to guess a default target directory.
+This means: if there is a Dired buffer displayed in the next
+window, use its current directory, instead of this Dired buffer’s
+current directory.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq dired-dwim-target t)
+#+END_SRC
+
+Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file details with =(= and =)=:
+#+BEGIN_SRC emacs-lisp
+  (use-package dired-details
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
+    :config
+    (setq-default dired-details-hidden-string "… ")
+    )
+#+END_SRC
+
 * LaTeX
 
 [[https://en.wikipedia.org/wiki/LaTeX][LaTeX]] is a powerful text setting system I use for creating letters,
