@@ -6586,6 +6586,8 @@ Some people start using Emacs just to be able to use this nifty Git
 interface of Magit.
 
 #+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "git")
+
 (use-package magit
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
@@ -6632,6 +6634,7 @@ End of use-package of magit:
 
 #+BEGIN_SRC emacs-lisp
 )
+) ;; if magit is found
 #+END_SRC
 
 ** Recent files
@@ -6994,8 +6997,16 @@ but you're not quite sure? If so, then =browse-kill-ring= is the Emacs
 extension for you.»
 
 #+BEGIN_SRC emacs-lisp
-(require 'browse-kill-ring)
-(browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
+(use-package browse-kill-ring
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
+   ;:load-path (concat my-user-emacs-directory "contrib/")
+   :config
+   (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
+)
+
+;; 2017-09-05: to delete when above is working:
+;;(require 'browse-kill-ring)
+;;(browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
 #+END_SRC
 
 ** DISABLED pdf-mode - Edit raw PDF files in Emacs
@@ -7337,10 +7348,10 @@ be of some use.»
 #+BEGIN_SRC emacs-lisp
 (use-package char-menu
   :ensure t
-  :defer 10
+  ;;:defer 10
   :config
   (setq char-menu
-        '("→" "…" "✓" "š" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
+        '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
          ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
@@ -7472,7 +7483,7 @@ Cool package but I don't need it at the moment. Therefore disabled.
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package pandoc-mode
-    :ensure nil
+    :ensure t
     :defer 10
   )
 )
