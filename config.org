@@ -587,8 +587,8 @@ It also checks certain operating system/binary combinations which aren't likely 
         )
       )
      ((and (my-system-type-is-windows) (string= binaryname "outlook"))
-      (when (file-exists-p "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE")
-        (concat "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE")
+      (when (file-exists-p "C:/Program Files (x86)/Microsoft Office/Office16/OUTLOOK.EXE")
+        (concat "C:/Program Files (x86)/Microsoft Office/Office16/OUTLOOK.EXE")
         )
       )
      ;; this is the default check for all binaries which got no special handling above:
@@ -928,7 +928,7 @@ My favorite light themes: leuven, whiteboard, solarized-light,
 
 Host-specific font size:
 #+BEGIN_SRC emacs-lisp
-(when (or (my-system-type-is-gnu) (my-system-type-is-windows))
+(when (my-system-type-is-gnu)
   (my-increase-fontsize);; increase fonts on some hosts by default
   )
 (when (my-system-type-is-darwin)
@@ -936,10 +936,11 @@ Host-specific font size:
   )
 (when (my-system-type-is-windows)
   ;;(set-face-attribute 'default (selected-frame) :height 150)
-  (set-face-attribute 'default (selected-frame) :height 130);; 2016-08-19 let's test 130 after 150 seems too big
+  ;;(set-face-attribute 'default (selected-frame) :height 130);; 2016-08-19 let's test 130 after 150 seems too big
+  (set-face-attribute 'default (selected-frame) :height 110);; 2017-09-06 detego
   )
 (when (my-system-is-floyd)
-  (set-face-attribute 'default (selected-frame) :height 110)
+  (set-face-attribute 'default (selected-frame) :height 105)
   )
 (when (my-system-is-sherri)
   (set-face-attribute 'default (selected-frame) :height 110)
@@ -1397,7 +1398,7 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
   ;; use american english on all other systems:
-  (let ((langs '("german8" "american")))
+  (let ((langs '("german8" "british")))
     (setq lang-ring (make-ring (length langs)))
     (dolist (elem langs) (ring-insert lang-ring elem)))
   )
@@ -2715,12 +2716,12 @@ Take a look at =my-reset-org()= as well.
               (org-set-startup-visibility)
               )
             (when (my-system-type-is-windows)
-              (when (my-buffer-exists "infonova.org")
-                (switch-to-buffer "infonova.org")
+              (when (my-buffer-exists "detego.org")
+                (switch-to-buffer "detego.org")
                 (org-set-startup-visibility)
                 )
-              (when (my-buffer-exists "r6-stories.org")
-                (switch-to-buffer "r6-stories.org")
+              (when (my-buffer-exists "ciso.org")
+                (switch-to-buffer "ciso.org")
                 (org-set-startup-visibility)
                 )
               )
@@ -3337,7 +3338,7 @@ emails, manual editing in vim, ...
 
 Setting it up: http://orgmode.org/org.html#Setting-up-capture
 #+BEGIN_SRC emacs-lisp
-(setq org-default-notes-file "~/share/all/org-mode/inbox.org")
+(setq org-default-notes-file "~/org/inbox.org")
 (define-key global-map "\C-cc" 'org-capture)
 #+END_SRC
 
@@ -3425,9 +3426,9 @@ Using test org-capture-templates:
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq org-capture-templates
 `(
-  ("1" "first version with string" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+  ("1" "first version with string" entry (file+headline "~/org/misc.org" "shorts")
    "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-  ("2" "second version with variable" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+  ("2" "second version with variable" entry (file+headline "~/org/misc.org" "shorts")
    ,my-capture-template-next :empty-lines 1)
         ))
 #+END_SRC
@@ -3445,68 +3446,70 @@ BEGIN of the templates:
 
 My general templates:
 #+BEGIN_SRC emacs-lisp
-	  ("s" "shorts-todo" entry (file+headline "~/share/all/org-mode/misc.org" "shorts")
+	  ("s" "shorts-todo" entry (file+headline "~/org/misc.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("e" "Event" entry (file+headline "~/share/all/org-mode/misc.org" "Events")
+	  ("e" "Event" entry (file+headline "~/org/misc.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("b" "Bookmark" entry (file+headline "~/share/all/org-mode/notes.org" "Bookmarks")
+	  ("b" "Bookmark" entry (file+headline "~/org/notes.org" "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("p" "public voit" entry (file+headline "~/share/all/org-mode/public_voit.org" "Blogbeiträge")
+	  ("p" "public voit" entry (file+headline "~/org/public_voit.org" "Blogbeiträge")
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
-	  ("a" "anzuschauen" entry (file+headline "~/share/all/org-mode/misc.org" "Anzuschauen")
+	  ("a" "anzuschauen" entry (file+headline "~/org/misc.org" "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	  ("B" "Besorgung" entry (file+headline "~/share/all/org-mode/hardware.org" "Besorgungen")
+	  ("B" "Besorgung" entry (file+headline "~/org/hardware.org" "Besorgungen")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Hardware templates:
 #+BEGIN_SRC emacs-lisp
 	  ("h" "hardware")
-	  ("hs" "sherri" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+	  ("hs" "sherri" entry (file+olp "~/org/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hf" "floyd" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
+	  ("hf" "floyd" entry (file+olp "~/org/hardware.org" "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hc" "Chromebook" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
+	  ("hc" "Chromebook" entry (file+olp "~/org/hardware.org" "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hp" "RasPlay" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
+	  ("hp" "RasPlay" entry (file+olp "~/org/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
 	   ,my-capture-template-next :empty-lines 1)
-	  ;;old;;("hb" "blanche" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
+	  ;;old;;("hb" "blanche" entry (file+olp "~/org/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
 	  ;;old;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("hw" "Winora T3" entry (file+olp "~/share/all/org-mode/hardware.org" "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
+	  ("hw" "Winora T3" entry (file+olp "~/org/hardware.org" "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Templates for my home:
 #+BEGIN_SRC emacs-lisp
 	  ("w" "Breitenweg")
-	  ("ws" "Breitenweg shorts" entry (file+headline "~/share/all/org-mode/bwg.org" "shorts")
+	  ("ws" "Breitenweg shorts" entry (file+headline "~/org/bwg.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("we" "Breitenweg event" entry (file+headline "~/share/all/org-mode/bwg.org" "Events")
+	  ("we" "Breitenweg event" entry (file+headline "~/org/bwg.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/share/all/org-mode/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
+	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 #+END_SRC
 
 Company templates:
 #+BEGIN_SRC emacs-lisp
-	  ("i" "infonova Templates")
-	  ("is" "infonova shorts" entry (file+headline "~/share/all/org-mode/infonova.org" "shorts")
+	  ("d" "detego")
+    ("ds" "shorts" entry (file+headline "~/org/detego.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("ie" "infonova event" entry (file+headline "~/share/all/org-mode/infonova.org" "Events")
+	  ("de" "event" entry (file+headline "~/org/detego.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("ir" "r6 Templates")
-	  ("irs" "R6 shorts" entry (file+headline "~/share/all/org-mode/r6-stories.org" "shorts")
+	  ("dc" "CISO")
+	  ("dcs" "shorts" entry (file+headline "~/org/ciso.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
+	  ("dce" "event" entry (file+headline "~/org/ciso.org" "Events")
+	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 #+END_SRC
 
 Template for my lecture:
 #+BEGIN_SRC emacs-lisp
-	  ("f" "FH St. Pölten shorts" entry (file+headline "~/share/all/org-mode/fhsp.org" "shorts")
+	  ("f" "FH St. Pölten shorts" entry (file+headline "~/org/fhsp.org" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Put it in the inbox, refile it later:
 #+BEGIN_SRC emacs-lisp
-	  ("I" "inbox, refile later" entry (file "~/share/all/org-mode/inbox.org")
+	  ("I" "inbox, refile later" entry (file "~/org/inbox.org")
 	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 #+END_SRC
 
@@ -3525,12 +3528,12 @@ Old templates for the records:
 ("xR" "elmex rot" table-line (id "fbd9be0e-5077-4ba9-89eb-6041f945991a") "| %T |")
 ("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
 ("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
-("xx" "xlogtest" table-line (file+headline "~/share/all/org-mode/misc.org" "xlogtest2012-06-17") "| %T |")
+("xx" "xlogtest" table-line (file+headline "~/org/misc.org" "xlogtest2012-06-17") "| %T |")
 #+END_SRC
 
 Test template:
 #+BEGIN_SRC emacs-lisp
-	  ("X" "test" entry (file+headline "~/share/all/org-mode/misc.org" "Tests")
+	  ("X" "test" entry (file+headline "~/org/misc.org" "Tests")
 	   ,my-capture-template-test :empty-lines 1)
 #+END_SRC
 
@@ -3686,21 +3689,23 @@ certain kind of data.
   (setq org-link-abbrev-alist
 	'(
 	  ("bib" . "~/archive/library/%s.bib")
-	  ("cite" . "file:~/share/all/org-mode/references.org::/%s/")
-					;	("mynotes" . "file:~/share/all/org-mode/references.org::%s")
+	  ("cite" . "file:~/org/references.org::/%s/")
+					;	("mynotes" . "file:~/org/references.org::%s")
 					;	("papers" . "~/archive/library/%s.pdf")
 	  ("photo" . "file:~/people/all_photographs/%s")
 	  ("pdf" . "~/archive/library/%s.pdf")
 	  ("notes" . "~/archive/library/%s-notes.pdf")
-	  ("contact" . "~/share/all/org-mode/contacts.org::/\*.*%s/")
-;	  ("tsfile" . "~/share/all/org-mode/memacs/files.org_archive::/\*.*%s/")
+	  ("contact" . "~/org/contacts.org::/\*.*%s/")
+;	  ("tsfile" . "~/org/memacs/files.org_archive::/\*.*%s/") replaced by org-link-set-parameters() + my-handle-tsfile-link()
 	  ("ifile" . "~/org/memacs/ifiles.org::/\*.*%s/")
-	  ("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
+	  ;;("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
 	  ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
 	  ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
-	  ("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
-	  ("ipd" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
-	  ("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
+	  ;;("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
+	  ;;("ipd" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
+	  ;;("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
+	  ("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
+	  ("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
 	  ))
 #+END_SRC
 
@@ -3730,7 +3735,7 @@ You might as well be interested in [[http://pragmaticemacs.com/emacs/insert-inte
     ;;(w32-shell-execute "open" (concat "outlook:" id))
     ;; fix:
     (w32-shell-execute "open"
-                       "C:/Program Files (x86)/Microsoft Office/root/Office16/OUTLOOK.EXE"
+                       "C:/Program Files (x86)/Microsoft Office/Office16/OUTLOOK.EXE"
                        (concat "/select " "outlook:" id))
     )
 )
@@ -3963,6 +3968,41 @@ Don't know why I disabled this:
                          :complete 'color-comp
                          :export 'color-link-export)
 #+END_SRC
+
+*** Open in external app
+:PROPERTIES:
+:CREATED:  [2017-09-14 Thu 14:43]
+:END:
+
+Found via [[https://www.reddit.com/r/emacs/comments/6zv83d/share_your_custom_orgmode_link_types/][reddit thread]]:
+
+Add a type of link so that the emacs will open the linked file with
+the default external application (useful for media such as movies,
+pdfs, etc.)
+
+- 2017-09-14: FIXXME: does not work on Windows: =Unable to start
+  '~\path\to\2017-09-12 a file.pdf': The specified file was not found.=
+  - I guess that the backslashes have to be replaced by forward
+    slashes for Windows/Cygwin
+
+Alternative approach for Windows:
+#+BEGIN_SRC emacs-lisp :tangle no
+(w32-shell-execute "open"
+			 "C:/Program Files (x86)/.../cygstart"
+			 (concat " \"" path-to-media "\""))
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-open-ext (path-to-media)
+    (if (my-system-type-is-windows)
+        (shell-command (concat "cygstart \"" path-to-media "\""))
+      (shell-command (concat "open " \"" path-to-media \""))
+      )
+  )
+  (org-add-link-type "open" 'my-open-ext)
+#+END_SRC
+
 ** Agenda
 
 Org-mode is my digital everything. And therefore, Org is also my
@@ -3986,16 +4026,23 @@ Definition of work files:
 #+BEGIN_SRC emacs-lisp
   (if (my-system-type-is-windows)
       (setq my-work-agenda-files (append (quote (
-                                                 "c:/Users/karl.voit/share/all/org-mode/r6-stories.org"
-                                                 "c:/Users/karl.voit/share/all/org-mode/infonova.org"
+                                                 "c:/Users/karl.voit/org/detego.org"
+                                                 "c:/Users/karl.voit/org/ciso.org"
+                                                 "c:/Users/karl.voit/org/exported-detego-calendar.org"
+                                                 ;;"c:/Users/karl.voit/org/r6-stories.org"
+                                                 ;;"c:/Users/karl.voit/org/infonova.org"
                                                  ))))
     (setq my-work-agenda-files (append (quote (
-                                               "~/share/all/org-mode/r6-stories.org"
-                                               "~/share/all/org-mode/infonova.org"
-                                               ;;"~/share/all/org-mode/tagstore.org";;moved to archive
-                                               ;;"~/share/all/org-mode/ist.org";;moved to archive
-                                               ;;"~/share/all/org-mode/test-phd.org"
-                                               ;;"~/share/all/org-mode/postdoc.org";;moved to archive
+                                               "~/org/detego.org"
+                                               "~/org/ciso.org"
+                                               "~/org/exported-detego-calendar.org"
+                                               ;;"~/org/infonova.org"
+                                               ;;"~/org/r6-stories.org"
+                                               ;;"~/org/infonova.org"
+                                               ;;"~/org/tagstore.org";;moved to archive
+                                               ;;"~/org/ist.org";;moved to archive
+                                               ;;"~/org/test-phd.org"
+                                               ;;"~/org/postdoc.org";;moved to archive
                                                ))))
     )
 #+END_SRC
@@ -4004,65 +4051,65 @@ Definitions of non-work files:
 #+BEGIN_SRC emacs-lisp
    (if (my-system-type-is-windows)
       (setq my-nonwork-agenda-files (append (quote (
-                                                    "c:/Users/karl.voit/share/all/org-mode/misc.org"
-					            "c:/Users/karl.voit/share/all/org-mode/issues.org"
-					            "c:/Users/karl.voit/share/all/org-mode/projects.org"
-					            "c:/Users/karl.voit/share/all/org-mode/finanzen_behoerden_versicherungen.org"
-					            "c:/Users/karl.voit/share/all/org-mode/bwg.org"
-					            "c:/Users/karl.voit/share/all/org-mode/contacts.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/foodandbeverages.org"
-					            "c:/Users/karl.voit/share/all/org-mode/hardware.org"
-					            "c:/Users/karl.voit/share/all/org-mode/fhsp.org"
-					            "c:/Users/karl.voit/share/all/org-mode/notes.org"
-					            "c:/Users/karl.voit/share/all/org-mode/public_voit.org"
-					            "c:/Users/karl.voit/share/all/org-mode/errors_public_voit.org"
-					            "c:/Users/karl.voit/share/all/org-mode/errors_orgmode_commits.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/movies.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/references.org"
+                                              "c:/Users/karl.voit/org/misc.org"
+					            "c:/Users/karl.voit/org/issues.org"
+					            "c:/Users/karl.voit/org/projects.org"
+					            "c:/Users/karl.voit/org/finanzen_behoerden_versicherungen.org"
+					            "c:/Users/karl.voit/org/bwg.org"
+					            "c:/Users/karl.voit/org/contacts.org"
+					            ;;"c:/Users/karl.voit/org/foodandbeverages.org"
+					            "c:/Users/karl.voit/org/hardware.org"
+					            "c:/Users/karl.voit/org/fhsp.org"
+					            "c:/Users/karl.voit/org/notes.org"
+					            "c:/Users/karl.voit/org/public_voit.org"
+					            "c:/Users/karl.voit/org/errors_public_voit.org"
+					            "c:/Users/karl.voit/org/errors_orgmode_commits.org"
+					            ;;"c:/Users/karl.voit/org/movies.org"
+					            ;;"c:/Users/karl.voit/org/references.org"
 					            ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
-					            "c:/Users/karl.voit/share/all/org-mode/memacs/error.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/git.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/ifiles.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/phonecalls.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/roylog.org"
-					            ;;"c:/Users/karl.voit/share/all/org-mode/memacs/SMS.org"
+					            ;;"c:/Users/karl.voit/org/memacs/error.org"
+					            ;;"c:/Users/karl.voit/org/memacs/git.org"
+					            ;;"c:/Users/karl.voit/org/memacs/ifiles.org"
+					            ;;"c:/Users/karl.voit/org/memacs/phonecalls.org"
+					            ;;"c:/Users/karl.voit/org/memacs/roylog.org"
+					            ;;"c:/Users/karl.voit/org/memacs/SMS.org"
                                                  ))))
     (setq my-nonwork-agenda-files (append (quote (
-                                            ;;"~/share/all/org-mode/archive.org"
-					          "~/share/all/org-mode/misc.org"
-					          "~/share/all/org-mode/issues.org"
-					          "~/share/all/org-mode/projects.org"
-					          "~/share/all/org-mode/finanzen_behoerden_versicherungen.org"
-					          "~/share/all/org-mode/bwg.org"
-					          "~/share/all/org-mode/contacts.org"
-					          "~/share/all/org-mode/foodandbeverages.org"
-					          "~/share/all/org-mode/hardware.org"
-					          "~/share/all/org-mode/notes.org"
-					          "~/share/all/org-mode/movies.org"
-					          "~/share/all/org-mode/references.org"
-					          "~/share/all/org-mode/public_voit.org"
-					          "~/share/all/org-mode/errors_public_voit.org"
-					          "~/share/all/org-mode/errors_orgmode_commits.org"
-					          "~/share/all/org-mode/fhsp.org"
+                                            ;;"~/org/archive.org"
+					          "~/org/misc.org"
+					          "~/org/issues.org"
+					          "~/org/projects.org"
+					          "~/org/finanzen_behoerden_versicherungen.org"
+					          "~/org/bwg.org"
+					          "~/org/contacts.org"
+					          "~/org/foodandbeverages.org"
+					          "~/org/hardware.org"
+					          "~/org/notes.org"
+					          "~/org/movies.org"
+					          "~/org/references.org"
+					          "~/org/public_voit.org"
+					          "~/org/errors_public_voit.org"
+					          "~/org/errors_orgmode_commits.org"
+					          "~/org/fhsp.org"
 					          "~/src/lazyblorg/wiki/Roadmap.org"
-					          "~/share/all/org-mode/memacs/error.org"
-					          ;;"~/share/all/org-mode/memacs/roylog.org"
-					          ;;"~/share/all/org-mode/memacs/archive.org"
-					          ;;"~/share/all/org-mode/memacs/bank.org"
-					          ;;"~/share/all/org-mode/memacs/datebk6.org"
-					          ;;"~/share/all/org-mode/memacs/delicious.org"
-					          ;;"~/share/all/org-mode/memacs/files.org"
-					          ;;"~/share/all/org-mode/memacs/GCal.org"
-					          ;;"~/share/all/org-mode/memacs/git.org"
-					          ;;"~/share/all/org-mode/memacs/ifiles.org"
-					          ;;"~/share/all/org-mode/memacs/mbox.org"
-					          ;;"~/share/all/org-mode/memacs/news.org"
-					          ;;"~/share/all/org-mode/memacs/phonecalls.org"
-					          ;;"~/share/all/org-mode/memacs/SMS.org"
-					          ;;"~/share/all/org-mode/memacs/tweets.org"
-					          ;;"~/share/all/org-mode/memacs/www.org"
-					          ;;"~/share/all/org-mode/memacs/movies.org"
-					          ;;"~/share/all/org-mode/memacs/Filmliste.org"
+					          "~/org/memacs/error.org"
+					          ;;"~/org/memacs/roylog.org"
+					          ;;"~/org/memacs/archive.org"
+					          ;;"~/org/memacs/bank.org"
+					          ;;"~/org/memacs/datebk6.org"
+					          ;;"~/org/memacs/delicious.org"
+					          ;;"~/org/memacs/files.org"
+					          ;;"~/org/memacs/GCal.org"
+					          ;;"~/org/memacs/git.org"
+					          ;;"~/org/memacs/ifiles.org"
+					          ;;"~/org/memacs/mbox.org"
+					          ;;"~/org/memacs/news.org"
+					          ;;"~/org/memacs/phonecalls.org"
+					          ;;"~/org/memacs/SMS.org"
+					          ;;"~/org/memacs/tweets.org"
+					          ;;"~/org/memacs/www.org"
+					          ;;"~/org/memacs/movies.org"
+					          ;;"~/org/memacs/Filmliste.org"
                                                ))))
     )
 
@@ -4888,14 +4935,17 @@ and with a bleeding heart.
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
-    (add-to-list 'org-agenda-category-icon-alist
-		  '("r6" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
-		  )
-    (add-to-list 'org-agenda-category-icon-alist
-		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
-		  )
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;		  '("r6" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
+;;		  )
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
+;;		  )
     (add-to-list 'org-agenda-category-icon-alist
 		  '("detego" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
+		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		  '("outlook" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
 		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
@@ -4955,7 +5005,7 @@ Memacs org-agenda shortcut
   (defun my-memacs-org-agenda ()
     "Opens an org-agenda with activated archive"
     (interactive)
-    ;;(setq org-agenda-files (append (quote ("~/share/all/org-mode/issues.org"))));; for testing purposes
+    ;;(setq org-agenda-files (append (quote ("~/org/issues.org"))));; for testing purposes
     (org-agenda-list)
     ;;(call-interactively 'org-agenda-log-mode)
     (org-agenda-log-mode '(4))
@@ -4981,10 +5031,10 @@ I aliased it within =~/.zshrc.local= to =memacs=
     (org-agenda-list nil nil 60)
     (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
-    (org-agenda-write "~/share/all/org-mode/agenda-export-raw.ics")
+    (org-agenda-write "~/org/agenda-export-raw.ics")
     (message "after org-agenda-write")
     (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
-    (setq icspath "~/share/all/org-mode/")
+    (setq icspath "~/org/")
     (shell-command-to-string (concat
 			      scriptpath "postprocess_Org-mode_iCal_export.py "
 			      "-i " icspath "agenda-export-raw.ics "
@@ -5445,6 +5495,33 @@ Customized «scrartcl»
                    ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
 #+END_SRC
 
+«detego»
+- 2017-09-13: must be tested
+#+BEGIN_SRC emacs-lisp
+    (add-to-list 'org-latex-classes
+                 '("detego"
+                   "\\documentclass\[a4paper,parskip=half,11pt\]\{scrartcl\}
+                    \\usepackage\[ngerman,american\]\{babel\}\\usepackage\{eurosym\}\\usepackage\{xspace\}\\usepackage\[usenames,dvipsnames\]\{xcolor\}
+                    \\usepackage\[protrusion=true,factor=900\]\{microtype\}\\usepackage\{enumitem\}
+                    \\definecolor\{DispositionColor\}\{RGB\}\{0,54,90\}\\usepackage\{arial\}
+                    \\DeclareRobustCommand\{\\myacro\}\[1\]\{\\textsc\{\\lowercase\{#1\}\}\} %%  abbrevations using small caps
+                    %% colorful headings:
+                    %\\setheadsepline\{.4pt\}\[\\color\{DispositionColor\}\]
+                    \\renewcommand\{\\headfont\}\{\\normalfont\\sffamily\\color\{DispositionColor\}\}
+                    \\renewcommand\{\\pnumfont\}\{\\normalfont\\sffamily\\color\{DispositionColor\}\}
+                    \\addtokomafont\{disposition\}\{\\color\{DispositionColor\}\}
+                    \\addtokomafont\{caption\}\{\\color\{DispositionColor\}\\footnotesize\}
+                    \\addtokomafont\{captionlabel\}\{\\color\{DispositionColor\}\}
+
+                    \\usepackage\{enumitem\}
+                    \\setlist\{noitemsep\} %% kills the space between items
+
+                   "
+                   ("\\section\{%s\}" . "\\section*\{%s\}")
+                   ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                   ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+#+END_SRC
+
 «lyrics»
 - 2017-03-23: 2-column layout sans-serif for lyrics
 #+BEGIN_SRC emacs-lisp
@@ -5753,10 +5830,10 @@ Set org-contacts defaults that differ from standard
 #+BEGIN_SRC emacs-lisp
   (setq org-contacts-address-property "CITY")
   (setq org-contacts-birthday-property "BORN")
-  (setq org-contacts-files "~/share/all/org-mode/contacts.org")
+  (setq org-contacts-files "~/org/contacts.org")
   (setq org-contacts-icon-property "PHOTOGRAPH")
   (custom-set-variables
-   '(org-contacts-files "~/share/all/org-mode/contacts.org")
+   '(org-contacts-files "~/org/contacts.org")
    '(org-contacts-address-property "CITY")
    '(org-contacts-birthday-property "BORN")
    '(org-contacts-icon-property "PHOTOGRAPH")
@@ -5959,9 +6036,17 @@ http://orgmode.org/org.html#MobileOrg
 
 General OrgMobile setup:
 #+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/share/all/org-mode")
-  (setq org-mobile-directory "~/share/all/org-mode/mobile-org/")
-  (setq org-mobile-inbox-for-pull "~/share/all/org-mode/inbox.org")
+  (cond ((my-system-type-is-windows)
+         (setq org-directory "~/org")
+         (setq org-mobile-directory "~/org/mobile-org/")
+         (setq org-mobile-inbox-for-pull "~/org/inbox.org")
+         )
+        (t
+         (setq org-directory "~/org")
+         (setq org-mobile-directory "~/org/mobile-org/")
+         (setq org-mobile-inbox-for-pull "~/org/inbox.org")
+         )
+        )
 #+END_SRC
 
 Do not generate IDs for all headings: http://orgmode.org/manual/Pushing-to-MobileOrg.html
@@ -6199,14 +6284,14 @@ org-feed - aggregating RSS feeds in news.org file:
       '(
   ("heise"
          "http://www.heise.de/newsticker/heise.rdf"
-         "~/share/all/org-mode/news.org" "heise")
+         "~/org/news.org" "heise")
   ("Dilbert"
          "http://feeds.feedburner.com/DilbertDailyStrip"
-         "~/share/all/org-mode/news.org" "Dilbert")
+         "~/org/news.org" "Dilbert")
   )
       )
 #+END_SRC
-** DISABLED org-protocol-capture-html - turn HTML into Org-mode
+** org-protocol-capture-html - turn HTML into Org-mode
 
 https://github.com/alphapapa/org-protocol-capture-html
 #+BEGIN_QUOTE
@@ -7037,9 +7122,9 @@ and smart truncation.»
   (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":EMACS:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^~/share/all/org-mode" ":ORG:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/src/lazyblorg" ":LB:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/share/all/org-mode" ":ORG:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/" "~/") t)
   (smart-mode-line-enable)
 )
@@ -8456,7 +8541,7 @@ not I should keep this here. Well, it does not hurt either.
  ;; If there is more than one, they won't work right.
  '(org-contacts-address-property "CITY")
  '(org-contacts-birthday-property "BORN")
- '(org-contacts-files "~/share/all/org-mode/contacts.org")
+ '(org-contacts-files "~/org/contacts.org")
  '(org-contacts-icon-property "PHOTOGRAPH")
  '(safe-local-variable-values
    (quote
