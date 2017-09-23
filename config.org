@@ -5902,6 +5902,7 @@ Activate Babel languages:
      (emacs-lisp . t)
      (sql . t)
      (restclient . t)
+     (plantuml . t)
      ))
   )
 
@@ -5919,6 +5920,7 @@ Activate Babel languages:
      (emacs-lisp . t)
      (ditaa . t)
      (dot . t)
+     (plantuml . t)
      ))
   )
 #+END_SRC
@@ -6006,6 +6008,47 @@ https://github.com/astahlman/ob-async
   (add-to-list 'org-ctrl-c-ctrl-c-hook 'ob-async-org-babel-execute-src-block)
   )
 #+END_SRC
+
+*** PlantUML
+:PROPERTIES:
+:CREATED:  [2017-09-22 Fri 21:53]
+:END:
+
+Forget [[https://en.wikipedia.org/wiki/DOT_(graph_description_language)][dot]]. :-)
+
+[[http://plantuml.com/][PlantUML]] is a handy tool for drawing simple diagrams. It is [[https://zhangweize.wordpress.com/2010/08/27/a-new-version-of-ob-plantuml/][part of
+Org-mode since 2010]].
+
+As [[http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-support.html][an example]], the following block gets exported as a cool diagram:
+#+begin_src plantuml :file myplantuml.png
+  Alice -> Bob: synchronous call
+  Alice ->> Bob: asynchronous call
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+(require 'ob-plantuml)
+(setq org-plantuml-jar-path (concat my-user-emacs-directory "bin/plantuml.jar")) ;; I keep the jar file in my ".emacs.d/bin"
+#+END_SRC
+
+For a maximum of editing experience and a very cool preview, you also
+want to install [[https://github.com/skuro/plantuml-mode][plantuml-mode]]:
+
+#+BEGIN_SRC emacs-lisp
+  (use-package plantuml-mode
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/plantuml-mode")))
+    :config
+    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)) ;; Enable plantuml-mode for PlantUML files
+    (add-to-list
+     'org-src-lang-modes '("plantuml" . plantuml))
+    )
+#+END_SRC
+
+| =M-x plantuml-preview= | order of preference: SVG, PNG, ASCII                                                     |
+|------------------------+------------------------------------------------------------------------------------------|
+| =C-c C-c=              | preview: renders a PlantUML diagram from the current buffer in the best supported format |
+| =C-u C-c C-c=          | preview in other window                                                                  |
+| =C-u C-u C-c C-c=      | preview in other frame                                                                   |
+
 ** org-crypt
 
 Activate org-crypt if =gpg= is installed:
