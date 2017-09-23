@@ -6358,6 +6358,23 @@ Org-mode content! It can even turn HTML tables into Org tables!
 )
 #+END_SRC
 
+** org-mind-map
+
+I found [[https://github.com/theodorewiles/org-mind-map][org-mind-map]] via an [[http://irreal.org/blog/?p=6561][article on irreal]].
+
+At the moment, I am not planning on using it intensively. It is maybe
+a cool method to visualize the structure of some Org-mode files of
+mine for demonstration purposes for novice or non-Org-users.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-mind-map
+    ;;:ensure t
+    :defer 15
+    :load-path "~/.emacs.d/contrib/org-mind-map/"
+    :config ;; executed after loading package
+  )
+#+END_SRC
+
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
