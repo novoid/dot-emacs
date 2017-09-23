@@ -5201,6 +5201,20 @@ TODOs, called “habits”.»
   (setq org-habit-graph-column 50)
 #+END_SRC
 
+*** my-reset-org-with-visibility-and-super-agenda() - reset some Org-mode stuff and reset startup visibility
+
+This function is a combination of =my-reset-org()= and
+=my-org-startup-visibility()= from above.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-reset-org-with-visibility-and-super-agenda ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible and resets the most important buffers to their startup visibility"
+  (interactive)
+  (my-reset-org)
+  (my-org-startup-visibility)
+  )
+#+END_SRC
+
 *** org-agenda-exporter-settings
 
 I export my agendas defined in =org-agenda-custom-commands= that have
