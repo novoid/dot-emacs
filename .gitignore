@@ -22,3 +22,8 @@ tutorial
 .gitignore
 var
 etc
+/.stfolder
+/.stignore
+/.stignore_common
+bin
+/config_Windows_working_ID_links.el
