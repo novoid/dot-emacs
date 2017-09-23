@@ -2647,30 +2647,6 @@ Bind the key:
   (bind-key "u" 'my-url-linkify my-map)
 #+END_SRC
 
-*** my-reset-org() - reset some Org-mode stuff
-
-This function summarizes some other functions that clear up the
-current Org-mode, re-building some caches and so fort.
-
-Take a look at =my-org-startup-visibility()= as well.
-
-#+BEGIN_SRC emacs-lisp
-(defun my-reset-org ()
-  "Clears all kinds of Org-mode caches and re-builds them if possible"
-  (interactive)
-  (measure-time
-   (org-element-cache-reset)
-   (org-refile-cache-clear)
-   (org-refile-get-targets)
-   (setq org-agenda-tags-column (- (- (window-total-width) 3))) ;; total width minus 3
-   (when (my-buffer-exists "*Org Agenda*")
-     (kill-buffer "*Org Agenda*")
-     (org-agenda-list)
-     )
-   )
-  )
-#+END_SRC
-
 *** my-org-startup-visibility()
 :PROPERTIES:
 :CREATED:  [2017-06-23 Fri 22:22]
@@ -2727,6 +2703,30 @@ Take a look at =my-reset-org()= as well.
               )
             )
           )
+#+END_SRC
+
+*** my-reset-org() - reset some Org-mode stuff
+
+This function summarizes some other functions that clear up the
+current Org-mode, re-building some caches and so fort.
+
+Take a look at =my-org-startup-visibility()= as well.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-reset-org ()
+  "Clears all kinds of Org-mode caches and re-builds them if possible"
+  (interactive)
+  (measure-time
+   (org-element-cache-reset)
+   (org-refile-cache-clear)
+   (org-refile-get-targets)
+   (setq org-agenda-tags-column (- (- (window-total-width) 3))) ;; total width minus 3
+   (when (my-buffer-exists "*Org Agenda*")
+     (kill-buffer "*Org Agenda*")
+     (org-agenda-list)
+     )
+   )
+  )
 #+END_SRC
 
 *** DISABLED when being idle for 15 minutes, run my-reset-org()
