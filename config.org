@@ -96,6 +96,12 @@ English time-stamps in Org-mode (instead of localized German ones):
 (setq system-time-locale "C")
 #+END_SRC
 
+[[http://pragmaticemacs.com/emacs/adaptive-cursor-width/][Adaptive cursor width | Pragmatic Emacs]]: make cursor the width of the
+character it is under; i.e. full width of a TAB:
+#+BEGIN_SRC emacs-lisp
+(setq x-stretch-cursor t)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
