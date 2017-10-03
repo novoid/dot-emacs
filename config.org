@@ -480,6 +480,7 @@ OLD method of extending the path:
             ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
             "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
             "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
+            "C:\\Program\ Files\ \(x86\)\\Java\\jre1.8.0_144\\bin" ";"
             (getenv "PATH")))
 #+END_SRC
 
@@ -487,6 +488,7 @@ Extending the path:
 #+BEGIN_SRC emacs-lisp
           (setq exec-path (cons (concat cygwin-root-directory "bin/") exec-path)) ;; Babun
           (setq exec-path (cons (concat cygwin-root-directory "usr/local/bin/") exec-path)) ;; Babun
+          (setq exec-path (cons "C:/Program Files (x86)/Java/jre1.8.0_144/bin" exec-path)) ;; Babun
 #+END_SRC
 
 Adding cygwin mounts:
