@@ -913,8 +913,17 @@ My favorite light themes: leuven, whiteboard, solarized-light,
 (add-hook 'emacs-startup-hook 'delete-other-windows t)
 #+END_SRC
 
-** Font sizes
+** Font
+:PROPERTIES:
+:CREATED:  [2017-10-02 Mon 15:18]
+:END:
 
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist
+                       '(font . "DejaVu Sans Mono-12"))
+#+END_SRC
+
+** Font sizes
 
 - 2011-04-20: increase/set font size
   - http://www.emacswiki.org/emacs/SetFonts
