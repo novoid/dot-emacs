@@ -8318,6 +8318,87 @@ http://blog.zenspider.com/2007/03/locate-and-spotlight.html
   )
 #+END_SRC
 
+** my-codenav-*: Code navigation → M-i | M-k
+:PROPERTIES:
+:CREATED:  [2017-10-02 Mon 17:45]
+:END:
+
+I found very handy navigation commands on [[http://rakan.me/emacs/code-navigation-in-emacs/][Code Navigation in Emacs]]
+which I included here:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-codenav-imenu-candidates ()
+  "Get the candidates list from imenu."
+  (let* ((items (imenu--make-index-alist))
+	 (items (delete (assoc "*Rescan*" items) items)))
+    items))
+
+
+(defun my-codenav-flatten-candidates (candidates)
+  "Flatten CANDIDATES of imenu list."
+  (let (result)
+    (dolist (candidate candidates result)
+      (if (imenu--subalist-p candidate)
+          (setq result (append result (my-codenav-flatten-candidates (cdr candidate))))
+        (add-to-list 'result candidate)))
+    result))
+
+
+(defun my-codenav-sort-candidates (candidates)
+  (sort candidates (lambda (a b) (< (cdr a) (cdr b)))))
+
+
+(defun my-codenav-current-symbol (names-and-pos)
+  "Figure out current definition by checking positions of NAMES-AND-POS against current position."
+  (let ((list-length (length names-and-pos))
+        (current-pos (point))
+        (current-index 0)
+        (next-index 0))
+    (dolist (symbol names-and-pos)
+      ;; If we reaches the end, just return the last element
+      ;; instead of returning index+1
+      (setq next-index (if (< next-index (1- list-length))
+                          (1+ current-index)
+                         current-index))
+      (let* ((current-symbol-pos (marker-position (cdr symbol)))
+	     (next-symbol-pos (marker-position (cdr (nth next-index names-and-pos)))))
+        (if (and (= current-index 0) (< current-pos current-symbol-pos))
+            (return 0))
+	(if (and (>= current-pos current-symbol-pos) (< current-pos next-symbol-pos))
+	    (return current-index)))
+      (setq current-index (1+ current-index)))
+    ;; If last item, decrement index
+    (if (eq current-index (length names-and-pos))
+	(1- current-index)
+      current-index)))
+
+(defun my-codenav-next-definition ()
+  "Navigate to next function/class definition."
+  (interactive)
+  (let* ((imenu-candidates (my-codenav-imenu-candidates))
+         (names-and-pos (my-codenav-sort-candidates (my-codenav-flatten-candidates imenu-candidates)))
+	 (current-symbol (my-codenav-current-symbol names-and-pos))
+         (next-symbol-index (if (>= (1+ current-symbol) (length names-and-pos)) 0
+                              (1+ current-symbol)))
+	 (next-symbol (nth next-symbol-index names-and-pos)))
+    (imenu next-symbol)))
+
+
+(defun my-codenav-prev-definition ()
+  "Navigate to previous function/class definition."
+  (interactive)
+  (let* ((imenu-candidates (my-codenav-imenu-candidates))
+         (names-and-pos (my-codenav-sort-candidates (my-codenav-flatten-candidates imenu-candidates)))
+	 (current-symbol (my-codenav-current-symbol names-and-pos))
+         (prev-symbol-index (if (< (1- current-symbol) 0) (1- (length names-and-pos))
+                              (1- current-symbol)))
+	 (prev-symbol (nth prev-symbol-index names-and-pos)))
+    (imenu prev-symbol)))
+
+(global-set-key (kbd "M-i") (lambda () (interactive) (my-codenav-prev-definition)))
+(global-set-key (kbd "M-k") (lambda () (interactive) (my-codenav-next-definition)))
+#+END_SRC
+
 * Key bindings
 
 In this heading, I do define many key bindings.
