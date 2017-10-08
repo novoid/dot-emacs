@@ -460,6 +460,10 @@ Links:
 - id:2014-01-31-cygwin-emacs
 - http://www.emacswiki.org/emacs/RobertAdesamConfig
 
+#+BEGIN_SRC emacs-lisp
+(if (my-system-type-is-windows)
+#+END_SRC
+
 Hard-coding the cygwin install path (for [[http://babun.github.io/][babun]]):
 - id:2016-04-22-magit-not-working-on-windows
 #+BEGIN_SRC emacs-lisp
@@ -525,6 +529,11 @@ END of Cygwin/babun configuration
           )
       (message "»»» I could not locate the cygwin path")
       )
+#+END_SRC
+
+end of Cygwin config
+#+BEGIN_SRC emacs-lisp
+);; end of if-windows
 #+END_SRC
 
 ** Starting GNU/Emacs on Windows
