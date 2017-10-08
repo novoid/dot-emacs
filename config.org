@@ -280,7 +280,9 @@ It sets some default paths in order to separate automatically created
 files and directories.
 
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/no-littering/no-littering.el")
+(use-package no-littering
+   :load-path "~/.emacs.d/contrib/no-littering/"
+   )
 (require 'no-littering)
 #+END_SRC
 
@@ -461,7 +463,7 @@ Links:
 - http://www.emacswiki.org/emacs/RobertAdesamConfig
 
 #+BEGIN_SRC emacs-lisp
-(if (my-system-type-is-windows)
+(when (my-system-type-is-windows)
 #+END_SRC
 
 Hard-coding the cygwin install path (for [[http://babun.github.io/][babun]]):
@@ -811,7 +813,11 @@ https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
 #+BEGIN_SRC emacs-lisp :tangle no
 ;(use-package edit-server)
 (my-load-local-el "contrib/edit-server.el")
-(edit-server-start)
+;won't work; (use-package edit-server
+;won't work;    :load-path "~/.emacs.d/contrib/"
+;won't work;    :config
+;won't work;    (edit-server-start)
+;won't work;    )
 
 (if (locate-library "edit-server")
     (progn
@@ -1454,7 +1460,10 @@ What a relief for bilingual people like me (German/English).
 - from: https://github.com/nschum/auto-dictionary-mode
 
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/auto-dictionary-mode/auto-dictionary.el")
+(use-package auto-dictionary
+   :load-path "~/.emacs.d/contrib/auto-dictionary-mode/"
+)
+
 (require 'auto-dictionary)
 (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
 #+END_SRC
@@ -1791,6 +1800,14 @@ enable elpy and use ipython:
 #+BEGIN_SRC emacs-lisp
 (elpy-enable)
 (elpy-use-ipython)
+#+END_SRC
+
+From [[https://www.reddit.com/r/emacs/comments/70chy1/emacs_ipython_completion/][this reddit]] and [[https://emacs.stackexchange.com/questions/24453/weird-shell-output-when-using-ipython-5][this solution]]: NOT TESTED YET! (2017-10-02)
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "ipython")
+    (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "--simple-prompt -i")
+)
 #+END_SRC
 
 auto-mode-list for Python files:
@@ -2204,12 +2221,21 @@ assign file extensions to Org-mode:
 
 Loading contributed packages:
 #+BEGIN_SRC emacs-lisp
-  (my-load-local-el "contrib/org-mode/contrib/lisp/org-checklist.el")
-  (my-load-local-el "contrib/org-mode/contrib/lisp/org-depend.el")
-  (my-load-local-el "contrib/org-mode/contrib/lisp/org-expiry.el")
+(use-package org-checklist
+ :load-path "~/.emacs.d/contrib/org-mode/contrib/lisp/"
+)
+(use-package org-depend
+ :load-path "~/.emacs.d/contrib/org-mode/contrib/lisp/"
+)
+(use-package org-expiry
+ :load-path "~/.emacs.d/contrib/org-mode/contrib/lisp/"
+)
+(use-package ob-restclient
+ :load-path "~/.emacs.d/contrib/ob-restclient.el/"
+)
+
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
-  (my-load-local-el "contrib/ob-restclient.el/ob-restclient.el")
   (autoload 'org-checklist "org-checklist.el")
 
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
@@ -4466,7 +4492,9 @@ See also: id:2017-08-12-org-super-agenda
 
 Loading the code:
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/org-super-agenda/org-super-agenda.el")
+(use-package org-super-agenda
+ :load-path "~/.emacs.d/contrib/org-super-agenda/"
+)
 #+END_SRC
 
 Definition of =my-super-agenda-groups=, my central configuration of super-agenda:
@@ -5280,6 +5308,10 @@ Import iCal to Org-mode
 
 #+BEGIN_SRC emacs-lisp
 (my-load-local-el "contrib/org-import-calendar.el")
+;won't work; (use-package org-import-calendar
+;won't work;  :load-path "~/.emacs.d/contrib/"
+;won't work; )
+
 (use-package org-import-icalendar)
 #+END_SRC
 
@@ -5416,8 +5448,14 @@ https://github.com/tbanel/orgaggregate «Aggregating a table is
 creating a new table by computing sums, averages, and so on, out of
 material from the first table.»
 #+BEGIN_SRC emacs-lisp
-  (my-load-local-el "contrib/orgaggregate/orgtbl-aggregate.el")
-  (my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
+(use-package orgtbl-aggregate
+   :load-path "~/.emacs.d/contrib/orgaggregate/"
+)
+
+;won't work; (use-package org-insert-dblock
+;won't work;    :load-path "~/.emacs.d/contrib/orgaggregate/"
+;won't work; )
+(my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
 #+END_SRC
 
 *** org-table-sticky-header-mode
@@ -6422,7 +6460,9 @@ Org-mode content! It can even turn HTML tables into Org tables!
 
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
-  (my-load-local-el "contrib/org-protocol-capture-html/org-protocol-capture-html.el")
+  (use-package org-protocol-capture-html
+     :load-path "~/.emacs.d/contrib/org-protocol-capture-html/"
+  )
   (require 'org-protocol-capture-html)
 )
 #+END_SRC
@@ -6464,7 +6504,9 @@ minor advantage.
 
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-gnu)
-    (my-load-local-el "contrib/tabbar.el")
+    (use-package tabbar
+       :load-path "~/.emacs.d/contrib/"
+    )
   )
 #+END_SRC
 
@@ -6638,7 +6680,9 @@ Counting lines, words, characters.
 - http://www.emacswiki.org/emacs/wc.el
 
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/wc.el")
+(use-package wc
+   :load-path "~/.emacs.d/contrib/"
+)
 #+END_SRC
 
 ** magit → my-map g       + smeargle (highlighting)
@@ -6689,8 +6733,6 @@ interface of Magit.
   - M-x smeargle-clear  - Clear overlays in current buffer
 
 #+BEGIN_SRC emacs-lisp
-  ;OLD;(my-load-local-el "contrib/emacs-smeargle/smeargle.el")
-  ;OLD;(bind-key "c" 'smeargle my-map)
   (use-package smeargle
     :ensure t
     :defer 10
@@ -6771,7 +6813,9 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "outlook")
-  (my-load-local-el "contrib/message-outlook.el")
+  (use-package message-outlook
+     :load-path "~/.emacs.d/contrib/"
+  )
 )
 #+END_SRC
 
@@ -6782,8 +6826,10 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 #+BEGIN_SRC emacs-lisp
 when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 
-(my-load-local-el "contrib/outlookedit.el")
-(use-package outlookedit)
+  (use-package outlookedit
+     :load-path "~/.emacs.d/contrib/"
+  )
+  ;;(use-package outlookedit)
 
 (defvar mno-get-outlook-body
   "cscript //B //Job:getMessage c:/Users/karl.voit/bin/outlook_emacs.wsf")
@@ -7089,7 +7135,9 @@ useful to me.»
 don't need it for now.
 
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/pdf-mode/pdf-mode.el")
+(use-package pdf-mode
+   :load-path "~/.emacs.d/contrib/pdf-mode/"
+)
 #+END_SRC
 
 ** guide-key - displays the available key bindings automatically
@@ -7148,8 +7196,9 @@ disabled 2015-08-31 since I don't use it for now.
 - [[https://en.wikipedia.org/wiki/RAML_%2528software%2529][What is RAML?]] (RESTful API Modeling Language)
 
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
-  (my-load-local-el "contrib/raml-mode/raml-mode.el")
+(use-package raml-mode
+   :if (my-system-type-is-windows)
+   :load-path "~/.emacs.d/contrib/raml-mode/"
 )
 #+END_SRC
 
@@ -7653,11 +7702,14 @@ I don't use it for now. Maybe after I got the requirement more often
 and memorize the commands.
 
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/move-text/move-text.el")
-(require 'move-text)
+(use-package move-text
+   :load-path "~/.emacs.d/contrib/move-text/"
+   :config
+   (global-set-key (kbd "M-,")          'move-text-up)
+   (global-set-key (kbd "M-.")          'move-text-down)
+)
+;; (require 'move-text)
 ;; (move-text-default-bindings)
-(global-set-key (kbd "M-,")          'move-text-up)
-(global-set-key (kbd "M-.")          'move-text-down)
 #+END_SRC
 
 ** DISABLED command-log-mode → my-map k
@@ -7682,7 +7734,6 @@ How to use:
 2. =my-map k=
 
 #+BEGIN_SRC emacs-lisp
-;;(my-load-local-el "contrib/command-log-mode/command-log-mode.el")
 (use-package command-log-mode
   :ensure t
   :defer 10
@@ -7783,10 +7834,14 @@ https://github.com/rolandwalker/unicode-fonts
 - via: http://pragmaticemacs.com/emacs/move-through-edit-points/
 
 #+BEGIN_SRC emacs-lisp
-(my-load-local-el "contrib/goto-chg.el")
-(require 'goto-chg)
-(global-set-key [f2] 'goto-last-change)
-(global-set-key [f3] 'goto-last-change-reverse)
+(use-package goto-chg
+   :load-path "~/.emacs.d/contrib//"
+   :config
+   (global-set-key [f2] 'goto-last-change)
+   (global-set-key [f3] 'goto-last-change-reverse)
+)
+
+;(require 'goto-chg)
 #+END_SRC
 
 ** highlight-symbol → my-map h
@@ -7825,8 +7880,9 @@ also allows for using variables. More flexibility is almost impossible.
   :defer 10
   :if (my-system-type-is-windows)
   :init ;; executed before loading package
-  (my-load-local-el "contrib/2del/restclient/json-reformat.el")
-  ;;(my-load-local-el "contrib/restclient/restclient.el")
+  (use-package json-reformat
+     :load-path "~/.emacs.d/2del/restclient/"
+     )
   ;; :mode "\\.rb\\'"
 )
 #+END_SRC
@@ -8486,7 +8542,6 @@ I tried some of those but they did not stick:
 : `----
 
 #+BEGIN_SRC emacs-lisp
-;(my-load-local-el "contrib/boxquote.el") 2014-01-19: removed old el and replaced it with package from elpa
 (bind-key "q" #'boxquote-region my-map)
 (bind-key "Q" #'boxquote-title my-map)
 #+END_SRC
