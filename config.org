@@ -8114,7 +8114,7 @@ setup to look like a default Emacs.
   ;; ######################################################
   ;; handle CamelCaseParts as distinct words
   ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-  (global-subword-mode 1) ; 1 for on, 0 for off
+  ;; disabled 2017-10-10: not that useful ;; (global-subword-mode 1) ; 1 for on, 0 for off
   ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
   ;; FIXXME: this is a test for getting it work independent of
   ;; CamelCase words
@@ -8138,7 +8138,7 @@ setup to look like a default Emacs.
   (setq initial-scratch-message ";; This buffer is for notes you don't want to save\n;; If you want to create a file, visit that file with C-x C-f,\n;; then enter the text in that file's own buffer.\n\n")
 
   ;; http://ergoemacs.org/emacs/emacs_adv_tips.html
-  (global-subword-mode 0) ; 1 for on, 0 for off
+  ;; disabled 2017-10-10: not that useful ;; (global-subword-mode 0) ; 1 for on, 0 for off
   ;; https://www.gnu.org/software/emacs/manual/html_node/ccmode/Subword-Movement.html
   ;; FIXXME: this is a test for getting it work independent of CamelCase words
 
