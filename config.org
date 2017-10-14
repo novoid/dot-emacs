@@ -8693,11 +8693,11 @@ file.
 			       (interactive)
                                (when (my-system-type-is-gnu)
                                  (find-file
-                               "~/institutions/tugraz/schulungen_voit/org-mode/kursmaterial/featureshow/org-mode-teaser.org")
+                               "~/src/org-mode-workshop/featureshow/org-mode-teaser.org")
                                  )
                                (when (my-system-type-is-windows)
                                  (find-file
-                               "c:/Users/karl.voit/fromweb/src/org-mode-workshop/featureshow/org-mode-teaser.org")
+                               "c:/Users/karl.voit/src/org-mode-workshop/featureshow/org-mode-teaser.org")
                                  )
 			       )
           my-map
