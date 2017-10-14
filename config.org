@@ -5613,7 +5613,9 @@ Customized «scrartcl»
                    "\\documentclass\[a4paper,parskip=half,11pt\]\{scrartcl\}
                     \\usepackage\[ngerman,american\]\{babel\}\\usepackage\{eurosym\}\\usepackage\{xspace\}\\usepackage\[usenames,dvipsnames\]\{xcolor\}
                     \\usepackage\[protrusion=true,factor=900\]\{microtype\}\\usepackage\{enumitem\}
-                    \\definecolor\{DispositionColor\}\{RGB\}\{0,54,90\}\\usepackage\{arial\}
+                    \\definecolor\{DispositionColor\}\{RGB\}\{0,54,90\}
+                    \\usepackage\{helvet\}
+                    \\renewcommand\{\\familydefault\}\{\\sfdefault\}
                     \\DeclareRobustCommand\{\\myacro\}\[1\]\{\\textsc\{\\lowercase\{#1\}\}\} %%  abbrevations using small caps
                     %% colorful headings:
                     %\\setheadsepline\{.4pt\}\[\\color\{DispositionColor\}\]
