@@ -596,8 +596,8 @@ aren't likely in the exec-path.
 It also checks certain operating system/binary combinations which aren't likely in the exec path."
     (cond
      ((and (my-system-type-is-windows) (string= binaryname "firefox"))
-      (when (file-exists-p "C:/Program Files (x86)/Mozilla Firefox/firefox.exe")
-        (concat "C:/Program Files (x86)/Mozilla Firefox/firefox.exe")
+      (when (file-exists-p "C:/Program Files/Mozilla Firefox/firefox.exe")
+        (concat "C:/Program Files/Mozilla Firefox/firefox.exe")
         )
       )
      ((and (my-system-type-is-windows) (string= binaryname "python"))
