@@ -6469,7 +6469,7 @@ Org-mode content! It can even turn HTML tables into Org tables!
 )
 #+END_SRC
 
-** org-mind-map
+** DISABLED org-mind-map
 
 I found [[https://github.com/theodorewiles/org-mind-map][org-mind-map]] via an [[http://irreal.org/blog/?p=6561][article on irreal]].
 
@@ -6485,6 +6485,10 @@ mine for demonstration purposes for novice or non-Org-users.
     :config ;; executed after loading package
   )
 #+END_SRC
+
+2017-10-14: Unfortunately, I do have [[https://github.com/theodorewiles/org-mind-map/issues/13][issues with this tool so that I
+had to disable it]]. Maybe I'd give it another try in a couple of months
+or so.
 
 ** debug message: config orgmode finished.
 
