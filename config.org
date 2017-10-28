@@ -1778,12 +1778,14 @@ Some keyboard commands (summary):
 | F6       | flymake-goto-next-error  |
 | my-map P | pylookup                 |
 
--------------
+** BEGIN of Python-related stuff
 
 The code blocks here are only executed when python is found on the current system:
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "python")
 #+END_SRC
+
+** BEGIN of Elpy
 
 [[https://github.com/jorgenschaefer/elpy][Elpy]] provides a very cool programming experience for Python code.
 
@@ -1802,6 +1804,8 @@ enable elpy and use ipython:
 (elpy-use-ipython)
 #+END_SRC
 
+** Switch for ipython (NOT YET TESTED)
+
 From [[https://www.reddit.com/r/emacs/comments/70chy1/emacs_ipython_completion/][this reddit]] and [[https://emacs.stackexchange.com/questions/24453/weird-shell-output-when-using-ipython-5][this solution]]: NOT TESTED YET! (2017-10-02)
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "ipython")
@@ -1810,11 +1814,14 @@ From [[https://www.reddit.com/r/emacs/comments/70chy1/emacs_ipython_completion/]
 )
 #+END_SRC
 
-auto-mode-list for Python files:
+** auto-mode-list for Python files
+
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
 #+END_SRC
+
+** ropemacs
 
 [[https://github.com/python-rope/ropemacs][ropemacs]] is an evironment that provides advanced things such as refactoring:
 
@@ -1827,7 +1834,8 @@ Ropemacs:
 (setq ropemacs-enable-autoimport t)
 #+END_SRC
 
-- auto-complete mode:
+** auto-completion
+
 #+BEGIN_SRC emacs-lisp
 (use-package auto-complete
   :ensure t
@@ -1842,10 +1850,14 @@ Ropemacs:
 (ac-config-default)
 #+END_SRC
 
+** pyflakes
+
 [[https://pypi.python.org/pypi/pyflakes][Pyflakes]] is a simple program which checks Python source files for errors:
 #+BEGIN_SRC emacs-lisp
 (setq python-check-command "pyflakes")
 #+END_SRC
+
+** flymake, flycheck
 
 #+BEGIN_QUOTE
 [[https://www.emacswiki.org/emacs/FlyMake][FlyMake]] performs on-the-fly syntax checks on the files being edited
@@ -1884,6 +1896,8 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
         ))
 #+END_SRC
 
+** pylookup
+
 [[https://github.com/tsgates/pylookup][pylookup]]: Emacs mode for searching python documents with convenience
 
 #+BEGIN_SRC emacs-lisp
@@ -1911,8 +1925,27 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
   (define-key my-map "P" 'pylookup-lookup)
 #+END_SRC
 
+** hideshow-orgmode (NOT WORKING YET)
 
-END of elpy package
+I found [[https://github.com/logangrado/hideshow-orgmode][hideshow-orgmode]] via [[https://www.reddit.com/r/emacs/comments/795u0o/hideshoworgmode/][this reddit thread]]. It provides (Python)
+code outlining similar to Org-mode =TAB= visibility cycling. This is a
+very nice thing to have. So far, I used yafolding-mode for it.
+
+Set-up on 2017-10-28 but did not work out of the box (nothing changes
+when I do =hs-cycle(-all)=). I have to invest this issue when I've got
+more time.
+
+#+BEGIN_SRC emacs-lisp
+(use-package hideshow-orgmode
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/hideshow-orgmode")))
+  :config
+  (global-set-key (kbd "M-h") 'hs-cycle)
+  (global-set-key (kbd "M-H") 'hs-cycle-all)
+)
+#+END_SRC
+
+** END of Python-related stuff + Elpy
+
 #+BEGIN_SRC emacs-lisp
 );; use-package
 );; if python binary found
