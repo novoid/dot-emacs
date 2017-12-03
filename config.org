@@ -4543,7 +4543,7 @@ See also: id:2017-08-12-org-super-agenda
 Loading the code:
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-agenda
- :load-path "~/.emacs.d/contrib/org-super-agenda/"
+   :load-path "~/.emacs.d/contrib/org-super-agenda/"
 )
 #+END_SRC
 
@@ -4616,6 +4616,35 @@ down below.
 *** org-agenda-custom-commands → long list of agenda definitions
 
 #+BEGIN_SRC emacs-lisp
+(if noninteractive
+  ;; if Emacs is started in batch mode: omit org-super-agenda since I don't need it here and there were issues with it:
+  (setq org-agenda-custom-commands
+        (quote (
+                ("n" "no TODO events +180d"
+                 ((agenda "no TODO events +180d"
+                          ((org-agenda-span 180)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           (org-agenda-skip-function
+                            '(or
+                              (org-agenda-skip-entry-if 'todo 'any);; skip if any TODO state is found
+                              (org-agenda-skip-entry-if 'category "infonova");; skip if any TODO state is found
+                              (my-skip-tag "lp")
+                              )
+                            )
+                           ;;(org-agenda-skip-function '(my-skip-tag "lp"))
+                          )))
+                 nil ("~/org/agenda_180d_filtered.html"))
+
+                ("D" "detail agenda"
+                 ((agenda "detail agenda"
+                          ((org-agenda-span 31)
+                           (org-agenda-time-grid nil)
+                          )))
+                 nil ("~/org/agenda_details.html"))
+                )))
+
+  ;; if Emacs is started in interactive mode:
   (setq org-agenda-custom-commands
         (quote (
 
@@ -4855,6 +4884,7 @@ down below.
                 ;;                (org-agenda-todo-list-sublevels t)
                 ;;                (org-tags-match-list-sublevels 'indented)))
                 )))
+)
 #+END_SRC
 
 #+RESULTS:
