@@ -3019,7 +3019,8 @@ The replacement table is taken from [[http://ergoemacs.org/emacs/elisp_replace_h
           ;; org-link. Can be extended.
           (replace-table '(("\\[" . "{")
                            ("\\]" . "}")
-                           ("&amp;" . "&") ("&#039;" . "'") ("&#8211;" . "–")
+                           ("&#8217;" . "’")
+                           ("&amp;" . "&") ("&#039;" . "'") ("&#8211;" . "–") ("&#8212;" . "—")
 			         ("&nbsp;" . " ") ("&ensp;" . " ") ("&emsp;" . " ") ("&thinsp;" . " ")
 			         ("&rlm;" . "‏") ("&lrm;" . "‎") ("&zwj;" . "‍") ("&zwnj;" . "‌")
 			         ("&iexcl;" . "¡") ("&cent;" . "¢") ("&pound;" . "£") ("&curren;" . "¤") ("&yen;" . "¥") ("&brvbar;" . "¦") ("&sect;" . "§")
