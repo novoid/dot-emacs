@@ -6189,7 +6189,8 @@ https://github.com/astahlman/ob-async
 Forget [[https://en.wikipedia.org/wiki/DOT_(graph_description_language)][dot]]. :-)
 
 [[http://plantuml.com/][PlantUML]] is a handy tool for drawing simple diagrams. It is [[https://zhangweize.wordpress.com/2010/08/27/a-new-version-of-ob-plantuml/][part of
-Org-mode since 2010]].
+Org-mode since 2010]] and is a wrapper to dot, allowing higher-level
+definitions.
 
 As [[http://eschulte.github.io/babel-dev/DONE-integrate-plantuml-support.html][an example]], the following block gets exported as a cool diagram:
 #+begin_src plantuml :file myplantuml.png
@@ -7581,7 +7582,7 @@ be of some use.»
   ;;:defer 10
   :config
   (setq char-menu
-        '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†"
+        '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†" "␣"
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
          ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
