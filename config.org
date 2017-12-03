@@ -4276,10 +4276,11 @@ files; on my other machines, start with my non-work-related files.
 
   (bind-key "A" 'my-toggle-agenda-files my-map)
 
-   (if (my-system-type-is-windows)
-       (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
-       (setq org-agenda-files (append my-nonwork-agenda-files ))
-       )
+  (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
+  ;; separate agenda files for work/nonwork: ;; (if (my-system-type-is-windows)
+  ;; separate agenda files for work/nonwork: ;;     (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
+  ;; separate agenda files for work/nonwork: ;;     (setq org-agenda-files (append my-nonwork-agenda-files ))
+  ;; separate agenda files for work/nonwork: ;;     )
 #+END_SRC
 
 *** Misc agenda helper functions
