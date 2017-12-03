@@ -5852,7 +5852,7 @@ https://github.com/yjwen/org-reveal
 )
 #+END_SRC
 
-*** ox-clip - formatted copy from Org-mode to system clipboard
+*** DISABLED ox-clip - formatted copy from Org-mode to system clipboard
 
 #+BEGIN_QUOTE
 [[http://melpa.org/#/ox-clip][This module]] copies selected regions in org-mode as formatted text on the
@@ -5878,6 +5878,30 @@ Windows, Mac and Linux.
 - https://github.com/jkitchin/scimax
 - use: M-x ox-clip-formatted-copy
 
+- 2017-11-20: moved from ELPA package to a checkout from https://github.com/jkitchin/ox-clip
+  - resulted in:
+    #+BEGIN_EXAMPLE
+    [...]
+    config • ox-clip - formatted copy from Org-mode to system clipboard …
+    Importing package-keyring.gpg...done
+    ad-handle-definition: ‘url-cache-extract’ got redefined
+    Contacting host: jorgenschaefer.github.io:443
+    gnutls.c: [1] (Emacs) GnuTLS library not found
+    Opening TLS connection to ‘jorgenschaefer.github.io’...
+    Opening TLS connection with ‘gnutls-cli --x509cafile /usr/ssl/certs/ca-bundle.crt -p 443 jorgenschaefer.github.io’...done
+    Opening TLS connection to ‘jorgenschaefer.github.io’...done
+    Contacting host: jorgenschaefer.github.io:443
+    Contacting host: orgmode.org:80
+    Contacting host: stable.melpa.org:80
+    Contacting host: elpa.gnu.org:80
+    Package refresh done
+    Setting ‘package-selected-packages’ temporarily since "emacs -q" would overwrite customizations
+    For information about GNU Emacs and the GNU system, type C-h C-a.
+    <C-lwindow> is undefined
+    Error running timer ‘require’: (error "Unknown keyword: :export-block")
+    #+END_EXAMPLE
+  - I'll have to re-check later-on when I've time to fix this.
+
 #+BEGIN_SRC emacs-lisp
   (when (or
          (and (my-system-type-is-gnu) (my-eval-if-binary-or-warn "xclip") (not (my-system-is-karl-voit-at)))
@@ -5885,6 +5909,7 @@ Windows, Mac and Linux.
          (my-system-type-is-windows);; For Windows the html-clip-w32.py script will be installed.
          )
     (use-package ox-clip
+      :load-path "~/.emacs.d/contrib/ox-clip/"
         ;;:if
       :ensure t
       :defer 10
