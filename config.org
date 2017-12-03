@@ -5763,6 +5763,7 @@ translates Org-mode file to various other formats via Pandoc.»
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package ox-pandoc
+    :load-path "~/.emacs.d/contrib/ox-pandoc/"
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 10
     ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
