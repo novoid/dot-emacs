@@ -1925,23 +1925,38 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
   (define-key my-map "P" 'pylookup-lookup)
 #+END_SRC
 
-** hideshow-orgmode (NOT WORKING YET)
+** hideshow-orgmode
 
 I found [[https://github.com/logangrado/hideshow-orgmode][hideshow-orgmode]] via [[https://www.reddit.com/r/emacs/comments/795u0o/hideshoworgmode/][this reddit thread]]. It provides (Python)
 code outlining similar to Org-mode =TAB= visibility cycling. This is a
 very nice thing to have. So far, I used yafolding-mode for it.
 
-Set-up on 2017-10-28 but did not work out of the box (nothing changes
-when I do =hs-cycle(-all)=). I have to invest this issue when I've got
-more time.
+This needs the hideshow minor mode =M-x hideshow-minor-mode= enabled
+to work.
+
+FIXXME: Maybe this snippet should only be executed when opening a
+Python file. I don't know if this is true and how I should implement
+it for now.
+
+- [ ] FIXXME: auto-load hs-minor-mode and hideshow-orgmode for Python files
+- [ ] FIXXME: invoke =hs-cycle-all= on opening a python file
 
 #+BEGIN_SRC emacs-lisp
-(use-package hideshow-orgmode
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/hideshow-orgmode")))
-  :config
-  (global-set-key (kbd "M-h") 'hs-cycle)
-  (global-set-key (kbd "M-H") 'hs-cycle-all)
-)
+  (use-package hideshow-orgmode
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/hideshow-orgmode")))
+    :config
+    (hs-minor-mode 1)
+    (global-set-key (kbd "M-h") 'hs-cycle)
+    (global-set-key (kbd "M-H") 'hs-cycle-all)
+  )
+
+  ;(add-hook 'python-mode-hook (lambda () (hs-minor-mode 1)))
+  (add-hook 'python-mode-hook 'hs-minor-mode)
+  (add-hook 'python-mode-hook (lambda ()
+                                (hs-cycle-all)
+                                (global-set-key (kbd "M-h") 'hs-cycle)
+                                (global-set-key (kbd "M-H") 'hs-cycle-all)
+                                ))
 #+END_SRC
 
 ** END of Python-related stuff + Elpy
