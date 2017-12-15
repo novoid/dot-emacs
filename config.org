@@ -5755,6 +5755,21 @@ END of LaTeX class definitions
    );; with-eval-after-load
 );; if pdflatex is found
 #+END_SRC
+
+*** htmlize
+
+[[https://www.emacswiki.org/emacs/Htmlize][htmlize]] is an HTML export functionality used by org-reveal or ox-clip
+(when not in org-mode).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t
+    :defer 10
+    :config
+    (require 'htmlize)
+  )
+#+END_SRC
+
 *** ox-pandoc - Export via Pandoc
 
 https://github.com/kawabata/ox-pandoc - «This is another exporter that
