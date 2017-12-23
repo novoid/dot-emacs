@@ -7649,13 +7649,14 @@ unchained from constraints of backward compatibility.
   :init
   (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming" "malia"))
   (cond ((my-system-is-sherri)
-         (bind-key "w" '(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
+         ;; 2017-12-23 outdated: (bind-key "w" '(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
+         (bind-key "w" (lambda () (interactive) (wttrin-query "graz")) my-map)
          )
         ((my-system-type-is-windows)
-         (bind-key "w" '(lambda () (interactive) (wttrin-query "unterpremstatten") (toggle-truncate-lines)) my-map)
+         (bind-key "w" '(lambda () (interactive) (wttrin-query "graz")) my-map)
           )
         (t
-         (bind-key "w" '(lambda () (interactive) (wttrin) (toggle-truncate-lines)) my-map)
+         (bind-key "w" '(lambda () (interactive) (wttrin)) my-map)
          )
         )
   )
