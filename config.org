@@ -2895,7 +2895,7 @@ Disabled because it doesn't work:
 ;;(message (or (current-idle-time) (number-to-string 0)))
 #+END_SRC
 
-*** DISABLED Functions for Working Hour Calculation
+*** Functions for Working Hour Calculation
 
 I used this code to derive working hours until the company switched to
 a stupid new tool everybody hates. Yes, even worse than SAP.
@@ -2958,8 +2958,8 @@ my side:
                             ((string= day "Mi")  8.5)
                             ((string= day "Thu") 8.5)
                             ((string= day "Do")  8.5)
-                            ((string= day "Fri") 4.5)
-                            ((string= day "Fr")  4.5)
+                            ((string= day "Fri") 8.5)
+                            ((string= day "Fr")  8.5)
                             )
                            )
 	)
