@@ -45,12 +45,12 @@ profiling:
 
 2011-04-20: turn off backup files
 #+BEGIN_SRC emacs-lisp
-(setq backup-inhibited t)
+(setq-default backup-inhibited t)
 #+END_SRC
 
 set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/emacs/emacs_33.html
 #+BEGIN_SRC emacs-lisp
-(setq calendar-week-start-day 1)
+(setq-default calendar-week-start-day 1)
 #+END_SRC
 
 omit usage of TAB for =C-x r o=: indent-tabs-mode
@@ -65,17 +65,17 @@ append and update time-stamps for =Time-stamp: <>= in headers:
 
 set warning of opening large files to 100MB
 #+BEGIN_SRC emacs-lisp
-(setq large-file-warning-threshold 100000000)
+(setq-default large-file-warning-threshold 100000000)
 #+END_SRC
 
 do not add double space after periods [[http://www.reddit.com/r/emacs/comments/2l5gtz/real_sentence_in_emacs/][Real sentence in Emacs : emacs]]
 #+BEGIN_SRC emacs-lisp
-(setq sentence-end-double-space nil)
+(setq-default sentence-end-double-space nil)
 #+END_SRC
 
 https://www.emacswiki.org/emacs/TruncateLines =M-x toggle-truncate-lines=
 #+BEGIN_SRC emacs-lisp
-(setq truncate-lines t)
+(setq-default truncate-lines t)
 #+END_SRC
 
 [[http://stackoverflow.com/questions/7577614/emacs-truncate-lines-in-all-buffers][elisp - Emacs truncate lines in all buffers - Stack Overflow]]
@@ -8990,8 +8990,6 @@ not I should keep this here. Well, it does not hurt either.
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))
-
-(setq truncate-lines t);; https://www.emacswiki.org/emacs/TruncateLines - M-x toggle-truncate-lines
 #+END_SRC
 
 * Closing and end for profiling
