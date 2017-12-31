@@ -1959,13 +1959,33 @@ it for now.
                                 ))
 #+END_SRC
 
+** elpygen → C-c i
+:PROPERTIES:
+:CREATED:  [2017-12-26 Tue 10:49]
+:END:
+
+From [[https://github.com/vkazanov/elpygen][GitHub]]: "Generate Python function/method stub for a call-like symbol under point"
+
+Just write =a_function_call(first_named, 2, second_named)=, invoke the
+command =elpygen-implement= and elpygen either jumps to the existing
+function or it generates a stub for a new one. The example above
+results in =def a_function_call(first_named, arg1, second_named):\npass=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elpygen
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/elpygen")))
+    :config
+    (require 'elpygen)
+    (define-key python-mode-map (kbd "C-c i") 'elpygen-implement)
+  )
+#+END_SRC
+
 ** END of Python-related stuff + Elpy
 
 #+BEGIN_SRC emacs-lisp
 );; use-package
 );; if python binary found
 #+END_SRC
-
 * dired
 
 Usually, I do file management in [[http://karl-voit.at/2015/12/14/screen-to-tmux/][tmux]] and zsh. There are my aliases,
