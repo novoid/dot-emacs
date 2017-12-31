@@ -1770,13 +1770,17 @@ maintainability. It also ships with a large set of libraries.
 
 Misc stuff is taken from: https://github.com/jorgenschaefer/elpy/wiki/
 
-Some keyboard commands (summary):
+Selected keyboard commands (summary):
 
-| Key      | Command                  |
-|----------+--------------------------|
-| F5       | flymake-goto-prev-error  |
-| F6       | flymake-goto-next-error  |
-| my-map P | pylookup                 |
+| Key       | Command                                               | Command                           |
+|-----------+-------------------------------------------------------+-----------------------------------|
+| C-up/down | jump to previous/next line of that indentation level  | =elpy-nav-move-line-or-region-up= |
+| M-h       | hide/show current function                            | =hs-cycle=                        |
+| my-map P  | pylookup: show Python documentation for word at point | =pylookup-lookup=                 |
+| C-c i     | elpygen: implement stub (or jump to definition)       | =elpygen-implement=               |
+| F5        | previous error                                        | =flymake-goto-prev-error=         |
+| F6        | next error                                            | =flymake-goto-next-error=         |
+| C-c C-r r | refactor code/region/word                             | =elpy-refactor=                   |
 
 ** BEGIN of Python-related stuff
 
