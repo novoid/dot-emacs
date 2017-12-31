@@ -5574,6 +5574,47 @@ A minor mode to show the sticky header for org-mode tables.
   )
 #+END_SRC
 
+*** patching orgtbl-ascii-draw to accept references for min/max values
+:PROPERTIES:
+:CREATED:  [2017-12-31 Sun 10:10]
+:END:
+
+I created [[https://github.com/tbanel/orgtblasciiplot/issues/1][an issue on Github with a feature request]] which was posted
+as a patch by the original author.
+
+Here, I apply the patch by overwriting the orgmode function:
+
+#+BEGIN_SRC emacs-lisp
+  (defun orgtbl-ascii-draw (value min max &optional width characters)
+    "Draw an ascii bar in a table.
+  VALUE is the value to plot, it determines the width of the bar to draw.
+  MIN is the value that will be displayed as empty (zero width bar).
+  MAX is the value that will draw a bar filling all the WIDTH.
+  WIDTH is the span in characters from MIN to MAX.
+  CHARACTERS is a string that will compose the bar, with shades of grey
+  from pure white to pure black.  It defaults to a 10 characters string
+  of regular ascii characters."
+    (let* ((width      (ceiling (or width 12)))
+           (characters (or characters " .:;c!lhVHW"))
+           (len        (1- (length characters)))
+           (value      (float (if (numberp value)
+                                  value (string-to-number value))))
+           (min        (float (if (numberp min)  ;; <------ patch
+                                  min (string-to-number min))))
+           (max        (float (if (numberp max)  ;; <------ patch
+                                  max (string-to-number max))))
+           (relative   (/ (- value min) (- max min)))
+           (steps      (round (* relative width len))))
+      (cond ((< steps             0) "too small")
+            ((> steps (* width len)) "too large")
+            (t (let* ((int-division (/ steps len))
+                      (remainder    (- steps (* int-division len))))
+                 (concat (make-string int-division (elt characters len))
+                         (string (elt characters remainder))))))))
+#+END_SRC
+
+*This can be removed* when the patch hits orgmode/maint in git.
+
 ** Exporting
 
 Not necessary any more:
