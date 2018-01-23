@@ -821,7 +821,7 @@ https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
 
 (if (locate-library "edit-server")
     (progn
-      (use-package edit-server)
+      ;(use-package edit-server)
       (setq edit-server-new-frame nil)
       (edit-server-start)))
 #+END_SRC
@@ -3356,6 +3356,9 @@ Opening image files with external viewer:
 			       ("\\.jpg\\'" . default)
 			       ("\\.jpeg\\'" . default)
 			       ("\\.tiff\\'" . default)
+			       ("\\.docx\\'" . default)
+			       ("\\.xlsx\\'" . default)
+			       ("\\.pptx\\'" . default)
 			       ) org-file-apps ))))
 #+END_SRC
 ** TODO keywords and faces
@@ -5011,7 +5014,7 @@ For tag searches ignore tasks with scheduled and deadline dates
 (setq org-agenda-tags-todo-honor-ignore-options t)
 #+END_SRC
 
-Always hilight the current agenda line
+Always highlight the current agenda line:
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
 #+END_SRC
@@ -7709,7 +7712,8 @@ flexible, simple tools for minibuffer completion in Emacs
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :ensure t
-  :bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
+  ;;:bind (:map my-map ("J" . counsel-imenu)) ;; http://irreal.org/blog/?p=6201 jumping to buffer org-heading
+  ;; 2018-01-23: moved to jump-hydra!
   :config
   (counsel-mode 1)
 )
@@ -8313,40 +8317,28 @@ instead of using the pattern =.*\(jpg\|png\)=.
 
   ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-)
-#+END_SRC
 
-** csv-mode
+  (defhydra hydra-jumping (:color blue
+                           :hint nil)
+"
+    dumb-jump-go-_o_ther-window
+    dumb-_J_ump-go
+    dumb-jump-_b_ack
+    dumb-jump-quick-_l_ook
+    dumb-jump-go-prefer-e_x_ternal
+    _z_ dumb-jump-go-prefer-external-other-window
+    _c_ounsel-imenu
+"
+    ("o" dumb-jump-go-other-window)
+    ("J" dumb-jump-go)
+    ("b" dumb-jump-back)
+    ("l" dumb-jump-quick-look)
+    ("x" dumb-jump-go-prefer-external)
+    ("z" dumb-jump-go-prefer-external-other-window)
+    ("c" counsel-imenu)
+    )
+    (define-key my-map (kbd "J") #'hydra-jumping/body)
 
-Manipulating CSV files.
-
-#+BEGIN_SRC emacs-lisp
-(use-package csv-mode
-  :ensure t
-  :defer 10
-  :config
-  (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
-  (autoload 'csv-mode "csv-mode"
-    "Major mode for editing comma-separated value files." t)
-)
-#+END_SRC
-
-** pcre2el
-:PROPERTIES:
-:CREATED:  [2017-11-26 Sun 17:05]
-:END:
-
-I got this nice package from [[http://cestlaz.github.io/posts/using-emacs-38-dired/][a screencast of dired]]. It offers
-simplified regular expressions instead of the standard Emacs RegEx.
-
-Example: in dired, you can mark using =%m= followed by =.*(jpg|png)=
-instead of using the pattern =.*\(jpg\|png\)=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package pcre2el
-:ensure t
-:config
-(pcre-mode)
 )
 #+END_SRC
 
