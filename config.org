@@ -3482,6 +3482,59 @@ http://orgmode.org/org.html#Setting-tags
 (setq org-fast-tag-selection-single-key (quote expert))
 #+END_SRC
 
+*** my-set-tags-including-inherited
+:PROPERTIES:
+:CREATED:  [2018-01-23 Tue 16:45]
+:END:
+
+The problem: when I do have the following heading structure and I
+export "My Project", e.g., to HTML, the tags =projectX= and =@Peter=
+are not associated to "My Task":
+
+#+BEGIN_SRC org
+,* My Project           :projectX:
+,** My Workpackage        :@Peter:
+,*** My Task                 :foo:
+#+END_SRC
+
+Within Org-mode, tag inheritance works perfectly. However, the export
+modules do not consider tag inheritance at all. This way, "My Task"
+does not get the tags =projectX= and =@Peter=.
+
+When invoking the following function when the cursor is on a heading,
+all inherited tags get written to the heading. In the example above,
+when invoking on the heading "My Task", the end result would be:
+
+#+BEGIN_SRC org
+,* My Project           :projectX:
+,** My Workpackage        :@Peter:
+,*** My Task        :projectX:@Peter:foo:
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun my-set-tags-including-inherited ()
+  (interactive)
+  (let (
+	(alltags (org-get-tags-at))
+	;(ignored-tags '(ISAE3402 2del crypt))
+	)
+
+    ;; 2018-01-23: any method I tried to remove certain tags did not work due to my inability to filter according to strings:
+    ;; example string: (#("ISAE3402" 0 8 (inherited t)) #("test1" 0 5 (inherited t)) #("foobar" 0 6 (inherited t)) #("test2" 0 5 (inherited t)) #("baz" 0 3 (inherited t)))
+
+    ;;(delete 'ISAE3402 alltags)
+    ;; remove "a" from al, using equal as the test, applied to the car of each element
+;    (setq alltags
+    ;(remove* "ISAE3402" alltags :test 'equal :key 'get-text-property)
+					; 'get-text-property
+					; 'car
+					;)
+    (org-set-tags-to alltags)
+    )
+  )
+#+END_SRC
+
+
 ** Capture
 
 http://orgmode.org/manual/Capture.html «Capture lets you quickly store
