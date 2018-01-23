@@ -8180,6 +8180,25 @@ Manipulating CSV files.
 )
 #+END_SRC
 
+** pcre2el
+:PROPERTIES:
+:CREATED:  [2017-11-26 Sun 17:05]
+:END:
+
+I got this nice package from [[http://cestlaz.github.io/posts/using-emacs-38-dired/][a screencast of dired]]. It offers
+simplified regular expressions instead of the standard Emacs RegEx.
+
+Example: in dired, you can mark using =%m= followed by =.*(jpg|png)=
+instead of using the pattern =.*\(jpg\|png\)=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package pcre2el
+:ensure t
+:config
+(pcre-mode)
+)
+#+END_SRC
+
 ** hydra
 
 #+BEGIN_SRC emacs-lisp
