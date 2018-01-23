@@ -6369,10 +6369,27 @@ Encrypt all entries before saving
     (setq org-tags-exclude-from-inheritance (quote ("crypt")))
 #+END_SRC
 
-GPG key to use for encryption
+GPG key to use for encryption:
+
+*Note for Windows 10 users*: I had to import the private/secret key to
+my pgp4win/Kleopatra key management tool. =~/.gnupg/= or
+=~/.babun/cygwin/.gnupg/= did not result in Emacs being able to find
+the key.
+
 #+BEGIN_SRC emacs-lisp
+    (setq org-crypt-key "77B9E3C5")
+#+END_SRC
+
+#+RESULTS:
+: 77B9E3C5
+
+OLD key:
+#+BEGIN_SRC emacs-lisp :tangle no
     (setq org-crypt-key "8A614641")
 #+END_SRC
+
+#+RESULTS:
+: 8A614641
 
 encrypting whole files:
 http://orgmode.org/worg/org-tutorials/encrypting-files.html
