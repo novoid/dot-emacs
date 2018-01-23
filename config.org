@@ -7363,7 +7363,7 @@ map it to F12 and end condition of loading:
 )
 #+END_SRC
 
-** browse-kill-ring → M-y
+** DISABLED browse-kill-ring → M-y
 
 https://github.com/browse-kill-ring/browse-kill-ring
 
