@@ -8199,6 +8199,26 @@ instead of using the pattern =.*\(jpg\|png\)=.
 )
 #+END_SRC
 
+** dumb-jump
+:PROPERTIES:
+:CREATED:  [2018-01-22 Mon 13:39]
+:END:
+
+- an Emacs "jump to definition" package
+- From: [[http://irreal.org/blog/?p=6218][Irreal: Dumb-jump in Action]]
+- Source: https://github.com/jacktasia/dumb-jump
+
+- [[http://irreal.org/blog/?p=6419][Some Oldies but Goodies Updated—Part 1 | Irreal]]
+  - [[http://irreal.org/blog/?p=6218][Dumb-jump in Action | Irreal]]
+    - [[http://cestlaz.github.io/posts/using-emacs-33-projectile-jump/#.WRS1mVKZOuV][Using Emacs - 33 - projectile, dumb-jump | C'est la Z]] →
+      Screecast with projectile and dumb-jump
+
+#+BEGIN_SRC emacs-lisp
+(use-package dumb-jump
+:ensure t
+)
+#+END_SRC
+
 ** hydra
 
 #+BEGIN_SRC emacs-lisp
