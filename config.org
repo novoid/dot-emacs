@@ -5196,6 +5196,9 @@ and with a bleeding heart.
     (add-to-list 'org-agenda-category-icon-alist
 		  '("outlook" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
 		  )
+    (add-to-list 'org-agenda-category-icon-alist
+		  '("ISAE3402" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
+		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
