@@ -9101,6 +9101,17 @@ a configurable list of functions.»
 (global-set-key (kbd "M-/") 'hippie-expand)
 #+END_SRC
 
+** my-fill-or-unfill → M-q
+:PROPERTIES:
+:CREATED:  [2018-01-27 Sat 11:33]
+:END:
+
+Function defined above.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-q") 'my-fill-or-unfill)
+#+END_SRC
+
 ** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
 
 With these commands, I get great shortcuts to put the current word,
