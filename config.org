@@ -3935,7 +3935,7 @@ You might as well be interested in [[http://pragmaticemacs.com/emacs/insert-inte
 
 *** Links to Outlook entities
 
-Please do read [[id:2018-01-24-broken-outlook-links][my blog article that explains that those links get
+Please do read [[http://karl-voit.at/2018/01/24/broken-outlook-links/][my blog article that explains that those links get
 broken very easily]].
 
 - http://superuser.com/questions/71786/can-i-create-a-link-to-a-specific-email-message-in-outlook
