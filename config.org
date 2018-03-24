@@ -1277,6 +1277,14 @@ Org-mode syntax.
             (replace-match "- " nil t))
           (while (search-forward "o	" nil t)
             (replace-match "  - " nil t))
+          (while (search-forward "" nil t)
+            (replace-match "\"" nil t))
+          (while (search-forward "" nil t)
+            (replace-match "\"" nil t))
+          (while (search-forward "" nil t)
+            (replace-match "'" nil t))
+          (while (search-forward "" nil t)
+            (replace-match "-" nil t))
           ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
           ;; (replace-match "1. " nil t))
           (recode-region (point-min) (point-max) 'latin-1 'windows-1252); fix char encoding, e.g.: \366 -> ö
