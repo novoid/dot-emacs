@@ -27,3 +27,4 @@ etc
 /.stignore_common
 bin
 /config_Windows_working_ID_links.el
+server
