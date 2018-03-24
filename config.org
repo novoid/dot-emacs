@@ -5935,6 +5935,30 @@ https://github.com/yashi/org-asciidoc - «An Org Mode Exporter Backend For Ascii
   )
 #+END_SRC
 
+*** ox-rst - Export to reStructuredText
+
+https://github.com/msnoigrs/ox-rst
+
+#+BEGIN_SRC emacs-lisp
+(my-load-local-el "contrib/ox-rst/ox-rst.el")
+(require 'ox-rst)
+#+END_SRC
+
+-------------------
+
+FIXXME: I don't know why loading via use-package is not working with
+this one: =package-compute-transaction: Package ‘ox-rst-’ is
+unavailable=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ox-rst
+  :load-path "~/.emacs.d/contrib/ox-rst/"
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :defer 10
+  :if (my-system-type-is-windows)
+  )
+#+END_SRC
+
 *** Org-Reveal - generate nice presentations out of Org-mode
 
 https://github.com/yjwen/org-reveal
