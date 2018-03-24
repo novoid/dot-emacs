@@ -8383,6 +8383,59 @@ instead of using the pattern =.*\(jpg\|png\)=.
 )
 #+END_SRC
 
+** keyfreq
+:PROPERTIES:
+:CREATED:  [2018-02-21 Wed 18:11]
+:END:
+
+I found it via [[http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs.html][this blog article]]: it logs the used commands and their
+keyboard shortcuts and gives you an overview. Most frequently used
+commands should be mapped to easy to type shortcuts.
+
+#+BEGIN_SRC emacs-lisp
+(use-package keyfreq
+:ensure t
+:config
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+)
+#+END_SRC
+
+You can see the current result by calling =keyfreq-show=.
+
+** DISABLED pdf-tools
+:PROPERTIES:
+:CREATED:  [2018-03-08 Thu 09:48]
+:END:
+
+pdf-tools provides really cool functionality to annotate PDF files
+within Emacs.
+
+My first steps with many drawbacks: id:2014-12-02-pdf-tools
+
+This does *not* work so far. Unmet (and many) dependencies are in my
+way. This is quite frustrating.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-pdfview
+:ensure t
+:defer 15
+:config
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package pdf-tools
+:ensure t
+:defer 15
+:config
+(pdf-tools-install)
+(eval-after-load 'org '(require 'org-pdfview))
+(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+(add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
