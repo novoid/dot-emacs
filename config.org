@@ -975,7 +975,8 @@ Host-specific font size:
   (set-face-attribute 'default (selected-frame) :height 105)
   )
 (when (my-system-is-sherri)
-  (set-face-attribute 'default (selected-frame) :height 110)
+  ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
+  (set-face-attribute 'default (selected-frame) :height 105)
   )
 #+END_SRC
 * UTF-8 and codings
@@ -2005,6 +2006,8 @@ my functions, the features I like.
 
 Having a file manager in Emacs does have some advantages, I guess.
 Maybe I'll try it some day.
+
+[[http://ergoemacs.org/emacs/emacs_dired_tips.html][Dired tipps from ergoemacs]]. [[https://www.masteringemacs.org/article/dired-shell-commands-find-xargs-replacement][Mastering Emacs on Dired]].
 
 Here are some minor tweaks related to file management in Emacs with
 dired.
@@ -3732,6 +3735,8 @@ Put it in the inbox, refile it later:
 #+BEGIN_SRC emacs-lisp
 	  ("I" "inbox, refile later" entry (file "~/org/inbox.org")
 	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+	  ("W" "WWW: inbox, refile later" entry (file "~/org/inbox.org")
+	   "* %a :website:\n\n%U %?\n\n%:initial\n" :empty-lines 1)
 #+END_SRC
 
 Old templates for the records:
@@ -5202,6 +5207,9 @@ and with a bleeding heart.
 		  '("detego" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
 		  )
     (add-to-list 'org-agenda-category-icon-alist
+		  '("ciso" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
+		  )
+    (add-to-list 'org-agenda-category-icon-alist
 		  '("outlook" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
 		  )
     (add-to-list 'org-agenda-category-icon-alist
@@ -6029,6 +6037,9 @@ https://github.com/yjwen/org-reveal
 )
 #+END_SRC
 
+#+RESULTS:
+: t
+
 *** DISABLED ox-clip - formatted copy from Org-mode to system clipboard
 
 #+BEGIN_QUOTE
@@ -6274,10 +6285,11 @@ Activate Babel languages:
   )
 #+END_SRC
 
+DISABLED 2018-03-16 because of id:2018-03-16-exports-results-parameter-ignored:
 Inhibit evaluation of code blocks during export
 http://orgmode.org/manual/Exporting-code-blocks.html
 #+BEGIN_SRC emacs-lisp
-  (setq org-export-babel-evaluate nil)
+;;  (setq org-export-babel-evaluate nil)
 #+END_SRC
 
 Do not prompt to confirm evaluation:
@@ -7781,7 +7793,7 @@ be of some use.»
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
          ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
-          "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω")
+          "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω" "Σ" "Δ")
          ("Hatschek"   "Ǎ" "ǎ" "Č" "č" "Ď" "ď" "Ě" "ě" "Ǧ" "ǧ" "Ȟ" "ȟ"
           "Ǐ" "ǐ" "ǰ" "Ǩ" "ǩ" "Ľ" "ľ" "Ň" "ň" "Ǒ" "ǒ" "Ř" "ř" "Š" "š" "Ť" "ť"
           "Ǔ" "ǔ" "Ǚ" "ǚ" "Ž" "ž" "Ǯ" "ǯ")
