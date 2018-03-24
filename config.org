@@ -5825,13 +5825,16 @@ Customized «scrartcl»
 #+BEGIN_SRC emacs-lisp
     (add-to-list 'org-latex-classes
                  '("detego"
-                   "\\documentclass\[a4paper,parskip=half,11pt\]\{scrartcl\}
+                   "\\documentclass\[a4paper,parskip=half,11pt,headinclude=false,footinclude=false\]\{scrartcl\}
                     \\usepackage\[ngerman,american\]\{babel\}\\usepackage\{eurosym\}\\usepackage\{xspace\}\\usepackage\[usenames,dvipsnames\]\{xcolor\}
                     \\usepackage\[protrusion=true,factor=900\]\{microtype\}\\usepackage\{enumitem\}
                     \\definecolor\{DispositionColor\}\{RGB\}\{0,54,90\}
                     \\usepackage\{helvet\}
                     \\renewcommand\{\\familydefault\}\{\\sfdefault\}
                     \\DeclareRobustCommand\{\\myacro\}\[1\]\{\\textsc\{\\lowercase\{#1\}\}\} %%  abbrevations using small caps
+                    \\usepackage{scrlayer-scrpage} \\rehead{\\includegraphics\[height=1cm\]{{c:/Users/karl.voit/.emacs.d/bin/Detego-Logo-209x41.png}}} \\pagestyle{scrheadings} %% Logo in header
+                    \\newenvironment{NOTES}{}{}  %% declares org-reveal environment in PDF output
+                    \\usepackage[space]{grffile} %% enable spaces in filenames of includegraphics
                     %% colorful headings:
                     %\\setheadsepline\{.4pt\}\[\\color\{DispositionColor\}\]
                     \\renewcommand\{\\headfont\}\{\\normalfont\\sffamily\\color\{DispositionColor\}\}
