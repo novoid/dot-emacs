@@ -2533,7 +2533,7 @@ http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 : (setq org-image-actual-width t)
 :   => Never resize and use original width (the default)
 
-*** scimax/org-return
+*** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
 - http://irreal.org/blog/?p=6131
