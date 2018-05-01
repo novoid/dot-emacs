@@ -4701,7 +4701,7 @@ Definition of =my-super-agenda-groups=, my central configuration of super-agenda
                        ;; their order is unspecified, defaulting to 0. Sections
                        ;; are displayed lowest-number-first.
                        :order 1)
-          (:name "Habits" :habit t :order 2)
+  ;        (:name "Habits" :habit t :order 2)
           (:name "Shopping" :tag "Besorgung" :order 3)
                  ;; Boolean AND group matches items that match all subgroups
                  ;;  :and (:tag "shopping" :tag "@town")
