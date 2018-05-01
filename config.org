@@ -1273,9 +1273,11 @@ Org-mode syntax.
         (clipboard-yank)
         (save-restriction
           (narrow-to-region mybegin (point))  ;; ignore everything outside of region
+          (recode-region (point-min) (point-max) 'latin-1 'windows-1252); fix char encoding, e.g.: \366 -> ö
           (goto-char (point-min))
           (while (search-forward "\"	" nil t)
             (replace-match "- " nil t))
+          (goto-char (point-min))
           (while (search-forward "o	" nil t)
             (replace-match "  - " nil t))
           (while (search-forward "" nil t)
@@ -1288,7 +1290,6 @@ Org-mode syntax.
             (replace-match "-" nil t))
           ;;(while (search-forward "1.	" nil t) ;; FIXXME: replace with regex-methods for numbers in general
           ;; (replace-match "1. " nil t))
-          (recode-region (point-min) (point-max) 'latin-1 'windows-1252); fix char encoding, e.g.: \366 -> ö
           ))
       )
 
@@ -2509,9 +2510,20 @@ Disable property inheritance (in order to seed up)
 #+END_SRC
 
 https://www.gnu.org/software/emacs/manual/html_node/org/Matching-tags-and-properties.html
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq org-tags-match-list-sublevels nil)
 #+END_SRC
+
+2018-04-08: I now keep =org-tags-match-list-sublevels= to its default
+value (=t=) because [[https://www.reddit.com/r/orgmode/comments/8a8wv3/sparse_tree_with_nonscheduled_todo_items_of/][I could not generate sparse trees with all
+unscheduled open tasks]] and setting this to =nil= (can't remember why I
+did it in the first place) was the reason.
+
+#+BEGIN_QUOTE
+This variable is semi-obsolete and probably should always be true.  It
+is better to limit inheritance to certain tags using the variables
+‘org-use-tag-inheritance’ and ‘org-tags-exclude-from-inheritance’.
+#+END_QUOTE
 
 Prevent auto-filling for source code:
 #+BEGIN_SRC emacs-lisp
@@ -9303,8 +9315,10 @@ things, some of them only in interactive mode.
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
   (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
-  (message "Creating agenda …")
-  (my-org-agenda)
+  ;(when (not (my-system-type-is-windows))
+      (message "Creating agenda …")
+      (my-org-agenda)
+  ;    )
 
   (message "my-org-startup-visibility …")
   (my-org-startup-visibility)
