@@ -2033,6 +2033,50 @@ Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file
     )
 #+END_SRC
 
+FIXXME: I have to split up following packages after I tested them. I'm
+beginning with dired just now and have to identify needful things:
+
+Enabling already pre-insalled dired-x:
+
+#+BEGIN_SRC emacs-lisp
+(require 'dired-x)
+#+END_SRC
+
+Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]]:
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired+
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-plus/")))
+;;  :ensure t
+  :defer 10
+  :config
+  (diredp-toggle-find-file-reuse-dir 1) ;; https://www.emacswiki.org/emacs/DiredReuseDirectoryBuffer
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-icon
+:ensure t
+:config
+(add-hook 'dired-mode-hook 'dired-icon-mode)
+)
+#+END_SRC
+
+- [ ] ivy-dired-history is an alternative to:
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-dired-history
+:ensure t
+:config
+(require 'savehist)
+(add-to-list 'savehist-additional-variables 'helm-dired-history-variable)
+(savehist-mode 1)
+(with-eval-after-load 'dired
+  (require 'helm-dired-history)
+  (define-key dired-mode-map "," 'dired))
+)
+#+END_SRC
+
 * LaTeX
 
 [[https://en.wikipedia.org/wiki/LaTeX][LaTeX]] is a powerful text setting system I use for creating letters,
