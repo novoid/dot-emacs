@@ -7809,6 +7809,34 @@ flexible, simple tools for minibuffer completion in Emacs
 - http://pragmaticemacs.com/emacs/dont-search-swipe/
 - http://irreal.org/blog/?p=5340 -> swiper depends on ivy; ivy is much better than ido-mode/smex; example config
 
+- from https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html
+  - DISABLED because I faced issues with it:
+    - tagging in Org-mode lacks tab-completion
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package ivy :demand
+      :config
+      (setq ivy-use-virtual-buffers t    ;; Add recent files and bookmarks to the ivy-switch-buffer
+            ivy-count-format "%d/%d ")   ;; Displays the current and total number in the collection in the prompt
+      (ivy-mode 1)
+)
+#+END_SRC
+
+| Key        | Command                 | Description                                    |
+|------------+-------------------------+------------------------------------------------|
+| M-n        | ivy-next-line           | Next line                                      |
+| M-p        | ivy-previous-line       | Previous line                                  |
+| M-<        | ivy-beginning-of-buffer | Beginning of the Ivy minibuffer                |
+| M->        | ivy-end-of-buffer       | End of the Ivy minibuffer                      |
+| C-v        | ivy-scroll-up-command   | Page up by one Ivy buffer size                 |
+| M-v        | ivy-scroll-down-command | Page down by one Ivy buffer size               |
+| C-m or RET | ivy-done                | Calls the default action                       |
+| C-M-m      | ivy-call                | Calls the default action, keeps Ivy open       |
+| M-o        | ivy-dispatching-done    | Displays the available actions                 |
+| C-M-o      | ivy-dispacthing-call    | Displays available actions, keeps Ivy open     |
+| C-'        | ivy-avy                 | Uses Avy to select candidates                  |
+| TAB        | ivy-partial-or-done     | Tab completion, repeated presses may call done |
+|            | ivy-resume              | Restart Ivy before last action                 |
+
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
   :ensure t
