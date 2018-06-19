@@ -2669,6 +2669,30 @@ Here is a list of file extensions that should be openend outside of Emacs:
   ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
 #+END_SRC
 
+*** remove spaces from org-link-escape-chars
+:PROPERTIES:
+:CREATED:  [2018-05-04 Fri 11:40]
+:END:
+
+- Why
+  - I got issues on Windows when linking to a file which results in
+    something like this which does not work when visited using =C-c
+    C-o=:
+    : file:~/my%20dir/my%20file.txt
+  - Something like this works tough:
+    : [[file:~/my dir/my file.txt]]
+
+This *might be dangerous* since I neglect any changes of this (internal)
+variable. So far, it gets the job done. Let's hope for the best that I
+don't get into any nasty side-effects and don't remember or recognize
+the reason caused by overwriting this setting here.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-link-escape-chars
+  ;;%20 %5B %5D %25
+  '(?\[ ?\] ?%)
+  )
+#+END_SRC
 
 ** Styling
 
