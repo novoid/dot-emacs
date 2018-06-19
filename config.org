@@ -1446,7 +1446,7 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
   )
 #+END_SRC
 
-** my-toggle-ispell-language() → S-F5
+** my-toggle-ispell-language()
 
 =my-toggle-ispell-language()= because I use two languages and switch
 between them:
@@ -1495,7 +1495,9 @@ Modes for programming languages; check spelling only in comments/strings
 (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
 #+END_SRC
 
-** Keybindings
+** DISABLED Keybindings
+
+2018-06-19: disabled because I moved those functions to a hydra with F5
 
 bind-keys:
 #+BEGIN_SRC emacs-lisp
@@ -8263,11 +8265,12 @@ also allows for using variables. More flexibility is almost impossible.
   ;; :mode "\\.rb\\'"
 )
 #+END_SRC
-** neotree → F9
+** DISABLED neotree +→ F9+
 
 [[https://github.com/jaypei/emacs-neotree][NeoTree]] offers a file tree side-panel like NerdTree for Vim.
 
-installed on 2015-03-22
+- installed on 2015-03-22
+- disabled 2018-06-19: I don't use it in real life
 
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
@@ -8339,12 +8342,32 @@ instead of using the pattern =.*\(jpg\|png\)=.
   :ensure t
   :defer 10
   :config ;; executed after loading package
+)
+#+END_SRC
 
-  ;; from hydra-examples.el vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+Please note: =:color red= is for repeating actions, =:color blue= for
+one-time actions. From [[https://github.com/abo-abo/hydra][the web site]]:
 
-  ;;** Example 7: toggle with Ruby-style docstring
+#+BEGIN_QUOTE
+The =:color= key is a shortcut. It aggregates =:exit= and
+=:foreign-keys= key in the following way:
+
+| color    | toggle                     |
+|----------+----------------------------|
+| red      |                            |
+| blue     | :exit t                    |
+| amaranth | :foreign-keys warn         |
+| teal     | :foreign-keys warn :exit t |
+| pink     | :foreign-keys run          |
+#+END_QUOTE
+
+*** toggle things with Ruby-style docstring → my-map M
+
+Example 7 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
   (defvar whitespace-mode nil)
-  (defhydra hydra-toggle (:color pink)
+  (defhydra hydra-toggle (:color teal)
     "
   _f_ auto-fill-mode:    %`auto-fill-function
   _t_ truncate-lines:    %`truncate-lines
@@ -8353,18 +8376,27 @@ instead of using the pattern =.*\(jpg\|png\)=.
   _a_ abbrev-mode:       %`abbrev-mode
   _d_ debug-on-error:    %`debug-on-error
   "
+  ;;  ("q" nil "quit")
     ("a" abbrev-mode nil)
     ("d" toggle-debug-on-error nil)
     ("f" auto-fill-mode nil)
     ("t" toggle-truncate-lines nil)
     ("w" whitespace-mode nil)
     ("l" org-toggle-link-display nil)
-    ("q" nil "quit"))
+  )
   ;; Recommended binding:
   ;;(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
   (bind-key "M" #'hydra-toggle/body my-map)
+#+END_SRC
 
-  ;;** Example 9: s-expressions in the docstring
+#+RESULTS:
+: hydra-toggle/body
+
+*** DISABLED s-expressions in the docstring
+
+Example 9 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
   ;; You can inline s-expresssions into the docstring like this:
   (defvar dired-mode-map)
   (declare-function dired-mark "dired")
@@ -8375,8 +8407,13 @@ instead of using the pattern =.*\(jpg\|png\)=.
   Number of marked items: %(length (dired-get-marked-files))
   "
       ("m" dired-mark "mark")))
+#+END_SRC
 
-  ;;** Example 10: apropos family
+*** apropos → C-c h
+
+Example 10 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
   (defhydra hydra-apropos (:color blue
                            :hint nil)
     "
@@ -8393,8 +8430,13 @@ instead of using the pattern =.*\(jpg\|png\)=.
     ("e" apropos-value))
   ;; Recommended binding:
   (global-set-key (kbd "C-c h") 'hydra-apropos/body)
+#+END_SRC
 
-  ;;** Example 11: rectangle-mark-mode
+*** rectangle-mark-mode → C-x r h
+
+Example 11 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
   (require 'rect)
   (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
                              :color pink
@@ -8422,11 +8464,75 @@ instead of using the pattern =.*\(jpg\|png\)=.
     ("p" kill-rectangle nil)
     ("o" nil nil))
     ;; Recommended binding:
-  (global-set-key (kbd "C-x SPC") 'hydra-rectangle/body)
+  (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
+#+END_SRC
 
-  ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*** Spell checking → F5
 
+Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
 
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-spelling (:color red)
+  "
+  ^
+  ^Spelling^          ^Errors^            ^Checker^
+  ^────────^──────────^──────^────────────^───────^───────
+  check _r_egion      _n_ext error        _m_ode
+  check _b_uffer      _c_orrect           toggle _l_anguage
+  ^^
+  "
+  ("q" nil "quit")
+  ("r" flyspell-region nil)
+  ("l" my-toggle-ispell-language nil)
+  ("n" flyspell-goto-next-error nil)
+;;  ("<" flyspell-correct-previous :color pink nil)
+;;  (">" flyspell-correct-next :color pink nil)
+  ("c" flyspell-correct-word-before-point nil)
+;;  ("d" ispell-change-dictionary)
+  ("b" flyspell-buffer nil)
+  ("m" flyspell-mode nil))
+  (global-set-key [f5] 'hydra-spelling/body)
+#+END_SRC
+
+*** Python → my-map P
+:PROPERTIES:
+:CREATED:  [2018-06-19 Tue 23:26]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "python")
+  (defhydra hydra-python (:color pink)
+    "
+    ^
+    ^Movement^               ^Create^            ^Help^
+    ^────────^───────────────^──────^────────────^────^───────
+    _j_ same level up   C-↑  _i_ implement       _h_ help (documentation)
+    _k_ same level down C-↓  _[__]_ p/n error      _,__._ p/n flycheck
+    _t_ toggle show/hide     _r_ refactor        M-. show definition
+    ^^
+    "
+    ("j" elpy-nav-backward-block nil)
+    ("k" elpy-nav-forward-block nil)
+    ("t" hs-cycle nil)
+    ("h" pylookup-lookup nil :color blue)
+    ("i" elpygen-implement nil :color blue)
+    ("[" flymake-goto-prev-error nil)
+    ("]" flymake-goto-next-error nil)
+    ("," flycheck-previous-error nil)
+    ("." flycheck-next-error nil)
+    ("r" elpy-refactor nil :color blue)
+    ("q" nil "quit")
+    )
+    (bind-key "P" #'hydra-python/body my-map)
+)
+#+END_SRC
+
+#+RESULTS:
+: hydra-python/body
+
+*** Dumb Jump → my-map J
+
+#+BEGIN_SRC emacs-lisp
   (defhydra hydra-jumping (:color blue
                            :hint nil)
 "
@@ -8447,11 +8553,9 @@ instead of using the pattern =.*\(jpg\|png\)=.
     ("c" counsel-imenu)
     )
     (define-key my-map (kbd "J") #'hydra-jumping/body)
-
-)
 #+END_SRC
 
-** keyfreq
+** DISABLED keyfreq
 :PROPERTIES:
 :CREATED:  [2018-02-21 Wed 18:11]
 :END:
