@@ -4733,21 +4733,22 @@ Definition of =my-super-agenda-groups=, my central configuration of super-agenda
           (:name "Today"  ; Optionally specify section name
                  :time-grid t  ; Items that appear on the time grid
                  )
-          (:name "Important" :priority "A")
+          (:name "DEADLINES" :deadline t :order 1)
+          (:name "Important" :priority "A" :order 2)
           (:priority<= "B"
                        ;; Show this section after "Today" and "Important", because
                        ;; their order is unspecified, defaulting to 0. Sections
                        ;; are displayed lowest-number-first.
-                       :order 1)
-  ;        (:name "Habits" :habit t :order 2)
-          (:name "Shopping" :tag "Besorgung" :order 3)
+                       :order 2)
+  ;        (:name "Habits" :habit t :order 3)
+          (:name "Shopping" :tag "Besorgung" :order 4)
                  ;; Boolean AND group matches items that match all subgroups
                  ;;  :and (:tag "shopping" :tag "@town")
                  ;; Multiple args given in list with implicit OR
                  ;;  :tag ("food" "dinner"))
                  ;;  :habit t
                  ;;  :tag "personal")
-          (:name "Started" :todo "STARTED" :order 5)
+          (:name "Started" :todo "STARTED" :order 6)
           ;;(:name "Space-related (non-moon-or-planet-related)"
           ;;       ;; Regexps match case-insensitively on the entire entry
           ;;       :and (:regexp ("space" "NASA")
@@ -5469,8 +5470,6 @@ workaround before I customized my agenda export to HTML.
     )
   )
 #+END_SRC
-
-*
 
 *** DISABLED calfw - A calendar framework for Emacs
 
