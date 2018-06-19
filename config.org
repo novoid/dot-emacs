@@ -8253,7 +8253,7 @@ https://github.com/rolandwalker/unicode-fonts
 )
 #+END_SRC
 
-** goto-chg - visit places of previous changes in current buffer → F5|F6
+** goto-chg - visit places of previous changes in current buffer → F2|F3
 
 - http://www.emacswiki.org/emacs/download/goto-chg.el
   - Goto the point of the most recent edit in the buffer.
