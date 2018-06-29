@@ -6652,6 +6652,7 @@ re-direct stderr to stdout and add an additional line:
 https://github.com/astahlman/ob-async
 - not yet available as a package
 - [ ] re-check availability
+  - 2018-06-27 no package in my sources yet (again)
 #+BEGIN_SRC emacs-lisp
 (use-package ob-async
   :ensure t
@@ -8777,67 +8778,6 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   ("b" flyspell-buffer nil)
   ("m" flyspell-mode nil))
   (global-set-key [f5] 'hydra-spelling/body)
-#+END_SRC
-
-*** Python → my-map P
-:PROPERTIES:
-:CREATED:  [2018-06-19 Tue 23:26]
-:END:
-
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "python")
-  (defhydra hydra-python (:color pink)
-    "
-    ^
-    ^Movement^               ^Create^            ^Help^
-    ^────────^───────────────^──────^────────────^────^───────
-    _j_ same level up   C-↑  _i_ implement       _h_ help (documentation)
-    _k_ same level down C-↓  _[__]_ p/n error      _,__._ p/n flycheck
-    _t_ toggle show/hide     _r_ refactor        M-. show definition
-    ^^
-    "
-    ("j" elpy-nav-backward-block nil)
-    ("k" elpy-nav-forward-block nil)
-    ("t" hs-cycle nil)
-    ("h" pylookup-lookup nil :color blue)
-    ("i" elpygen-implement nil :color blue)
-    ("[" flymake-goto-prev-error nil)
-    ("]" flymake-goto-next-error nil)
-    ("," flycheck-previous-error nil)
-    ("." flycheck-next-error nil)
-    ("r" elpy-refactor nil :color blue)
-    ("q" nil "quit")
-    )
-    (bind-key "P" #'hydra-python/body my-map)
-)
-#+END_SRC
-
-#+RESULTS:
-: hydra-python/body
-
-*** Dumb Jump → my-map J
-
-#+BEGIN_SRC emacs-lisp
-  (defhydra hydra-jumping (:color blue
-                           :hint nil)
-"
-    dumb-jump-go-_o_ther-window
-    dumb-_J_ump-go
-    dumb-jump-_b_ack
-    dumb-jump-quick-_l_ook
-    dumb-jump-go-prefer-e_x_ternal
-    _z_ dumb-jump-go-prefer-external-other-window
-    _c_ounsel-imenu
-"
-    ("o" dumb-jump-go-other-window)
-    ("J" dumb-jump-go)
-    ("b" dumb-jump-back)
-    ("l" dumb-jump-quick-look)
-    ("x" dumb-jump-go-prefer-external)
-    ("z" dumb-jump-go-prefer-external-other-window)
-    ("c" counsel-imenu)
-    )
-    (define-key my-map (kbd "J") #'hydra-jumping/body)
 #+END_SRC
 
 ** DISABLED keyfreq
