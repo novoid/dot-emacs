@@ -7602,7 +7602,7 @@ disabled 2015-08-31 since I don't use it for now.
 )
 #+END_SRC
 
-** Synonyms → my-map S
+** Synonyms → my-map S (+ F5)
 
 - via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
 - The file names are absolute, not relative, locations
@@ -7625,6 +7625,24 @@ disabled 2015-08-31 since I don't use it for now.
 (message (concat "»»» I could not locate \"" my-user-emacs-directory "bin/mthes10/mthesaur.txt\""))
 )
 #+END_SRC
+
+** define-word (F5)
+:PROPERTIES:
+:CREATED:  [2018-06-28 Thu 12:54]
+:END:
+
+- https://github.com/abo-abo/define-word
+  - via [[http://irreal.org/blog/?p=7303][An Emacs Interface to the macOS System Dictionary | Irreal]] and [[http://irreal.org/blog/?p=7250][A Thesaurus for Emacs | Irreal]]
+  - uses online service of https://www.wordnik.com/
+
+#+BEGIN_SRC emacs-lisp
+(use-package define-word
+   :load-path "~/.emacs.d/contrib/define-word/"
+;;   :config
+)
+#+END_SRC
+
+Binding is done via [[id:hydra-spellchecking][hydra]].
 
 ** nyan-mode - Nyan Cat instead of scroll bar
 
@@ -8519,6 +8537,9 @@ Example 11 from hydra-examples.el
 #+END_SRC
 
 *** Spell checking → F5
+:PROPERTIES:
+:ID:       hydra-spellchecking
+:END:
 
 Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
 
@@ -8530,12 +8551,16 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   ^────────^──────────^──────^────────────^───────^───────
   check _r_egion      _n_ext error        _m_ode
   check _b_uffer      _c_orrect           toggle _l_anguage
+  _s_ynonym
+  _d_efine word
   ^^
   "
   ("q" nil "quit")
   ("r" flyspell-region nil)
   ("l" my-toggle-ispell-language nil)
   ("n" flyspell-goto-next-error nil)
+  ("s" my-synonym-current-word nil :color blue)
+  ("d" define-word-at-point nil :color blue) ;; define-word
 ;;  ("<" flyspell-correct-previous :color pink nil)
 ;;  (">" flyspell-correct-next :color pink nil)
   ("c" flyspell-correct-word-before-point nil)
