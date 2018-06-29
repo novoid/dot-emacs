@@ -9783,6 +9783,93 @@ sed 's/ | \(.*\)/ | ~\1~/' | \
 sed ':a;N;$!ba;s/\n/ |\n/g'
 #+END_SRC
 
+#+RESULTS:
+| *key*                                                    | *function*                                                |
+|----------------------------------------------------------+-----------------------------------------------------------|
+| [M-l]                                                    | ~downcase-word~                                           |
+| [M-u]                                                    | ~upcase-word~                                             |
+| [M-c]                                                    | ~capitalize-word~                                         |
+| [remap fill-paragraph]                                   |                                                           |
+| emacs-lisp-mode C-c e                                    | ~macrostep-expand~                                        |
+| M-h                                                      | ~hs-cycle~                                                |
+| M-H                                                      | ~hs-cycle-all~                                            |
+| M-h                                                      | ~hs-cycle~                                                |
+| M-H                                                      | ~hs-cycle-all~                                            |
+| python-mode C-c i                                        | ~elpygen-implement~                                       |
+| dired-mode ~,~                                           | ~dired~                                                   |
+| ~\C-cl~                                                  | ~org-store-link~                                          |
+| ~\C-ca~                                                  | ~org-agenda~                                              |
+| C-c %                                                    | ~org-mark-ring-push~                                      |
+| C-c <left>                                               | ~org-mark-ring-goto~                                      |
+| C-c <down>                                               | ~org-mark-ring-push~                                      |
+| global ~\C-cc~                                           | ~org-capture~                                             |
+| ~\C-cm~                                                  | ~my-memacs-org-agenda~                                    |
+| org-mode C-c )                                           | ~reftex-citation~                                         |
+| org-mode C-c (                                           | ~org-mode-reftex-search~                                  |
+| [f8]                                                     | ~minimap-mode~                                            |
+| C-s-SPC                                                  | ~mode-line-in-header~                                     |
+| [f12]                                                    | ~my-toggle-naked-emacs~                                   |
+| [f4]                                                     | ~char-menu~                                               |
+| [f2]                                                     | ~goto-last-change~                                        |
+| [f3]                                                     | ~goto-last-change-reverse~                                |
+| C-c h                                                    | ~hydra-apropos/body~                                      |
+| C-x r h                                                  | ~hydra-rectangle/body~                                    |
+| [f5]                                                     | ~hydra-spelling/body~                                     |
+| ~\C-s~                                                   | ~my-search-method-according-to-numlines~                  |
+| global [tool-bar pdf-button]                             |                                                           |
+| [f1]                                                     | ~my-toggle-beginner-setup~                                |
+| [(shift f1)]                                             | ~my-toggle-dark-bright-theme~                             |
+| M-i (lambda () (interactive) (my-codenav-prev-definition |                                                           |
+| M-k (lambda () (interactive) (my-codenav-next-definition |                                                           |
+| [home]                                                   | ~beginning-of-buffer~                                     |
+| [end]                                                    | ~end-of-buffer~                                           |
+| [C-left]                                                 | ~backward-word~                                           |
+| [C-right]                                                | ~forward-word~                                            |
+| C-p                                                      | ~scroll-down-command~                                     |
+| C-n                                                      | ~scroll-up-command~                                       |
+| C-f                                                      | ~(lambda () (interactive) (forward-line 5~                |
+| M-/                                                      | ~hippie-expand~                                           |
+| M-q                                                      | ~my-fill-or-unfill~                                       |
+| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~   |
+| [M-l]                                                    | ~downcase-word)~                                        |
+| [M-u]                                                    | ~upcase-word)~                                          |
+| [M-c]                                                    | ~capitalize-word)~                                      |
+| [remap fill-paragraph]                                 |                                                           |
+| global [(f5)]                                            | ~flyspell-mode)~                                        |
+| global [(shift f5)]                                      | ~my-toggle-ispell-language)~                            |
+| global [(f6)]                                            | ~flyspell-goto-next-error)~                             |
+| global [(f7)]                                            | ~flyspell-correct-word-before-point)~                   |
+| org-mode RET                                           |                                                           |
+| ~\C-cl~                                                  | ~org-store-link)~                                       |
+| ~\C-ca~                                                  | ~org-agenda)~                                           |
+| C-c %                                                    | ~org-mark-ring-push)~                                   |
+| C-c <left>                                               | ~org-mark-ring-goto)~                                   |
+| C-c <down>                                               | ~org-mark-ring-push)~                                   |
+| global ~\C-cc~                                           | ~org-capture)~                                          |
+| ~\C-cm~                                                  | ~my-memacs-org-agenda)~                                 |
+| org-mode C-c )                                           | ~reftex-citation)~                                      |
+| org-mode C-c (                                           | ~org-mode-reftex-search))~                              |
+| [f8]                                                     | ~minimap-mode)~                                         |
+| C-s-SPC                                                  | ~mode-line-in-header)~                                  |
+| [f12]                                                    | ~my-toggle-naked-emacs)~                                |
+| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~ |
+| [f4]                                                     | ~char-menu)~                                            |
+| [f2]                                                     | ~goto-last-change)~                                     |
+| [f3]                                                     | ~goto-last-change-reverse)~                             |
+| [f9]                                                     | ~neotree-toggle)~                                       |
+| ~\C-s~                                                   | ~my-search-method-according-to-numlines)~               |
+| global [tool-bar pdf-button]                           |                                                           |
+| [f1]                                                     | ~my-toggle-beginner-setup)~                             |
+| [(shift f1)]                                             | ~my-toggle-dark-bright-theme)~                          |
+| [home]                                                   | ~beginning-of-buffer)~                                  |
+| [end]                                                    | ~end-of-buffer)~                                        |
+| [C-left]                                                 | ~backward-word)~                                        |
+| [C-right]                                                | ~forward-word)~                                         |
+| C-p                                                      | ~scroll-down-command)~                                  |
+| C-n                                                      | ~scroll-up-command)~                                    |
+| C-f                                                      | ~(lambda () (interactive) (forward-line 5)))~           |
+| M-/                                                      | ~hippie-expand)~                                        |
+
 ** Mappings not using my-map (sorted output)
 
 #+BEGIN_SRC sh :results raw  :exports results :prologue "echo \"| *key* | *function* |\n|-\""
@@ -9943,13 +10030,12 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 | <f3>       | goto-last-change-reverse           |
 | <f4>       | char-menu                          |
 |------------+------------------------------------|
-| <f5>       | flyspell-mode                      |
-| Shift-f5   | my-toggle-ispell-language          |
+| <f5>       | flyspell hydra                     |
 | <f6>       | flyspell-goto-next-error           |
 | <f7>       | flyspell-correct-word-before-point |
 | <f8>       |                                    |
 |------------+------------------------------------|
-| <f9>       | neotree-toggle                     |
+| <f9>       | python hydra                       |
 | <f10>      | menu-bar-open                      |
 | <f11>      | toggle-frame-fullscreen            |
 | <f12>      | my-toggle-naked-emacs              |
