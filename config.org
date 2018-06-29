@@ -2005,10 +2005,8 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
 * dired
 
 Usually, I do file management in [[http://karl-voit.at/2015/12/14/screen-to-tmux/][tmux]] and zsh. There are my aliases,
-my functions, the features I like.
-
-Having a file manager in Emacs does have some advantages, I guess.
-Maybe I'll try it some day.
+my functions, the features I like. Having a file manager in Emacs does
+have some advantages.
 
 [[http://ergoemacs.org/emacs/emacs_dired_tips.html][Dired tipps from ergoemacs]]. [[https://www.masteringemacs.org/article/dired-shell-commands-find-xargs-replacement][Mastering Emacs on Dired]].
 
@@ -2027,6 +2025,8 @@ current directory.
 (setq dired-dwim-target t)
 #+END_SRC
 
+** dired-details → (
+
 Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file details with =(= and =)=:
 #+BEGIN_SRC emacs-lisp
   (use-package dired-details
@@ -2036,8 +2036,7 @@ Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file
     )
 #+END_SRC
 
-FIXXME: I have to split up following packages after I tested them. I'm
-beginning with dired just now and have to identify needful things:
+** dired-x, dired+, dired-icon
 
 Enabling already pre-insalled dired-x:
 
@@ -2065,6 +2064,8 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
 )
 #+END_SRC
 
+** helm-dired-history
+
 - [ ] ivy-dired-history is an alternative to:
 
 #+BEGIN_SRC emacs-lisp
@@ -2078,6 +2079,214 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
   (require 'helm-dired-history)
   (define-key dired-mode-map "," 'dired))
 )
+#+END_SRC
+
+** dired-recent → C-z
+:PROPERTIES:
+:CREATED:  [2018-06-28 Thu 13:39]
+:END:
+
+- https://github.com/vifon/dired-recent.el
+- from [[https://www.reddit.com/r/emacs/comments/8u8slx/dired_quickly_jumping_to_previously_visited/e1e2iew/?context=3][this reddit context]]
+
+"Press =C-x C-d= to select a previously visited directory to open."
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-recent
+   :load-path "~/.emacs.d/contrib/dired-recent.el/"
+   :config
+   (require 'dired-recent)
+   (dired-recent-mode 1)
+)
+#+END_SRC
+
+Make better use of =dired-recent-open= using ivy:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-recent-dirs ()
+  "Present a list of recently used directories and open the selected one in dired"
+  (interactive)
+    (let ((dir (ivy-read "Directory: "
+                         dired-recent-directories
+                         :re-builder #'ivy--regex
+                         :sort nil
+                         :initial-input nil)))
+      (dired dir)))
+
+(global-set-key (kbd "C-z") 'my-dired-recent-dirs)
+#+END_SRC
+
+** dired-narrow → /
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 20:49]
+:END:
+
+From
+http://pragmaticemacs.com/emacs/dynamically-filter-directory-listing-with-dired-narrow/
+with https://github.com/Fuco1/dired-hacks
+
+It narrows down the list of files using a pattern. =g= resets the view.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-narrow
+  :load-path "~/.emacs.d/contrib/dired-hacks/"
+  :bind (:map dired-mode-map
+              ("/" . dired-narrow)))
+#+END_SRC
+
+** dired-open
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 20:49]
+:END:
+
+From https://github.com/Fuco1/dired-hacks
+
+Provides:
+- =dired-open-xdg= try to open the file using =xdg-open=
+- =dired-open-guess-shell-alist= try to open the file by launching applications from =dired-guess-shell-alist-user=
+- =dired-open-call-function-by-extension= call an elisp function based on extension.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-open
+  :load-path "~/.emacs.d/contrib/dired-hacks/"
+)
+#+END_SRC
+
+** dired-ranger → M-c; M-v; M-m
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 20:49]
+:END:
+
+From https://github.com/Fuco1/dired-hacks:
+
+- https://github.com/Fuco1/dired-hacks#dired-ranger
+
+#+BEGIN_QUOTE
+With the multi-stage operations, you can gather files from /multiple/
+dired buffers into a single "clipboard", then copy or move all of them
+to the target location. Another huge advantage is that if the target
+dired buffer is already opened, switching to it via ido or ibuffer is
+often faster than selecting the path.
+
+Call =dired-ranger-copy= to add marked files (or the file under point if
+no files are marked) to the "clipboard". With non-nil prefix argument,
+add the marked files to the current clipboard.
+
+Past clipboards are stored in =dired-ranger-copy-ring= so you can repeat
+the past pastes.
+
+Call =dired-ranger-paste= or =dired-ranger-move= to copy or move the files
+in the current clipboard to the current dired buffer. With raw prefix
+argument (usually C-u), the clipboard is not cleared, so you can
+repeat the copy operation in another dired buffer.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-ranger
+  :load-path "~/.emacs.d/contrib/dired-hacks/"
+  :config
+  (define-key dired-mode-map (kbd "M-c") 'dired-ranger-copy)  ;; overwrites: diredp-capitalize-this-file
+  (define-key dired-mode-map (kbd "M-v") 'dired-ranger-paste) ;; overwrites: scroll-down-command
+  (define-key dired-mode-map (kbd "M-m") 'dired-ranger-move)  ;; overwrites: back-to-indentation
+)
+#+END_SRC
+
+** dired-collapse
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 20:49]
+:END:
+
+From https://github.com/Fuco1/dired-hacks#dired-collapse
+
+Provides:
+- =dired-open-xdg= try to open the file using =xdg-open=
+- =dired-open-guess-shell-alist= try to open the file by launching applications from =dired-guess-shell-alist-user=
+- =dired-open-call-function-by-extension= call an elisp function based on extension.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-collapse
+  :load-path "~/.emacs.d/contrib/dired-hacks/"
+  :config
+  ;(dired-collapse-mode)
+)
+#+END_SRC
+
+** image-dired+
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 12:58]
+:END:
+
+Image-dired extensions: https://www.emacswiki.org/emacs/ImageDired
+
+- Non-blocking thumbnail creating
+- Adjust image to window
+
+#+BEGIN_SRC emacs-lisp
+(use-package image-dired+
+:ensure t
+:config
+(require 'image-dired+)
+(image-diredx-async-mode 1)
+(image-diredx-adjust-mode 1)
+(define-key image-dired-thumbnail-mode-map "\C-n" 'image-diredx-next-line)
+(define-key image-dired-thumbnail-mode-map "\C-p" 'image-diredx-previous-line)
+(define-key image-dired-thumbnail-mode-map "g" 'revert-buffer);; revert all thumbnails if `image-diredx-async-mode' is on
+(define-key image-dired-thumbnail-mode-map "x" 'image-diredx-flagged-delete);; Delete confirmation prompt with thumbnails
+(setq image-dired-track-movement nil) ;; Suppress unknown cursor movements
+(setq image-dired-external-viewer "/usr/bin/geeqie") ;; FIXXME: configure different for Windows
+)
+#+END_SRC
+
+** my-dired-filetags → M-t
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 21:35]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-filetags ()
+    "Run \"filetags\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "FIXXME xfce4-terminal --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
+        (dired-do-shell-command "xfce4-terminal --disable-server --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
+        ;;not working because of symlink?:      (dired-do-shell-command "~/bin/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
+        ;;works: (dired-do-shell-command "~/src/misc/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
+        )
+      )
+    (revert-buffer nil t t) ;; refresh listing of files
+    )
+
+  (define-key dired-mode-map (kbd "M-t") 'my-dired-filetags)
+#+END_SRC
+
+** my-dired-appendfilename → M-a
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 21:36]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-appendfilename ()
+    "Run \"appendfilename\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "FIXXME xfce4-terminal --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
+        (dired-do-shell-command "xfce4-terminal --disable-server --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/appendfilename/appendfilename/__init__.py *" nil marked-files)
+        )
+      )
+    (revert-buffer nil t t)
+    )
+
+  (define-key dired-mode-map (kbd "M-a") 'my-dired-appendfilename)
 #+END_SRC
 
 * LaTeX
