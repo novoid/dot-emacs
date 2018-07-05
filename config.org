@@ -8907,6 +8907,98 @@ way. This is quite frustrating.
 )
 #+END_SRC
 
+** eyebrowse
+:PROPERTIES:
+:CREATED:  [2018-07-02 Mon 11:41]
+:END:
+
+When you are working with multiple tasks in parallel, you most likely
+know the issue of getting lost in your buffers or destroying your
+window setup for an in-between task.
+
+[[https://github.com/wasamasa/eyebrowse][eyebrowse]] helps mitigating those issues by providing "saved buffer
+configurations" and assign it to separate slots that are addressed by
+their number. If you know [[https://www.gnu.org/software/screen/][GNU screen]] or [[https://en.wikipedia.org/wiki/Tmux][tmux]] in your shell, this is
+quite familiar to you.
+
+I got the recommendation for it [[https://www.reddit.com/r/emacs/comments/7au3hj/how_do_you_manage_your_emacs_windows_and_stay_sane/][from this reddit thread]].
+
+The author is obviously using spacemacs. Unfortunately, the default
+prefix =C-c C-w= is overriding =org-refile()= which I use frequently.
+I chose =C-;= as my alternative prefix.
+
+Please notice that with only one slot (the default one), the indicator
+is not shown in the modeline.
+
+| Key bind | Function                           |
+|----------+------------------------------------|
+| prefix < | Switch to /previous/ window config |
+| prefix > | Switch to /next/ window config     |
+| prefix ' | Switch to /last/ window config     |
+| prefix " | /Close/ current window config      |
+| prefix , | /Rename/ current window config     |
+| prefix c | /Create/ new window config         |
+| prefix 0 | Switch to window config 0          |
+| ...      | ...                                |
+| prefix 9 | Switch to window config 9          |
+
+#+BEGIN_SRC emacs-lisp
+(use-package eyebrowse
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/eyebrowse/")))
+  :defer 10
+  :init
+  (setq eyebrowse-keymap-prefix (kbd "C-;"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
+  :config
+  (eyebrowse-mode t)
+)
+#+END_SRC
+
+Open issues:
+
+- [ ] create hydra with list of slots (see [[https://github.com/wasamasa/eyebrowse/issues/88][github issue]])
+- [ ] set eyebrowse-mode-line-style to a minimal one (see [[https://github.com/wasamasa/eyebrowse/issues/89][github issue]])
+
+** ibuffer
+
+Replace =list-buffers= with =ibuffer= ([[http://ergoemacs.org/emacs/emacs_buffer_management.html][ergoemacs: List Buffers]]; https://www.emacswiki.org/emacs/IbufferMode)
+#+BEGIN_SRC emacs-lisp
+;;(defalias 'list-buffers 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("dired" (mode . dired-mode))
+                 ("org" (or (mode . org-mode)
+                            (mode . org-agenda-mode)
+                            ))
+                 ("python" (mode . python-mode))
+  ;;               ("erc" (mode . erc-mode))
+                 ("emacs" (or
+                           (name . "^\\*scratch\\*$")
+                           (name . "^\\*Messages\\*$")))
+                 ("planner" (or
+                             (name . "^\\*Calendar\\*$")
+                             (name . "^diary$")
+                             (mode . muse-mode)))
+  ;;               ("gnus" (or
+  ;;                        (mode . message-mode)
+  ;;                        (mode . bbdb-mode)
+  ;;                        (mode . mail-mode)
+  ;;                        (mode . gnus-group-mode)
+  ;;                        (mode . gnus-summary-mode)
+  ;;                        (mode . gnus-article-mode)
+  ;;                        (name . "^\\.bbdb$")
+  ;;                        (name . "^\\.newsrc-dribble")))
+                 ))))
+
+    (add-hook 'ibuffer-mode-hook
+              (lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
