@@ -8111,6 +8111,10 @@ for it, I can save precious horizontal space.
 #+BEGIN_SRC emacs-lisp
 (use-package nyan-mode
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :init
+  (when (my-system-type-is-windows)
+    (setq nyan-bar-length 20);; reduce length on narrow upward/tilted display
+  )
   :config
   (nyan-mode t)
 )
