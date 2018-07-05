@@ -322,7 +322,7 @@ files and directories.
 
 #+BEGIN_SRC emacs-lisp
 (use-package no-littering
-   :load-path "~/.emacs.d/contrib/no-littering/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/no-littering/")))
    )
 (require 'no-littering)
 #+END_SRC
@@ -609,7 +609,6 @@ at least with my [[https://autohotkey.com/docs/Hotstrings.htm][Hotstrings]]:
 'HideBat.vbs
 CreateObject("Wscript.Shell").Run "C:\Users\Karl.Voit\bin\windows-start-orgmode.bat", 0, True
 #+END_EXAMPLE
-
 * Looking for binaries
 
 Some Emacs configuration snippets relate to external programs such as
@@ -816,7 +815,6 @@ characters to disable the check at this stage:
 (my-eval-if-binary-or-warn "ag")
 (my-eval-if-binary-or-warn "biber")
 #+END_SRC
-
 * System-specific browse-url-browser
 
 Here, I do hard-code my preferred browser that is used when I open
@@ -1542,7 +1540,6 @@ following function:
     (not (eq nil (get-buffer bufname)))
     )
 #+END_SRC
-
 * Spell checking
 
 «[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
@@ -1643,7 +1640,7 @@ What a relief for bilingual people like me (German/English).
 
 #+BEGIN_SRC emacs-lisp
 (use-package auto-dictionary
-   :load-path "~/.emacs.d/contrib/auto-dictionary-mode/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/auto-dictionary-mode/")))
 )
 
 (require 'auto-dictionary)
@@ -1949,7 +1946,7 @@ use-package]] which links [[https://www.youtube.com/watch?v=2TSKxxYEbII][2015-04
   (use-package macrostep
     ;;:ensure t
     :defer 15
-    :load-path "~/.emacs.d/contrib/macrostep/" ;; relative to emacs dir
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/macrostep/")))
     :config ;; executed after loading package
     (define-key emacs-lisp-mode-map (kbd "C-c e") 'macrostep-expand)
   )
@@ -1978,7 +1975,6 @@ From the README:
     Exit macrostep-mode by typing =q= or =C-c C-c=, or by successively
     typing =c= to collapse all surrounding expansions.
 #+END_QUOTE
-
 * Python
 
 This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]] code. Python
@@ -1988,7 +1984,7 @@ maintainability. It also ships with a large set of libraries.
 
 Misc stuff is taken from: https://github.com/jorgenschaefer/elpy/wiki/
 
-Selected keyboard commands (summary):
+Selected keyboard commands (summary): (see defined hydra for python mode!)
 
 | Key       | Command                                               | Command                           |
 |-----------+-------------------------------------------------------+-----------------------------------|
@@ -2360,7 +2356,8 @@ via [[https://github.com/rupa/z][z]]. You might also look into =GoTo= (on steroi
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-recent
-   :load-path "~/.emacs.d/contrib/dired-recent.el/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-recent.el/")))
+   :defer 10
    :config
    (require 'dired-recent)
    (dired-recent-mode 1)
@@ -2396,7 +2393,8 @@ It narrows down the list of files using a pattern. =g= resets the view.
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-narrow
-  :load-path "~/.emacs.d/contrib/dired-hacks/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
+  :defer 10
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 #+END_SRC
@@ -2531,7 +2529,8 @@ repeat the copy operation in another dired buffer.
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-ranger
-  :load-path "~/.emacs.d/contrib/dired-hacks/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
+  :defer 15 ;; has to be after dired+ in able to overwrite its bindings below
   :config
   (define-key dired-mode-map (kbd "M-c") 'dired-ranger-copy)  ;; overwrites: diredp-capitalize-this-file
   (define-key dired-mode-map (kbd "M-v") 'dired-ranger-paste) ;; overwrites: scroll-down-command
@@ -2613,25 +2612,23 @@ search):
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
         ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
-        (dired-do-shell-command "xfce4-terminal --disable-server --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
-        ;;not working because of symlink?:      (dired-do-shell-command "~/bin/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
-        ;;works: (dired-do-shell-command "~/src/misc/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
+        (dired-do-shell-command "xfce4-terminal --disable-server --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/appendfilename/appendfilename/__init__.py *" nil marked-files)
         )
       )
-    (revert-buffer nil t t) ;; refresh listing of files
+    (revert-buffer nil t t)
     )
 
-  (define-key dired-mode-map (kbd "M-t") 'my-dired-filetags)
+  (define-key dired-mode-map (kbd "M-a") 'my-dired-appendfilename)
 #+END_SRC
 
-** my-dired-appendfilename → M-a
+** my-dired-filetags-filter → F9
 :PROPERTIES:
-:CREATED:  [2018-06-29 Fri 21:36]
+:CREATED:  [2018-06-30 Sat 19:31]
 :END:
 
 #+BEGIN_SRC emacs-lisp
-  (defun my-dired-appendfilename ()
-    "Run \"appendfilename\" on current or marked files"
+  (defun my-dired-filetags-filter ()
+    "Run \"filetags --filter\" on current or marked files"
     (interactive)
     (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
       (when (my-system-type-is-windows)
@@ -3268,16 +3265,16 @@ assign file extensions to Org-mode:
 Loading contributed packages:
 #+BEGIN_SRC emacs-lisp
 (use-package org-checklist
- :load-path "~/.emacs.d/contrib/org-mode/contrib/lisp/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
 (use-package org-depend
- :load-path "~/.emacs.d/contrib/org-mode/contrib/lisp/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
 (use-package org-expiry
- :load-path "~/.emacs.d/contrib/org-mode/contrib/lisp/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
 (use-package ob-restclient
- :load-path "~/.emacs.d/contrib/ob-restclient.el/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ob-restclient.el/")))
 )
 
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
@@ -5637,7 +5634,7 @@ See also: id:2017-08-12-org-super-agenda
 Loading the code:
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-agenda
-   :load-path "~/.emacs.d/contrib/org-super-agenda/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-super-agenda/")))
 )
 #+END_SRC
 
@@ -6397,8 +6394,9 @@ described on https://github.com/kiwanami/emacs-calfw/issues/22
 Open calendar using:  =M-x cfw:open-org-calendar=
 
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/contrib/calfw/")
-(use-package calfw-org)
+(use-package calfw-org
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/calfw/")))
+)
 #+END_SRC
 
 Provide a command to use calfw in org-agenda-custom-commands
@@ -6628,7 +6626,7 @@ creating a new table by computing sums, averages, and so on, out of
 material from the first table.»
 #+BEGIN_SRC emacs-lisp
 (use-package orgtbl-aggregate
-   :load-path "~/.emacs.d/contrib/orgaggregate/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/orgaggregate/")))
 )
 
 ;won't work; (use-package org-insert-dblock
@@ -6921,7 +6919,7 @@ translates Org-mode file to various other formats via Pandoc.»
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package ox-pandoc
-    :load-path "~/.emacs.d/contrib/ox-pandoc/"
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-pandoc/")))
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 10
     ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
@@ -6957,7 +6955,7 @@ unavailable=
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package ox-rst
-  :load-path "~/.emacs.d/contrib/ox-rst/"
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-rst/")))
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :defer 10
   :if (my-system-type-is-windows)
@@ -7094,7 +7092,7 @@ Windows, Mac and Linux.
          (my-system-type-is-windows);; For Windows the html-clip-w32.py script will be installed.
          )
     (use-package ox-clip
-      :load-path "~/.emacs.d/contrib/ox-clip/"
+      :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-clip/")))
         ;;:if
       :ensure t
       :defer 10
@@ -7774,7 +7772,7 @@ Org-mode content! It can even turn HTML tables into Org tables!
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package org-protocol-capture-html
-     :load-path "~/.emacs.d/contrib/org-protocol-capture-html/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-protocol-capture-html/")))
   )
   (require 'org-protocol-capture-html)
 )
@@ -7792,7 +7790,7 @@ mine for demonstration purposes for novice or non-Org-users.
   (use-package org-mind-map
     ;;:ensure t
     :defer 15
-    :load-path "~/.emacs.d/contrib/org-mind-map/"
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mind-map/")))
     :config ;; executed after loading package
   )
 #+END_SRC
@@ -7822,7 +7820,7 @@ minor advantage.
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-gnu)
     (use-package tabbar
-       :load-path "~/.emacs.d/contrib/"
+       :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
     )
   )
 #+END_SRC
@@ -7998,7 +7996,7 @@ Counting lines, words, characters.
 
 #+BEGIN_SRC emacs-lisp
 (use-package wc
-   :load-path "~/.emacs.d/contrib/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
 )
 #+END_SRC
 
@@ -8131,7 +8129,7 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "outlook")
   (use-package message-outlook
-     :load-path "~/.emacs.d/contrib/"
+     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
   )
 )
 #+END_SRC
@@ -8144,7 +8142,7 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 
   (use-package outlookedit
-     :load-path "~/.emacs.d/contrib/"
+     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
   )
   ;;(use-package outlookedit)
 
@@ -8453,7 +8451,7 @@ don't need it for now.
 
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-mode
-   :load-path "~/.emacs.d/contrib/pdf-mode/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/pdf-mode/")))
 )
 #+END_SRC
 
@@ -8515,7 +8513,7 @@ disabled 2015-08-31 since I don't use it for now.
 #+BEGIN_SRC emacs-lisp
 (use-package raml-mode
    :if (my-system-type-is-windows)
-   :load-path "~/.emacs.d/contrib/raml-mode/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/raml-mode/")))
 )
 #+END_SRC
 
@@ -8554,7 +8552,7 @@ disabled 2015-08-31 since I don't use it for now.
 
 #+BEGIN_SRC emacs-lisp
 (use-package define-word
-   :load-path "~/.emacs.d/contrib/define-word/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/define-word/")))
 ;;   :config
 )
 #+END_SRC
@@ -8650,7 +8648,7 @@ and smart truncation.»
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
   ;; hiding minor modes from mode line (don't forget the leading space)
-  (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ,"))
+  (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ," " PCRE" " counsel" " OTSH" "dired-icon "))
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":EMACS:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/org" ":ORG:") t)
@@ -9072,7 +9070,7 @@ and memorize the commands.
 
 #+BEGIN_SRC emacs-lisp
 (use-package move-text
-   :load-path "~/.emacs.d/contrib/move-text/"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/move-text/")))
    :config
    (global-set-key (kbd "M-,")          'move-text-up)
    (global-set-key (kbd "M-.")          'move-text-down)
@@ -9204,7 +9202,7 @@ https://github.com/rolandwalker/unicode-fonts
 
 #+BEGIN_SRC emacs-lisp
 (use-package goto-chg
-   :load-path "~/.emacs.d/contrib//"
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
    :config
    (global-set-key [f2] 'goto-last-change)
    (global-set-key [f3] 'goto-last-change-reverse)
@@ -9250,7 +9248,7 @@ also allows for using variables. More flexibility is almost impossible.
   :if (my-system-type-is-windows)
   :init ;; executed before loading package
   (use-package json-reformat
-     :load-path "~/.emacs.d/2del/restclient/"
+     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/2del/restclient/")))
      )
   ;; :mode "\\.rb\\'"
 )
