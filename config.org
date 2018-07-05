@@ -2265,17 +2265,33 @@ current directory.
 (setq dired-dwim-target t)
 #+END_SRC
 
+** dired-garbage-files-regexp - define garbage file regex
+:PROPERTIES:
+:CREATED:  [2018-07-05 Thu 17:39]
+:END:
+
+In dired, you can press =%&= which calls =dired-flag-garbage-files()=.
+By default, it uses the regular expression
+="\\(?:\\.\\(?:aux\\|bak\\|dvi\\|log\\|orig\\|rej\\|toc\\)\\)\\'"=
+which does not include miscelaneous file extensions I am working with.
+
+Therefore, I overwrite the regex with my own values:
+
+#+BEGIN_SRC emacs-lisp
+(setq dired-garbage-files-regexp "\\(?:\\.\\(?:aux\\|bak\\|bbl\\|bcf\\|dvi\\|log\\|rej\\|toc\\)\\)\\'")
+#+END_SRC
+
 ** dired-details → (
 
 Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file details with =(= and =)=:
 #+BEGIN_SRC emacs-lisp
   (use-package dired-details
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
+    :defer 10
     :config
     (setq-default dired-details-hidden-string "… ")
     )
 #+END_SRC
-
 ** dired-x, dired+, dired-icon
 
 Enabling already pre-insalled dired-x:
@@ -2299,9 +2315,15 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
 #+BEGIN_SRC emacs-lisp
 (use-package dired-icon
 :ensure t
+:defer 10
 :config
 (add-hook 'dired-mode-hook 'dired-icon-mode)
 )
+#+END_SRC
+
+Bind backspace to visit higher level directory:
+#+BEGIN_SRC emacs-lisp
+(define-key dired-mode-map (kbd "<backspace>") 'diredp-up-directory-reuse-dir-buffer)
 #+END_SRC
 
 ** helm-dired-history
@@ -2325,6 +2347,11 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
 :PROPERTIES:
 :CREATED:  [2018-06-28 Thu 13:39]
 :END:
+
+This is one of the killer-features of (any) file-browser application:
+offer a quick search of recently visited directories. I never maintain
+any directory bookmarks any more. I use a similar feature in my [[https://en.wikipedia.org/wiki/Z_shell][zsh]]
+via [[https://github.com/rupa/z][z]]. You might also look into =GoTo= (on steroids) of [[http://fman.io/][fman]].
 
 - https://github.com/vifon/dired-recent.el
 - from [[https://www.reddit.com/r/emacs/comments/8u8slx/dired_quickly_jumping_to_previously_visited/e1e2iew/?context=3][this reddit context]]
@@ -2388,7 +2415,88 @@ Provides:
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-open
-  :load-path "~/.emacs.d/contrib/dired-hacks/"
+  :defer 10
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
+)
+#+END_SRC
+
+** dired-collapse
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 20:49]
+:END:
+
+From https://github.com/Fuco1/dired-hacks#dired-collapse
+
+Provides:
+- =dired-open-xdg= try to open the file using =xdg-open=
+- =dired-open-guess-shell-alist= try to open the file by launching applications from =dired-guess-shell-alist-user=
+- =dired-open-call-function-by-extension= call an elisp function based on extension.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-collapse
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
+  :defer 10
+  :config
+  ;(dired-collapse-mode)
+)
+#+END_SRC
+
+** image-dired+
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 12:58]
+:END:
+
+Image-dired extensions: https://www.emacswiki.org/emacs/ImageDired
+
+- Non-blocking thumbnail creating
+- Adjust image to window
+
+[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html][Emacs manual]]:
+
+#+BEGIN_QUOTE
+To enter Image-Dired, mark the image files you want to look at in the
+Dired buffer, using =m= as usual. Then type =C-t d=
+(=image-dired-display-thumbs=). This creates and switches to a buffer
+containing image-dired, corresponding to the marked files.
+
+You can also enter Image-Dired directly by typing =M-x image-dired=.
+This prompts for a directory; specify one that has image files. This
+creates thumbnails for all the images in that directory, and displays
+them all in the thumbnail buffer. This takes a long time if the
+directory contains many image files, and it asks for confirmation if
+the number of image files exceeds
+=image-dired-show-all-from-dir-max-files=.
+#+END_QUOTE
+
+
+FIXXME: 2018-06-30: There is a issue on floyd. I get following error
+when I mark files and invoke =C-t d=:
+
+#+BEGIN_EXAMPLE
+[...]
+error in process sentinel: image-diredx--invoke-process: Wrong type argument: processp, [nil 23351 46922 931735 nil image-dired-thumb-queue-run nil nil 787000]
+error in process sentinel: Wrong type argument: processp, [nil 23351 46922 931735 nil image-dired-thumb-queue-run nil nil 787000]
+[...]
+Marking files...
+377 files newly marked
+image-diredx--invoke-process: Wrong type argument: processp, [nil 23351 47004 248326 nil image-dired-thumb-queue-run nil nil 669000]
+[...]
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+(use-package image-dired+
+  :ensure t
+  :defer 10
+  :config
+  (require 'image-dired+)
+  (image-diredx-async-mode 1)
+  (image-diredx-adjust-mode 1)
+  (define-key image-dired-thumbnail-mode-map "\C-n" 'image-diredx-next-line)
+  (define-key image-dired-thumbnail-mode-map "\C-p" 'image-diredx-previous-line)
+  (define-key image-dired-thumbnail-mode-map "g" 'revert-buffer);; revert all thumbnails if `image-diredx-async-mode' is on
+  (define-key image-dired-thumbnail-mode-map "x" 'image-diredx-flagged-delete);; Delete confirmation prompt with thumbnails
+  (setq image-dired-track-movement nil) ;; Suppress unknown cursor movements
+  (setq image-dired-external-viewer "/usr/bin/geeqie") ;; FIXXME: configure different for Windows
 )
 #+END_SRC
 
@@ -2431,50 +2539,26 @@ repeat the copy operation in another dired buffer.
 )
 #+END_SRC
 
-** dired-collapse
+** dired-isearch
 :PROPERTIES:
-:CREATED:  [2018-06-29 Fri 20:49]
+:CREATED:  [2018-07-03 Tue 18:08]
 :END:
 
-From https://github.com/Fuco1/dired-hacks#dired-collapse
-
-Provides:
-- =dired-open-xdg= try to open the file using =xdg-open=
-- =dired-open-guess-shell-alist= try to open the file by launching applications from =dired-guess-shell-alist-user=
-- =dired-open-call-function-by-extension= call an elisp function based on extension.
-
-#+BEGIN_SRC emacs-lisp
-(use-package dired-collapse
-  :load-path "~/.emacs.d/contrib/dired-hacks/"
+Via [[https://www.emacswiki.org/emacs/DiredIsearch][EmacsWiki]] and download from http://www.emacswiki.org/emacs/download/dired-isearch.el
+#+BEGIN_SRC emacs-lisp  :tangle no
+(use-package dired-isearch
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
+  :defer 10
   :config
-  ;(dired-collapse-mode)
 )
 #+END_SRC
 
-** image-dired+
-:PROPERTIES:
-:CREATED:  [2018-06-29 Fri 12:58]
-:END:
-
-Image-dired extensions: https://www.emacswiki.org/emacs/ImageDired
-
-- Non-blocking thumbnail creating
-- Adjust image to window
+*Not necessary* any more. There is built-in functionality which I just
+have to re-map to =C-s= (because I don't need reverse or RegEx
+search):
 
 #+BEGIN_SRC emacs-lisp
-(use-package image-dired+
-:ensure t
-:config
-(require 'image-dired+)
-(image-diredx-async-mode 1)
-(image-diredx-adjust-mode 1)
-(define-key image-dired-thumbnail-mode-map "\C-n" 'image-diredx-next-line)
-(define-key image-dired-thumbnail-mode-map "\C-p" 'image-diredx-previous-line)
-(define-key image-dired-thumbnail-mode-map "g" 'revert-buffer);; revert all thumbnails if `image-diredx-async-mode' is on
-(define-key image-dired-thumbnail-mode-map "x" 'image-diredx-flagged-delete);; Delete confirmation prompt with thumbnails
-(setq image-dired-track-movement nil) ;; Suppress unknown cursor movements
-(setq image-dired-external-viewer "/usr/bin/geeqie") ;; FIXXME: configure different for Windows
-)
+(define-key dired-mode-map (kbd "C-s") 'dired-isearch-filenames)
 #+END_SRC
 
 ** my-dired-filetags → M-t
@@ -2483,8 +2567,44 @@ Image-dired extensions: https://www.emacswiki.org/emacs/ImageDired
 :END:
 
 #+BEGIN_SRC emacs-lisp
-  (defun my-dired-filetags ()
-    "Run \"filetags\" on current or marked files"
+(defun my-dired-filetags ()
+  "Run \"filetags\" on current or marked files"
+  (interactive)
+  (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+    (when (my-system-type-is-windows)
+      ;;works            (let ((proc (start-process "cmd" nil "cmd.exe" "/C" "start" "cmd.exe" "/K" "echo \"Hello\"")))
+      ;;(message (concat "CALLING: c:/Users/karl.voit/bin/filetags.bat -sv " marked-files))
+      (let ((proc (start-process "cmd" nil "cmd.exe" "/C" "start" "cmd.exe" "/C"
+                                 "c:/Users/karl.voit/bin/filetags.bat -sv"
+                                 (shell-quote-argument marked-files)))
+        (set-process-query-on-exit-flag proc nil)))
+      ;;(dired-do-shell-command "cmd.exe /K c:/Users/karl.voit/bin/filetags.bat *" nil marked-files)
+      )
+    (when (my-system-type-is-gnu)
+      ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+      ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
+      (dired-do-shell-command "xfce4-terminal --disable-server --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
+      ;;not working because of symlink?:      (dired-do-shell-command "~/bin/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
+      ;;works: (dired-do-shell-command "~/src/misc/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
+      )
+    )
+  (revert-buffer nil t t) ;; refresh listing of files
+  )
+
+(define-key dired-mode-map (kbd "M-t") 'my-dired-filetags)
+#+END_SRC
+
+#+RESULTS:
+: my-dired-filetags
+
+** my-dired-appendfilename → M-a
+:PROPERTIES:
+:CREATED:  [2018-06-29 Fri 21:36]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-appendfilename ()
+    "Run \"appendfilename\" on current or marked files"
     (interactive)
     (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
       (when (my-system-type-is-windows)
@@ -2519,16 +2639,363 @@ Image-dired extensions: https://www.emacswiki.org/emacs/ImageDired
         )
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
-        (dired-do-shell-command "xfce4-terminal --disable-server --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/appendfilename/appendfilename/__init__.py *" nil marked-files)
+        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --filter *" nil marked-files)
         )
       )
-    (revert-buffer nil t t)
     )
-
-  (define-key dired-mode-map (kbd "M-a") 'my-dired-appendfilename)
 #+END_SRC
 
+** my-dired-filetags-filter-recursive → F9
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:31]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-filetags-filter-recursive ()
+    "Run \"filetags --filter --recursive\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "FIXXME xfce4-terminal --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --filter --recursive *" nil marked-files)
+        )
+      )
+    )
+#+END_SRC
+
+** my-dired-tagtrees → F9
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:32]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-tagtrees ()
+    "Run \"filetags --tagtrees\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "filetags --tagtrees --tagtrees-handle-no-tag no-tags" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --tagtrees --tagtrees-handle-no-tag no-tags *" nil marked-files)
+        )
+      )
+    )
+#+END_SRC
+
+#+RESULTS:
+: my-dired-tagtrees
+
+** my-dired-tagtrees-recursive → F9
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:32]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-tagtrees-recursive ()
+    "Run \"filetags --tagtrees --recursive\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "C:\\Python36\\Scripts\\filetags.exe --tagtrees --recursive --tagtrees-handle-no-tag no-tags *" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --tagtrees --recursive --tagtrees-handle-no-tag no-tags *" nil marked-files)
+        )
+      )
+    )
+#+END_SRC
+
+#+RESULTS:
+: my-dired-tagtrees-recursive
+
+** my-dired-date2name → F9
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:32]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-date2name ()
+    "Run \"time2name\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "date2name *" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        (dired-do-shell-command "/home/vk/src/date2name/date2name/__init__.py *" nil marked-files)
+        )
+      )
+    (revert-buffer nil t t) ;; refresh listing of files
+    )
+#+END_SRC
+
+** my-dired-time2name → F9
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:32]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-dired-time2name ()
+    "Run \"date2name --withtime\" on current or marked files"
+    (interactive)
+    (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
+      (when (my-system-type-is-windows)
+        (dired-do-shell-command "date2name --withtime *" nil marked-files)
+        )
+      (when (my-system-type-is-gnu)
+        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
+        (dired-do-shell-command "/home/vk/src/date2name/date2name/__init__.py --withtime *" nil marked-files)
+        )
+      )
+    (revert-buffer nil t t) ;; refresh listing of files
+    )
+#+END_SRC
+
+** my-open-in-external-app → C-c C-o
+:PROPERTIES:
+:CREATED:  [2018-07-01 Sun 10:19]
+:END:
+
+from http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-open-in-external-app ()
+  "Open the current file or dired marked files in external app.
+The app is chosen from your OS's preference.
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2016-10-15"
+  (interactive)
+  (let* (
+         ($file-list
+          (if (string-equal major-mode "dired-mode")
+              (dired-get-marked-files)
+            (list (buffer-file-name))))
+         ($do-it-p (if (<= (length $file-list) 5)
+                       t
+                     (y-or-n-p "Open more than 5 files? "))))
+    (when $do-it-p
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda ($fpath)
+           (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" $fpath t t))) $file-list))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda ($fpath)
+           (shell-command
+            (concat "open " (shell-quote-argument $fpath))))  $file-list))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda ($fpath) (let ((process-connection-type nil))
+                            (start-process "" nil "xdg-open" $fpath))) $file-list))))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (define-key dired-mode-map (kbd "C-c C-o") 'my-dired-open-in-external-app)
+#+END_SRC
+
+** my-dired-open-in-file-manager → F9
+:PROPERTIES:
+:CREATED:  [2018-07-01 Sun 10:29]
+:END:
+
+This is =xah-show-in-desktop()= from
+http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html and
+adapted a bit:
+
+- file-truename() to translate relative paths to absolute
+- thunar as default manager on Linux
+- [ ] FIXXME: OS switching commands
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-open-in-file-manager ()
+  "Show current file in desktop.
+ (Mac Finder, Windows Explorer, Linux file manager)
+ This command can be called when in a file or in `dired'.
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2018-01-13 adapted by Karl Voit 2018-07-01"
+  (interactive)
+  (let (($path (file-truename (if (buffer-file-name) (buffer-file-name) default-directory ))))
+    (cond
+     ((string-equal system-type "windows-nt")
+      (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" $path t t)))
+     ((string-equal system-type "darwin")
+      (if (eq major-mode 'dired-mode)
+          (let (($files (dired-get-marked-files )))
+            (if (eq (length $files) 0)
+                (shell-command
+                 (concat "open " (shell-quote-argument default-directory)))
+              (shell-command
+               (concat "open -R " (shell-quote-argument (car (dired-get-marked-files )))))))
+        (shell-command
+         (concat "open -R " $path))))
+     ((string-equal system-type "gnu/linux")
+      (let (
+            (process-connection-type nil)
+            (openFileProgram (if (file-exists-p "/usr/bin/thunar")
+                                 "/usr/bin/thunar"
+                               "/usr/bin/xdg-open")))
+        (start-process "" nil openFileProgram $path))
+      ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
+      ))))
+#+END_SRC
+
+** my-dired-mark-images-and-thumbnail → F9
+:PROPERTIES:
+:CREATED:  [2018-07-01 Sun 10:48]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-mark-images-and-thumbnail ()
+  "Mark all image files in dired (png, PNG, jpg, JPG, jpeg, JPEG) and start image-dired+."
+  (interactive)
+  (dired-mark-extension '("png" "jpg" "PNG" "JPG" "jpeg" "JPEG" "tif" "tiff" "TIF" "TIFF" "gif" "GIF"))
+  (image-dired-display-thumbs)
+)
+#+END_SRC
+
+#+RESULTS:
+: my-dired-mark-images-and-thumbnail
+
+** my-dired-copy-filename-as-absolute-link → F9
+:PROPERTIES:
+:CREATED:  [2018-07-05 Thu 18:27]
+:END:
+
+I often link files in Org mode documents with their full path such as
+: [[file:c:/Users/karl.voit/2del/2018-07-04T15.35.42 Outlook - changing recurring events deletes all exceptions -- screenshots.png]]
+
+This would require
+1. select a file
+2. copy the absolute path name in dired via =M-0 w=
+3. switch to the Org buffer
+4. type
+   : [[file:
+5. yank the kill ring element containing the absolute path
+6. finish the link with =]]=
+
+Following function avoids human error and reduces this process to:
+1. select a file
+2. call the function below via my F9 hydra
+3. switch to a Org buffer
+4. yank the working link from the kill ring
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-copy-filename-as-absolute-link ()
+  "Copy current file name with absolute path as [[file:<absolute path>]] link."
+  (interactive)
+  (dired-copy-filename-as-kill 0) ;; current absolute path to kill ring
+  (let* ((path (current-kill 0))) ;; get topmost kill ring element
+    (kill-new (concat "[[file:" path "]]")) ;; write back new/modified kill ring element
+  )
+)
+#+END_SRC
+
+** my-dired-copy-filename-as-tsfile-link → F9
+:PROPERTIES:
+:CREATED:  [2018-07-05 Thu 18:28]
+:END:
+
+Same explanation as =my-dired-copy-filename-as-absolute-link= holds
+but with the result being a =tsfile:= link I use to link to
+Memacs-indexed files (see Org Mode customized links):
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-copy-filename-as-tsfile-link ()
+  "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+  (interactive)
+  (dired-copy-filename-as-kill) ;; current file name to kill ring
+  (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+    (kill-new (concat "[[tsfile:" filename "]]")) ;; write back new/modified kill ring element
+  )
+)
+#+END_SRC
+
+** filetags.el → F9
+:PROPERTIES:
+:CREATED:  [2018-07-04 Wed 15:43]
+:END:
+
+https://github.com/beutelma/filetags.el provides
+=filetags-dired-update-tags()= which is an Elisp-native
+re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
+
+#+BEGIN_SRC emacs-lisp
+(use-package filetags
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/filetags.el/")))
+  :config
+  (setq filetags-enforce-controlled-vocabulary t)
+  (setq filetags-controlled-vocabulary '("confidential" "restricted" "public" "internal" "internaluse"
+   "license" "demos" "proposals" "flipcharts" "data" "draft" "final" "screenshots" "travel"
+   "templates" "contracts" "processes"))
+)
+#+END_SRC
+
+** hydra-dired → F9
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:10]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-dired (:color blue)
+  "
+  ^^                    ^^                  ^^                 /  filter            C-x C-f  touch
+  _t_agtrees            _f_ilter            _d_ate2name        g  refresh           M-c      dired-ranger-copy
+  _T_agtrees recursive  _F_ilter recursive  _t_ime2name        +  mkdir             M-v      dired-ranger-paste
+  ^────────^────────────^──────^────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
+  _a_bsolute link       ^^                  ^^                 D  delete marked
+  _m_emacs tsfile link  ^^                  ^^                 tk hide marked       C-c C-o  open externally
+  ^^                    ^^                  ^^                 U  unmark all        C-o      open in new frame
+  ^View    ^            ^Edit^              ^Order^
+  ^────────^────────────^──────^────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
+  _c_ollapse mode       _v_idir (C-x C-q)   _s_ize ordered     !  pipe to shell     C-t d    image-dired+ of marked files
+  _o_pen in file manager      ^^            _n_ormal ordered                        <percent> l  lowercase
+  _i_mage thumbnails    _SPC_ filetags.el   ^^                 x  delete flagged    <percent> u  uppercase
+  _(_ toggle details  ( ^^                  ^^                                      <percent> &  flag temp files
+  ^^                    ^^                  ^^
+  "
+  ("t" my-dired-tagtrees nil)
+  ("T" my-dired-tagtrees-recursive nil)
+
+  ("f" my-dired-filetags-filter nil)
+  ("F" my-dired-filetags-filter-recursive nil)
+
+  ("d" my-dired-date2name nil)
+  ("t" my-dired-time2name nil)
+
+  ("a" my-dired-copy-filename-as-absolute-link nil)
+  ("m" my-dired-copy-filename-as-tsfile-link nil)
+
+  ("c" dired-collapse-mode nil)
+  ("o" my-dired-open-in-file-manager nil)
+  ("i" my-dired-mark-images-and-thumbnail nil)
+  ("(" dired-hide-details-mode nil)
+
+  ("v" dired-toggle-read-only nil)
+  ("SPC" filetags-dired-update-tags nil)
+
+  ("s" (dired-sort-other "-alS --block-size=\'1") nil)
+  ("n" (dired-sort-other "-al --block-size=\'1") nil)
+
+  ("q" nil "quit")
+
+;  ("s" (setq dired-listing-switches "-alS --block-size=\'1") nil)
+;  ("n" (setq dired-listing-switches "-al --block-size=\'1") nil)
+
+)
+
+(define-key dired-mode-map [f9] 'hydra-dired/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-dired/body
 * LaTeX
 
 [[https://en.wikipedia.org/wiki/LaTeX][LaTeX]] is a powerful text setting system I use for creating letters,
