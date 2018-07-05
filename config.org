@@ -253,6 +253,47 @@ Details: id:2016-03-27-maximize-window-init.el
 (toggle-frame-maximized)
 #+END_SRC
 
+* use-package
+:PROPERTIES:
+:CREATED:  [2018-07-02 Mon 11:09]
+:END:
+
+My setup is using John Wiegley's [[https://github.com/jwiegley/use-package][use-package]] for configuration and
+startup of external libraries. This has many advantages: flexibility,
+startup performance, readability.
+
+----------------------------------------
+
+Here are some examples for future reference:
+
+A very simple example for installing a package via package management
+and ensure it is installed when Emacs launches:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package dumb-jump
+:ensure t
+)
+#+END_SRC
+
+An example of loading a /local/ package (not from Melpa or other
+package service):
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package define-word
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/mypackage/")))
+)
+#+END_SRC
+
+Key binding example from [[https://github.com/jwiegley/use-package#key-binding][docu]]:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package helm
+  :bind (("M-x" . helm-M-x)
+         ("M-<f5>" . helm-find-files)
+         ([f10] . helm-buffers-list)
+         ([S-f10] . helm-recentf)))
+#+END_SRC
+
 * my-load-local-el()
 
 Using this function, I am able to easily load lisp files within my
