@@ -1167,6 +1167,137 @@ menu of options and the hydra-k offers a prefix for it.
 
 See 33min30s of the video linked in: [[http://irreal.org/blog/?p=6453][Irreal: Hydra Video]]
 
+* hydra
+
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :ensure t
+  :defer 10
+  :config ;; executed after loading package
+)
+#+END_SRC
+
+Please note: =:color red= is for repeating actions, =:color blue= for
+one-time actions. From [[https://github.com/abo-abo/hydra][the web site]]:
+
+#+BEGIN_QUOTE
+The =:color= key is a shortcut. It aggregates =:exit= and
+=:foreign-keys= key in the following way:
+
+| color    | toggle                     |
+|----------+----------------------------|
+| red      |                            |
+| blue     | :exit t                    |
+| amaranth | :foreign-keys warn         |
+| teal     | :foreign-keys warn :exit t |
+| pink     | :foreign-keys run          |
+#+END_QUOTE
+
+** toggle things with Ruby-style docstring → my-map M
+
+Example 7 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  (defvar whitespace-mode nil)
+  (defhydra hydra-toggle (:color teal)
+    "
+  _f_ auto-fill-mode:    %`auto-fill-function
+  _t_ truncate-lines:    %`truncate-lines
+  _w_ whitespace-mode:   %`whitespace-mode
+  _l_ org link display:  %`org-descriptive-links
+  _a_ abbrev-mode:       %`abbrev-mode
+  _d_ debug-on-error:    %`debug-on-error
+  "
+  ;;  ("q" nil "quit")
+    ("a" abbrev-mode nil)
+    ("d" toggle-debug-on-error nil)
+    ("f" auto-fill-mode nil)
+    ("t" toggle-truncate-lines nil)
+    ("w" whitespace-mode nil)
+    ("l" org-toggle-link-display nil)
+  )
+  ;; Recommended binding:
+  ;;(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+  (bind-key "M" #'hydra-toggle/body my-map)
+#+END_SRC
+
+#+RESULTS:
+: hydra-toggle/body
+
+** DISABLED s-expressions in the docstring
+
+Example 9 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  ;; You can inline s-expresssions into the docstring like this:
+  (defvar dired-mode-map)
+  (declare-function dired-mark "dired")
+  (when (bound-and-true-p hydra-examples-verbatim)
+    (require 'dired)
+    (defhydra hydra-marked-items (dired-mode-map "")
+      "
+  Number of marked items: %(length (dired-get-marked-files))
+  "
+      ("m" dired-mark "mark")))
+#+END_SRC
+
+** apropos → C-c h
+
+Example 10 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-apropos (:color blue
+                           :hint nil)
+    "
+  _a_propos        _c_ommand
+  _d_ocumentation  _l_ibrary
+  _v_ariable       _u_ser-option
+  ^ ^       valu_e_"
+    ("a" apropos)
+    ("d" apropos-documentation)
+    ("v" apropos-variable)
+    ("c" apropos-command)
+    ("l" apropos-library)
+    ("u" apropos-user-option)
+    ("e" apropos-value))
+  ;; Recommended binding:
+  (global-set-key (kbd "C-c h") 'hydra-apropos/body)
+#+END_SRC
+
+** rectangle-mark-mode → C-x r h
+
+Example 11 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  (require 'rect)
+  (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                             :color pink
+                             :post (deactivate-mark))
+    "
+    ^_k_^     _d_elete    _s_tring
+  _h_   _l_   _o_k        _y_ank
+    ^_j_^     _n_ew-copy  _r_eset
+  ^^^^        _e_xchange  _u_ndo
+  ^^^^        ^ ^         _p_aste
+  "
+    ("h" rectangle-backward-char nil)
+    ("l" rectangle-forward-char nil)
+    ("k" rectangle-previous-line nil)
+    ("j" rectangle-next-line nil)
+    ("e" hydra-ex-point-mark nil)
+    ("n" copy-rectangle-as-kill nil)
+    ("d" delete-rectangle nil)
+    ("r" (if (region-active-p)
+             (deactivate-mark)
+           (rectangle-mark-mode 1)) nil)
+    ("y" yank-rectangle nil)
+    ("u" undo nil)
+    ("s" string-rectangle nil)
+    ("p" kill-rectangle nil)
+    ("o" nil nil))
+    ;; Recommended binding:
+  (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
+#+END_SRC
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
@@ -1554,12 +1685,46 @@ bind-keys:
 (define-key global-map [(f7)] 'flyspell-correct-word-before-point)
 #+END_SRC
 
+** hydra-spelling → F5
+:PROPERTIES:
+:ID:       hydra-spellchecking
+:END:
+
+Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-spelling (:color red)
+  "
+  ^
+  ^Spelling^          ^Errors^            ^Checker^
+  ^────────^──────────^──────^────────────^───────^───────
+  check _r_egion      _n_ext error        _m_ode
+  check _b_uffer      _c_orrect           toggle _l_anguage
+  _s_ynonym
+  _d_efine word
+  ^^
+  "
+  ("q" nil "quit")
+  ("r" flyspell-region nil)
+  ("l" my-toggle-ispell-language nil)
+  ("n" flyspell-goto-next-error nil)
+  ("s" my-synonym-current-word nil :color blue)
+  ("d" define-word-at-point nil :color blue) ;; define-word
+;;  ("<" flyspell-correct-previous :color pink nil)
+;;  (">" flyspell-correct-next :color pink nil)
+  ("c" flyspell-correct-word-before-point nil)
+;;  ("d" ispell-change-dictionary)
+  ("b" flyspell-buffer nil)
+  ("m" flyspell-mode nil))
+
+  (global-set-key [f5] 'hydra-spelling/body)
+#+END_SRC
+
 ** End of aspell
 
 #+BEGIN_SRC emacs-lisp
 );; when aspell found
 #+END_SRC
-
 * flycheck
 
 «[[http://www.flycheck.org/][Flycheck]] is a modern on-the-fly syntax checking extension for GNU
@@ -2035,6 +2200,40 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
     (require 'elpygen)
     (define-key python-mode-map (kbd "C-c i") 'elpygen-implement)
   )
+#+END_SRC
+
+** hydra-python → F9
+:PROPERTIES:
+:CREATED:  [2018-07-01 Sun 11:12]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-python (:color blue)
+  "
+  ^
+  ^View^                ^Navigation^        ^^                   C-↑↓   goto line of same level
+  ^^────────────────────^^──────────────────^^────────────────
+  _h_ide/show fun  M-h  _,_ ← error     F5  ^^
+  _c_ycle all      M-H  _._   error →   F6  ^^
+  ^^                    ^^                  ^^
+  ^Edit^                ^Help^              ^^
+  ^^────────────────────^^──────────────────^^────────────────
+  _i_mplement    C-c i  _H_elp (pylookup)   ^^
+  _r_efactor C-c C-r r  ^^                  ^^
+  ^^
+  "
+  ("q" nil "quit")
+  ("h" hs-cycle nil :color red)
+  ("c" hs-cycle-all nil)
+  ("," flymake-goto-prev-error nil :color red)
+  ("." flymake-goto-next-error nil :color red)
+  ("i" elpygen-implement nil)
+  ("r" elpy-refactor nil)
+  ("H" pylookup-lookup nil)
+;  (""  nil)
+)
+
+(define-key python-mode-map [f9] 'hydra-python/body)
 #+END_SRC
 
 ** END of Python-related stuff + Elpy
@@ -8653,172 +8852,6 @@ instead of using the pattern =.*\(jpg\|png\)=.
 (use-package dumb-jump
 :ensure t
 )
-#+END_SRC
-
-** hydra
-
-#+BEGIN_SRC emacs-lisp
-(use-package hydra
-  :ensure t
-  :defer 10
-  :config ;; executed after loading package
-)
-#+END_SRC
-
-Please note: =:color red= is for repeating actions, =:color blue= for
-one-time actions. From [[https://github.com/abo-abo/hydra][the web site]]:
-
-#+BEGIN_QUOTE
-The =:color= key is a shortcut. It aggregates =:exit= and
-=:foreign-keys= key in the following way:
-
-| color    | toggle                     |
-|----------+----------------------------|
-| red      |                            |
-| blue     | :exit t                    |
-| amaranth | :foreign-keys warn         |
-| teal     | :foreign-keys warn :exit t |
-| pink     | :foreign-keys run          |
-#+END_QUOTE
-
-*** toggle things with Ruby-style docstring → my-map M
-
-Example 7 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  (defvar whitespace-mode nil)
-  (defhydra hydra-toggle (:color teal)
-    "
-  _f_ auto-fill-mode:    %`auto-fill-function
-  _t_ truncate-lines:    %`truncate-lines
-  _w_ whitespace-mode:   %`whitespace-mode
-  _l_ org link display:  %`org-descriptive-links
-  _a_ abbrev-mode:       %`abbrev-mode
-  _d_ debug-on-error:    %`debug-on-error
-  "
-  ;;  ("q" nil "quit")
-    ("a" abbrev-mode nil)
-    ("d" toggle-debug-on-error nil)
-    ("f" auto-fill-mode nil)
-    ("t" toggle-truncate-lines nil)
-    ("w" whitespace-mode nil)
-    ("l" org-toggle-link-display nil)
-  )
-  ;; Recommended binding:
-  ;;(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
-  (bind-key "M" #'hydra-toggle/body my-map)
-#+END_SRC
-
-#+RESULTS:
-: hydra-toggle/body
-
-*** DISABLED s-expressions in the docstring
-
-Example 9 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  ;; You can inline s-expresssions into the docstring like this:
-  (defvar dired-mode-map)
-  (declare-function dired-mark "dired")
-  (when (bound-and-true-p hydra-examples-verbatim)
-    (require 'dired)
-    (defhydra hydra-marked-items (dired-mode-map "")
-      "
-  Number of marked items: %(length (dired-get-marked-files))
-  "
-      ("m" dired-mark "mark")))
-#+END_SRC
-
-*** apropos → C-c h
-
-Example 10 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  (defhydra hydra-apropos (:color blue
-                           :hint nil)
-    "
-  _a_propos        _c_ommand
-  _d_ocumentation  _l_ibrary
-  _v_ariable       _u_ser-option
-  ^ ^       valu_e_"
-    ("a" apropos)
-    ("d" apropos-documentation)
-    ("v" apropos-variable)
-    ("c" apropos-command)
-    ("l" apropos-library)
-    ("u" apropos-user-option)
-    ("e" apropos-value))
-  ;; Recommended binding:
-  (global-set-key (kbd "C-c h") 'hydra-apropos/body)
-#+END_SRC
-
-*** rectangle-mark-mode → C-x r h
-
-Example 11 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  (require 'rect)
-  (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
-                             :color pink
-                             :post (deactivate-mark))
-    "
-    ^_k_^     _d_elete    _s_tring
-  _h_   _l_   _o_k        _y_ank
-    ^_j_^     _n_ew-copy  _r_eset
-  ^^^^        _e_xchange  _u_ndo
-  ^^^^        ^ ^         _p_aste
-  "
-    ("h" rectangle-backward-char nil)
-    ("l" rectangle-forward-char nil)
-    ("k" rectangle-previous-line nil)
-    ("j" rectangle-next-line nil)
-    ("e" hydra-ex-point-mark nil)
-    ("n" copy-rectangle-as-kill nil)
-    ("d" delete-rectangle nil)
-    ("r" (if (region-active-p)
-             (deactivate-mark)
-           (rectangle-mark-mode 1)) nil)
-    ("y" yank-rectangle nil)
-    ("u" undo nil)
-    ("s" string-rectangle nil)
-    ("p" kill-rectangle nil)
-    ("o" nil nil))
-    ;; Recommended binding:
-  (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
-#+END_SRC
-
-*** Spell checking → F5
-:PROPERTIES:
-:ID:       hydra-spellchecking
-:END:
-
-Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-spelling (:color red)
-  "
-  ^
-  ^Spelling^          ^Errors^            ^Checker^
-  ^────────^──────────^──────^────────────^───────^───────
-  check _r_egion      _n_ext error        _m_ode
-  check _b_uffer      _c_orrect           toggle _l_anguage
-  _s_ynonym
-  _d_efine word
-  ^^
-  "
-  ("q" nil "quit")
-  ("r" flyspell-region nil)
-  ("l" my-toggle-ispell-language nil)
-  ("n" flyspell-goto-next-error nil)
-  ("s" my-synonym-current-word nil :color blue)
-  ("d" define-word-at-point nil :color blue) ;; define-word
-;;  ("<" flyspell-correct-previous :color pink nil)
-;;  (">" flyspell-correct-next :color pink nil)
-  ("c" flyspell-correct-word-before-point nil)
-;;  ("d" ispell-change-dictionary)
-  ("b" flyspell-buffer nil)
-  ("m" flyspell-mode nil))
-  (global-set-key [f5] 'hydra-spelling/body)
 #+END_SRC
 
 ** DISABLED keyfreq
