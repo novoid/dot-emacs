@@ -2288,6 +2288,7 @@ Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file
     (setq-default dired-details-hidden-string "… ")
     )
 #+END_SRC
+
 ** dired-x, dired+, dired-icon
 
 Enabling already pre-insalled dired-x:
@@ -2928,10 +2929,11 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 (use-package filetags
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/filetags.el/")))
   :config
-  (setq filetags-enforce-controlled-vocabulary t)
-  (setq filetags-controlled-vocabulary '("confidential" "restricted" "public" "internal" "internaluse"
-   "license" "demos" "proposals" "flipcharts" "data" "draft" "final" "screenshots" "travel"
-   "templates" "contracts" "processes"))
+  (setq filetags-enforce-controlled-vocabulary nil) ;; let me invent new tags on the fly (might not be a good idea anyway!)
+  (setq filetags-load-controlled-vocabulary-from-file t) ;; read CV from .filetags files within same or upper directories
+  ;;ignored;; (setq filetags-controlled-vocabulary '("confidential" "restricted" "public" "internal" "internaluse"
+  ;;ignored;;  "license" "demos" "proposals" "flipcharts" "data" "draft" "final" "screenshots" "travel"
+  ;;ignored;;  "templates" "contracts" "processes"))
 )
 #+END_SRC
 
@@ -2993,6 +2995,7 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 
 #+RESULTS:
 : hydra-dired/body
+
 * LaTeX
 
 [[https://en.wikipedia.org/wiki/LaTeX][LaTeX]] is a powerful text setting system I use for creating letters,
