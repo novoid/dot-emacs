@@ -5708,6 +5708,78 @@ down below.
     )
 #+END_SRC
 
+*** my-super-agenda-important-business-only
+:PROPERTIES:
+:CREATED:  [2018-07-06 Fri 18:05]
+:END:
+
+Same as =my-super-agenda= but with much stricter filters so that I
+only see important business stuff.
+
+#+BEGIN_SRC emacs-lisp
+  (setq my-super-agenda-important-business-only-groups
+        '(;; Each group has an implicit boolean OR operator between its selectors.
+          (:name "Today"  ; Optionally specify section name
+                 :time-grid t  ; Items that appear on the time grid
+                 )
+          (:name "DEADLINES" :order 1 :and (:deadline t :not (:tag "reward") :not (:tag "@BWG")))
+          (:name "Important" :order 2 :and (:priority "A" :not (:tag "reward") :not (:tag "@BWG")))
+          (:name "Low Prio"
+                       ;; Show this section after "Today" and "Important", because
+                       ;; their order is unspecified, defaulting to 0. Sections
+                       ;; are displayed lowest-number-first.
+                       :and (:priority<= "B" :not (:tag "reward") :not (:tag "@BWG"))
+                       :order 2)
+  ;        (:name "Habits" :habit t :order 3 :and (:not (:tag "reward") :not (:tag "@BWG")))
+          (:name "Shopping" :order 4 :and (:tag "Besorgung" :not (:tag "reward") :not (:tag "@BWG")))
+                 ;; Boolean AND group matches items that match all subgroups
+                 ;;  :and (:tag "shopping" :tag "@town")
+                 ;; Multiple args given in list with implicit OR
+                 ;;  :tag ("food" "dinner"))
+                 ;;  :habit t
+                 ;;  :tag "personal")
+          (:name "Started" :order 6 :and (:todo "STARTED" :not (:tag "reward") :not (:tag "@BWG")))
+          ;;(:name "Space-related (non-moon-or-planet-related)"
+          ;;       ;; Regexps match case-insensitively on the entire entry
+          ;;       :and (:regexp ("space" "NASA")
+          ;;                     ;; Boolean NOT also has implicit OR between selectors
+          ;;                     :not (:regexp "moon" :tag "planet")))
+          ;;(:name "BWG" :tag "@BWG" :order 7)
+          (:name "WAITING" :order 9 :and (:todo "WAITING" :not (:tag "reward") :not (:tag "@BWG")))  ; Set order of this section
+          (:name "2read" :order 15 :and (:tag "2read" :not (:tag "reward") :not (:tag "@BWG")))
+          (:name "Other (Business)" :order 20 :category "ciso" :category "detego" :category "ISAE3402" :and (:tag "2read" :not (:tag "reward") :not (:tag "@BWG")))
+          ;; Groups supply their own section names when none are given
+          (:name "SOMEDAY or WATCHING"
+                 ;; Show this group at the end of the agenda (since it has the
+                 ;; highest number). If you specified this group last, items
+                 ;; with these todo keywords that e.g. have priority A would be
+                 ;; displayed in that group instead, because items are grouped
+                 ;; out in the order the groups are listed.
+                 :and (:todo ("SOMEDAY" "WATCHING") :not (:tag "reward") :not (:tag "@BWG"))
+                 :order 25)
+          ;;(:name "reward"
+          ;;       :tag ("reward" "lp")
+          ;;       :order 100
+          ;;       )
+
+          ;; After the last group, the agenda will display items that didn't
+          ;; match any of these groups, with the default order position of 99
+          )
+        )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-super-agenda-business()
+    "generates my super-agenda"
+    (interactive)
+    (org-super-agenda-mode)
+    (let
+        ((org-super-agenda-groups my-super-agenda-important-business-only-groups))
+      (org-agenda nil "a")
+      )
+    )
+#+END_SRC
+
 *** org-agenda-custom-commands → long list of agenda definitions
 
 #+BEGIN_SRC emacs-lisp
@@ -5746,6 +5818,11 @@ down below.
                 ("a" "Super Agenda" agenda ""
                  (org-super-agenda-mode)
                  ((org-super-agenda-groups my-super-agenda-groups))
+                 (org-agenda nil "a"))
+
+                ("b" "Business Super Agenda" agenda ""
+                 (org-super-agenda-mode)
+                 ((org-super-agenda-groups my-super-agenda-important-business-only-groups))
                  (org-agenda nil "a"))
 
                 ("A" "Agenda" agenda ""
@@ -5983,14 +6060,15 @@ down below.
 #+END_SRC
 
 #+RESULTS:
-| a | Super Agenda         | agenda                                                                                                                                                                                                                                                                                                        |            | (org-super-agenda-mode)                                                                                           | ((org-super-agenda-groups my-super-agenda-groups)) | (org-agenda nil a) |
-| A | Agenda               | agenda                                                                                                                                                                                                                                                                                                        |            | (org-agenda nil a)                                                                                                |                                                    |                    |
-| n | no TODO events +180d | ((agenda no TODO events +180d ((org-agenda-span 180) (org-agenda-time-grid nil) (org-agenda-entry-types (quote (:timestamp :sexp))) (org-agenda-skip-function (quote (or (org-agenda-skip-entry-if (quote todo) (quote any)) (org-agenda-skip-entry-if (quote category) infonova) (my-skip-tag lp)))))))      | nil        | (~/org/agenda_180d_filtered.html)                                                                                 |                                                    |                    |
-| D | detail agenda        | ((agenda detail agenda ((org-agenda-span 31) (org-agenda-time-grid nil))))                                                                                                                                                                                                                                    | nil        | (~/org/agenda_details.html)                                                                                       |                                                    |                    |
-| r | reward tasks         | ((tags-todo reward/!STARTED ((org-agenda-overriding-header rewards: STARTED))) (tags-todo reward/!NEXT ((org-agenda-overriding-header rewards: NEXT))) (tags-todo reward/!TODO ((org-agenda-overriding-header rewards: TODO))) (tags-todo reward/!SOMEDAY ((org-agenda-overriding-header rewards: SOMEDAY)))) |            |                                                                                                                   |                                                    |                    |
-| i | issues               | ((tags-todo issue/!STARTED ((org-agenda-overriding-header issues: STARTED))) (tags-todo issue/!NEXT ((org-agenda-overriding-header issues: NEXT))) (tags-todo issue/!TODO ((org-agenda-overriding-header issues: TODO))) (tags-todo issue/!SOMEDAY ((org-agenda-overriding-header issues: SOMEDAY))))         |            |                                                                                                                   |                                                    |                    |
-| B | borrowed             | tags                                                                                                                                                                                                                                                                                                          | +borrowed  | ((org-agenda-overriding-header borrowed or lend) (org-agenda-skip-function (quote tag-without-done-or-canceled))) |                                                    |                    |
-| $ | Besorgungen          | tags                                                                                                                                                                                                                                                                                                          | +Besorgung | ((org-agenda-overriding-header Besorgungen) (org-agenda-skip-function (quote tag-without-done-or-canceled)))      |                                                    |                    |
+| a | Super Agenda          | agenda                                                                                                                                                                                                                                                                                                        |            | (org-super-agenda-mode)                                                                                           | ((org-super-agenda-groups my-super-agenda-groups))                         | (org-agenda nil a) |
+| b | Business Super Agenda | agenda                                                                                                                                                                                                                                                                                                        |            | (org-super-agenda-mode)                                                                                           | ((org-super-agenda-groups my-super-agenda-important-business-only-groups)) | (org-agenda nil a) |
+| A | Agenda                | agenda                                                                                                                                                                                                                                                                                                        |            | (org-agenda nil a)                                                                                                |                                                                            |                    |
+| n | no TODO events +180d  | ((agenda no TODO events +180d ((org-agenda-span 180) (org-agenda-time-grid nil) (org-agenda-entry-types (quote (:timestamp :sexp))) (org-agenda-skip-function (quote (or (org-agenda-skip-entry-if (quote todo) (quote any)) (org-agenda-skip-entry-if (quote category) infonova) (my-skip-tag lp)))))))      | nil        | (~/org/agenda_180d_filtered.html)                                                                                 |                                                                            |                    |
+| D | detail agenda         | ((agenda detail agenda ((org-agenda-span 31) (org-agenda-time-grid nil))))                                                                                                                                                                                                                                    | nil        | (~/org/agenda_details.html)                                                                                       |                                                                            |                    |
+| r | reward tasks          | ((tags-todo reward/!STARTED ((org-agenda-overriding-header rewards: STARTED))) (tags-todo reward/!NEXT ((org-agenda-overriding-header rewards: NEXT))) (tags-todo reward/!TODO ((org-agenda-overriding-header rewards: TODO))) (tags-todo reward/!SOMEDAY ((org-agenda-overriding-header rewards: SOMEDAY)))) |            |                                                                                                                   |                                                                            |                    |
+| i | issues                | ((tags-todo issue/!STARTED ((org-agenda-overriding-header issues: STARTED))) (tags-todo issue/!NEXT ((org-agenda-overriding-header issues: NEXT))) (tags-todo issue/!TODO ((org-agenda-overriding-header issues: TODO))) (tags-todo issue/!SOMEDAY ((org-agenda-overriding-header issues: SOMEDAY))))         |            |                                                                                                                   |                                                                            |                    |
+| B | borrowed              | tags                                                                                                                                                                                                                                                                                                          | +borrowed  | ((org-agenda-overriding-header borrowed or lend) (org-agenda-skip-function (quote tag-without-done-or-canceled))) |                                                                            |                    |
+| $ | Besorgungen           | tags                                                                                                                                                                                                                                                                                                          | +Besorgung | ((org-agenda-overriding-header Besorgungen) (org-agenda-skip-function (quote tag-without-done-or-canceled)))      |                                                                            |                    |
 
 *** Agenda settings
 
@@ -6250,18 +6328,22 @@ and with a bleeding heart.
 
 switch to open Agenda or open new one:
 #+BEGIN_SRC emacs-lisp
-  (defun my-org-agenda ()
-    "Opens the already opened agenda or opens new one instead"
-    (interactive)
+  (defun my-org-agenda (&optional arg)
+    "Opens the already opened agenda or opens new one instead. With
+     universal prefix, use business agenda."
+    (interactive "P")
 
     (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
     (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
     (if (my-buffer-exists "*Org Agenda*")
         (switch-to-buffer "*Org Agenda*")
-      (my-super-agenda)
+      (cond ((not arg) (my-super-agenda)) ;; without argument, start my super-agenda
+            (t (my-super-agenda-business));; with argument, start super-agenda of business
       )
-    )
+      )
+  )
+
   (bind-key "a" 'my-org-agenda my-map)
 #+END_SRC
 
