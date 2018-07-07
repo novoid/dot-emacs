@@ -5722,32 +5722,39 @@ only see important business stuff.
           (:name "Today"  ; Optionally specify section name
                  :time-grid t  ; Items that appear on the time grid
                  )
-          (:name "DEADLINES" :order 1 :and (:deadline t :not (:tag "reward") :not (:tag "@BWG")))
-          (:name "Important" :order 2 :and (:priority "A" :not (:tag "reward") :not (:tag "@BWG")))
+          (:name "DEADLINES" :order 1
+                  :and (:deadline t :not (:tag ("reward" "@BWG"))))
+          (:name "Important" :order 2
+                 :and (:priority "A" :not (:tag ("reward" "@BWG"))))
           (:name "Low Prio"
                        ;; Show this section after "Today" and "Important", because
                        ;; their order is unspecified, defaulting to 0. Sections
                        ;; are displayed lowest-number-first.
-                       :and (:priority<= "B" :not (:tag "reward") :not (:tag "@BWG"))
+                       :and (:priority<= "B" :not (:tag ("reward" "@BWG")))
                        :order 2)
-  ;        (:name "Habits" :habit t :order 3 :and (:not (:tag "reward") :not (:tag "@BWG")))
-          (:name "Shopping" :order 4 :and (:tag "Besorgung" :not (:tag "reward") :not (:tag "@BWG")))
+          ;;(:name "Habits" :habit t :order 3 :and (:not (:tag ("reward" "@BWG"))))
+          (:name "Shopping" :order 4
+                 :and (:tag "Besorgung" :not (:tag ("reward" "@BWG"))))
                  ;; Boolean AND group matches items that match all subgroups
                  ;;  :and (:tag "shopping" :tag "@town")
                  ;; Multiple args given in list with implicit OR
                  ;;  :tag ("food" "dinner"))
                  ;;  :habit t
                  ;;  :tag "personal")
-          (:name "Started" :order 6 :and (:todo "STARTED" :not (:tag "reward") :not (:tag "@BWG")))
+          (:name "Started" :order 6
+                 :and (:todo "STARTED" :not (:tag ("reward" "@BWG"))))
           ;;(:name "Space-related (non-moon-or-planet-related)"
           ;;       ;; Regexps match case-insensitively on the entire entry
           ;;       :and (:regexp ("space" "NASA")
           ;;                     ;; Boolean NOT also has implicit OR between selectors
           ;;                     :not (:regexp "moon" :tag "planet")))
           ;;(:name "BWG" :tag "@BWG" :order 7)
-          (:name "WAITING" :order 9 :and (:todo "WAITING" :not (:tag "reward") :not (:tag "@BWG")))  ; Set order of this section
-          (:name "2read" :order 15 :and (:tag "2read" :not (:tag "reward") :not (:tag "@BWG")))
-          (:name "Other (Business)" :order 20 :category "ciso" :category "detego" :category "ISAE3402" :and (:tag "2read" :not (:tag "reward") :not (:tag "@BWG")))
+          (:name "WAITING" :order 9
+                 :and (:todo "WAITING" :not (:tag ("reward" "@BWG"))))  ; Set order of this section
+          (:name "2read" :order 15
+                 :and (:tag "2read" :not (:tag ("reward" "@BWG"))))
+          (:name "Other (Business)" :order 20
+                 :and (:category ("ciso" "detego" "ISAE3402") :not (:tag ("reward" "@BWG"))))
           ;; Groups supply their own section names when none are given
           (:name "SOMEDAY or WATCHING"
                  ;; Show this group at the end of the agenda (since it has the
@@ -5755,7 +5762,7 @@ only see important business stuff.
                  ;; with these todo keywords that e.g. have priority A would be
                  ;; displayed in that group instead, because items are grouped
                  ;; out in the order the groups are listed.
-                 :and (:todo ("SOMEDAY" "WATCHING") :not (:tag "reward") :not (:tag "@BWG"))
+                 :and (:todo ("SOMEDAY" "WATCHING") :not (:tag ("reward" "@BWG")))
                  :order 25)
           ;;(:name "reward"
           ;;       :tag ("reward" "lp")
