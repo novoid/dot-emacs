@@ -2208,7 +2208,7 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   "
   ^
   ^View^                ^Navigation^        ^^                   C-↑↓   goto line of same level
-  ^^────────────────────^^──────────────────^^────────────────
+  ^^────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
   _h_ide/show fun  M-h  _,_ ← error     F5  ^^
   _c_ycle all      M-H  _._   error →   F6  ^^
   ^^                    ^^                  ^^
@@ -2278,6 +2278,9 @@ Therefore, I overwrite the regex with my own values:
 #+END_SRC
 
 ** dired-details → (
+
+- [ ] FIXXME 2018-07-06: think of switching to [[https://www.emacswiki.org/emacs/DiredDetails][dired-details+]] (which
+  offers some functionality I currently do not use).
 
 Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file details with =(= and =)=:
 #+BEGIN_SRC emacs-lisp
@@ -5369,6 +5372,8 @@ Definitions of non-work files:
 Default agenda files: on my business host, start with the work-related
 files; on my other machines, start with my non-work-related files.
 
+*** my-toggle-agenda-files() → my-map A
+
 #+BEGIN_SRC emacs-lisp
   (defun my-toggle-agenda-files ()
     "Toggle my agenda files between work/everything and nonwork/everything
@@ -5844,12 +5849,12 @@ only see important business stuff.
   (setq org-agenda-custom-commands
         (quote (
 
-                ("a" "Super Agenda" agenda ""
+                ("a" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
                  (org-super-agenda-mode)
                  ((org-super-agenda-groups my-super-agenda-groups))
                  (org-agenda nil "a"))
 
-                ("b" "Business Super Agenda" agenda ""
+                ("b" "Business Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
                  (org-super-agenda-mode)
                  ((org-super-agenda-groups my-super-agenda-important-business-only-groups))
                  (org-agenda nil "a"))
