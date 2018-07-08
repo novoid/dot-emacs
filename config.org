@@ -5655,7 +5655,7 @@ For business, I use a different setup:
   )
 #+END_SRC
 
-*** my-super-agenda
+*** my-super-agenda()
 
 [[https://github.com/alphapapa/org-super-agenda][Supercharge your Org daily/weekly agenda by grouping items]]
 
@@ -5735,7 +5735,7 @@ down below.
     )
 #+END_SRC
 
-*** my-super-agenda-important-business-only
+*** my-super-agenda-business()
 :PROPERTIES:
 :CREATED:  [2018-07-06 Fri 18:05]
 :END:
@@ -6092,17 +6092,6 @@ only see important business stuff.
                 )))
 )
 #+END_SRC
-
-#+RESULTS:
-| a | Super Agenda          | agenda                                                                                                                                                                                                                                                                                                        |            | (org-super-agenda-mode)                                                                                           | ((org-super-agenda-groups my-super-agenda-groups))                         | (org-agenda nil a) |
-| b | Business Super Agenda | agenda                                                                                                                                                                                                                                                                                                        |            | (org-super-agenda-mode)                                                                                           | ((org-super-agenda-groups my-super-agenda-important-business-only-groups)) | (org-agenda nil a) |
-| A | Agenda                | agenda                                                                                                                                                                                                                                                                                                        |            | (org-agenda nil a)                                                                                                |                                                                            |                    |
-| n | no TODO events +180d  | ((agenda no TODO events +180d ((org-agenda-span 180) (org-agenda-time-grid nil) (org-agenda-entry-types (quote (:timestamp :sexp))) (org-agenda-skip-function (quote (or (org-agenda-skip-entry-if (quote todo) (quote any)) (org-agenda-skip-entry-if (quote category) infonova) (my-skip-tag lp)))))))      | nil        | (~/org/agenda_180d_filtered.html)                                                                                 |                                                                            |                    |
-| D | detail agenda         | ((agenda detail agenda ((org-agenda-span 31) (org-agenda-time-grid nil))))                                                                                                                                                                                                                                    | nil        | (~/org/agenda_details.html)                                                                                       |                                                                            |                    |
-| r | reward tasks          | ((tags-todo reward/!STARTED ((org-agenda-overriding-header rewards: STARTED))) (tags-todo reward/!NEXT ((org-agenda-overriding-header rewards: NEXT))) (tags-todo reward/!TODO ((org-agenda-overriding-header rewards: TODO))) (tags-todo reward/!SOMEDAY ((org-agenda-overriding-header rewards: SOMEDAY)))) |            |                                                                                                                   |                                                                            |                    |
-| i | issues                | ((tags-todo issue/!STARTED ((org-agenda-overriding-header issues: STARTED))) (tags-todo issue/!NEXT ((org-agenda-overriding-header issues: NEXT))) (tags-todo issue/!TODO ((org-agenda-overriding-header issues: TODO))) (tags-todo issue/!SOMEDAY ((org-agenda-overriding-header issues: SOMEDAY))))         |            |                                                                                                                   |                                                                            |                    |
-| B | borrowed              | tags                                                                                                                                                                                                                                                                                                          | +borrowed  | ((org-agenda-overriding-header borrowed or lend) (org-agenda-skip-function (quote tag-without-done-or-canceled))) |                                                                            |                    |
-| $ | Besorgungen           | tags                                                                                                                                                                                                                                                                                                          | +Besorgung | ((org-agenda-overriding-header Besorgungen) (org-agenda-skip-function (quote tag-without-done-or-canceled)))      |                                                                            |                    |
 
 *** Agenda settings
 
