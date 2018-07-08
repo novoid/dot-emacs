@@ -2937,6 +2937,27 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 )
 #+END_SRC
 
+** date2name → F9
+:PROPERTIES:
+:CREATED:  [2018-07-08 Sun 15:55]
+:END:
+
+https://github.com/beutelma/date2name.el provides
+=date2name-dired-add-date-to-name()= which is an Elisp-native
+re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
+
+#+BEGIN_SRC emacs-lisp
+(use-package date2name
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/date2name.el/")))
+)
+#+END_SRC
+
+- [ ] FIXXME: replace date2name.py with it if it is well tested
+- [ ] FIXXME: map to a direct key
+- [ ] FIXXME: add to cheatsheet (hydra): ask for day when used with
+  universal prefix
+- [ ] FIXXME: do for time2name as well
+
 ** hydra-dired → F9
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:10]
@@ -2949,7 +2970,7 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
   _t_agtrees            _f_ilter            _d_ate2name        g  refresh           M-c      dired-ranger-copy
   _T_agtrees recursive  _F_ilter recursive  _t_ime2name        +  mkdir             M-v      dired-ranger-paste
   ^────────^────────────^──────^────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
-  _a_bsolute link       ^^                  ^^                 D  delete marked
+  _a_bsolute link       ^^                  _D_ate2name.el     D  delete marked
   _m_emacs tsfile link  ^^                  ^^                 tk hide marked       C-c C-o  open externally
   ^^                    ^^                  ^^                 U  unmark all        C-o      open in new frame
   ^View    ^            ^Edit^              ^Order^
@@ -2968,6 +2989,7 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 
   ("d" my-dired-date2name nil)
   ("t" my-dired-time2name nil)
+  ("D" filetags-dired-update-tags nil)
 
   ("a" my-dired-copy-filename-as-absolute-link nil)
   ("m" my-dired-copy-filename-as-tsfile-link nil)
