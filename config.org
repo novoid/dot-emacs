@@ -8724,7 +8724,18 @@ I get a popup buffer that tells me what bindings I am able to use.
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :config ;; executed after loading package
   (setq guide-key/guide-key-sequence '("C-c C-,"))
+  (setq guide-key/recursive-key-sequence-flag t)
+
+  ;; show common Org mode keys
+  (defun guide-key/my-hook-function-for-org-mode ()
+    (guide-key/add-local-guide-key-sequence "C-c")
+    (guide-key/add-local-guide-key-sequence "C-c C-x")
+    (guide-key/add-local-highlight-command-regexp "org-")
+  )
+  (add-hook 'org-mode-hook 'guide-key/my-hook-function-for-org-mode)
+
   (guide-key-mode 1)  ; Enable guide-key-mode
+
 )
 #+END_SRC
 
