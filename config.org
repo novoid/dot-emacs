@@ -1676,12 +1676,10 @@ Modes for programming languages; check spelling only in comments/strings
 (add-hook 'emacs-lisp-mode-hook 'flyspell-prog-mode)
 #+END_SRC
 
-** DISABLED Keybindings
+** Keybindings
 
-2018-06-19: disabled because I moved those functions to a hydra with F5
-
-bind-keys:
-#+BEGIN_SRC emacs-lisp
+2018-06-19: disabled most bindings because I moved those functions to a hydra with F5
+#+BEGIN_SRC emacs-lisp :tangle no
 (define-key global-map [(f5)] 'flyspell-mode)
 (bind-key "fm" 'flyspell-mode my-map);; also mapped to F5
 (bind-key "fr" 'flyspell-region my-map)
@@ -1692,6 +1690,13 @@ bind-keys:
 (define-key global-map [(f6)] 'flyspell-goto-next-error)
 (bind-key "ff" 'flyspell-correct-word-before-point my-map)
 (define-key global-map [(f7)] 'flyspell-correct-word-before-point)
+#+END_SRC
+
+For quickly correcting text, I keep F6 and S-F6 for going through the
+findings one by one:
+#+BEGIN_SRC emacs-lisp
+(define-key global-map [(f6)] 'flyspell-goto-next-error)
+(define-key global-map [(shift f6)] 'flyspell-correct-word-before-point)
 #+END_SRC
 
 ** hydra-spelling → F5
