@@ -9627,7 +9627,7 @@ way. This is quite frustrating.
 )
 #+END_SRC
 
-** eyebrowse
+** eyebrowse → my-map ,
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:41]
 :END:
@@ -9645,7 +9645,16 @@ I got the recommendation for it [[https://www.reddit.com/r/emacs/comments/7au3hj
 
 The author is obviously using spacemacs. Unfortunately, the default
 prefix =C-c C-w= is overriding =org-refile()= which I use frequently.
-I chose =C-;= as my alternative prefix.
+I chose =C-:= as alternative prefix in order to un-map the original.
+However, I am invoking eyebrowse functionality only via my hydra which
+is defined below and inviked via =my-map ,=.
+
+Since my horizontal mode line space is sparse, I wanted a small
+modification. I need the whole indicator information (with labels) in
+the hydra (much space) but only the list of the slots in the mode line
+in order to keep it as small as possible. Therefore I modified the
+package by duplicating the modeline functions according to [[https://github.com/wasamasa/eyebrowse/issues/89][this GitHub
+issue explanation]].
 
 Please notice that with only one slot (the default one), the indicator
 is not shown in the modeline.
@@ -9667,16 +9676,50 @@ is not shown in the modeline.
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/eyebrowse/")))
   :defer 10
   :init
-  (setq eyebrowse-keymap-prefix (kbd "C-;"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
+  (setq eyebrowse-keymap-prefix (kbd "C-:"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
   :config
   (eyebrowse-mode t)
-)
 #+END_SRC
 
-Open issues:
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-eyebrowse (:color red)
+  "
+  ^
+  %s(eyebrowse-mode-line-indicator)
 
-- [ ] create hydra with list of slots (see [[https://github.com/wasamasa/eyebrowse/issues/88][github issue]])
-- [ ] set eyebrowse-mode-line-style to a minimal one (see [[https://github.com/wasamasa/eyebrowse/issues/89][github issue]])
+  _,_ ← window                      _0_ switch to window config 0        C-S-;     prefix
+  _._   window →                    _1_ switch to window config 1        prefix c  create
+  ^↦^ previous window config          ...                    ^^          prefix ,  rename
+  _r_ename current window config    _9_ switch to window config 9        prefix l  last window
+  _c_reate new window config
+  _C_lose current window config
+  ^^
+  "
+  ("q" nil "quit")
+  ("," eyebrowse-prev-window-config nil)
+  ("." eyebrowse-next-window-config nil)
+  ("<tab>" eyebrowse-last-window-config nil)
+  ("r" eyebrowse-rename-window-config nil)
+  ("c" eyebrowse-create-window-config nil)
+  ("C" eyebrowse-close-window-config nil)
+  ("0" eyebrowse-switch-to-window-config-0 nil :color blue)
+  ("1" eyebrowse-switch-to-window-config-1 nil :color blue)
+  ("2" eyebrowse-switch-to-window-config-2 nil :color blue)
+  ("3" eyebrowse-switch-to-window-config-3 nil :color blue)
+  ("4" eyebrowse-switch-to-window-config-4 nil :color blue)
+  ("5" eyebrowse-switch-to-window-config-5 nil :color blue)
+  ("6" eyebrowse-switch-to-window-config-6 nil :color blue)
+  ("7" eyebrowse-switch-to-window-config-7 nil :color blue)
+  ("8" eyebrowse-switch-to-window-config-8 nil :color blue)
+  ("9" eyebrowse-switch-to-window-config-9 nil :color blue)
+)
+
+:bind (:map my-map ("," . hydra-eyebrowse/body))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+);; end eyebrowse
+#+END_SRC
 
 ** ibuffer
 
