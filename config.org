@@ -294,6 +294,17 @@ Key binding example from [[https://github.com/jwiegley/use-package#key-binding][
          ([S-f10] . helm-recentf)))
 #+END_SRC
 
+more binding examples:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  :bind (:map my-map ("SPC" . yankpad-insert))
+
+  :bind (("M-f" . sp-forward-sexp)
+         ("M-b" . sp-backward-sexp)
+         )
+#+END_SRC
+
+
 * my-load-local-el()
 
 Using this function, I am able to easily load lisp files within my
