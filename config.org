@@ -8796,7 +8796,7 @@ don't need it for now.
 )
 #+END_SRC
 
-** guide-key - displays the available key bindings automatically
+** DISABLED guide-key - displays the available key bindings automatically
 
 «[[https://github.com/kai2nenobu/guide-key][guide-key.el]] displays the available key bindings automatically and
 dynamically. guide-key aims to be an alternative of one-key.el.»
@@ -8822,6 +8822,37 @@ I get a popup buffer that tells me what bindings I am able to use.
   (guide-key-mode 1)  ; Enable guide-key-mode
 
 )
+#+END_SRC
+
+** which-key - displays the available key bindings automatically
+:PROPERTIES:
+:CREATED:  [2018-07-15 Sun 20:06]
+:END:
+
+https://github.com/justbur/emacs-which-key
+
+I got the recommendation via [[https://www.reddit.com/r/emacs/comments/8x8rz7/my_emacs_key_binding_strategy/e22x2cu/][this reddit thread]] with the arguments,
+that =which-key= is inferior to =guide-key= which I used before::
+- more active
+- more features
+- more contributions
+
+when I do press my prefix for =my-map= and wait a bit,
+I get a popup buffer that tells me what bindings I am able to use.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-which-key/")))
+    :defer 20
+    :config ;; executed after loading package
+    (which-key-setup-side-window-right)
+    (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("RET" . nil) . ("⏎" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⇤" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil)))
+
+    (which-key-mode)
+  )
 #+END_SRC
 
 ** vcard-mode
