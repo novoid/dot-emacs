@@ -538,6 +538,7 @@ OLD method of extending the path:
             ;;"c:\\cygwin64\\bin" ";"  ;; Cygwin
             "C:\\Users\\karl.voit\\.babun\\cygwin\\bin" ";"
             "C:\\Users\\karl.voit\\.babun\\cygwin\\usr\\local\\bin" ";"
+            "C:\\Python36\\" ";"
             "C:\\Program\ Files\ \(x86\)\\Java\\jre1.8.0_144\\bin" ";"
             (getenv "PATH")))
 #+END_SRC
