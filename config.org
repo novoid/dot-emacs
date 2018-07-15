@@ -10202,6 +10202,30 @@ which I included here:
 (global-set-key (kbd "M-k") (lambda () (interactive) (my-codenav-next-definition)))
 #+END_SRC
 
+** my-reddit-export-via-pandoc
+:PROPERTIES:
+:CREATED:  [2018-07-14 Sat 09:23]
+:END:
+
+This is a simple shortcut because I can not remember which of the many
+markdown dialects is the one for [[https://www.reddit.com/][reddit]] and [[https://github.com/kawabata/ox-pandoc][ox-pandoc]] doesn't show
+me markdown at all which I have to fix some day.
+
+My workflow is:
+1. mark the region where the content to export is
+2. =M-x my-reddit TAB RET=
+3. copy the content from the temporary buffer to my browser window
+4. destroy the temporary buffer
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-reddit-export-via-pandoc ()
+  "This is a simple wrapper function that converts the currently
+  marked region to the markdown dialect that reddit understands."
+    (interactive)
+    (org-pandoc-export-to-markdown_mmd-and-open)
+  )
+#+END_SRC
+
 * Key bindings
 
 In this heading, I do define many key bindings.
