@@ -25,10 +25,17 @@ personal Org-mode files.
 
 -----------------------
 
-Some minor tasks I plan to do with my =config.org=:
+Function-Key-Mappings:
 
-- flyspell bindkeys:
-  - [ ] create a hydra some day
+| Shift | Bright   |          |          |    |   |       | fix spell  |    |         |   | windows |      |          |       |
+|-------+----------+----------+----------+----+---+-------+------------+----+---------+---+---------+------+----------+-------|
+|       | Beginner | ← change | change → | ★  |   | spell | next spell |    | minimap |   | MODE    | menu | maximize | naked |
+|-------+----------+----------+----------+----+---+-------+------------+----+---------+---+---------+------+----------+-------|
+|       | F1       | F2       | F3       | F4 |   | F5    | F6         | F7 | F8      |   | F9      | F10  | F11      | F12   |
+
+-----------------------
+
+Some minor tasks I plan to do with my =config.org=:
 
 - [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
 - [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
