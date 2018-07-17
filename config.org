@@ -9780,6 +9780,42 @@ Manipulating CSV files.
   (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
   (autoload 'csv-mode "csv-mode"
     "Major mode for editing comma-separated value files." t)
+
+  (defhydra hydra-csv (:color blue)
+      "
+  ^^
+  _a_lign Fields into Columns     C-c C-a          _B_ Set Buffer's Comment Start       C-c C-c
+  _u_nalign Columns into Fields   C-c C-u          _L_ Sort By Field Lexicographically  C-c C-s
+  ^^                                               _N_ Sort By Field Numerically        C-c C-n
+      _,_  ← Field →  _._           C-M-b/f          _D_ Use Descending Sort Order        C-c C-d
+  ^^                                               _r_everse Order of Lines             C-c C-r
+  _S_ Make Separators Invisible   C-c C-v          _t_ranspose Rows and Columns         C-c C-t
+  _i_ Toggle Field Index Mode                       ^^
+  ^^                                               _k_ Kill Fields          C-c C-k
+  ^^                                               _y_ank Fields (Columns)  C-c C-y
+  ^^                                               _Y_ank As New Table      C-c C-z
+  ^^
+    "
+    ("a" csv-align-fields        nil :color red)
+    ("u" csv-unalign-fields      nil :color red)
+    ("B" csv-set-comment-start   nil)
+    ("D" csv-toggle-descending   nil)
+    ("k" csv-kill-fields         nil)
+    ("N" csv-sort-numeric-fields nil)
+    ("r" csv-reverse-region      nil)
+    ("L" csv-sort-fields         nil)
+    ("t" csv-transpose           nil)
+    ("S" csv-toggle-invisibility nil :color red)
+    ("y" csv-yank-fields         nil)
+    ("Y" csv-yank-as-new-table   nil)
+    ("." csv-forward-field       nil :color red)
+    ("," (csv-forward-field -1)           nil :color red)
+    ("i" csv-field-index-mode    nil :color red)
+    ("q" nil "quit")
+  )
+
+  (define-key csv-mode-map [f9] 'hydra-csv/body)
+
 )
 #+END_SRC
 
