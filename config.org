@@ -1312,9 +1312,118 @@ Example 11 from hydra-examples.el
     ("s" string-rectangle nil)
     ("p" kill-rectangle nil)
     ("o" nil nil))
-    ;; Recommended binding:
+
   (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
 #+END_SRC
+
+** reStructuredText → F9
+:PROPERTIES:
+:CREATED:  [2018-07-16 Mon 13:54]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-rst (:color blue)
+      "
+  ^^
+    _a_ insert • complete • promote adornment ( C-c C-a C-a     )
+    _c_ycle adornment                         ( C-- C-=         )        Let's love
+    _r_e-adjust adornments of buffer          ( C-c C-a C-s     )                    reStructured Text
+    _v_isualize adornment formats used        ( C-c C-a C-d     )
+
+    _,_      ↑                                ( C-M-e           )
+          section
+    _._      ↓                                ( C-M-a           )
+
+    _m_ark section                            ( C-M-h           )
+    _n_ew line with indent                    ( C-j             )
+  ────^^────────────────────────────────────────────────────────────
+      _s_hift region →         ( C-c C-r TAB     )
+    ← _S_hift region           ( M-- C-c C-r TAB )
+  ────^^───────────────────────────────────────────^^───────────────────────────────────────────────────────────
+    _C_omment region           ( M-;         )     _t_oc temp view  (close with c; zip with z) ( C-c C-t C-t )
+    _b_ullet list region       ( C-c C-l C-b )     _T_oc insert TOC (did not work)             ( C-c C-t C-i )
+    _e_numerated list region   ( C-c C-l C-e )     _u_pdate TOC                                ( C-c C-t C-u )
+    _i_nsert item              ( C-c C-l C-i )
+  ^^
+    "
+    ("a" rst-adjust nil)
+    ("c" (rst-adjust -1) nil :color red)
+    ("r" rst-straighten-adornments nil)
+    ("v" rst-display-adornments-hierarchy nil)
+    ("," rst-forward-section nil :color red)
+    ("." rst-backward-section nil :color red)
+    ("m" rst-mark-section nil :color red)
+    ("s" rst-shift-region nil :color red)
+    ("S" rst-shift-region nil :color red)
+    ("n" newline-and-indent nil)
+    ("C" comment-dwim nil)
+    ("b" rst-bullet-list-region nil)
+    ("e" rst-enumerate-region nil)
+    ("i" rst-insert-list nil)
+    ("t" rst-toc nil)
+    ("T" rst-toc-insert nil)
+    ("u" rst-toc-update nil)
+    ("q" nil "quit")
+  )
+
+(require 'rst)
+(define-key rst-mode-map [f9] 'hydra-rst/body)
+#+END_SRC
+
+** Buffer management → Shift F9
+:PROPERTIES:
+:CREATED:  [2018-07-16 Mon 13:54]
+:END:
+
+- C-x 2 split-window-below
+- C-x 3 split-window-right
+- 0 close this
+- 1 close other
+- [ ] resize functions:
+  - https://www.emacswiki.org/emacs/WindowResize
+- [ ] go through cheatsheet
+- https://github.com/abo-abo/hydra/wiki/Window-Management
+- [ ] I've defined a swap function or so
+
+    (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+    (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+    (global-set-key (kbd "S-C-<down>") 'shrink-window)
+    (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-buffers (:color blue)
+      "
+  ^^
+    C-x 2  split ↓
+    C-x 3  split →
+
+    C-x 0  close this
+    C-x 1  close others
+
+    _m_ark section
+    _n_ew line with indent
+  ────^^────────────────────────────────────────────────────────────
+  ^^
+    "
+    ("a" rst-adjust nil)
+    ("c" (rst-adjust -1) nil :color red)
+    ("t" rst-toc nil)
+    ("T" rst-toc-insert nil)
+    ("u" rst-toc-update nil)
+    ("q" nil "quit")
+  )
+
+(define-key global-map [(shift f9)] 'hydra-buffers/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-buffers/body
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
