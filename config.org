@@ -278,7 +278,8 @@ and ensure it is installed when Emacs launches:
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package dumb-jump
-:ensure t
+  :ensure t
+  :defer 10
 )
 #+END_SRC
 
