@@ -3086,6 +3086,14 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 #+BEGIN_SRC emacs-lisp
 (use-package date2name
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/date2name.el/")))
+  :config
+  (setq date2name-enable-smart-separation-character-chooser t)
+
+  ;; 2018-07-21: https://github.com/DerBeutlin/date2name.el/issues/1#issuecomment-406787333
+  (defun file-attribute-modification-time (attributes)
+    "extracts the modification time from ATTRIBUTES"
+    (nth 5 attributes))
+
 )
 #+END_SRC
 
@@ -3126,7 +3134,8 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 
   ("d" my-dired-date2name nil)
   ("t" my-dired-time2name nil)
-  ("D" filetags-dired-update-tags nil)
+;  ("D" filetags-dired-update-tags nil)
+  ("D" date2name-dired-add-date-to-name nil)
 
   ("a" my-dired-copy-filename-as-absolute-link nil)
   ("m" my-dired-copy-filename-as-tsfile-link nil)
