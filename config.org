@@ -109,6 +109,14 @@ character it is under; i.e. full width of a TAB:
 (setq x-stretch-cursor t)
 #+END_SRC
 
+Remember the position of a buffer and go to that position when
+re-opening the file: (2018-07-26 disabled because it is not always a good thing to do)
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq-default save-place t)
+(setq save-place-file (expand-file-name ".places" user-emacs-directory))
+(save-place-mode 1)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
