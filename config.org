@@ -415,7 +415,6 @@ more binding examples:
          )
 #+END_SRC
 
-
 * my-load-local-el()
 
 Using this function, I am able to easily load lisp files within my
@@ -2464,6 +2463,8 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   ^^────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
   _h_ide/show fun  M-h  _,_ ← error     F5  ^^
   _c_ycle all      M-H  _._   error →   F6  ^^
+  ^^                    _<_ ← symbol        ^^
+  ^^                    _>_   symbol →      ^^
   ^^                    ^^                  ^^
   ^Edit^                ^Help^              ^^
   ^^────────────────────^^──────────────────^^────────────────
@@ -2476,6 +2477,8 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   ("c" hs-cycle-all nil)
   ("," flymake-goto-prev-error nil :color red)
   ("." flymake-goto-next-error nil :color red)
+  ("<" highlight-symbol-prev nil)
+  (">" highlight-symbol-next nil)
   ("i" elpygen-implement nil)
   ("r" elpy-refactor nil)
   ("H" pylookup-lookup nil)
@@ -3898,6 +3901,9 @@ the reason caused by overwriting this setting here.
 #+END_SRC
 
 ** Styling
+:PROPERTIES:
+:CREATED:  [2018-07-23 Mon 10:26]
+:END:
 
 Omit the headline-asterisks except the last one:
 #+BEGIN_SRC emacs-lisp
@@ -4857,7 +4863,6 @@ when invoking on the heading "My Task", the end result would be:
     )
   )
 #+END_SRC
-
 
 ** Capture
 
@@ -8367,6 +8372,8 @@ Not org related but might be candidates as well:
 - my-toggle-dark-bright-theme() → S-F1
 - my-toggle-windows-split() - Toggle between split windows and a single window
 
+- [ ] https://github.com/abo-abo/hydra/wiki/Org-agenda
+
 TEMPLATE copied from dired:
 #+BEGIN_SRC emacs-lisp :tangle no
 (defhydra hydra-org (:color blue)
@@ -8637,7 +8644,11 @@ interface of Magit.
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "git")
 
+;;2018-07-09 test when using GitHub version;;(setq with-editor-file-name-history-exclude 1) ;; https://github.com/syl20bnr/spacemacs/issues/7225
+
 (use-package magit
+  ;;2018-07-09 disabled because lots of errors on load;; :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/magit/lisp/")))
+
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
   ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
@@ -8747,6 +8758,13 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 
 ** message-outlook.el - sending mail with Outlook
 
+With this package, I can =C-c C-o= on =mailto:user@example.com= in my
+Org mode. A new Emacs message composing buffer appears and with
+=message-send-and-exit()= (=C-c C-c=) the composed email doesn't get
+sent to the recipient(s) and instead appears as an email in a new
+composing window of Outlook where I may continue composing or send it
+to the recipient(s).
+
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "outlook")
   (use-package message-outlook
@@ -8757,7 +8775,14 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 
 ** DISABLED Editing Outlook emails in Emacs
 
+Continue editing an email in Emacs which is being currently composed
+within Outlook. When finished composing it in Emacs, it can then be
+sent back to the open Outlook window again.
+
 - http://www.emacswiki.org/emacs/MsOutlook
+
+Disabled, because there are some annoying things related to this
+workflow.
 
 #+BEGIN_SRC emacs-lisp
 when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
@@ -9312,6 +9337,7 @@ and smart truncation.»
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
   ;; hiding minor modes from mode line (don't forget the leading space)
   (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ," " PCRE" " counsel" " OTSH" "dired-icon "))
+  ;; does not hide in Org-agenda:  "Diary " "Ddl " "Grid " "Habit " "FlyC " "WK "
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":EMACS:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/org" ":ORG:") t)
@@ -9500,7 +9526,7 @@ be of some use.»
   (setq char-menu
         '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†" "␣"
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
-         ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√")
+         ("Math"       "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√" "∄" "∃")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
           "ν" "ξ" "ο" "π" "ρ" "σ" "τ" "υ" "φ" "χ" "ψ" "ω" "Σ" "Δ")
          ("Hatschek"   "Ǎ" "ǎ" "Č" "č" "Ď" "ď" "Ě" "ě" "Ǧ" "ǧ" "Ȟ" "ȟ"
@@ -9936,6 +9962,8 @@ also allows for using variables. More flexibility is almost impossible.
 
 Manipulating CSV files.
 
+As with many major modes, I do have a helpful hydra mapped to F9.
+
 #+BEGIN_SRC emacs-lisp
 (use-package csv-mode
   :ensure t
@@ -10075,6 +10103,10 @@ way. This is quite frustrating.
 )
 #+END_SRC
 
+#+RESULTS:
+
+- [ ] hydra for pdf-tools: https://github.com/abo-abo/hydra/wiki/PDF-Tools
+
 ** eyebrowse → my-map ,
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:41]
@@ -10209,6 +10241,7 @@ Replace =list-buffers= with =ibuffer= ([[http://ergoemacs.org/emacs/emacs_buffer
               (lambda ()
                 (ibuffer-switch-to-saved-filter-groups "default")))
 #+END_SRC
+
 
 * My helper functions (part II)
 
@@ -10998,6 +11031,7 @@ Function defined above.
 (global-set-key (kbd "M-q") 'my-fill-or-unfill)
 #+END_SRC
 
+
 ** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
 
 With these commands, I get great shortcuts to put the current word,
@@ -11244,49 +11278,105 @@ sort | uniq
 #+END_SRC
 
 #+RESULTS:
-| *key*                        | *function*                                              |
-|------------------------------+---------------------------------------------------------|
-| C-, l                        | ~avy-goto-line~                                         |
-| C-, n                        | ~neotree-toggle~                                        |
-| C-, w                        | ~avy-goto-word-0~                                       |
-| C-c %                        | ~org-mark-ring-push~                                    |
-| C-c <down>                   | ~org-mark-ring-push~                                    |
-| C-c <left>                   | ~org-mark-ring-goto~                                    |
-| C-f                          | ~(lambda () (interactive) (forward-line 5~              |
-| C-n                          | ~scroll-up-command~                                     |
-| C-p                          | ~scroll-down-command~                                   |
-| C-s-SPC                      | ~mode-line-in-header~                                   |
-| M-,                          | ~move-text-up~                                          |
-| M-.                          | ~move-text-down~                                        |
-| M-/                          | ~hippie-expand~                                         |
-| M-x                          | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~ |
-| [(shift f1)]                 | ~my-toggle-dark-bright-theme~                           |
-| [C-left]                     | ~backward-word~                                         |
-| [C-right]                    | ~forward-word~                                          |
-| [M-c]                        | ~capitalize-word~                                       |
-| [M-l]                        | ~downcase-word~                                         |
-| [M-u]                        | ~upcase-word~                                           |
-| [S-left]                     | ~backward-word~                                         |
-| [S-right]                    | ~forward-word~                                          |
-| [end]                        | ~end-of-buffer~                                         |
-| [f12]                        | ~my-toggle-naked-emacs~                                 |
-| [f1]                         | ~my-toggle-beginner-setup~                              |
-| [f5]                         | ~goto-last-change~                                      |
-| [f6]                         | ~goto-last-change-reverse~                              |
-| [f7]                         | ~char-menu~                                             |
-| [f8]                         | ~neotree-toggle)~                                       |
-| [f8]                         | ~neotree-toggle~                                        |
-| [home]                       | ~beginning-of-buffer~                                   |
-| [remap fill-paragraph]       |                                                         |
-| global [tool-bar pdf-button] |                                                         |
-| global ~\C-cc~               | ~org-capture~                                           |
-| org-mode C-c (               | ~org-mode-reftex-search~                                |
-| org-mode C-c )               | ~reftex-citation~                                       |
-| org-mode RET                 |                                                         |
-| ~\C-ca~                      | ~org-agenda~                                            |
-| ~\C-cl~                      | ~org-store-link~                                        |
-| ~\C-cm~                      | ~my-memacs-org-agenda~                                  |
-| ~\C-s~                       | ~my-search-method-according-to-numlines~                |
+| *key*                                                    | *function*                                                                  |
+|----------------------------------------------------------+-----------------------------------------------------------------------------|
+| ~\C-ca~                                                  | ~org-agenda~                                                                |
+| ~\C-ca~                                                  | ~org-agenda)~                                                             |
+| C-c <down>                                               | ~org-mark-ring-push~                                                        |
+| C-c <down>                                               | ~org-mark-ring-push)~                                                     |
+| C-c h                                                    | ~hydra-apropos/body~                                                        |
+| C-c <left>                                               | ~org-mark-ring-goto~                                                        |
+| C-c <left>                                               | ~org-mark-ring-goto)~                                                     |
+| ~\C-cl~                                                  | ~org-store-link~                                                            |
+| ~\C-cl~                                                  | ~org-store-link)~                                                         |
+| ~\C-cm~                                                  | ~my-memacs-org-agenda~                                                      |
+| ~\C-cm~                                                  | ~my-memacs-org-agenda)~                                                   |
+| C-c %                                                    | ~org-mark-ring-push~                                                        |
+| C-c %                                                    | ~org-mark-ring-push)~                                                     |
+| C-f                                                      | ~(lambda () (interactive) (forward-line 5~                                  |
+| C-f                                                      | ~(lambda () (interactive) (forward-line 5)))~                             |
+| [C-left]                                                 | ~backward-word~                                                             |
+| [C-left]                                                 | ~backward-word)~                                                          |
+| C-n                                                      | ~scroll-up-command~                                                         |
+| C-n                                                      | ~scroll-up-command)~                                                      |
+| C-p                                                      | ~scroll-down-command~                                                       |
+| C-p                                                      | ~scroll-down-command)~                                                    |
+| [C-right]                                                | ~forward-word~                                                              |
+| [C-right]                                                | ~forward-word)~                                                           |
+| ~\C-s~                                                   | ~my-search-method-according-to-numlines~                                    |
+| ~\C-s~                                                   | ~my-search-method-according-to-numlines)~                                 |
+| C-s-SPC                                                  | ~mode-line-in-header~                                                       |
+| C-s-SPC                                                  | ~mode-line-in-header)~                                                    |
+| C-x C-b                                                  | ~ibuffer~                                                                   |
+| C-x r h                                                  | ~hydra-rectangle/body~                                                      |
+| C-z                                                      | ~my-dired-recent-dirs~                                                      |
+| dired-mode <backspace>                                   | ~diredp-up-directory-reuse-dir-buffer~                                      |
+| dired-mode C-c C-o                                       | ~my-dired-open-in-external-app~                                             |
+| dired-mode C-s                                           | ~dired-isearch-filenames~                                                   |
+| dired-mode ~,~                                           | ~dired~                                                                     |
+| dired-mode [f9]                                          | ~hydra-dired/body~                                                          |
+| dired-mode M-a                                           | ~my-dired-appendfilename~                                                   |
+| dired-mode M-c                                           | ~dired-ranger-copy)  ;; overwrites: diredp-capitalize-this-file~            |
+| dired-mode M-m                                           | ~dired-ranger-move)  ;; overwrites: back-to-indentation~                    |
+| dired-mode M-t                                           | ~my-dired-filetags~                                                         |
+| dired-mode M-v                                           | ~dired-ranger-paste) ;; overwrites: scroll-down-command~                    |
+| emacs-lisp-mode C-c e                                    | ~macrostep-expand~                                                          |
+| [end]                                                    | ~end-of-buffer~                                                             |
+| [end]                                                    | ~end-of-buffer)~                                                          |
+| [f12]                                                    | ~my-toggle-naked-emacs~                                                     |
+| [f12]                                                    | ~my-toggle-naked-emacs)~                                                  |
+| [f1]                                                     | ~my-toggle-beginner-setup~                                                  |
+| [f1]                                                     | ~my-toggle-beginner-setup)~                                               |
+| [f2]                                                     | ~goto-last-change~                                                          |
+| [f2]                                                     | ~goto-last-change)~                                                       |
+| [f3]                                                     | ~goto-last-change-reverse~                                                  |
+| [f3]                                                     | ~goto-last-change-reverse)~                                               |
+| [f4]                                                     | ~char-menu~                                                                 |
+| [f4]                                                     | ~char-menu)~                                                              |
+| [f5]                                                     | ~hydra-spelling/body~                                                       |
+| [f8]                                                     | ~minimap-mode~                                                              |
+| [f8]                                                     | ~minimap-mode)~                                                           |
+| [f9]                                                     | ~neotree-toggle)~                                                         |
+| global ~\C-cc~                                           | ~org-capture~                                                               |
+| global ~\C-cc~                                           | ~org-capture)~                                                            |
+| global [(f5)]                                            | ~flyspell-mode)~                                                          |
+| global [(f6)]                                            | ~flyspell-goto-next-error)~                                               |
+| global [(f7)]                                            | ~flyspell-correct-word-before-point)~                                     |
+| global [(shift f5)]                                      | ~my-toggle-ispell-language)~                                              |
+| global [tool-bar pdf-button]                             |                                                                             |
+| global [tool-bar pdf-button]                           |                                                                             |
+| [home]                                                   | ~beginning-of-buffer~                                                       |
+| [home]                                                   | ~beginning-of-buffer)~                                                    |
+| image-dired-thumbnail-mode ~\C-n~                        | ~image-diredx-next-line~                                                    |
+| image-dired-thumbnail-mode ~\C-p~                        | ~image-diredx-previous-line~                                                |
+| image-dired-thumbnail-mode ~g~                           | ~revert-buffer);; revert all thumbnails if `image-diredx-async-mode' is on~ |
+| image-dired-thumbnail-mode ~x~                           | ~image-diredx-flagged-delete);; Delete confirmation prompt with thumbnails~ |
+| [M-c]                                                    | ~capitalize-word~                                                           |
+| [M-c]                                                    | ~capitalize-word)~                                                        |
+| M-h                                                      | ~hs-cycle~                                                                  |
+| M-H                                                      | ~hs-cycle-all~                                                              |
+| M-/                                                      | ~hippie-expand~                                                             |
+| M-/                                                      | ~hippie-expand)~                                                          |
+| M-i (lambda () (interactive) (my-codenav-prev-definition |                                                                             |
+| M-k (lambda () (interactive) (my-codenav-next-definition |                                                                             |
+| [M-l]                                                    | ~downcase-word~                                                             |
+| [M-l]                                                    | ~downcase-word)~                                                          |
+| M-q                                                      | ~my-fill-or-unfill~                                                         |
+| [M-u]                                                    | ~upcase-word~                                                               |
+| [M-u]                                                    | ~upcase-word)~                                                            |
+| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~                     |
+| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~                   |
+| org-mode C-c (                                           | ~org-mode-reftex-search~                                                    |
+| org-mode C-c (                                           | ~org-mode-reftex-search))~                                                |
+| org-mode C-c )                                           | ~reftex-citation~                                                           |
+| org-mode C-c )                                           | ~reftex-citation)~                                                        |
+| org-mode RET                                           |                                                                             |
+| python-mode C-c i                                        | ~elpygen-implement~                                                         |
+| python-mode [f9]                                         | ~hydra-python/body~                                                         |
+| [remap fill-paragraph]                                   |                                                                             |
+| [remap fill-paragraph]                                 |                                                                             |
+| [(shift f1)]                                             | ~my-toggle-dark-bright-theme~                                               |
+| [(shift f1)]                                             | ~my-toggle-dark-bright-theme)~                                            |
 
 ** Mapping from my-map outside of use-package
 
@@ -11424,5 +11514,4 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 * Local Variables
 # Local Variables:
 # mode: auto-fill
-# mode: flyspell
 # End:
