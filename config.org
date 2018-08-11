@@ -317,6 +317,23 @@ values:
 )
 #+END_SRC
 
+*** Default split direction according to frame aspect ratio
+
+On wide screens, I want my default split direction being side-by-side
+(vertical split). On tilted/high screens, the default split should be
+up/down (horizontal split). ([[https://stackoverflow.com/questions/7997590/how-to-change-the-default-split-screen-direction][Source]])
+
+The values of the thresholds before I started modifying them here:
+: split-width-threshold  ;; Its value is 9999; Original value was 160
+: split-height-threshold ;; Its value is 80
+
+#+BEGIN_SRC emacs-lisp
+(if (my-frame-is-landscape)
+  (setq split-width-threshold nil);; for vertical split
+  (setq split-width-threshold 1)  ;; for horizontal split
+)
+#+END_SRC
+
 * use-package
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:09]
