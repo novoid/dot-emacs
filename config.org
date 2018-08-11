@@ -1141,6 +1141,22 @@ Host-specific font size:
   (set-face-attribute 'default (selected-frame) :height 105)
   )
 #+END_SRC
+
+** DISABLED Modeline with icons
+:PROPERTIES:
+:CREATED:  [2018-07-23 Mon 13:44]
+:END:
+
+There are two potentially nice packages in order to beautify my
+modeline even further:
+
+- https://github.com/dustinlacewell/eyeliner
+- https://github.com/domtronn/all-the-icons.el
+  - requires fonts to be installed
+
+FIXXME: So far, I did not try them because my current modeline is
+beautiful enough. Maybe in the future.
+
 * UTF-8 and codings
 
 Activate UTF-8 mode:
