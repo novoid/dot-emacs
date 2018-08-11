@@ -268,6 +268,55 @@ Details: id:2016-03-27-maximize-window-init.el
 (toggle-frame-maximized)
 #+END_SRC
 
+*** my-frame-is-landscape() my-frame-is-portrait()
+
+Following frame-width and frame-height values are returned when the
+Emacs frame (the thing which is called "window" on OS-level) is either
+higher or wider:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(frame-width) ;; portrait frame: 73; landscape frame: 190; quadratic frame: 47
+(frame-height);; portrait frame: 56; landscape frame: 60 ; quadratic frame: 47
+#+END_SRC
+
+In order to find out whether or not there is more space in the
+horizontal or in the vertical line, I divide the width by two. This is
+because characters (the measure returned by =(frame-width)= and
+=(frame-height)=) are higher than wide approximately by factor two as
+well:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(if (< (/ (frame-width) 2) (frame-height))
+  (message "portrait frame")
+(message "landscape frame")
+)
+#+END_SRC
+
+So I define functions to check the frame aspect that return boolean
+values:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-frame-is-landscape ()
+  "Return true if Emacs frame is landscape and not portrait mode"
+  (< (/ (frame-width) 2) (frame-height))
+  )
+
+;; (if (my-frame-is-landscape)
+;;  (message "portrait frame")
+;; (message "landscape frame")
+;; )
+
+(defun my-frame-is-portrait ()
+  "Return true if Emacs frame is portrait and not landscape mode"
+  (not (my-frame-is-landscape))
+  )
+
+(if (my-frame-is-portrait)
+  (message "The frame is in landscape mode")
+  (message "The frame is in portrait mode")
+)
+#+END_SRC
+
 * use-package
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:09]
