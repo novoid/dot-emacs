@@ -6648,10 +6648,20 @@ switch to open Agenda or open new one:
 
     (if (my-buffer-exists "*Org Agenda*")
         (switch-to-buffer "*Org Agenda*")
-      (cond ((not arg) (my-super-agenda)) ;; without argument, start my super-agenda
-            (t (my-super-agenda-business));; with argument, start super-agenda of business
+      (if (my-system-type-is-windows)
+
+        ;; on Windows, the business agenda is default and the normal agenda accessable via C-u prefix
+        (cond ((not arg) (my-super-agenda-business)) ;; without argument: super-agenda of business
+              (t (my-super-agenda));; with argument: super-agenda
+          )
+
+        ;; on other systems, it's the other way round
+        (cond ((not arg) (my-super-agenda)) ;; without argument: my super-agenda
+              (t (message "Business agenda")
+                 (my-super-agenda-business));; with argument: super-agenda of business
+          )
       )
-      )
+    )
   )
 
   (bind-key "a" 'my-org-agenda my-map)
