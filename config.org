@@ -268,6 +268,35 @@ Details: id:2016-03-27-maximize-window-init.el
 (toggle-frame-maximized)
 #+END_SRC
 
+** Window Management
+:PROPERTIES:
+:CREATED:  [2018-07-23 Mon 11:27]
+:END:
+
+*** my-vsplit-last-buffer() my-hsplit-last-buffer ()
+
+This is using the last buffer for splitting windows instead of the
+current one:
+
+From [[https://github.com/mwfogleman/.emacs.d/blob/master/michael.org][this emacs config]] which stole it from [[https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org#make-window-splitting-more-useful][Sacha]] and [[https://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury][reddit]]:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-vsplit-last-buffer ()
+  (interactive)
+  (split-window-vertically)
+  (other-window 1 nil)
+  (switch-to-next-buffer))
+
+(defun my-hsplit-last-buffer ()
+  (interactive)
+  (split-window-horizontally)
+  (other-window 1 nil)
+  (switch-to-next-buffer))
+
+(bind-key "C-x 2" 'my-vsplit-last-buffer)
+(bind-key "C-x 3" 'my-hsplit-last-buffer)
+#+END_SRC
+
 *** my-frame-is-landscape() my-frame-is-portrait()
 
 Following frame-width and frame-height values are returned when the
