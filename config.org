@@ -3973,6 +3973,31 @@ Nice looking bullets for headings:
   )
 #+END_SRC
 
+[[https://github.com/harrybournis/org-fancy-priorities][org-fancy-priorities]] replaces, e.g., "[A]" (for "highest priority") with a nice graphic.
+
+2018-07-23: disabled since it does not seem to work on my side. It
+somehow messes up my TODO keywords and my Windows font does not
+feature the icon characters.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-fancy-priorities
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-fancy-priorities/")))
+)
+#+END_SRC
+
+Nice symbold instead of keywords. I got this from [[https://github.com/mwfogleman/.emacs.d/blob/master/michael.org#prettify-symbols-1][this config]] but his
+UTF-8 symbols were not in my current (Windows) font.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook
+              (lambda ()
+                (push '("TODO"  . ?█) prettify-symbols-alist)
+                (push '("DONE"  . ?✓) prettify-symbols-alist)
+                (push '("WAITING"  . ?…) prettify-symbols-alist)
+                (push '("CANCELLED"  . ?×) prettify-symbols-alist)
+                (push '("SOMEDAY"  . ??) prettify-symbols-alist)))
+#+END_SRC
+
 ** General key bindings
 
 Standard key bindings:
