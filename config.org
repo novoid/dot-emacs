@@ -3145,12 +3145,18 @@ Following function avoids human error and reduces this process to:
 4. yank the working link from the kill ring
 
 #+BEGIN_SRC emacs-lisp
-(defun my-dired-copy-filename-as-absolute-link ()
-  "Copy current file name with absolute path as [[file:<absolute path>]] link."
-  (interactive)
+(defun my-dired-copy-filename-as-absolute-link (&optional arg)
+  "Copy current file name with absolute path as [[file:<absolute path>]] link.
+   If the universal argument is given, the path is omitted in the link description."
+  (interactive "P")
   (dired-copy-filename-as-kill 0) ;; current absolute path to kill ring
   (let* ((path (current-kill 0))) ;; get topmost kill ring element
+  (if (equal arg '(4))
+    ;; universal argument is set:
+    (kill-new (concat "[[file:" path "][" (helm-basename path) "]]")) ;; write back new/modified kill ring element
+    ;; universal argument is not set:
     (kill-new (concat "[[file:" path "]]")) ;; write back new/modified kill ring element
+  )
   )
 )
 #+END_SRC
@@ -3233,20 +3239,20 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-dired (:color blue)
   "
-  ^^                    ^^                  ^^                 /  filter            C-x C-f  touch
-  _t_agtrees            _f_ilter            _d_ate2name        g  refresh           M-c      dired-ranger-copy
-  _T_agtrees recursive  _F_ilter recursive  _t_ime2name        +  mkdir             M-v      dired-ranger-paste
-  ^────────^────────────^──────^────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
-  _a_bsolute link       ^^                  _D_ate2name.el     D  delete marked
-  _m_emacs tsfile link  ^^                  ^^                 tk hide marked       C-c C-o  open externally
-  ^^                    ^^                  ^^                 U  unmark all        C-o      open in new frame
-  ^View    ^            ^Edit^              ^Order^
-  ^────────^────────────^──────^────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
-  _c_ollapse mode       _v_idir (C-x C-q)   _s_ize ordered     !  pipe to shell     C-t d    image-dired+ of marked files
-  _o_pen in file manager      ^^            _n_ormal ordered                        <percent> l  lowercase
-  _i_mage thumbnails    _SPC_ filetags.el   ^^                 x  delete flagged    <percent> u  uppercase
-  _(_ toggle details  ( ^^                  ^^                                      <percent> &  flag temp files
-  ^^                    ^^                  ^^
+  ^^                    ^^                    ^^                 /  filter            C-x C-f  touch
+  _t_agtrees            _f_ilter              _d_ate2name        g  refresh           M-c      dired-ranger-copy
+  _T_agtrees recursive  _F_ilter recursive    _t_ime2name        +  mkdir             M-v      dired-ranger-paste
+  ^────────^────────────^──────^──────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
+  _a_bsolute link       _m_emacs tsfile link  _D_ate2name.el     D  delete marked
+  _A_bsolute basename   ^^                    tk hide marked       C-c C-o  open externally
+  ^^                    ^^                    ^^                 U  unmark all        C-o      open in new frame
+  ^View    ^            ^Edit^                ^Order^
+  ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
+  _c_ollapse mode       _v_idir (C-x C-q)     _s_ize ordered     !  pipe to shell     C-t d    image-dired+ of marked files
+  _o_pen in file manager      ^^              _n_ormal ordered                        <percent> l  lowercase
+  _i_mage thumbnails    _SPC_ filetags.el     ^^                 x  delete flagged    <percent> u  uppercase
+  _(_ toggle details  ( ^^                    ^^                                      <percent> &  flag temp files
+  ^^                    ^^                    ^^
   "
   ("t" my-dired-tagtrees nil)
   ("T" my-dired-tagtrees-recursive nil)
@@ -3261,6 +3267,10 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 
   ("a" my-dired-copy-filename-as-absolute-link nil)
   ("m" my-dired-copy-filename-as-tsfile-link nil)
+  ("A" (let ((current-prefix-arg '(4))) ;; emulate C-u
+         (call-interactively 'my-dired-copy-filename-as-absolute-link)
+       )
+   nil)
 
   ("c" dired-collapse-mode nil)
   ("o" my-dired-open-in-file-manager nil)
@@ -3282,9 +3292,6 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 
 (define-key dired-mode-map [f9] 'hydra-dired/body)
 #+END_SRC
-
-#+RESULTS:
-: hydra-dired/body
 
 * LaTeX
 
