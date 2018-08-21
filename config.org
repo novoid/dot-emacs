@@ -25,20 +25,25 @@ personal Org-mode files.
 
 -----------------------
 
-Function-Key-Mappings:
-
-| Shift | Bright   |          |          |    |   |       | fix spell  |    |         |   | windows |      |          |       |
-|-------+----------+----------+----------+----+---+-------+------------+----+---------+---+---------+------+----------+-------|
-|       | Beginner | ← change | change → | ★  |   | spell | next spell |    | minimap |   | MODE    | menu | maximize | naked |
-|-------+----------+----------+----------+----+---+-------+------------+----+---------+---+---------+------+----------+-------|
-|       | F1       | F2       | F3       | F4 |   | F5    | F6         | F7 | F8      |   | F9      | F10  | F11      | F12   |
-
------------------------
-
 Some minor tasks I plan to do with my =config.org=:
 
 - [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
 - [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
+
+* Function keys
+
+Here are my function-key-mappings that are included in most hydra help screens:
+
+#+BEGIN_SRC emacs-lisp
+(setq my-f-key-settings (concat
+"⇧   windows                    ┃         fix spell                ┃  Bright
+"                                                                                                       (propertize
+"    F1        F2      F3   F4  ┃  F5     F6          F7  F8       ┃  F9        F10   F10       F11
+"                                                                                                        'face '(:foreground "green"))
+"    Hydra     ← change →   ★   ┃  spell  next spell      minimap  ┃  Beginner  menu  maximize  naked
+
+"))
+#+END_SRC
 
 * General settings
 
@@ -352,7 +357,11 @@ On wide screens, I want my default split direction being side-by-side
 (vertical split). On tilted/high screens, the default split should be
 up/down (horizontal split). ([[https://stackoverflow.com/questions/7997590/how-to-change-the-default-split-screen-direction][Source]])
 
-The values of the thresholds before I started modifying them here:
+Note: this might be no good idea when you are not working with
+single/maximized windows like I prefer for now.
+
+The values of the thresholds on sherri (30", landscape) before I
+started overwriting them here:
 : split-width-threshold  ;; Its value is 9999; Original value was 160
 : split-height-threshold ;; Its value is 80
 
@@ -391,6 +400,7 @@ package service):
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package define-word
+   :if (my-system-type-is-gnu)
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/mypackage/")))
 )
 #+END_SRC
@@ -1460,15 +1470,15 @@ Example 11 from hydra-examples.el
   (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
 #+END_SRC
 
-** reStructuredText → F9
+** reStructuredText → F1
 :PROPERTIES:
 :CREATED:  [2018-07-16 Mon 13:54]
 :END:
 
 #+BEGIN_SRC emacs-lisp
   (defhydra hydra-rst (:color blue)
+    (concat my-f-key-settings
       "
-  ^^
     _a_ insert • complete • promote adornment ( C-c C-a C-a     )
     _c_ycle adornment                         ( C-- C-=         )        Let's love
     _r_e-adjust adornments of buffer          ( C-c C-a C-s     )                    reStructured Text
@@ -1489,7 +1499,7 @@ Example 11 from hydra-examples.el
     _e_numerated list region   ( C-c C-l C-e )     _u_pdate TOC                                ( C-c C-t C-u )
     _i_nsert item              ( C-c C-l C-i )
   ^^
-    "
+    ")
     ("a" rst-adjust nil)
     ("c" (rst-adjust -1) nil :color red)
     ("r" rst-straighten-adornments nil)
@@ -1511,7 +1521,7 @@ Example 11 from hydra-examples.el
   )
 
 (require 'rst)
-(define-key rst-mode-map [f9] 'hydra-rst/body)
+(define-key rst-mode-map [f1] 'hydra-rst/body)
 #+END_SRC
 
 ** Buffer management → Shift F9
@@ -1541,6 +1551,7 @@ Example 11 from hydra-examples.el
 
 #+BEGIN_SRC emacs-lisp
   (defhydra hydra-buffers (:color blue)
+    (concat my-f-key-settings
       "
   ^^
     C-x 2  split ↓
@@ -1553,7 +1564,7 @@ Example 11 from hydra-examples.el
     _n_ew line with indent
   ────^^────────────────────────────────────────────────────────────
   ^^
-    "
+    ")
     ("a" rst-adjust nil)
     ("c" (rst-adjust -1) nil :color red)
     ("t" rst-toc nil)
@@ -1968,6 +1979,7 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-spelling (:color red)
+    (concat my-f-key-settings
   "
   ^
   ^Spelling^          ^Errors^            ^Checker^
@@ -1977,7 +1989,7 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   _s_ynonym
   _d_efine word
   ^^
-  "
+  ")
   ("q" nil "quit")
   ("r" flyspell-region nil)
   ("l" my-toggle-ispell-language nil)
@@ -2475,15 +2487,15 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   )
 #+END_SRC
 
-** hydra-python → F9
+** hydra-python → F1
 :PROPERTIES:
 :CREATED:  [2018-07-01 Sun 11:12]
 :END:
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-python (:color blue)
+    (concat my-f-key-settings
   "
-  ^
   ^View^                ^Navigation^        ^^                   C-↑↓   goto line of same level
   ^^────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
   _h_ide/show fun  M-h  _,_ ← error     F5  ^^
@@ -2496,7 +2508,7 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   _i_mplement    C-c i  _H_elp (pylookup)   ^^
   _r_efactor C-c C-r r  ^^                  ^^
   ^^
-  "
+  ")
   ("q" nil "quit")
   ("h" hs-cycle nil :color red)
   ("c" hs-cycle-all nil)
@@ -2510,7 +2522,7 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
 ;  (""  nil)
 )
 
-(define-key python-mode-map [f9] 'hydra-python/body)
+(define-key python-mode-map [f1] 'hydra-python/body)
 #+END_SRC
 
 ** END of Python-related stuff + Elpy
@@ -2906,7 +2918,7 @@ search):
   (define-key dired-mode-map (kbd "M-a") 'my-dired-appendfilename)
 #+END_SRC
 
-** my-dired-filetags-filter → F9
+** my-dired-filetags-filter → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:31]
 :END:
@@ -2927,7 +2939,7 @@ search):
     )
 #+END_SRC
 
-** my-dired-filetags-filter-recursive → F9
+** my-dired-filetags-filter-recursive → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:31]
 :END:
@@ -2948,7 +2960,7 @@ search):
     )
 #+END_SRC
 
-** my-dired-tagtrees → F9
+** my-dired-tagtrees → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:32]
 :END:
@@ -2972,7 +2984,7 @@ search):
 #+RESULTS:
 : my-dired-tagtrees
 
-** my-dired-tagtrees-recursive → F9
+** my-dired-tagtrees-recursive → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:32]
 :END:
@@ -2996,7 +3008,7 @@ search):
 #+RESULTS:
 : my-dired-tagtrees-recursive
 
-** my-dired-date2name → F9
+** my-dired-date2name → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:32]
 :END:
@@ -3018,7 +3030,7 @@ search):
     )
 #+END_SRC
 
-** my-dired-time2name → F9
+** my-dired-time2name → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:32]
 :END:
@@ -3083,7 +3095,7 @@ Version 2016-10-15"
   (define-key dired-mode-map (kbd "C-c C-o") 'my-dired-open-in-external-app)
 #+END_SRC
 
-** my-dired-open-in-file-manager → F9
+** my-dired-open-in-file-manager → F1
 :PROPERTIES:
 :CREATED:  [2018-07-01 Sun 10:29]
 :END:
@@ -3129,7 +3141,7 @@ Version 2018-01-13 adapted by Karl Voit 2018-07-01"
       ))))
 #+END_SRC
 
-** my-dired-mark-images-and-thumbnail → F9
+** my-dired-mark-images-and-thumbnail → F1
 :PROPERTIES:
 :CREATED:  [2018-07-01 Sun 10:48]
 :END:
@@ -3146,7 +3158,7 @@ Version 2018-01-13 adapted by Karl Voit 2018-07-01"
 #+RESULTS:
 : my-dired-mark-images-and-thumbnail
 
-** my-dired-copy-filename-as-absolute-link → F9
+** my-dired-copy-filename-as-absolute-link → F1
 :PROPERTIES:
 :CREATED:  [2018-07-05 Thu 18:27]
 :END:
@@ -3186,7 +3198,7 @@ Following function avoids human error and reduces this process to:
 )
 #+END_SRC
 
-** my-dired-copy-filename-as-tsfile-link → F9
+** my-dired-copy-filename-as-tsfile-link → F1
 :PROPERTIES:
 :CREATED:  [2018-07-05 Thu 18:28]
 :END:
@@ -3206,7 +3218,7 @@ Memacs-indexed files (see Org Mode customized links):
 )
 #+END_SRC
 
-** filetags.el → F9
+** filetags.el → F1
 :PROPERTIES:
 :CREATED:  [2018-07-04 Wed 15:43]
 :END:
@@ -3227,7 +3239,7 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 )
 #+END_SRC
 
-** date2name → F9
+** date2name → F1
 :PROPERTIES:
 :CREATED:  [2018-07-08 Sun 15:55]
 :END:
@@ -3256,15 +3268,15 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
   universal prefix
 - [ ] FIXXME: do for time2name as well
 
-** hydra-dired → F9
+** hydra-dired → F1
 :PROPERTIES:
 :CREATED:  [2018-06-30 Sat 19:10]
 :END:
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-dired (:color blue)
+    (concat my-f-key-settings
   "
-  ^^                    ^^                    ^^                 /  filter            C-x C-f  touch
   _t_agtrees            _f_ilter              _d_ate2name        g  refresh           M-c      dired-ranger-copy
   _T_agtrees recursive  _F_ilter recursive    _t_ime2name        +  mkdir             M-v      dired-ranger-paste
   ^────────^────────────^──────^──────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
@@ -3278,7 +3290,7 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
   _i_mage thumbnails    _SPC_ filetags.el     ^^                 x  delete flagged    <percent> u  uppercase
   _(_ toggle details  ( ^^                    ^^                                      <percent> &  flag temp files
   ^^                    ^^                    ^^
-  "
+  ")
   ("t" my-dired-tagtrees nil)
   ("T" my-dired-tagtrees-recursive nil)
 
@@ -3315,7 +3327,7 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 
 )
 
-(define-key dired-mode-map [f9] 'hydra-dired/body)
+(define-key dired-mode-map [f1] 'hydra-dired/body)
 #+END_SRC
 
 * LaTeX
@@ -7464,7 +7476,7 @@ translates Org-mode file to various other formats via Pandoc.»
       (?K "as markdown." org-pandoc-export-as-markdown)
       ;;(?3 "to markdown_mmd." org-pandoc-export-to-markdown_mmd)
       (?m "to markdown_mmd and open." org-pandoc-export-to-markdown_mmd-and-open)
-      (?M "as markdown_mmd." org-pandoc-export-as-markdown_mmd)
+      (?M "as markdown_mmd. (reddit|Wiki.js)" org-pandoc-export-as-markdown_mmd)
       (?s "to markdown_strict & open" org-pandoc-export-to-markdown_strict-and-open)
       (?S "as markdown_strict." org-pandoc-export-as-markdown_strict)
       ;;(?: "to rst." org-pandoc-export-to-rst)
@@ -10053,7 +10065,7 @@ also allows for using variables. More flexibility is almost impossible.
   ;; :mode "\\.rb\\'"
 )
 #+END_SRC
-** DISABLED neotree +→ F9+
+** DISABLED neotree +→ F1+
 
 [[https://github.com/jaypei/emacs-neotree][NeoTree]] offers a file tree side-panel like NerdTree for Vim.
 
@@ -10065,7 +10077,7 @@ also allows for using variables. More flexibility is almost impossible.
   :ensure t
   :defer 20
   :config ;; executed after loading package
-  (global-set-key [f9] 'neotree-toggle)
+  (global-set-key [f1] 'neotree-toggle)
 )
 #+END_SRC
 
@@ -10085,6 +10097,7 @@ As with many major modes, I do have a helpful hydra mapped to F9.
     "Major mode for editing comma-separated value files." t)
 
   (defhydra hydra-csv (:color blue)
+    (concat my-f-key-settings
       "
   ^^
   _a_lign Fields into Columns     C-c C-a          _B_ Set Buffer's Comment Start       C-c C-c
@@ -10098,7 +10111,7 @@ As with many major modes, I do have a helpful hydra mapped to F9.
   ^^                                               _y_ank Fields (Columns)  C-c C-y
   ^^                                               _Y_ank As New Table      C-c C-z
   ^^
-    "
+    ")
     ("a" csv-align-fields        nil :color red)
     ("u" csv-unalign-fields      nil :color red)
     ("B" csv-set-comment-start   nil)
@@ -10117,7 +10130,7 @@ As with many major modes, I do have a helpful hydra mapped to F9.
     ("q" nil "quit")
   )
 
-  (define-key csv-mode-map [f9] 'hydra-csv/body)
+  (define-key csv-mode-map [f1] 'hydra-csv/body)
 
 )
 #+END_SRC
@@ -10594,7 +10607,7 @@ On 2017-06-17, I stubled over an even more sophisticated setup for
 deciding on a search tool:
 https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-ivy.el
 
-** my-toggle-beginner-setup() → F1
+** my-toggle-beginner-setup() → F9
 
 When I am working with Emacs, I do not use the menu bar nor the icon
 bar, for example. Those things got hidden in my configuration.
@@ -10699,10 +10712,10 @@ setup to look like a default Emacs.
         )
   )
 
-(global-set-key [f1] 'my-toggle-beginner-setup)
+(global-set-key [f9] 'my-toggle-beginner-setup)
 #+END_SRC
 
-** my-toggle-dark-bright-theme() → S-F1
+** my-toggle-dark-bright-theme() → S-F9
 
 Some times, I do have to switch from my default dark theme to a bright
 one in order to get a decent result for a projector or similar.
@@ -10727,7 +10740,7 @@ one in order to get a decent result for a projector or similar.
         )
   )
 
-(global-set-key [(shift f1)] 'my-toggle-dark-bright-theme)
+(global-set-key [(shift f9)] 'my-toggle-dark-bright-theme)
 #+END_SRC
 
 ** my-toggle-windows-split() - Toggle between split windows and a single window
@@ -11424,7 +11437,7 @@ sed ':a;N;$!ba;s/\n/ |\n/g'
 | [f4]                                                     | ~char-menu)~                                            |
 | [f2]                                                     | ~goto-last-change)~                                     |
 | [f3]                                                     | ~goto-last-change-reverse)~                             |
-| [f9]                                                     | ~neotree-toggle)~                                       |
+| [f1]                                                     | ~neotree-toggle)~                                       |
 | ~\C-s~                                                   | ~my-search-method-according-to-numlines)~               |
 | global [tool-bar pdf-button]                           |                                                           |
 | [f1]                                                     | ~my-toggle-beginner-setup)~                             |
@@ -11507,7 +11520,7 @@ sort | uniq
 | dired-mode C-c C-o                                       | ~my-dired-open-in-external-app~                                             |
 | dired-mode C-s                                           | ~dired-isearch-filenames~                                                   |
 | dired-mode ~,~                                           | ~dired~                                                                     |
-| dired-mode [f9]                                          | ~hydra-dired/body~                                                          |
+| dired-mode [f1]                                          | ~hydra-dired/body~                                                          |
 | dired-mode M-a                                           | ~my-dired-appendfilename~                                                   |
 | dired-mode M-c                                           | ~dired-ranger-copy)  ;; overwrites: diredp-capitalize-this-file~            |
 | dired-mode M-m                                           | ~dired-ranger-move)  ;; overwrites: back-to-indentation~                    |
@@ -11529,7 +11542,7 @@ sort | uniq
 | [f5]                                                     | ~hydra-spelling/body~                                                       |
 | [f8]                                                     | ~minimap-mode~                                                              |
 | [f8]                                                     | ~minimap-mode)~                                                           |
-| [f9]                                                     | ~neotree-toggle)~                                                         |
+| [f1]                                                     | ~neotree-toggle)~                                                         |
 | global ~\C-cc~                                           | ~org-capture~                                                               |
 | global ~\C-cc~                                           | ~org-capture)~                                                            |
 | global [(f5)]                                            | ~flyspell-mode)~                                                          |
@@ -11565,7 +11578,7 @@ sort | uniq
 | org-mode C-c )                                           | ~reftex-citation)~                                                        |
 | org-mode RET                                           |                                                                             |
 | python-mode C-c i                                        | ~elpygen-implement~                                                         |
-| python-mode [f9]                                         | ~hydra-python/body~                                                         |
+| python-mode [f1]                                         | ~hydra-python/body~                                                         |
 | [remap fill-paragraph]                                   |                                                                             |
 | [remap fill-paragraph]                                 |                                                                             |
 | [(shift f1)]                                             | ~my-toggle-dark-bright-theme~                                               |
