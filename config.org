@@ -10250,6 +10250,75 @@ Replace =list-buffers= with =ibuffer= ([[http://ergoemacs.org/emacs/emacs_buffer
 #+END_SRC
 
 
+** nxml-mode
+:PROPERTIES:
+:CREATED:  [2018-08-21 Tue 11:36]
+:END:
+
+Read about the XML mode on http://lgfang.github.io/mynotes/emacs/emacs-xml.html
+
+- [ ] add hide-show config from
+  http://lgfang.github.io/mynotes/emacs/emacs-xml.html in source and hydra
+
+*** my-xml-pretty-print-region()
+
+Source: http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
+
+#+BEGIN_SRC emacs-lisp
+(defun my-xml-pretty-print-region (begin end)
+  "Pretty format XML markup in region. You need to have nxml-mode
+http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+this.  The function inserts linebreaks to separate tags that have
+nothing but whitespace between them.  It then indents the markup
+by using nxml's indentation rules."
+  (interactive "r")
+  (save-excursion
+    (nxml-mode)
+    (goto-char begin)
+    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+      (backward-char) (insert "\n"))
+    (indent-region begin end))
+  (message "Ah, much better!"))
+#+END_SRC
+
+*** my-xml-pretty-print-buffer()
+
+#+BEGIN_SRC emacs-lisp
+(defun my-xml-pretty-print-buffer()
+  "marks whole buffer and calls my-xml-pretty-print-region"
+  (interactive)
+  (mark-whole-buffer)
+  (my-xml-pretty-print-region);; FIXXME: provide (begin end)
+  )
+#+END_SRC
+
+*** hydra-nxml → F1
+:PROPERTIES:
+:CREATED:  [2018-08-21 Tue 11:36]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-nxml (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^                               ^^                           ^^                ←→ element  C-M n|p
+  ^^View                           ^^                           ^^                ↑↓ element  C-M u|d
+  ^────────^───────────────────────^──────^─────────────────────^─────────^─────
+  _r_egion prettyfy                ^^                           ^^                C-M-i  auto-complete
+  _b_uffer prettify                ^^                           ^^                C-/    finish element
+  ^^                               ^^                           ^^
+  ^^                               ^^                           ^^
+  ")
+  ("r" my-xml-pretty-print-region nil)
+  ("b" my-xml-pretty-print-buffer nil)
+
+  ("q" nil "quit")
+)
+
+(require 'nxml-mode)
+(define-key nxml-mode-map [f1] 'hydra-nxml/body)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
