@@ -4648,6 +4648,75 @@ the result as a time value."
 	    `,@exprs))))
 #+END_SRC
 
+*** org-decrypt-entries()
+:PROPERTIES:
+:CREATED:  [2018-08-21 Tue 10:56]
+:END:
+
+I never use =org-decrypt-entries()= since my Org files tend to be
+large and contain several encrypted entries. In order to get a decent
+performance, I overwrite =org-decrypt-entries()= so that I am able to
+select =org-decrypt-entry()= much faster in helm search.
+
+#+BEGIN_SRC emacs-lisp
+(defun org-decrypt-entries()
+  (interactive)
+  (org-decrypt-entry)
+)
+#+END_SRC
+
+*** my-sparse-tree-with-tag-filter() - ask for a tag and filter open Org-tasks → my-map F
+
+The code asks for one or more tags and derives a sparse tree with all
+related open headings.
+
+See: id:2014-11-02-filter-org-tasks-by-tag
+
+#+BEGIN_SRC emacs-lisp
+(defun my-sparse-tree-with-tag-filter()
+  "asks for a tag and generates sparse tree for all open tasks in current Org buffer
+  that are associated with this tag"
+  (interactive "*")
+  (setq tag-for-filter
+        (org-trim
+         (org-icompleting-read "Tags: "
+                               'org-tags-completion-function
+                               nil nil nil 'org-tags-history))
+        )
+  (org-occur
+   (concat "^\\*+ \\(NEXT\\|TODO\\|WAITING\\|STARTED\\) .+:"
+           tag-for-filter
+           ":")
+   )
+  )
+(bind-key "F" #'my-sparse-tree-with-tag-filter my-map)
+
+#+END_SRC
+
+*** my-reddit-export-via-pandoc
+:PROPERTIES:
+:CREATED:  [2018-07-14 Sat 09:23]
+:END:
+
+This is a simple shortcut because I can not remember which of the many
+markdown dialects is the one for [[https://www.reddit.com/][reddit]] and [[https://github.com/kawabata/ox-pandoc][ox-pandoc]] doesn't show
+me markdown at all which I have to fix some day.
+
+My workflow is:
+1. mark the region where the content to export is
+2. =M-x my-reddit TAB RET=
+3. copy the content from the temporary buffer to my browser window
+4. destroy the temporary buffer
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-reddit-export-via-pandoc ()
+  "This is a simple wrapper function that converts the currently
+  marked region to the markdown dialect that reddit understands."
+    (interactive)
+    (org-pandoc-export-to-markdown_mmd-and-open)
+  )
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -10635,66 +10704,6 @@ buffer and in [[https://en.wikipedia.org/wiki/ISO_8601][ISO 8601]] format when I
 (bind-key "D" #'my-insert-datestamp-inactive my-map)
 #+END_SRC
 
-** my-sparse-tree-with-tag-filter() - ask for a tag and filter open Org-tasks → my-map F
-
-The code asks for one or more tags and derives a sparse tree with all
-related open headings.
-
-See: id:2014-11-02-filter-org-tasks-by-tag
-
-#+BEGIN_SRC emacs-lisp
-(defun my-sparse-tree-with-tag-filter()
-  "asks for a tag and generates sparse tree for all open tasks in current Org buffer
-  that are associated with this tag"
-  (interactive "*")
-  (setq tag-for-filter
-        (org-trim
-         (org-icompleting-read "Tags: "
-                               'org-tags-completion-function
-                               nil nil nil 'org-tags-history))
-        )
-  (org-occur
-   (concat "^\\*+ \\(NEXT\\|TODO\\|WAITING\\|STARTED\\) .+:"
-           tag-for-filter
-           ":")
-   )
-  )
-(bind-key "F" #'my-sparse-tree-with-tag-filter my-map)
-
-#+END_SRC
-
-** my-xml-pretty-print-region()
-
-Source: http://stackoverflow.com/questions/12492/pretty-printing-xml-files-on-emacs
-
-#+BEGIN_SRC emacs-lisp
-(defun my-xml-pretty-print-region (begin end)
-  "Pretty format XML markup in region. You need to have nxml-mode
-http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
-this.  The function inserts linebreaks to separate tags that have
-nothing but whitespace between them.  It then indents the markup
-by using nxml's indentation rules."
-  (interactive "r")
-  (save-excursion
-    (nxml-mode)
-    (goto-char begin)
-    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
-      (backward-char) (insert "\n"))
-    (indent-region begin end))
-  (message "Ah, much better!"))
-#+END_SRC
-
-** my-xml-pretty-print-buffer()
-
-#+BEGIN_SRC emacs-lisp
-(defun my-xml-pretty-print-buffer()
-  "marks whole buffer and calls my-xml-pretty-print-region"
-  (interactive)
-  (mark-whole-buffer)
-  (my-xml-pretty-print-region);; FIXXME: provide (begin end)
-  )
-#+END_SRC
-
 ** DISABLED OS X: mdfind (find via spotlight)
 
 Code of this heading does provide access to the macOS spotlight search
@@ -10802,29 +10811,6 @@ which I included here:
 (global-set-key (kbd "M-k") (lambda () (interactive) (my-codenav-next-definition)))
 #+END_SRC
 
-** my-reddit-export-via-pandoc
-:PROPERTIES:
-:CREATED:  [2018-07-14 Sat 09:23]
-:END:
-
-This is a simple shortcut because I can not remember which of the many
-markdown dialects is the one for [[https://www.reddit.com/][reddit]] and [[https://github.com/kawabata/ox-pandoc][ox-pandoc]] doesn't show
-me markdown at all which I have to fix some day.
-
-My workflow is:
-1. mark the region where the content to export is
-2. =M-x my-reddit TAB RET=
-3. copy the content from the temporary buffer to my browser window
-4. destroy the temporary buffer
-
-#+BEGIN_SRC emacs-lisp
-  (defun my-reddit-export-via-pandoc ()
-  "This is a simple wrapper function that converts the currently
-  marked region to the markdown dialect that reddit understands."
-    (interactive)
-    (org-pandoc-export-to-markdown_mmd-and-open)
-  )
-#+END_SRC
 
 * Key bindings
 
