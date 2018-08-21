@@ -10156,7 +10156,7 @@ commands should be mapped to easy to type shortcuts.
 
 You can see the current result by calling =keyfreq-show=.
 
-** DISABLED pdf-tools
+** pdf-tools
 :PROPERTIES:
 :CREATED:  [2018-03-08 Thu 09:48]
 :END:
@@ -10164,34 +10164,128 @@ You can see the current result by calling =keyfreq-show=.
 pdf-tools provides really cool functionality to annotate PDF files
 within Emacs.
 
-My first steps with many drawbacks: id:2014-12-02-pdf-tools
+- My first steps with many drawbacks: id:2014-12-02-pdf-tools
+- 2018-08-12: first working installation after doing =sudo apt install
+  elpa-pdf-tools-server= in Debian GNU/Linux stable
 
 This does *not* work so far. Unmet (and many) dependencies are in my
 way. This is quite frustrating.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pdfview
+;;:if (my-system-type-is-gnu)
 :ensure t
 :defer 15
 :config
 )
 #+END_SRC
+
+Starting the pdf-tools configuration:
 
 #+BEGIN_SRC emacs-lisp
-(use-package pdf-tools
-:ensure t
-:defer 15
-:config
-(pdf-tools-install)
-(eval-after-load 'org '(require 'org-pdfview))
-(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
-(add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
-)
+  (use-package pdf-tools
+;;  :if (my-system-type-is-gnu)
+  :ensure t
+  :defer 15
+   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
+  :config
+  (pdf-tools-install)
+  (eval-after-load 'org '(require 'org-pdfview))
+  ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+  (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+
+  (setq-default pdf-view-display-size 'fit-page);; open pdfs scaled to fit page (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward);; use normal isearch (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
+
+  ;; workaround for https://github.com/markus1189/org-pdfview/issues/14 on Org-mode 9/Windows:
+  (when (my-system-type-is-windows)
+    (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link))))
+  )
+
+  (bind-keys :map pdf-view-mode-map
+          ("f9" . hydra-pdftools/body)
+          ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+          ("g"  . pdf-view-first-page)
+          ("G"  . pdf-view-last-page)
+          ("l"  . image-forward-hscroll)
+          ("h"  . image-backward-hscroll)
+          ("j"  . pdf-view-next-page)
+          ("k"  . pdf-view-previous-page)
+          ("e"  . pdf-view-goto-page)
+          ("u"  . pdf-view-revert-buffer)
+          ("al" . pdf-annot-list-annotations)
+          ("ad" . pdf-annot-delete)
+          ("aa" . pdf-annot-attachment-dired)
+          ("am" . pdf-annot-add-markup-annotation)
+          ("at" . pdf-annot-add-text-annotation)
+          ("y"  . pdf-view-kill-ring-save)
+          ("i"  . pdf-misc-display-metadata)
+          ("s"  . pdf-occur)
+          ("b"  . pdf-view-set-slice-from-bounding-box)
+          ("r"  . pdf-view-reset-slice))
 #+END_SRC
 
-#+RESULTS:
+hydra for pdf-tools: https://github.com/abo-abo/hydra/wiki/PDF-Tools
 
-- [ ] hydra for pdf-tools: https://github.com/abo-abo/hydra/wiki/PDF-Tools
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-pdftools (:color blue :hint nil)
+    (concat my-f-key-settings
+        "
+                                                                      ╭───────────┐
+       Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
+   ╭──────────────────────────────────────────────────────────────────┴───────────╯
+         ^^_g_^^      _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
+         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
+         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
+         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
+    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
+         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
+         ^^_n_^^      ^ ^  _r_eset slice box
+         ^^^↓^^^
+         ^^_G_^^
+   --------------------------------------------------------------------------------
+        ")
+        ("\\" hydra-master/body "back")
+        ("q" nil "quit")
+        ("al" pdf-annot-list-annotations)
+        ("ad" pdf-annot-delete)
+        ("aa" pdf-annot-attachment-dired)
+        ("am" pdf-annot-add-markup-annotation)
+        ("at" pdf-annot-add-text-annotation)
+        ("y"  pdf-view-kill-ring-save)
+        ("+" pdf-view-enlarge :color red)
+        ("-" pdf-view-shrink :color red)
+        ("0" pdf-view-scale-reset)
+        ("H" pdf-view-fit-height-to-window)
+        ("W" pdf-view-fit-width-to-window)
+        ("P" pdf-view-fit-page-to-window)
+        ("n" pdf-view-next-page-command :color red)
+        ("p" pdf-view-previous-page-command :color red)
+        ("d" pdf-view-dark-minor-mode)
+        ("b" pdf-view-set-slice-from-bounding-box)
+        ("r" pdf-view-reset-slice)
+        ("g" pdf-view-first-page)
+        ("G" pdf-view-last-page)
+        ("e" pdf-view-goto-page)
+        ("o" pdf-outline)
+        ("s" pdf-occur)
+        ("i" pdf-misc-display-metadata)
+        ("u" pdf-view-revert-buffer)
+        ("F" pdf-links-action-perfom)
+        ("f" pdf-links-isearch-link)
+        ("B" pdf-history-backward :color red)
+        ("N" pdf-history-forward :color red)
+        ("l" image-forward-hscroll :color red)
+        ("h" image-backward-hscroll :color red))
+
+(define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
+#+END_SRC
+
+Closing the pdf-tools configuration:
+
+#+begin_src emacs-lisp :tangle yes
+)
+#+end_src
 
 ** eyebrowse → my-map ,
 :PROPERTIES:
@@ -10249,6 +10343,7 @@ is not shown in the modeline.
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-eyebrowse (:color red)
+    (concat my-f-key-settings
   "
   ^
   %s(eyebrowse-mode-line-indicator)
@@ -10260,7 +10355,7 @@ is not shown in the modeline.
   _c_reate new window config
   _C_lose current window config
   ^^
-  "
+  ")
   ("q" nil "quit")
   ("," eyebrowse-prev-window-config nil)
   ("." eyebrowse-next-window-config nil)
