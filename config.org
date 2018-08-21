@@ -1524,7 +1524,7 @@ Example 11 from hydra-examples.el
 (define-key rst-mode-map [f1] 'hydra-rst/body)
 #+END_SRC
 
-** Buffer management → Shift F9
+** Buffer management → Shift F1
 :PROPERTIES:
 :CREATED:  [2018-07-16 Mon 13:54]
 :END:
@@ -1573,7 +1573,7 @@ Example 11 from hydra-examples.el
     ("q" nil "quit")
   )
 
-(define-key global-map [(shift f9)] 'hydra-buffers/body)
+(define-key global-map [(shift f1)] 'hydra-buffers/body)
 #+END_SRC
 
 #+RESULTS:
@@ -3177,7 +3177,7 @@ This would require
 
 Following function avoids human error and reduces this process to:
 1. select a file
-2. call the function below via my F9 hydra
+2. call the function below via my hydra
 3. switch to a Org buffer
 4. yank the working link from the kill ring
 
@@ -8502,11 +8502,11 @@ Not org related but might be candidates as well:
   ^^                               _T_ags include inherited     _b_usiness shared
   ^^                               ^^                           _B_usiness personal
   ^^                               ^^                           ^^
-  ^^Filter                         ^^Export                     ^^Views
+  ^^Filter                         ^^Export                     ^^
   ^────────^───────────────────────^──────^─────────────────────^─────────^─────
-  _f_ilter open todos by tags      _R_eddit/Wiki.js (region)    ^F9^   Beginner setup
-  ^^                               ^^                           ^S-F9^ Dark theme
-  ^^                               ^^                           ^F11^  Fullscreen
+  _f_ilter open todos by tags      _R_eddit/Wiki.js (region)    ^^
+  ^^                               ^^                           ^^
+  ^^                               ^^                           ^^
   ")
 
   ("p" (lambda ()
@@ -10085,7 +10085,7 @@ also allows for using variables. More flexibility is almost impossible.
 
 Manipulating CSV files.
 
-As with many major modes, I do have a helpful hydra mapped to F9.
+As with many major modes, I do have a helpful hydra mapped to F1.
 
 #+BEGIN_SRC emacs-lisp
 (use-package csv-mode
@@ -10241,7 +10241,7 @@ Starting the pdf-tools configuration:
   )
 
   (bind-keys :map pdf-view-mode-map
-          ("f9" . hydra-pdftools/body)
+          ("f1" . hydra-pdftools/body)
           ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
           ("g"  . pdf-view-first-page)
           ("G"  . pdf-view-last-page)
