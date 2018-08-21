@@ -10395,10 +10395,11 @@ Replace =list-buffers= with =ibuffer= ([[http://ergoemacs.org/emacs/emacs_buffer
   (setq ibuffer-saved-filter-groups
         (quote (("default"
                  ("dired" (mode . dired-mode))
+                 ("PDF" (mode . pdf-view-mode))
+                 ("python" (mode . python-mode))
                  ("org" (or (mode . org-mode)
                             (mode . org-agenda-mode)
                             ))
-                 ("python" (mode . python-mode))
   ;;               ("erc" (mode . erc-mode))
                  ("emacs" (or
                            (name . "^\\*scratch\\*$")
