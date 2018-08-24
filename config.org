@@ -36,11 +36,11 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧   windows                    ┃         fix spell                ┃  Bright
+"⇧   Windows                    ┃                           ┃  Bright    minimap
 "                                                                                                       (propertize
-"    F1        F2      F3   F4  ┃  F5     F6          F7  F8       ┃  F9        F10   F10       F11
+"    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9        F10      F11       F12
 "                                                                                                        'face '(:foreground "green"))
-"    Hydra     ← change →   ★   ┃  spell  next spell      minimap  ┃  Beginner  menu  maximize  naked
+"    Hydra     ← change →   ★   ┃  spell  (←) error →  fix  ┃  Beginner  Menu     maximize  naked
 
 "))
 #+END_SRC
@@ -1524,60 +1524,6 @@ Example 11 from hydra-examples.el
 (define-key rst-mode-map [f1] 'hydra-rst/body)
 #+END_SRC
 
-** Buffer management → Shift F1
-:PROPERTIES:
-:CREATED:  [2018-07-16 Mon 13:54]
-:END:
-
-- C-x 2 split-window-below
-- C-x 3 split-window-right
-- 0 close this
-- 1 close other
-- [ ] resize functions:
-  - https://www.emacswiki.org/emacs/WindowResize
-- [ ] go through cheatsheet
-- https://github.com/abo-abo/hydra/wiki/Window-Management
-- [ ] I've defined a swap function or so
-
-    (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-    (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-    (global-set-key (kbd "S-C-<down>") 'shrink-window)
-    (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-
-  ("h" windmove-left)
-  ("j" windmove-down)
-  ("k" windmove-up)
-  ("l" windmove-right)
-
-#+BEGIN_SRC emacs-lisp
-  (defhydra hydra-buffers (:color blue)
-    (concat my-f-key-settings
-      "
-  ^^
-    C-x 2  split ↓
-    C-x 3  split →
-
-    C-x 0  close this
-    C-x 1  close others
-
-    _m_ark section
-    _n_ew line with indent
-  ────^^────────────────────────────────────────────────────────────
-  ^^
-    ")
-    ("a" rst-adjust nil)
-    ("c" (rst-adjust -1) nil :color red)
-    ("t" rst-toc nil)
-    ("T" rst-toc-insert nil)
-    ("u" rst-toc-update nil)
-    ("q" nil "quit")
-  )
-
-(define-key global-map [(shift f1)] 'hydra-buffers/body)
-#+END_SRC
-
-#+RESULTS:
-: hydra-buffers/body
 
 * My helper functions (part I)
 
@@ -1670,7 +1616,7 @@ where I wrote a verbose description of the topic and my solution.
 (bind-key "c" #'title-capitalization my-map)
 #+END_SRC
 
-** my-toggle-windows-split() → my-map |
+** my-toggle-vertical-horizontal-split()
 
 Toggle the windows split between horizontally and vertically. I
 usually don't use it though.
@@ -1678,7 +1624,7 @@ usually don't use it though.
 From: http://www.emacswiki.org/emacs/ToggleWindowSplit
 
 #+BEGIN_SRC emacs-lisp
-(defun my-toggle-windows-split ()
+(defun my-toggle-vertical-horizontal-split ()
   "Switch window split from horizontally to vertically, or vice versa.
 
 i.e. change right window to bottom, or change bottom window to right."
@@ -1705,8 +1651,11 @@ i.e. change right window to bottom, or change bottom window to right."
                   (split-window-horizontally))
                 (set-window-buffer (windmove-find-other-window neighbour-dir) other-buf))))))))
 
-(bind-key "|" 'my-toggle-windows-split my-map)
+;(bind-key "|" 'my-toggle-split-and-single-window my-map)
 #+END_SRC
+
+#+RESULTS:
+: my-toggle-vertical-horizontal-split
 
 ** my-yank-windows → my-map y
 
@@ -1958,16 +1907,14 @@ Modes for programming languages; check spelling only in comments/strings
 (define-key global-map [(shift f5)] 'my-toggle-ispell-language)
 (bind-key "ft" 'my-toggle-ispell-language my-map);; can't remember if l(anguage) or t(oggle)
 (bind-key "fn" 'flyspell-goto-next-error my-map)
-(define-key global-map [(f6)] 'flyspell-goto-next-error)
 (bind-key "ff" 'flyspell-correct-word-before-point my-map)
-(define-key global-map [(f7)] 'flyspell-correct-word-before-point)
 #+END_SRC
 
-For quickly correcting text, I keep F6 and S-F6 for going through the
+For quickly correcting text, I keep F7 (next error) and F8 (fix) for going through the
 findings one by one:
 #+BEGIN_SRC emacs-lisp
-(define-key global-map [(f6)] 'flyspell-goto-next-error)
-(define-key global-map [(shift f6)] 'flyspell-correct-word-before-point)
+(define-key global-map [(f7)] 'flyspell-goto-next-error)
+(define-key global-map [(f8)] 'flyspell-correct-word-before-point)
 #+END_SRC
 
 ** hydra-spelling → F5
@@ -2398,8 +2345,8 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
   (add-hook 'python-mode-hook
       (lambda ()
         (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
-        (local-set-key [f5] 'flymake-goto-prev-error)
-        (local-set-key [f6] 'flymake-goto-next-error)
+        (local-set-key [f6] 'flymake-goto-prev-error)
+        (local-set-key [f7] 'flymake-goto-next-error)
         ))
 #+END_SRC
 
@@ -8545,6 +8492,7 @@ Not org related but might be candidates as well:
 )
 
 (define-key org-mode-map [f1] 'hydra-org/body)
+(define-key org-agenda-mode-map [f1] 'hydra-org/body)
 #+END_SRC
 
 #+RESULTS:
@@ -8601,7 +8549,7 @@ editing window.»
   :config ;; executed after loading package
   (setq minimap-window-location 'right)
   ;;deactivated;; (setq minimap-window-location 'right)
-  (global-set-key [f8] 'minimap-mode)
+  (global-set-key (kbd "S-<f10>") 'minimap-mode)
 )
 #+END_SRC
 
@@ -9328,7 +9276,7 @@ disabled 2015-08-31 since I don't use it for now.
 )
 #+END_SRC
 
-** Synonyms → my-map S (+ F5)
+** Synonyms → my-map S
 
 - via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
 - The file names are absolute, not relative, locations
@@ -9352,7 +9300,7 @@ disabled 2015-08-31 since I don't use it for now.
 )
 #+END_SRC
 
-** define-word (F5)
+** define-word
 :PROPERTIES:
 :CREATED:  [2018-06-28 Thu 12:54]
 :END:
@@ -10955,6 +10903,95 @@ which I included here:
 (global-set-key (kbd "M-k") (lambda () (interactive) (my-codenav-next-definition)))
 #+END_SRC
 
+* Collective Functionality
+:PROPERTIES:
+:CREATED:  [2018-08-24 Fri 09:44]
+:END:
+
+** hydra-buffers → Shift F1   my-map ,
+:PROPERTIES:
+:CREATED:  [2018-07-16 Mon 13:54]
+:END:
+
+This hydra offers buffer management functionalty.
+
+FIXXME: add more features:
+- [ ] resize functions:
+  - https://www.emacswiki.org/emacs/WindowResize
+- [ ] go through cheatsheet
+- https://github.com/abo-abo/hydra/wiki/Window-Management
+- [ ] I've defined a swap function or so
+
+    (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)   weniger hoch -
+    (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally) höher =
+    (global-set-key (kbd "S-C-<down>") 'shrink-window)
+    (global-set-key (kbd "S-C-<up>") 'enlarge-window)
+
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-buffers (:color blue)
+    (concat my-f-key-settings
+      "
+      %s(eyebrowse-mode-line-indicator)
+  ^^                                _0_ switch to window config 0     C-S-;     prefix
+  _,_ ← window                      _1_ switch to window config 1     prefix c  create
+  _._   window →                      ...                    ^^       prefix ,  rename
+  ^↦^ previous window config        _9_ switch to window config 9     prefix l  last window
+  _r_ename current window config
+  _c_reate new window config
+  _C_lose current window config     ^^                      ▄
+  ^^            ▄                   C-x 2  split _v_ertical ▄      ^^  C-x 0  _d_elete this
+       _t_oggle ▄ ←→▐▐              ^^                             ^^  C-x 1  _k_eep this, delete others
+       ^^             ▄             C-x 3  split _h_orizontal ▐▐   ^^         _o_ther window
+       _s_plit/single ▄ ←→ ▇                                       ^^    _=_  enlarge window
+  ^^                                                               ^^    _-_  shrink window
+  ────^^────────────────────────────────────────────────────────────
+    ")
+
+    ;; red = stay; blue = close
+    ("," eyebrowse-prev-window-config nil :color red)
+    ("." eyebrowse-next-window-config nil :color red)
+    ("<tab>" eyebrowse-last-window-config nil :color red)
+    ("r" eyebrowse-rename-window-config nil :color red)
+    ("c" eyebrowse-create-window-config nil :color red)
+    ("C" eyebrowse-close-window-config nil :color red)
+    ("0" eyebrowse-switch-to-window-config-0 nil :color blue)
+    ("1" eyebrowse-switch-to-window-config-1 nil :color blue)
+    ("2" eyebrowse-switch-to-window-config-2 nil :color blue)
+    ("3" eyebrowse-switch-to-window-config-3 nil :color blue)
+    ("4" eyebrowse-switch-to-window-config-4 nil :color blue)
+    ("5" eyebrowse-switch-to-window-config-5 nil :color blue)
+    ("6" eyebrowse-switch-to-window-config-6 nil :color blue)
+    ("7" eyebrowse-switch-to-window-config-7 nil :color blue)
+    ("8" eyebrowse-switch-to-window-config-8 nil :color blue)
+    ("9" eyebrowse-switch-to-window-config-9 nil :color blue)
+
+    ("d" delete-window nil :color blue)
+    ("k" delete-other-windows nil :color blue)
+    ("v" my-vsplit-last-buffer nil :color blue)
+    ("h" my-hsplit-last-buffer nil :color blue)
+    ("o" other-window :color red)
+
+    ("t" my-toggle-vertical-horizontal-split nil :color blue)
+    ("s" my-toggle-split-and-single-window nil :color blue)
+
+;;    ("-" shrink-window-horizontally nil :color red)
+;;    ("=" enlarge-window-horizontally nil :color red)
+    ("-" shrink-window nil :color red)
+    ("=" enlarge-window nil :color red)
+
+    ("q" nil "quit")
+  )
+
+(define-key global-map [(shift f1)] 'hydra-buffers/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-buffers/body
 
 * Key bindings
 
