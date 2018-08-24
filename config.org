@@ -278,6 +278,8 @@ Details: id:2016-03-27-maximize-window-init.el
 :CREATED:  [2018-07-23 Mon 11:27]
 :END:
 
+See hydra-buffers() near the end of this file for a nice summary.
+
 *** my-vsplit-last-buffer() my-hsplit-last-buffer ()
 
 This is using the last buffer for splitting windows instead of the
@@ -1357,7 +1359,7 @@ The =:color= key is a shortcut. It aggregates =:exit= and
 
 | color    | toggle                     |
 |----------+----------------------------|
-| red      |                            |
+| red      | stay                       |
 | blue     | :exit t                    |
 | amaranth | :foreign-keys warn         |
 | teal     | :foreign-keys warn :exit t |
@@ -1796,7 +1798,7 @@ save to user dictionary without asking:
 (setq ispell-silently-savep t)
 #+END_SRC
 
-** flyspell
+** DISABLED flyspell
 
 flyspell.el <http://kaolin.unice.fr/~serrano/>
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1829,22 +1831,23 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
                   ("-C" "-d" "de_DE-neu.multi")
                   "~latin1" iso-8859-1)))
 
-(if (my-system-type-is-windows)
+(when (my-system-type-is-windows)
     ;; use british english on powerplantwin:
     (let ((langs '("german8" "british")))
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
   )
-(if (my-system-type-is-gnu)
+(when (my-system-type-is-gnu)
     ;; use US english on powerplantwin:
     (let ((langs '("de_AT" "en_US")))
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
-  ;; use american english on all other systems:
-  (let ((langs '("german8" "british")))
-    (setq lang-ring (make-ring (length langs)))
-    (dolist (elem langs) (ring-insert lang-ring elem)))
-  )
+)
+;;  ;; use american english on all other systems:
+;;  (let ((langs '("german8" "british")))
+;;    (setq lang-ring (make-ring (length langs)))
+;;    (dolist (elem langs) (ring-insert lang-ring elem)))
+;;  )
 #+END_SRC
 
 ** my-toggle-ispell-language()
@@ -8435,7 +8438,6 @@ Org agenda hydra:
 Not org related but might be candidates as well:
 - [X] my-toggle-beginner-setup() → F1
 - [X] my-toggle-dark-bright-theme() → S-F1
-- [ ] my-toggle-windows-split() - Toggle between split windows and a single window
 
 - [ ] https://github.com/abo-abo/hydra/wiki/Org-agenda
 
@@ -8449,10 +8451,12 @@ Not org related but might be candidates as well:
   ^^                               _T_ags include inherited     _b_usiness shared
   ^^                               ^^                           _B_usiness personal
   ^^                               ^^                           ^^
-  ^^Filter                         ^^Export                     ^^
+  ^^Filter                         ^^Export                     ^^MISC
   ^────────^───────────────────────^──────^─────────────────────^─────────^─────
-  _f_ilter open todos by tags      _R_eddit/Wiki.js (region)    ^^
-  ^^                               ^^                           ^^
+  _f_ilter open todos by tags      _R_eddit/Wiki.js (region)    _s_ynonym
+  ^^                               ^^                           _d_efine word
+  ^^                               ^^                           _S_pray (speed reading)
+  ^^                               ^^                           _w_eather Graz
   ^^                               ^^                           ^^
   ")
 
@@ -8483,6 +8487,10 @@ Not org related but might be candidates as well:
   ("f" my-sparse-tree-with-tag-filter nil)
 
   ("R" my-reddit-export-via-pandoc nil)
+  ("s" my-synonym-current-word nil)
+  ("d" define-word-at-point nil)
+  ("S" spray-mode nil)
+  ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
 
 ;;  ("t" my-dired-tagtrees nil)
 ;;  ("T" my-dired-tagtrees-recursive nil)
@@ -10325,48 +10333,11 @@ is not shown in the modeline.
   (setq eyebrowse-keymap-prefix (kbd "C-:"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
   :config
   (eyebrowse-mode t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-eyebrowse (:color red)
-    (concat my-f-key-settings
-  "
-  ^
-  %s(eyebrowse-mode-line-indicator)
-
-  _,_ ← window                      _0_ switch to window config 0        C-S-;     prefix
-  _._   window →                    _1_ switch to window config 1        prefix c  create
-  ^↦^ previous window config          ...                    ^^          prefix ,  rename
-  _r_ename current window config    _9_ switch to window config 9        prefix l  last window
-  _c_reate new window config
-  _C_lose current window config
-  ^^
-  ")
-  ("q" nil "quit")
-  ("," eyebrowse-prev-window-config nil)
-  ("." eyebrowse-next-window-config nil)
-  ("<tab>" eyebrowse-last-window-config nil)
-  ("r" eyebrowse-rename-window-config nil)
-  ("c" eyebrowse-create-window-config nil)
-  ("C" eyebrowse-close-window-config nil)
-  ("0" eyebrowse-switch-to-window-config-0 nil :color blue)
-  ("1" eyebrowse-switch-to-window-config-1 nil :color blue)
-  ("2" eyebrowse-switch-to-window-config-2 nil :color blue)
-  ("3" eyebrowse-switch-to-window-config-3 nil :color blue)
-  ("4" eyebrowse-switch-to-window-config-4 nil :color blue)
-  ("5" eyebrowse-switch-to-window-config-5 nil :color blue)
-  ("6" eyebrowse-switch-to-window-config-6 nil :color blue)
-  ("7" eyebrowse-switch-to-window-config-7 nil :color blue)
-  ("8" eyebrowse-switch-to-window-config-8 nil :color blue)
-  ("9" eyebrowse-switch-to-window-config-9 nil :color blue)
 )
-
-:bind (:map my-map ("," . hydra-eyebrowse/body))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-);; end eyebrowse
-#+END_SRC
+See hydra definition near the end of this file.
+
 
 ** ibuffer
 
@@ -10691,12 +10662,12 @@ one in order to get a decent result for a projector or similar.
 (global-set-key [(shift f9)] 'my-toggle-dark-bright-theme)
 #+END_SRC
 
-** my-toggle-windows-split() - Toggle between split windows and a single window
+** my-toggle-split-and-single-window() - Toggle between split windows and a single window
 
 http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
 
 #+BEGIN_SRC emacs-lisp
-  (defun my-toggle-windows-split()
+  (defun my-toggle-split-and-single-window()
     "Switch back and forth between one window and whatever split of
   windows we might have in the frame. The idea is to maximize the
   current buffer, while being able to go back to the previous split
@@ -11006,6 +10977,9 @@ In this heading, I do define many key bindings.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c C-,") 'my-map)
 (global-set-key (kbd "C-c ,") 'my-map)
+
+;; so that following is possible again:
+(bind-key "," #'hydra-buffers/body my-map)
 #+END_SRC
 
 ** general navigation keys: Home, End, forward/backward word, scrolling
@@ -11274,7 +11248,6 @@ Function defined above.
 (global-set-key (kbd "M-q") 'my-fill-or-unfill)
 #+END_SRC
 
-
 ** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
 
 With these commands, I get great shortcuts to put the current word,
@@ -11303,7 +11276,6 @@ line, sentence, sexp or defun into the marked region:
 (bind-key "m x" #'mark-sexp my-map)
 (bind-key "m d" #'mark-defun my-map)
 #+END_SRC
-
 * autostart
 
 At the end of loading most of my configuration, I want to execute some
