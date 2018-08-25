@@ -4704,6 +4704,150 @@ My workflow is:
   )
 #+END_SRC
 
+*** my-org-in-any-block-p()
+:PROPERTIES:
+:CREATED:  [2018-08-25 Sat 10:49]
+:END:
+
+This is part 1/4 of the soluiton to split up blocks via =M-RET=:
+- [[https://scripter.co/splitting-an-org-block-into-two/][Blog article describing the purpose and the implementation]]
+- [[https://github.com/kaushalmodi/.emacs.d/blob/a7f701b66a7a18402f60dc750b2454317ba0996f/setup-files/setup-org.el][Repository with the version of the source code I was copying to here]]
+  - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][Current repository containing the function(s)]]
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-in-any-block-p ()
+      "Return non-nil if the point is in any Org block.
+The Org block can be *any*: src, example, verse, etc., even any
+Org Special block.
+This function is heavily adapted from `org-between-regexps-p'."
+      (save-match-data
+        (let ((pos (point))
+              (case-fold-search t)
+              (block-begin-re "^[[:blank:]]*#\\+begin_\\(?1:.+?\\)\\(?: .*\\)*$")
+              (limit-up (save-excursion (outline-previous-heading)))
+              (limit-down (save-excursion (outline-next-heading)))
+              beg end)
+          (save-excursion
+            ;; Point is on a block when on BLOCK-BEGIN-RE or if
+            ;; BLOCK-BEGIN-RE can be found before it...
+            (and (or (org-in-regexp block-begin-re)
+                     (re-search-backward block-begin-re limit-up :noerror))
+                 (setq beg (match-beginning 0))
+                 ;; ... and BLOCK-END-RE after it...
+                 (let ((block-end-re (concat "^[[:blank:]]*#\\+end_"
+                                             (match-string-no-properties 1)
+                                             "\\( .*\\)*$")))
+                   (goto-char (match-end 0))
+                   (re-search-forward block-end-re limit-down :noerror))
+                 (> (setq end (match-end 0)) pos)
+                 ;; ... without another BLOCK-BEGIN-RE in-between.
+                 (goto-char (match-beginning 0))
+                 (not (re-search-backward block-begin-re (1+ beg) :noerror))
+                 ;; Return value.
+                 (cons beg end))))))
+#+END_SRC
+
+*** my-org-split-block()
+:PROPERTIES:
+:CREATED:  [2018-08-25 Sat 10:52]
+:END:
+
+This is part 2/4 of the soluiton to split up blocks via =M-RET=:
+- [[https://scripter.co/splitting-an-org-block-into-two/][Blog article describing the purpose and the implementation]]
+- [[https://github.com/kaushalmodi/.emacs.d/blob/a7f701b66a7a18402f60dc750b2454317ba0996f/setup-files/setup-org.el][Repository with the version of the source code I was copying to here]]
+  - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][Current repository containing the function(s)]]
+
+#+BEGIN_SRC emacs-lisp
+    (defun my-org-split-block ()
+      "Sensibly split the current Org block at point.
+(1) Point in-between a line
+    #+EXAMPLE+begin_src emacs-lisp             #+EXAMPLE+begin_src emacs-lisp
+    (message▮ \"one\")                   (message \"one\")
+    (message \"two\")          -->       #+EXAMPLE+end_src
+    #+EXAMPLE+end_src                          ▮
+                                       #+EXAMPLE+begin_src emacs-lisp
+                                       (message \"two\")
+                                       #+EXAMPLE+end_src
+(2) Point at EOL
+    #+EXAMPLE+begin_src emacs-lisp             #+EXAMPLE+begin_src emacs-lisp
+    (message \"one\")▮                   (message \"one\")
+    (message \"two\")          -->       #+EXAMPLE+end_src
+    #+EXAMPLE+end_src                          ▮
+                                       #+EXAMPLE+begin_src emacs-lisp
+                                       (message \"two\")
+                                       #+EXAMPLE+end_src
+(3) Point at BOL
+    #+EXAMPLE+begin_src emacs-lisp             #+EXAMPLE+begin_src emacs-lisp
+    (message \"one\")                    (message \"one\")
+    ▮(message \"two\")          -->      #+EXAMPLE+end_src
+    #+EXAMPLE+end_src                          ▮
+                                       #+EXAMPLE+begin_src emacs-lisp
+                                       (message \"two\")
+                                       #+EXAMPLE+end_src
+"
+      (interactive)
+      (if (my-org-in-any-block-p)
+          (save-match-data
+            (save-restriction
+              (widen)
+              (let ((case-fold-search t)
+                    (at-bol (bolp))
+                    block-start
+                    block-end)
+                (save-excursion
+                  (re-search-backward "^\\(?1:[[:blank:]]*#\\+begin_.+?\\)\\(?: .*\\)*$" nil nil 1)
+                  (setq block-start (match-string-no-properties 0))
+                  (setq block-end (replace-regexp-in-string
+                                   "begin_" "end_" ;Replaces "begin_" with "end_", "BEGIN_" with "END_"
+                                   (match-string-no-properties 1))))
+                ;; Go to the end of current line, if not at the BOL
+                (unless at-bol
+                  (end-of-line 1))
+                (insert (concat (if at-bol "" "\n")
+                                block-end
+                                "\n\n"
+                                block-start
+                                (if at-bol "\n" "")))
+                ;; Go to the line before the inserted "#+begin_ .." line
+                (beginning-of-line (if at-bol -1 0)))))
+        (message "Point is not in an Org block")))
+#+END_SRC
+
+*** my-org-meta-return-advice()
+:PROPERTIES:
+:CREATED:  [2018-08-25 Sat 10:53]
+:END:
+
+This is part 3/4 of the soluiton to split up blocks via =M-RET=:
+- [[https://scripter.co/splitting-an-org-block-into-two/][Blog article describing the purpose and the implementation]]
+- [[https://github.com/kaushalmodi/.emacs.d/blob/a7f701b66a7a18402f60dc750b2454317ba0996f/setup-files/setup-org.el][Repository with the version of the source code I was copying to here]]
+  - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][Current repository containing the function(s)]]
+
+#+BEGIN_SRC emacs-lisp
+    ;; When point is in any Org block, make M-return split the block
+    ;; instead of inserting heading.
+    (defun my-org-meta-return-advice (&rest args)
+      "Do not call the original function if point is in an Org block."
+      (let ((do-not-run-orig-fn (my-org-in-any-block-p)))
+        (when do-not-run-orig-fn
+          (my-org-split-block))
+        do-not-run-orig-fn))
+#+END_SRC
+
+*** advice-add: =M-RET= splits up current block
+:PROPERTIES:
+:CREATED:  [2018-08-25 Sat 10:53]
+:END:
+
+This is part 4/4 of the soluiton to split up blocks via =M-RET=:
+- [[https://scripter.co/splitting-an-org-block-into-two/][Blog article describing the purpose and the implementation]]
+- [[https://github.com/kaushalmodi/.emacs.d/blob/a7f701b66a7a18402f60dc750b2454317ba0996f/setup-files/setup-org.el][Repository with the version of the source code I was copying to here]]
+  - [[https://github.com/kaushalmodi/.emacs.d/blob/master/setup-files/setup-org.el][Current repository containing the function(s)]]
+
+#+BEGIN_SRC emacs-lisp
+(advice-add 'org-meta-return :before-until #'my-org-meta-return-advice)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -8445,19 +8589,19 @@ Not org related but might be candidates as well:
 (defhydra hydra-org (:color blue)
   (concat my-f-key-settings
   "
-  ^^Go to                          ^^Inserting                  ^^Crypto
-  ^────────^───────────────────────^──────^─────────────────────^─────────^─────
-  _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link   _p_ersonal credentials
-  ^^                               _T_ags include inherited     _b_usiness shared
-  ^^                               ^^                           _B_usiness personal
-  ^^                               ^^                           ^^
-  ^^Filter                         ^^Export                     ^^MISC
-  ^────────^───────────────────────^──────^─────────────────────^─────────^─────
-  _f_ilter open todos by tags      _R_eddit/Wiki.js (region)    _s_ynonym
-  ^^                               ^^                           _d_efine word
-  ^^                               ^^                           _S_pray (speed reading)
-  ^^                               ^^                           _w_eather Graz
-  ^^                               ^^                           ^^
+  ^^Go to                          ^^Inserting                      ^^Crypto
+  ^────────^───────────────────────^──────^─────────────────────────^─────────^─────
+  _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _p_ersonal credentials
+  ^^                               _T_ags include inherited         _b_usiness shared
+  ^^                               _1_ split block (M-RET)          _B_usiness personal
+  ^^                               ^^                               ^^
+  ^^Filter                         ^^Export                         ^^MISC
+  ^────────^───────────────────────^──────^─────────────────────────^─────────^─────
+  _f_ilter open todos by tags      _R_eddit/Wiki.js (region)        _s_ynonym
+  ^^                               ^^                               _d_efine word
+  ^^                               ^^                               _S_pray (speed reading)
+  ^^                               ^^                               _w_eather Graz
+  ^^                               ^^                               ^^
   ")
 
   ("p" (lambda ()
@@ -8483,6 +8627,7 @@ Not org related but might be candidates as well:
   ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
   ("u" my-insert-orgmode-url-from-clipboard nil)
   ("T" my-set-tags-including-inherited nil)
+  ("1" my-org-split-block nil)
 
   ("f" my-sparse-tree-with-tag-filter nil)
 
