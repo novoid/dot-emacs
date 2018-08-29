@@ -1,5 +1,20 @@
 * My GNU/Emacs configuration folder
 
+** What To Expect
+:PROPERTIES:
+:CREATED:  [2018-08-29 Wed 08:37]
+:END:
+
+I am using:
+- Org mode (main focus)
+- Python (hobby programmer)
+- Cygwin/babun on Windows
+- Spell checking
+- Flychecking
+- Yasnippet/yankpad
+- dired
+- LaTeX (not active any more)
+
 ** General Structure
 
 As of 2017-05, I moved my Emacs configuration format from [[http://orgmode.org/manual/Orgstruct-mode.html][OrgStruct
@@ -15,7 +30,6 @@ Elisp blocks into the =config.el=. This generated file is interpreted
 by my GNU/Emacs on startup.
 
 Please do read [[http://karl-voit.at/2017/06/03/emacs-org][my blog article on how this Emacs configuration works]].
-
 ** Stuff Which Is Not Contained in the Git Repository
 
 Please take a look at my ~.gitignore~ file that contains some things I
@@ -170,6 +184,20 @@ Please note that ~org-30000101~ is a [[http://article.gmane.org/gmane.emacs.orgm
 pseudo-package]] to prevent the installation of Org-mode via package
 manager. I am using the Org Maint version from git directly (within my
 ~contrib~ directory).
+
+** Emacs 26
+:PROPERTIES:
+:CREATED:  [2018-08-29 Wed 08:34]
+:END:
+
+As of 2018-08-29, I am using three different hosts with Emacs:
+
+- Debian GNU/Linux stable with Emacs 25.1.1
+- Xubuntu GNU/Linux 17.04 LTS with Emacs 26.FIXXME
+- Windows 10 with Emacs FIXXME
+
+All are running the same configuration. Some settings are only used on
+specific platforms though.
 
 ** Useful References
 
