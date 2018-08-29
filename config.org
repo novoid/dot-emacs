@@ -2416,6 +2416,34 @@ it for now.
                                 ))
 #+END_SRC
 
+** sphinx-doc.el
+:PROPERTIES:
+:CREATED:  [2018-08-27 Mon 17:45]
+:END:
+
+Source: https://github.com/naiquevin/sphinx-doc.el
+
+#+BEGIN_QUOTE
+=sphinx-doc= is an emacs minor mode for inserting docstring skeleton for
+Python functions and methods. The structure of the docstring is as per
+the requirement of the [[http://sphinx-doc.org/index.html][Sphinx documentation generator]].
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sphinx-doc
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/sphinx-doc.el")))
+    :config
+    (add-hook 'python-mode-hook (lambda ()
+                                  (require 'sphinx-doc)
+                                  (sphinx-doc-mode t)))
+)
+#+END_SRC
+
+Issue:
+: let: Symbol’s value as variable is void: sphinx-doc-python-indent
+... when applied. I could not find anything related.
+
+
 ** elpygen → C-c i
 :PROPERTIES:
 :CREATED:  [2017-12-26 Tue 10:49]
@@ -2457,7 +2485,8 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   ^^────────────────────^^──────────────────^^────────────────
   _i_mplement    C-c i  _H_elp (pylookup)   ^^
   _r_efactor C-c C-r r  ^^                  ^^
-  ^^
+  _s_phinx-doc          ^^                  ^^
+  ^^                    ^^                  ^^
   ")
   ("q" nil "quit")
   ("h" hs-cycle nil :color red)
@@ -2468,6 +2497,8 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
   (">" highlight-symbol-next nil)
   ("i" elpygen-implement nil)
   ("r" elpy-refactor nil)
+  ("s" sphinx-doc nil)
+
   ("H" pylookup-lookup nil)
 ;  (""  nil)
 )
@@ -11024,6 +11055,9 @@ which I included here:
 :CREATED:  [2018-08-24 Fri 09:44]
 :END:
 
+In this section, I am putting things that need multiple definitions
+from above in order to work.
+
 ** hydra-buffers → Shift F1   my-map ,
 :PROPERTIES:
 :CREATED:  [2018-07-16 Mon 13:54]
@@ -11090,7 +11124,7 @@ FIXXME: add more features:
     ("k" delete-other-windows nil :color blue)
     ("v" my-vsplit-last-buffer nil :color blue)
     ("h" my-hsplit-last-buffer nil :color blue)
-    ("o" other-window :color red)
+    ("o" other-window nil :color red)
 
     ("t" my-toggle-vertical-horizontal-split nil :color blue)
     ("s" my-toggle-split-and-single-window nil :color blue)
@@ -11109,11 +11143,11 @@ FIXXME: add more features:
 #+RESULTS:
 : hydra-buffers/body
 
-* Key bindings
+** Key bindings
 
 In this heading, I do define many key bindings.
 
-** my-map, the ressurection → C-c C-,
+*** my-map, the ressurection → C-c C-,
 
 =C-c ,= is defined by Org-mode and must be re-defined here, after Org-mode has messed it up:
 
@@ -11127,7 +11161,7 @@ In this heading, I do define many key bindings.
 (bind-key "," #'hydra-buffers/body my-map)
 #+END_SRC
 
-** general navigation keys: Home, End, forward/backward word, scrolling
+*** general navigation keys: Home, End, forward/backward word, scrolling
 
 Home/End should behave like everywhere else:
 #+BEGIN_SRC emacs-lisp
@@ -11165,7 +11199,7 @@ I tried some of those but they did not stick:
 (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
 #+END_SRC
 
-** boxquote → my-map [qQ]
+*** boxquote → my-map [qQ]
 
 [[https://www.emacswiki.org/emacs/BoxQuote][Box quote]] does something like this:
 : ,----
@@ -11177,7 +11211,7 @@ I tried some of those but they did not stick:
 (bind-key "Q" #'boxquote-title my-map)
 #+END_SRC
 
-** switching lines → my-map <up/down>
+*** switching lines → my-map <up/down>
 
 http://whattheemacsd.com//editing-defuns.el-02.html
 
@@ -11205,7 +11239,7 @@ Swapping two lines:
 (bind-key (kbd "<down>") #'my-move-line-down my-map)
 #+END_SRC
 
-** joining lines → my-map j
+*** joining lines → my-map j
 
 Joining the current line with the next one: http://whattheemacsd.com//key-bindings.el-03.html
 
@@ -11218,7 +11252,7 @@ Joining the current line with the next one: http://whattheemacsd.com//key-bindin
 )
 #+END_SRC
 
-** DISABLED web-jump → my-map w
+*** DISABLED web-jump → my-map w
 
 «[[https://www.emacswiki.org/emacs/WebJump][WebJump]] is a programmable Web hotlist (or bookmark) facility that
 uses Emacs completion to select a hotlist item and can prompt for
@@ -11265,7 +11299,7 @@ query and option parameters.»
 
 #+END_SRC
 
-** Show recently files → my-map r
+*** Show recently files → my-map r
 
 [[help:recentf-open-files][Show a dialog to open a recent file.]]
 
@@ -11273,7 +11307,7 @@ query and option parameters.»
 (bind-key "r" #'recentf-open-files my-map)
 #+END_SRC
 
-** DISABLED Outlook: edit/save message → my-map oe|os
+*** DISABLED Outlook: edit/save message → my-map oe|os
 
 Some interaction with Outlook:
 
@@ -11284,7 +11318,7 @@ Some interaction with Outlook:
   )
 #+END_SRC
 
-** org-mark-ring-goto() → my-map <left>
+*** org-mark-ring-goto() → my-map <left>
 
 [[help:org-mark-ring-goto][Jump to the previous position in the mark ring.]]
 
@@ -11292,7 +11326,7 @@ Some interaction with Outlook:
 (bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
 #+END_SRC
 
-** open this config.org file → my-map .
+*** open this config.org file → my-map .
 
 Very handy to modify my config file: open it ;-)
 
@@ -11305,7 +11339,7 @@ Very handy to modify my config file: open it ;-)
           )
 #+END_SRC
 
-** open my org-mode teaser → my-map O
+*** open my org-mode teaser → my-map O
 
 I've written an org-mode teaser file which can be found on
 https://github.com/novoid/org-mode-workshop
@@ -11330,7 +11364,7 @@ file.
 
 #+END_SRC
 
-** DISABLED OrgStruct folding
+*** DISABLED OrgStruct folding
 
 Until 2017-05, I was using [[http://orgmode.org/manual/Orgstruct-mode.html][the Orgstruct minor mode]] for navigating
 through my Emacs config file. With migrating my old =main.el= to this
@@ -11345,7 +11379,7 @@ in OrgStruct mode:
 (bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
 #+END_SRC
 
-** DISABLED my-fix-drawer-order() → my-map C
+*** DISABLED my-fix-drawer-order() → my-map C
 
 I once noticed broken =PROPERTIES= drawers because of a bug in the
 Org-mode version I was using back then. Unfortunately, it messed up my
@@ -11361,7 +11395,7 @@ is =:LOGBOOK:= and toggles order of them:
 (bind-key "C" #'my-fix-drawer-order my-map)
 #+END_SRC
 
-** hippie-expand → M-/
+*** hippie-expand → M-/
 
 «[[http://emacswiki.org/emacs/HippieExpand][HippieExpand]] looks at the word before point and tries to expand it in
 various ways including expanding from a fixed list (like
@@ -11382,7 +11416,7 @@ a configurable list of functions.»
 (global-set-key (kbd "M-/") 'hippie-expand)
 #+END_SRC
 
-** my-fill-or-unfill → M-q
+*** my-fill-or-unfill → M-q
 :PROPERTIES:
 :CREATED:  [2018-01-27 Sat 11:33]
 :END:
@@ -11393,7 +11427,7 @@ Function defined above.
 (global-set-key (kbd "M-q") 'my-fill-or-unfill)
 #+END_SRC
 
-** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
+*** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
 
 With these commands, I get great shortcuts to put the current word,
 line, sentence, sexp or defun into the marked region:
