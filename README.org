@@ -6,14 +6,29 @@
 :END:
 
 I am using:
-- Org mode (main focus)
-- Python (hobby programmer)
-- Cygwin/babun on Windows
+- Org mode (my main Emacs focus)
+- Python (as a hobby programmer, not a professional)
+- Cygwin/[[http://babun.github.io/][Babun]] on Windows
 - Spell checking
 - Flychecking
-- Yasnippet/yankpad
-- dired
-- LaTeX (not active any more)
+- Templating: Yasnippet/yankpad
+- File Management: dired
+- Typesetting: LaTeX (not active any more)
+
+As of 2018-08-29, I am using three different hosts with Emacs:
+
+| Operating System             | Emacs version                                                                       |
+|------------------------------+-------------------------------------------------------------------------------------|
+| Debian GNU/Linux 9 (stretch) | Emacs 25.1.1                                                                        |
+| Xubuntu GNU/Linux 17.04 LTS  | GNU Emacs 27.0.50 (build 2, x86_64-pc-linux-gnu, GTK+ Version 3.18.9) of 2018-08-24 |
+| Windows 10                   | GNU Emacs 26.0.90 (build 1, x86_64-w64-mingw32) of 2017-11-30                       |
+
+All are running the same configuration. Some settings are only used on
+specific platforms though.
+
+I once was using OS X on my personal computer but this is history.
+Thankfully. Corresponding OS X specific settings are for archiving
+purposes.
 
 ** General Structure
 
@@ -80,41 +95,7 @@ and expect it to run on your host.
 For navigating through my =config.org= file, please do open it in
 Emacs so that you are able to collapse and expand headings.
 
-** Host-Names
-
-Some settings as specific for certain platforms or host names. The
-host names mentioned here are:
-
-- sherri
-  - Debian GNU/Linux 8 (jessie)
-  - my main working horse at home
-
-- X260
-  - Debian GNU/Linux 8 (jessie)
-  - my main working horse on the road
-
-- grmlvrs/kva
-  - Debian GNU/Linux 7 (wheezy)
-    - (therefore) not as "capable" as sherri/X260
-
-- atgrz*
-  - Windows 7 Pro with native Windows GNU/Emacs 64bit and [[http://babun.github.io/][Babun]]
-    - (therefore) not as "capable" as gary
-
-- outdated:
-  - gary
-    - Debian GNU/Linux 7 (wheezy)
-    - predecessor of X260
-  - blanche
-    - OS X 10.5
-    - pimped with [[https://www.macports.org/][MacPorts]]
-    - predecessor of sherri
-
-With 2016-04, I switched from using ~my-system-is-HOSTNAME~ to
-~my-system-type-is-OPERATINGSYSTEM~ instead for most cases. This
-lowers the effort of using Emacs on many computers.
-
-** Emacs 24
+** Migration to Emacs 24
 
 As with 2014-01-19, I totally migrated to GNU/Emacs 24 on all of my
 systems.
@@ -185,19 +166,6 @@ pseudo-package]] to prevent the installation of Org-mode via package
 manager. I am using the Org Maint version from git directly (within my
 ~contrib~ directory).
 
-** Emacs 26
-:PROPERTIES:
-:CREATED:  [2018-08-29 Wed 08:34]
-:END:
-
-As of 2018-08-29, I am using three different hosts with Emacs:
-
-- Debian GNU/Linux stable with Emacs 25.1.1
-- Xubuntu GNU/Linux 17.04 LTS with Emacs 26.FIXXME
-- Windows 10 with Emacs FIXXME
-
-All are running the same configuration. Some settings are only used on
-specific platforms though.
 
 ** Useful References
 
