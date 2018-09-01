@@ -2473,7 +2473,6 @@ Issue:
 : let: Symbol’s value as variable is void: sphinx-doc-python-indent
 ... when applied. I could not find anything related.
 
-
 ** elpygen → C-c i
 :PROPERTIES:
 :CREATED:  [2017-12-26 Tue 10:49]
@@ -2493,47 +2492,6 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
     (require 'elpygen)
     (define-key python-mode-map (kbd "C-c i") 'elpygen-implement)
   )
-#+END_SRC
-
-** hydra-python → F1
-:PROPERTIES:
-:CREATED:  [2018-07-01 Sun 11:12]
-:END:
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-python (:color blue)
-    (concat my-f-key-settings
-  "
-  ^View^                ^Navigation^        ^^                   C-↑↓   goto line of same level
-  ^^────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
-  _h_ide/show fun  M-h  _,_ ← error     F5  ^^
-  _c_ycle all      M-H  _._   error →   F6  ^^
-  ^^                    _<_ ← symbol        ^^
-  ^^                    _>_   symbol →      ^^
-  ^^                    ^^                  ^^
-  ^Edit^                ^Help^              ^^
-  ^^────────────────────^^──────────────────^^────────────────
-  _i_mplement    C-c i  _H_elp (pylookup)   ^^
-  _r_efactor C-c C-r r  ^^                  ^^
-  _s_phinx-doc          ^^                  ^^
-  ^^                    ^^                  ^^
-  ")
-  ("q" nil "quit")
-  ("h" hs-cycle nil :color red)
-  ("c" hs-cycle-all nil)
-  ("," flymake-goto-prev-error nil :color red)
-  ("." flymake-goto-next-error nil :color red)
-  ("<" highlight-symbol-prev nil)
-  (">" highlight-symbol-next nil)
-  ("i" elpygen-implement nil)
-  ("r" elpy-refactor nil)
-  ("s" sphinx-doc nil)
-
-  ("H" pylookup-lookup nil)
-;  (""  nil)
-)
-
-(define-key python-mode-map [f1] 'hydra-python/body)
 #+END_SRC
 
 ** END of Python-related stuff + Elpy
@@ -9026,6 +8984,98 @@ End of use-package of magit:
 ) ;; if magit is found
 #+END_SRC
 
+** GitGutter
+:PROPERTIES:
+:CREATED:  [2018-09-01 Sat 16:39]
+:END:
+
+[[https://github.com/syohex/emacs-git-gutter][GitGutter]] is visualizing modified lines within the source code buffer.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter
+  :if (my-eval-if-binary-or-warn "git")
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-git-gutter/")))
+  :config
+#+END_SRC
+
+Either you use the global minor mode ...
+#+BEGIN_SRC emacs-lisp
+  (global-git-gutter-mode +1)
+
+  ;; inactivate git-gutter-mode in asm-mode and image-mode
+  (custom-set-variables
+    '(git-gutter:disabled-modes '(asm-mode image-mode)))
+#+END_SRC
+
+... or activate the minor mode for specific modes:
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-hook 'python-mode-hook 'git-gutter-mode)
+  (add-hook 'ruby-mode-hook 'git-gutter-mode)
+#+END_SRC
+
+Some keyboard bindings:
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "C-x C-g") 'git-gutter)
+(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+
+;; Jump to next/previous hunk
+(global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+(global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+
+;; Stage current hunk
+(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+
+;; Revert current hunk
+(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
+;; Mark current hunk
+(global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
+#+END_SRC
+
+If you set git-gutter:update-interval seconds larger than 0,
+git-gutter updates diff information in real-time by idle timer.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (custom-set-variables
+  '(git-gutter:update-interval 2))
+#+END_SRC
+
+Pass option to 'git diff' command: You can pass git diff option to set
+git-gutter:diff-option.
+
+#+BEGIN_SRC emacs-lisp
+;; ignore all spaces
+(custom-set-variables
+ '(git-gutter:diff-option "-w"))
+#+END_SRC
+
+Customize visualization:
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(git-gutter:modified-sign "  ") ;; two space
+ '(git-gutter:added-sign "++")    ;; multiple character is OK
+ '(git-gutter:deleted-sign "--"))
+#+END_SRC
+
+Customize colors:
+#+BEGIN_SRC emacs-lisp :tangle no
+(set-face-background 'git-gutter:modified "purple") ;; background color
+(set-face-foreground 'git-gutter:added "green")
+(set-face-foreground 'git-gutter:deleted "red")
+#+END_SRC
+
+You can change minor-mode name in mode-line to set =git-gutter:lighter=.
+Default is =GitGutter=. First character should be a space.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(custom-set-variables
+ '(git-gutter:lighter " GG"))
+#+END_SRC
+
+End of git-gutter:
+#+BEGIN_SRC emacs-lisp
+)
+#+END_SRC
+
 ** Recent files
 
 «[[https://www.emacswiki.org/emacs/RecentFiles][Recentf]] is a minor mode that builds a list of recently opened files.
@@ -11218,6 +11268,58 @@ FIXXME: add more features:
 
 #+RESULTS:
 : hydra-buffers/body
+
+** hydra-python → F1
+:PROPERTIES:
+:CREATED:  [2018-07-01 Sun 11:12]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-python (:color blue)
+    (concat my-f-key-settings
+  "
+  ^View^                 ^Navigation^        ^^Git                C-↑↓   goto line of same level
+  ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
+  _h_ide/show fun  M-h   _,_ ← error    F5   ^^← Git hunk →
+  _c_ycle all      M-H   _._   error →  F6   S-F_2_
+   S-F_3_
+  ^^                     _<_ ← symbol        _s_tage hunk
+  ^^                     _>_   symbol →      _R_evert hunk
+  ^^                     ^^                  ^^
+  ^Edit^                 ^Help^              ^^
+  ^^─────────────────────^^──────────────────^^────────────────
+  _i_mplement    C-c i   _H_elp (pylookup)   ^^
+  _r_efactor C-c C-r r   ^^                  ^^
+  sphinx-_d_oc           ^^                  ^^
+  ^^                     ^^                  ^^
+  ")
+  ("q" nil "quit")
+  ("h" hs-cycle nil :color red)
+  ("c" hs-cycle-all nil)
+
+  ("," flymake-goto-prev-error nil :color red)
+  ("." flymake-goto-next-error nil :color red)
+  ("<" highlight-symbol-prev nil)
+  (">" highlight-symbol-next nil)
+
+  ("2" git-gutter:previous-hunk nil :color red)
+  ("3" git-gutter:next-hunk nil :color red)
+  ("s" git-gutter:stage-hunk nil)
+  ("R" git-gutter:revert-hunk nil)
+
+  ("i" elpygen-implement nil)
+  ("r" elpy-refactor nil)
+  ("d" sphinx-doc nil)
+
+  ("H" pylookup-lookup nil)
+;  (""  nil)
+)
+
+(define-key python-mode-map [f1] 'hydra-python/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-python/body
 
 ** Key bindings
 
