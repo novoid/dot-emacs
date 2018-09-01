@@ -273,6 +273,31 @@ Details: id:2016-03-27-maximize-window-init.el
 (toggle-frame-maximized)
 #+END_SRC
 
+Alternative from: [[https://www.reddit.com/r/emacs/comments/9c0a4d/tip_setting_initial_frame_size_and_position/][Tip: Setting initial frame size and position]]
+#+BEGIN_SRC emacs-lisp :tangle no
+;; Set initial frame size and position
+(defun my/set-initial-frame ()
+  (let* ((base-factor 0.70)
+	(a-width (* (display-pixel-width) base-factor))
+        (a-height (* (display-pixel-height) base-factor))
+        (a-left (truncate (/ (- (display-pixel-width) a-width) 2)))
+	(a-top (truncate (/ (- (display-pixel-height) a-height) 2))))
+    (set-frame-position (selected-frame) a-left a-top)
+    (set-frame-size (selected-frame) (truncate a-width)  (truncate a-height) t)))
+(setq frame-resize-pixelwise t)
+(my/set-initial-frame)
+#+END_SRC
+
+Also mentioned:
+#+BEGIN_QUOTE
+I believe this works both in windows and in character terminals:
+
+: (setq default-frame-alist '((left . 0) (width . 141) (fullscreen . fullheight)))
+
+(You might have to change 141 to something larger if you have a huge
+monitor.)
+#+END_QUOTE
+
 ** Window Management
 :PROPERTIES:
 :CREATED:  [2018-07-23 Mon 11:27]
