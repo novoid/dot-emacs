@@ -9013,7 +9013,13 @@ Either you use the global minor mode ...
   (add-hook 'ruby-mode-hook 'git-gutter-mode)
 #+END_SRC
 
-Some keyboard bindings:
+Keyboard bindings: Jump to next/previous hunk
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "S-<f2>") 'git-gutter:previous-hunk)
+(global-set-key (kbd "S-<f3>") 'git-gutter:next-hunk)
+#+END_SRC
+
+More bindings:
 #+BEGIN_SRC emacs-lisp :tangle no
 (global-set-key (kbd "C-x C-g") 'git-gutter)
 (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
@@ -9051,7 +9057,7 @@ git-gutter:diff-option.
 Customize visualization:
 #+BEGIN_SRC emacs-lisp
 (custom-set-variables
- '(git-gutter:modified-sign "  ") ;; two space
+ '(git-gutter:modified-sign "~ ") ;; two space
  '(git-gutter:added-sign "++")    ;; multiple character is OK
  '(git-gutter:deleted-sign "--"))
 #+END_SRC
