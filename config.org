@@ -2329,10 +2329,12 @@ Ropemacs:
 
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'load-path (concat my-user-emacs-directory "vendor/auto-complete-1.2"))
+(add-to-list 'load-path (concat my-user-emacs-directory "elpa/auto-complete-1.5.1"))
 (use-package auto-complete-config)
-(add-to-list 'ac-dictionary-directories (concat my-user-emacs-directory "vendor/auto-complete-1.2/dict"))
+(add-to-list 'ac-dictionary-directories (concat my-user-emacs-directory "elpa/auto-complete-1.5.1/dict"))
 (ac-config-default)
+
+(add-to-list 'auto-mode-alist '("\\.py$" . auto-complete-mode))
 #+END_SRC
 
 ** pyflakes
@@ -7149,6 +7151,50 @@ customizing the agenda export of =C-x C-w=
 	  (ps-landscape-mode t)
 	  ;;disabled;                  (org-agenda-add-entry-text-maxlines 5)
 	  (htmlize-output-type 'css)))
+#+END_SRC
+
+*** my-org-obfuscate-agenda-item
+:PROPERTIES:
+:CREATED:  [2018-09-01 Sat 14:38]
+:END:
+
+This was originally developed by [[https://github.com/alphapapa][alphapapa]] as =org-agenda-sharpie()=
+and published on [[https://github.com/alphapapa/org-super-agenda/issues/43#issuecomment-403268926][GitHub]].
+
+When invoked on an agenda item, you can enter some text and the agenda
+item gets temporarily overwritten. You can use this to obfuscate or
+"overwrite" agenda entries before making a screenshot for public use.
+
+#+BEGIN_SRC emacs-lisp
+(defun org-agenda-sharpie ()
+  "Censor the text of items in the agenda."
+  (interactive)
+  (let (regexp old-heading new-heading properties)
+    ;; Save face properties of line in agenda to reapply to changed text
+    (setq properties (text-properties-at (point)))
+
+    ;; Go to source buffer
+    (org-with-point-at (org-find-text-property-in-string 'org-marker
+                                                         (buffer-substring (line-beginning-position)
+                                                                           (line-end-position)))
+      ;; Save old heading text and ask for new text
+      (line-beginning-position)
+      (unless (org-at-heading-p)
+        ;; Not sure if necessary
+        (org-back-to-heading))
+      (setq old-heading (when (looking-at org-complex-heading-regexp)
+                          (match-string 4))))
+    (unless old-heading
+      (error "Can't find heading.  How can this be?"))
+    ;; Back to agenda buffer
+    (setq new-heading (read-from-minibuffer "Overwrite visible heading with: "))
+    (add-text-properties 0 (length new-heading) properties new-heading)
+    ;; Replace agenda text
+    (save-excursion
+      (let ((inhibit-read-only t))
+        (goto-char (line-beginning-position))
+        (when (search-forward old-heading (line-end-position))
+          (replace-match new-heading 'fixedcase 'literal))))))
 #+END_SRC
 
 ** iCal
