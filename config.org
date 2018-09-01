@@ -2303,7 +2303,10 @@ From [[https://www.reddit.com/r/emacs/comments/70chy1/emacs_ipython_completion/]
 (add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
 #+END_SRC
 
-** ropemacs
+** DISABLED ropemacs
+
+2018-08-31: disabled because path below is not found in my current
+setup. Need to investigate how to re-enable it or remove it.
 
 [[https://github.com/python-rope/ropemacs][ropemacs]] is an evironment that provides advanced things such as refactoring:
 
