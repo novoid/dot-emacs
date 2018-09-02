@@ -27,8 +27,6 @@ personal Org-mode files.
 
 Some minor tasks I plan to do with my =config.org=:
 
-- [ ]
-- [ ] move Git functions from Python hydra to new Git hydra (S-F4?)
 - [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
 - [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
 
@@ -38,11 +36,11 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧   Windows                    ┃                           ┃  Bright    minimap
+"⇧   Windows    ← hunk →        ┃                           ┃  Bright  minimap  Beginner
 "                                                                                                       (propertize
-"    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9        F10      F11       F12
+"    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
 "                                                                                                        'face '(:foreground "green"))
-"    Hydra     ← change →   ★   ┃  spell  (←) error →  fix  ┃  Beginner  Menu     maximize  naked
+"    Hydra     ← change →   ★   ┃  spell  (←) error →  fix  ┃  Git     Menu     maximize  naked
 
 "))
 #+END_SRC
@@ -3030,7 +3028,6 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 - [ ] FIXXME: add to cheatsheet (hydra): ask for day when used with
   universal prefix
 - [ ] FIXXME: do for time2name as well
-
 
 * LaTeX
 
@@ -10346,7 +10343,6 @@ by using nxml's indentation rules."
   )
 #+END_SRC
 
-
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
@@ -10422,7 +10418,7 @@ On 2017-06-17, I stubled over an even more sophisticated setup for
 deciding on a search tool:
 https://github.com/redguardtoo/emacs.d/blob/master/lisp/init-ivy.el
 
-** my-toggle-beginner-setup() → F9
+** my-toggle-beginner-setup() → S-F11
 
 When I am working with Emacs, I do not use the menu bar nor the icon
 bar, for example. Those things got hidden in my configuration.
@@ -10527,7 +10523,7 @@ setup to look like a default Emacs.
         )
   )
 
-(global-set-key [f9] 'my-toggle-beginner-setup)
+(global-set-key [(shift f11)] 'my-toggle-beginner-setup)
 #+END_SRC
 
 ** my-toggle-dark-bright-theme() → S-F9
@@ -11151,8 +11147,7 @@ Not org related but might be candidates as well:
   ^View^                 ^Navigation^        ^^Git                C-↑↓   goto line of same level
   ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
   _h_ide/show fun  M-h   _,_ ← error    F5   ^^← Git hunk →
-  _c_ycle all      M-H   _._   error →  F6   S-F_2_
-   S-F_3_
+  _c_ycle all      M-H   _._   error →  F6   S-F_2_   S-F_3_
   ^^                     _<_ ← symbol        _s_tage hunk
   ^^                     _>_   symbol →      _R_evert hunk
   ^^                     ^^                  ^^
@@ -11192,6 +11187,49 @@ Not org related but might be candidates as well:
 
 #+RESULTS:
 : hydra-python/body
+
+** hydra-git → F9
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-git (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^View                 ^^Navigation        ^^Edit
+  ^^─────────────────────^^──────────────────^^────────────────
+  _s_tatus    my-map g   ^^← Git hunk →      _S_tage hunk
+  ^^                     S-F_2_    S-F_3_      _R_evert hunk
+  ^^                     ^^                  ^^
+  ^^                     ^^                  ^^
+  ^^Smeargle             ^^                  ^^
+  ^^─────────────────────^^──────────────────^^────────────────
+  _h_ighlight on         ^^                  ^^
+  smeargle _c_ommits     ^^                  ^^
+  smeargle _C_lear       ^^                  ^^
+  ^^                     ^^                  ^^
+  ")
+  ("q" nil "quit")
+
+  ("s" magit-status nil)
+
+  ("2" git-gutter:previous-hunk nil :color red)
+  ("3" git-gutter:next-hunk nil :color red)
+
+  ("S" git-gutter:stage-hunk nil)
+  ("R" git-gutter:revert-hunk nil)
+
+  ("h" smeargle nil :color red)
+  ("c" smeargle-commits nil :color red)
+  ("C" smeargle-clear nil)
+
+)
+
+(with-eval-after-load 'magit
+  (global-set-key [f9] 'hydra-git/body)
+)
+#+END_SRC
+
+#+RESULTS:
+: hydra-git/body
 
 ** hydra-dired → F1
 :PROPERTIES:
