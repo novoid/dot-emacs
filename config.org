@@ -8721,6 +8721,234 @@ Not org related but might be candidates as well:
 #+BEGIN_SRC emacs-lisp
 (message "→★ orgmode finished in %.2fs" (float-time (time-subtract (current-time) my-org-config-start-time)))
 #+END_SRC
+* Git
+:PROPERTIES:
+:CREATED:  [2018-09-02 Sun 10:41]
+:END:
+
+This is a section where all [[https://en.wikipedia.org/wiki/Git][Git]]-related configuration is happening.
+
+#+BEGIN_SRC emacs-lisp
+(when (my-eval-if-binary-or-warn "git")
+#+END_SRC
+
+** magit → my-map g
+
+«[[https://github.com/magit/magit][Magit]] is an interface to the version control system Git, implemented
+as an Emacs package. Magit aspires to be a complete Git porcelain.
+While we cannot (yet) claim that Magit wraps and improves upon each
+and every Git command, it is complete enough to allow even experienced
+Git users to perform almost all of their daily version control tasks
+directly from within Emacs. While many fine Git clients exist, only
+Magit and Git itself deserve to be called porcelains.»
+
+Some people start using Emacs just to be able to use this nifty Git
+interface of Magit.
+
+
+#+BEGIN_SRC emacs-lisp
+
+;;2018-07-09 test when using GitHub version;;(setq with-editor-file-name-history-exclude 1) ;; https://github.com/syl20bnr/spacemacs/issues/7225
+
+(use-package magit
+  ;;2018-07-09 disabled because lots of errors on load;; :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/magit/lisp/")))
+
+  :if (my-eval-if-binary-or-warn "git")
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
+  :config ;; executed after loading package
+
+  ;; full screen magit-status
+  ;; http://whattheemacsd.com//setup-magit.el-01.html
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+
+  (defun magit-quit-session ()
+    "Restores the previous window configuration and kills the magit buffer"
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "g" #'magit-status my-map)
+#+END_SRC
+
+** smeargle (highlighting)
+
+- smeargle - Highlighting Regions by Last Updated Time (my-map c)
+  - https://github.com/syohex/emacs-smeargle/
+  - M-x smeargle  -  Highlight regions by last updated time.
+  - M-x smeargle-age  -  Highlight regions by age of changes.
+  - M-x smeargle-clear  - Clear overlays in current buffer
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smeargle
+    :ensure t
+    :defer 10
+    :config ;; executed after loading package
+    ;;:bind (:map my-map ("c" . smeargle)) ;; CONFLICTS with my title capitalization
+#+END_SRC
+
+You can set highlighted colors of smeargle by changing smeargle-colors:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(custom-set-variables
+ '(smeargle-colors '((older-than-1day   . "red")
+                     (older-than-3day   . "green")
+                     (older-than-1week  . "yellow")
+                     (older-than-2week  . nil)
+                     (older-than-1month . "orange")
+                     (older-than-3month . "pink")
+                     (older-than-6month . "cyan")
+                     (older-than-1year . "grey50"))))
+#+END_SRC
+
+And you can also set colors of =smeargle-commits= by =smeargle-age-colors=:
+
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(smeargle-age-colors '((0 . nil)
+                         (1 . "grey80")
+                         (2 . "grey70")
+                         (3 . "grey60")
+                         (4 . "grey50")
+                         (5 . "grey40")
+                         (6 . "grey30")
+                         (7 . "grey20")
+                         (8 . "grey10"))))
+#+END_SRC
+
+You can specify parameters until =smeargle-age-threshold=. =age= is set to
+=smeargle-age-threshold= if actual age of changes is older than
+=smeargle-age-threshold=. Default value of =smeargle-age-threshold= is 7.
+
+Misc settings:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "C-x v s") 'smeargle)
+(global-set-key (kbd "C-x v c") 'smeargle-commits)
+
+;; Highlight regions at opening file
+(add-hook 'find-file-hook 'smeargle)
+
+;; Updating after save buffer
+(add-hook 'after-save-hook 'smeargle)
+#+END_SRC
+
+End of smeargle:
+#+BEGIN_SRC emacs-lisp
+  )
+#+END_SRC
+
+** GitGutter
+:PROPERTIES:
+:CREATED:  [2018-09-01 Sat 16:39]
+:END:
+
+[[https://github.com/syohex/emacs-git-gutter][GitGutter]] is visualizing modified lines within the source code buffer.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-git-gutter/")))
+  :config
+#+END_SRC
+
+Either you use the global minor mode ...
+#+BEGIN_SRC emacs-lisp
+  (global-git-gutter-mode +1)
+
+  ;; inactivate git-gutter-mode in asm-mode and image-mode
+  (custom-set-variables
+    '(git-gutter:disabled-modes '(asm-mode image-mode)))
+#+END_SRC
+
+... or activate the minor mode for specific modes:
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-hook 'python-mode-hook 'git-gutter-mode)
+  (add-hook 'ruby-mode-hook 'git-gutter-mode)
+#+END_SRC
+
+Keyboard bindings: Jump to next/previous hunk
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "S-<f2>") 'git-gutter:previous-hunk)
+(global-set-key (kbd "S-<f3>") 'git-gutter:next-hunk)
+#+END_SRC
+
+More bindings:
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "C-x C-g") 'git-gutter)
+(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+
+;; Jump to next/previous hunk
+(global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+(global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+
+;; Stage current hunk
+(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+
+;; Revert current hunk
+(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
+;; Mark current hunk
+(global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
+#+END_SRC
+
+If you set git-gutter:update-interval seconds larger than 0,
+git-gutter updates diff information in real-time by idle timer.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (custom-set-variables
+  '(git-gutter:update-interval 2))
+#+END_SRC
+
+Pass option to 'git diff' command: You can pass git diff option to set
+git-gutter:diff-option.
+
+#+BEGIN_SRC emacs-lisp
+;; ignore all spaces
+(custom-set-variables
+ '(git-gutter:diff-option "-w"))
+#+END_SRC
+
+Customize visualization:
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(git-gutter:modified-sign "~ ") ;; two space
+ '(git-gutter:added-sign "++")    ;; multiple character is OK
+ '(git-gutter:deleted-sign "--"))
+#+END_SRC
+
+Customize colors:
+#+BEGIN_SRC emacs-lisp :tangle no
+(set-face-background 'git-gutter:modified "purple") ;; background color
+(set-face-foreground 'git-gutter:added "green")
+(set-face-foreground 'git-gutter:deleted "red")
+#+END_SRC
+
+You can change minor-mode name in mode-line to set =git-gutter:lighter=.
+Default is =GitGutter=. First character should be a space.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(custom-set-variables
+ '(git-gutter:lighter " GG"))
+#+END_SRC
+
+End of git-gutter:
+#+BEGIN_SRC emacs-lisp
+)
+#+END_SRC
+
+** End of Git
+:PROPERTIES:
+:CREATED:  [2018-09-02 Sun 10:44]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+) ;; end of magit use-package
+#+END_SRC
+
 * Misc modes/packages
 
 Misc sources for packages:
@@ -8914,171 +9142,6 @@ Counting lines, words, characters.
 #+BEGIN_SRC emacs-lisp
 (use-package wc
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
-)
-#+END_SRC
-
-** magit → my-map g       + smeargle (highlighting)
-
-«[[https://github.com/magit/magit][Magit]] is an interface to the version control system Git, implemented
-as an Emacs package. Magit aspires to be a complete Git porcelain.
-While we cannot (yet) claim that Magit wraps and improves upon each
-and every Git command, it is complete enough to allow even experienced
-Git users to perform almost all of their daily version control tasks
-directly from within Emacs. While many fine Git clients exist, only
-Magit and Git itself deserve to be called porcelains.»
-
-Some people start using Emacs just to be able to use this nifty Git
-interface of Magit.
-
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "git")
-
-;;2018-07-09 test when using GitHub version;;(setq with-editor-file-name-history-exclude 1) ;; https://github.com/syl20bnr/spacemacs/issues/7225
-
-(use-package magit
-  ;;2018-07-09 disabled because lots of errors on load;; :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/magit/lisp/")))
-
-  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  ;;:if (or (my-system-type-is-gnu) (my-system-is-powerplantlinux))
-  ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
-  :config ;; executed after loading package
-
-  ;; full screen magit-status
-  ;; http://whattheemacsd.com//setup-magit.el-01.html
-  (defadvice magit-status (around magit-fullscreen activate)
-    (window-configuration-to-register :magit-fullscreen)
-    ad-do-it
-    (delete-other-windows))
-
-  (defun magit-quit-session ()
-    "Restores the previous window configuration and kills the magit buffer"
-    (interactive)
-    (kill-buffer)
-    (jump-to-register :magit-fullscreen))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "g" #'magit-status my-map)
-#+END_SRC
-
-
-- smeargle - Highlighting Regions by Last Updated Time (my-map c)
-  - https://github.com/syohex/emacs-smeargle/
-  - M-x smeargle  -  Highlight regions by last updated time.
-  - M-x smeargle-age  -  Highlight regions by age of changes.
-  - M-x smeargle-clear  - Clear overlays in current buffer
-
-#+BEGIN_SRC emacs-lisp
-  (use-package smeargle
-    :ensure t
-    :defer 10
-    :config ;; executed after loading package
-    ;;:bind (:map my-map ("c" . smeargle)) ;; CONFLICTS with my title capitalization
-  )
-#+END_SRC
-
-End of use-package of magit:
-
-#+BEGIN_SRC emacs-lisp
-)
-) ;; if magit is found
-#+END_SRC
-
-** GitGutter
-:PROPERTIES:
-:CREATED:  [2018-09-01 Sat 16:39]
-:END:
-
-[[https://github.com/syohex/emacs-git-gutter][GitGutter]] is visualizing modified lines within the source code buffer.
-
-#+BEGIN_SRC emacs-lisp
-(use-package git-gutter
-  :if (my-eval-if-binary-or-warn "git")
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-git-gutter/")))
-  :config
-#+END_SRC
-
-Either you use the global minor mode ...
-#+BEGIN_SRC emacs-lisp
-  (global-git-gutter-mode +1)
-
-  ;; inactivate git-gutter-mode in asm-mode and image-mode
-  (custom-set-variables
-    '(git-gutter:disabled-modes '(asm-mode image-mode)))
-#+END_SRC
-
-... or activate the minor mode for specific modes:
-#+BEGIN_SRC emacs-lisp :tangle no
-  (add-hook 'python-mode-hook 'git-gutter-mode)
-  (add-hook 'ruby-mode-hook 'git-gutter-mode)
-#+END_SRC
-
-Keyboard bindings: Jump to next/previous hunk
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "S-<f2>") 'git-gutter:previous-hunk)
-(global-set-key (kbd "S-<f3>") 'git-gutter:next-hunk)
-#+END_SRC
-
-More bindings:
-#+BEGIN_SRC emacs-lisp :tangle no
-(global-set-key (kbd "C-x C-g") 'git-gutter)
-(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
-
-;; Jump to next/previous hunk
-(global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
-(global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
-
-;; Stage current hunk
-(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
-
-;; Revert current hunk
-(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
-
-;; Mark current hunk
-(global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
-#+END_SRC
-
-If you set git-gutter:update-interval seconds larger than 0,
-git-gutter updates diff information in real-time by idle timer.
-#+BEGIN_SRC emacs-lisp :tangle no
-  (custom-set-variables
-  '(git-gutter:update-interval 2))
-#+END_SRC
-
-Pass option to 'git diff' command: You can pass git diff option to set
-git-gutter:diff-option.
-
-#+BEGIN_SRC emacs-lisp
-;; ignore all spaces
-(custom-set-variables
- '(git-gutter:diff-option "-w"))
-#+END_SRC
-
-Customize visualization:
-#+BEGIN_SRC emacs-lisp
-(custom-set-variables
- '(git-gutter:modified-sign "~ ") ;; two space
- '(git-gutter:added-sign "++")    ;; multiple character is OK
- '(git-gutter:deleted-sign "--"))
-#+END_SRC
-
-Customize colors:
-#+BEGIN_SRC emacs-lisp :tangle no
-(set-face-background 'git-gutter:modified "purple") ;; background color
-(set-face-foreground 'git-gutter:added "green")
-(set-face-foreground 'git-gutter:deleted "red")
-#+END_SRC
-
-You can change minor-mode name in mode-line to set =git-gutter:lighter=.
-Default is =GitGutter=. First character should be a space.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(custom-set-variables
- '(git-gutter:lighter " GG"))
-#+END_SRC
-
-End of git-gutter:
-#+BEGIN_SRC emacs-lisp
 )
 #+END_SRC
 
