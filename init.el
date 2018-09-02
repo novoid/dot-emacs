@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2018-03-08 09:52:10 vk>
+;; Time-stamp:    <2018-08-17 19:19:49 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -130,16 +130,19 @@ Note the weekly scope of the command's precision.")
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(csv-separators (quote (";" "	")))
+ '(nyan-bar-length 20)
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
  '(org-contacts-files "~/share/all/org-mode/contacts.org" t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(package-selected-packages
    (quote
-    (org-pdfview keyfreq dired+ helm-dired-history dired-icon dired-x ox-rst dumb-jump pcre2el pdf-tools csv-mode pandoc-mode auto-complete guide-key hydra yasnippet buttercup yankpad yafolding wttrin use-package unicode-fonts undo-tree synonyms suggest spray smeargle smart-mode-line scss-mode restclient request-deferred ox-reveal ox-pandoc ox-clip ox-asciidoc org-table-sticky-header org-bullets nyan-mode neotree mode-icons markdown-mode magit json-mode highlight-symbol helm gnuplot git-timemachine flycheck eno elpy counsel char-menu bm anzu alert adoc-mode)))
+    (org-fancy-priorities dired-narrow image-dired+ ivy org-pdfview keyfreq dired+ helm-dired-history dired-icon dired-x ox-rst dumb-jump pcre2el pdf-tools csv-mode pandoc-mode auto-complete guide-key hydra yasnippet buttercup yankpad yafolding wttrin use-package unicode-fonts undo-tree synonyms suggest spray smeargle smart-mode-line scss-mode restclient request-deferred ox-reveal ox-pandoc ox-clip ox-asciidoc org-table-sticky-header org-bullets nyan-mode neotree mode-icons markdown-mode magit json-mode highlight-symbol helm gnuplot git-timemachine flycheck eno elpy counsel char-menu bm anzu alert adoc-mode)))
  '(safe-local-variable-values
    (quote
-    ((epa-file-encrypt-to nil)
+    ((DISABLEDeval ispell-change-dictionary "en_US")
+     (DISABLEDmode . flyspell)
+     (epa-file-encrypt-to nil)
      (TeX-master . "misc")
      (TeX-master . "references")
      (eval org-expiry-deinsinuate)
