@@ -8556,9 +8556,11 @@ End of git-gutter:
 )
 #+END_SRC
 
-** git-timemachine - Step through historic versions
+** git-timemachine
 
-- https://github.com/pidu/git-timemachine
+Step through historic versions: https://github.com/pidu/git-timemachine (2018-09-02: repo has been removed)
+
+[[http://emacsredux.com/blog/2014/07/22/travel-back-and-forward-in-git-history/][A page with an animated GIF]] showing its functionality.
 
 #+BEGIN_QUOTE
 Step through historic versions of git controlled file using everyone's
@@ -11202,7 +11204,7 @@ Not org related but might be candidates as well:
   ^^View                 ^^Navigation        ^^Edit
   ^^─────────────────────^^──────────────────^^────────────────
   _s_tatus    my-map g   ^^← Git hunk →      _S_tage hunk
-  ^^                     S-F_2_    S-F_3_      _R_evert hunk
+  _t_ime-machine       S-F_2_    S-F_3_      _R_evert hunk
   ^^                     ^^                  ^^
   ^^                     ^^                  ^^
   ^^Smeargle             ^^                  ^^
@@ -11215,6 +11217,7 @@ Not org related but might be candidates as well:
   ("q" nil "quit")
 
   ("s" magit-status nil)
+  ("t" git-timemachine-toggle)
 
   ("2" git-gutter:previous-hunk nil :color red)
   ("3" git-gutter:next-hunk nil :color red)
