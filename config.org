@@ -8556,6 +8556,68 @@ End of git-gutter:
 )
 #+END_SRC
 
+** git-timemachine - Step through historic versions
+
+- https://github.com/pidu/git-timemachine
+
+#+BEGIN_QUOTE
+Step through historic versions of git controlled file using everyone's
+favourite editor
+
+Visit a git-controlled file and issue =M-x git-timemachine= (or bind
+it to a keybinding of your choice). If you just need to toggle the
+time machine you can use =M-x git-timemachine-toggle=.
+
+Use the following keys to navigate historic version of the file
+
+| p | Visit previous historic version                                         |
+| n | Visit next historic version                                             |
+| w | Copy the abbreviated hash of the current historic version               |
+| W | Copy the full hash of the current historic version                      |
+| g | Goto nth revision                                                       |
+| q | Exit the time machine.                                                  |
+| b | Run magit-blame on the currently visited revision (if magit available). |
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-timemachine
+  :ensure t
+  :defer 15
+  :init
+#+END_SRC
+
+[[http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html][Source]] -> start from selected revision instead of HEAD
+#+BEGIN_SRC emacs-lisp
+      (defun my-git-timemachine-show-selected-revision ()
+        "Show last (current) revision of file."
+        (interactive)
+        (let (collection)
+          (setq collection
+                (mapcar (lambda (rev)
+                          ;; re-shape list for the ivy-read
+                          (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
+                        (git-timemachine--revisions)))
+          (ivy-read "commits:"
+                    collection
+                    :action (lambda (rev)
+                              (git-timemachine-show-revision rev)))))
+#+END_SRC
+
+Open git snapshot with the selected version. Based on ivy-mode:
+#+BEGIN_SRC emacs-lisp
+      (defun my-git-timemachine ()
+        "Open git snapshot with the selected version.  Based on ivy-mode."
+        (interactive)
+        (unless (featurep 'git-timemachine)
+          (require 'git-timemachine))
+        (git-timemachine--start #'my-git-timemachine-show-selected-revision))
+#+END_SRC
+
+end of git-timemachine:
+#+BEGIN_SRC emacs-lisp
+);; end of git-timemachine
+#+END_SRC
+
 ** End of Git
 :PROPERTIES:
 :CREATED:  [2018-09-02 Sun 10:44]
@@ -9754,63 +9816,6 @@ unchained from constraints of backward compatibility.
         )
   )
 
-#+END_SRC
-
-** git-timemachine - Step through historic versions
-
-- https://github.com/pidu/git-timemachine
-
-#+BEGIN_QUOTE
-Step through historic versions of git controlled file using everyone's
-favourite editor
-
-Visit a git-controlled file and issue =M-x git-timemachine= (or bind
-it to a keybinding of your choice). If you just need to toggle the
-time machine you can use =M-x git-timemachine-toggle=.
-
-Use the following keys to navigate historic version of the file
-
-| p | Visit previous historic version                                         |
-| n | Visit next historic version                                             |
-| w | Copy the abbreviated hash of the current historic version               |
-| W | Copy the full hash of the current historic version                      |
-| g | Goto nth revision                                                       |
-| q | Exit the time machine.                                                  |
-| b | Run magit-blame on the currently visited revision (if magit available). |
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "git")
-
-  (use-package git-timemachine
-    :ensure t
-    :defer 15
-    :init
-
-        ;; http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html -> start from selected revision instead of HEAD
-        (defun my-git-timemachine-show-selected-revision ()
-          "Show last (current) revision of file."
-          (interactive)
-          (let (collection)
-            (setq collection
-                  (mapcar (lambda (rev)
-                            ;; re-shape list for the ivy-read
-                            (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
-                          (git-timemachine--revisions)))
-            (ivy-read "commits:"
-                      collection
-                      :action (lambda (rev)
-                                (git-timemachine-show-revision rev)))))
-
-        (defun my-git-timemachine ()
-          "Open git snapshot with the selected version.  Based on ivy-mode."
-          (interactive)
-          (unless (featurep 'git-timemachine)
-            (require 'git-timemachine))
-          (git-timemachine--start #'my-git-timemachine-show-selected-revision))
-
-        )
-)
 #+END_SRC
 
 ** DISABLED pandoc-mode - An Emacs minor mode for interacting with Pandoc
