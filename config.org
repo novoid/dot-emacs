@@ -27,6 +27,8 @@ personal Org-mode files.
 
 Some minor tasks I plan to do with my =config.org=:
 
+- [ ]
+- [ ] move Git functions from Python hydra to new Git hydra (S-F4?)
 - [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
 - [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
 
@@ -1365,192 +1367,6 @@ menu of options and the hydra-k offers a prefix for it.
 
 See 33min30s of the video linked in: [[http://irreal.org/blog/?p=6453][Irreal: Hydra Video]]
 
-* hydra
-
-#+BEGIN_SRC emacs-lisp
-(use-package hydra
-  :ensure t
-  :defer 10
-  :config ;; executed after loading package
-)
-#+END_SRC
-
-Please note: =:color red= is for repeating actions, =:color blue= for
-one-time actions. From [[https://github.com/abo-abo/hydra][the web site]]:
-
-#+BEGIN_QUOTE
-The =:color= key is a shortcut. It aggregates =:exit= and
-=:foreign-keys= key in the following way:
-
-| color    | toggle                     |
-|----------+----------------------------|
-| red      | stay                       |
-| blue     | :exit t                    |
-| amaranth | :foreign-keys warn         |
-| teal     | :foreign-keys warn :exit t |
-| pink     | :foreign-keys run          |
-#+END_QUOTE
-
-** toggle things with Ruby-style docstring → my-map M
-
-Example 7 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  (defvar whitespace-mode nil)
-  (defhydra hydra-toggle (:color teal)
-    "
-  _f_ auto-fill-mode:    %`auto-fill-function
-  _t_ truncate-lines:    %`truncate-lines
-  _w_ whitespace-mode:   %`whitespace-mode
-  _l_ org link display:  %`org-descriptive-links
-  _a_ abbrev-mode:       %`abbrev-mode
-  _d_ debug-on-error:    %`debug-on-error
-  "
-  ;;  ("q" nil "quit")
-    ("a" abbrev-mode nil)
-    ("d" toggle-debug-on-error nil)
-    ("f" auto-fill-mode nil)
-    ("t" toggle-truncate-lines nil)
-    ("w" whitespace-mode nil)
-    ("l" org-toggle-link-display nil)
-  )
-  ;; Recommended binding:
-  ;;(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
-  (bind-key "M" #'hydra-toggle/body my-map)
-#+END_SRC
-
-#+RESULTS:
-: hydra-toggle/body
-
-** DISABLED s-expressions in the docstring
-
-Example 9 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  ;; You can inline s-expresssions into the docstring like this:
-  (defvar dired-mode-map)
-  (declare-function dired-mark "dired")
-  (when (bound-and-true-p hydra-examples-verbatim)
-    (require 'dired)
-    (defhydra hydra-marked-items (dired-mode-map "")
-      "
-  Number of marked items: %(length (dired-get-marked-files))
-  "
-      ("m" dired-mark "mark")))
-#+END_SRC
-
-** apropos → C-c h
-
-Example 10 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  (defhydra hydra-apropos (:color blue
-                           :hint nil)
-    "
-  _a_propos        _c_ommand
-  _d_ocumentation  _l_ibrary
-  _v_ariable       _u_ser-option
-  ^ ^       valu_e_"
-    ("a" apropos)
-    ("d" apropos-documentation)
-    ("v" apropos-variable)
-    ("c" apropos-command)
-    ("l" apropos-library)
-    ("u" apropos-user-option)
-    ("e" apropos-value))
-  ;; Recommended binding:
-  (global-set-key (kbd "C-c h") 'hydra-apropos/body)
-#+END_SRC
-
-** rectangle-mark-mode → C-x r h
-
-Example 11 from hydra-examples.el
-
-#+BEGIN_SRC emacs-lisp
-  (require 'rect)
-  (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
-                             :color pink
-                             :post (deactivate-mark))
-    "
-    ^_k_^     _d_elete    _s_tring
-  _h_   _l_   _o_k        _y_ank
-    ^_j_^     _n_ew-copy  _r_eset
-  ^^^^        _e_xchange  _u_ndo
-  ^^^^        ^ ^         _p_aste
-  "
-    ("h" rectangle-backward-char nil)
-    ("l" rectangle-forward-char nil)
-    ("k" rectangle-previous-line nil)
-    ("j" rectangle-next-line nil)
-    ("e" hydra-ex-point-mark nil)
-    ("n" copy-rectangle-as-kill nil)
-    ("d" delete-rectangle nil)
-    ("r" (if (region-active-p)
-             (deactivate-mark)
-           (rectangle-mark-mode 1)) nil)
-    ("y" yank-rectangle nil)
-    ("u" undo nil)
-    ("s" string-rectangle nil)
-    ("p" kill-rectangle nil)
-    ("o" nil nil))
-
-  (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
-#+END_SRC
-
-** reStructuredText → F1
-:PROPERTIES:
-:CREATED:  [2018-07-16 Mon 13:54]
-:END:
-
-#+BEGIN_SRC emacs-lisp
-  (defhydra hydra-rst (:color blue)
-    (concat my-f-key-settings
-      "
-    _a_ insert • complete • promote adornment ( C-c C-a C-a     )
-    _c_ycle adornment                         ( C-- C-=         )        Let's love
-    _r_e-adjust adornments of buffer          ( C-c C-a C-s     )                    reStructured Text
-    _v_isualize adornment formats used        ( C-c C-a C-d     )
-
-    _,_      ↑                                ( C-M-e           )
-          section
-    _._      ↓                                ( C-M-a           )
-
-    _m_ark section                            ( C-M-h           )
-    _n_ew line with indent                    ( C-j             )
-  ────^^────────────────────────────────────────────────────────────
-      _s_hift region →         ( C-c C-r TAB     )
-    ← _S_hift region           ( M-- C-c C-r TAB )
-  ────^^───────────────────────────────────────────^^───────────────────────────────────────────────────────────
-    _C_omment region           ( M-;         )     _t_oc temp view  (close with c; zip with z) ( C-c C-t C-t )
-    _b_ullet list region       ( C-c C-l C-b )     _T_oc insert TOC (did not work)             ( C-c C-t C-i )
-    _e_numerated list region   ( C-c C-l C-e )     _u_pdate TOC                                ( C-c C-t C-u )
-    _i_nsert item              ( C-c C-l C-i )
-  ^^
-    ")
-    ("a" rst-adjust nil)
-    ("c" (rst-adjust -1) nil :color red)
-    ("r" rst-straighten-adornments nil)
-    ("v" rst-display-adornments-hierarchy nil)
-    ("," rst-forward-section nil :color red)
-    ("." rst-backward-section nil :color red)
-    ("m" rst-mark-section nil :color red)
-    ("s" rst-shift-region nil :color red)
-    ("S" rst-shift-region nil :color red)
-    ("n" newline-and-indent nil)
-    ("C" comment-dwim nil)
-    ("b" rst-bullet-list-region nil)
-    ("e" rst-enumerate-region nil)
-    ("i" rst-insert-list nil)
-    ("t" rst-toc nil)
-    ("T" rst-toc-insert nil)
-    ("u" rst-toc-update nil)
-    ("q" nil "quit")
-  )
-
-(require 'rst)
-(define-key rst-mode-map [f1] 'hydra-rst/body)
-#+END_SRC
-
 
 * My helper functions (part I)
 
@@ -1945,41 +1761,6 @@ findings one by one:
 (define-key global-map [(f8)] 'flyspell-correct-word-before-point)
 #+END_SRC
 
-** hydra-spelling → F5
-:PROPERTIES:
-:ID:       hydra-spellchecking
-:END:
-
-Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-spelling (:color red)
-    (concat my-f-key-settings
-  "
-  ^
-  ^Spelling^          ^Errors^            ^Checker^
-  ^────────^──────────^──────^────────────^───────^───────
-  check _r_egion      _n_ext error        _m_ode
-  check _b_uffer      _c_orrect           toggle _l_anguage
-  _s_ynonym
-  _d_efine word
-  ^^
-  ")
-  ("q" nil "quit")
-  ("r" flyspell-region nil)
-  ("l" my-toggle-ispell-language nil)
-  ("n" flyspell-goto-next-error nil)
-  ("s" my-synonym-current-word nil :color blue)
-  ("d" define-word-at-point nil :color blue) ;; define-word
-;;  ("<" flyspell-correct-previous :color pink nil)
-;;  (">" flyspell-correct-next :color pink nil)
-  ("c" flyspell-correct-word-before-point nil)
-;;  ("d" ispell-change-dictionary)
-  ("b" flyspell-buffer nil)
-  ("m" flyspell-mode nil))
-
-  (global-set-key [f5] 'hydra-spelling/body)
-#+END_SRC
 
 ** End of aspell
 
@@ -2259,6 +2040,19 @@ Selected keyboard commands (summary): (see defined hydra for python mode!)
 | F5        | previous error                                        | =flymake-goto-prev-error=         |
 | F6        | next error                                            | =flymake-goto-next-error=         |
 | C-c C-r r | refactor code/region/word                             | =elpy-refactor=                   |
+
+-----------
+
+https://www.emacswiki.org/emacs/PythonProgrammingInEmacs
+
+#+BEGIN_QUOTE
+Note that some IDE packages provide completion, e.g. Elpy provides
+completion using either jedi or rope as a backend to CompanyMode, and
+anaconda-mode provides completion via CompanyMode or AutoComplete.
+
+You can also configure completion by using either jedi or rope as a
+backend to either CompanyMode or AutoComplete.
+#+END_QUOTE
 
 ** BEGIN of Python-related stuff
 
@@ -3237,67 +3031,6 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
   universal prefix
 - [ ] FIXXME: do for time2name as well
 
-** hydra-dired → F1
-:PROPERTIES:
-:CREATED:  [2018-06-30 Sat 19:10]
-:END:
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-dired (:color blue)
-    (concat my-f-key-settings
-  "
-  _t_agtrees            _f_ilter              _d_ate2name        g  refresh           M-c      dired-ranger-copy
-  _T_agtrees recursive  _F_ilter recursive    _t_ime2name        +  mkdir             M-v      dired-ranger-paste
-  ^────────^────────────^──────^──────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
-  _a_bsolute link       _m_emacs tsfile link  _D_ate2name.el     D  delete marked
-  _A_bsolute basename   ^^                    tk hide marked       C-c C-o  open externally
-  ^^                    ^^                    ^^                 U  unmark all        C-o      open in new frame
-  ^View    ^            ^Edit^                ^Order^
-  ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
-  _c_ollapse mode       _v_idir (C-x C-q)     _s_ize ordered     !  pipe to shell     C-t d    image-dired+ of marked files
-  _o_pen in file manager      ^^              _n_ormal ordered                        <percent> l  lowercase
-  _i_mage thumbnails    _SPC_ filetags.el     ^^                 x  delete flagged    <percent> u  uppercase
-  _(_ toggle details  ( ^^                    ^^                                      <percent> &  flag temp files
-  ^^                    ^^                    ^^
-  ")
-  ("t" my-dired-tagtrees nil)
-  ("T" my-dired-tagtrees-recursive nil)
-
-  ("f" my-dired-filetags-filter nil)
-  ("F" my-dired-filetags-filter-recursive nil)
-
-  ("d" my-dired-date2name nil)
-  ("t" my-dired-time2name nil)
-;  ("D" filetags-dired-update-tags nil)
-  ("D" date2name-dired-add-date-to-name nil)
-
-  ("a" my-dired-copy-filename-as-absolute-link nil)
-  ("m" my-dired-copy-filename-as-tsfile-link nil)
-  ("A" (let ((current-prefix-arg '(4))) ;; emulate C-u
-         (call-interactively 'my-dired-copy-filename-as-absolute-link)
-       )
-   nil)
-
-  ("c" dired-collapse-mode nil)
-  ("o" my-dired-open-in-file-manager nil)
-  ("i" my-dired-mark-images-and-thumbnail nil)
-  ("(" dired-hide-details-mode nil)
-
-  ("v" dired-toggle-read-only nil)
-  ("SPC" filetags-dired-update-tags nil)
-
-  ("s" (dired-sort-other "-alS --block-size=\'1") nil)
-  ("n" (dired-sort-other "-al --block-size=\'1") nil)
-
-  ("q" nil "quit")
-
-;  ("s" (setq dired-listing-switches "-alS --block-size=\'1") nil)
-;  ("n" (setq dired-listing-switches "-al --block-size=\'1") nil)
-
-)
-
-(define-key dired-mode-map [f1] 'hydra-dired/body)
-#+END_SRC
 
 * LaTeX
 
@@ -8622,10 +8355,6 @@ or so.
 
 This is a section where all [[https://en.wikipedia.org/wiki/Git][Git]]-related configuration is happening.
 
-#+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "git")
-#+END_SRC
-
 ** magit → my-map g
 
 «[[https://github.com/magit/magit][Magit]] is an interface to the version control system Git, implemented
@@ -8641,7 +8370,6 @@ interface of Magit.
 
 
 #+BEGIN_SRC emacs-lisp
-
 ;;2018-07-09 test when using GitHub version;;(setq with-editor-file-name-history-exclude 1) ;; https://github.com/syl20bnr/spacemacs/issues/7225
 
 (use-package magit
@@ -8734,7 +8462,7 @@ Misc settings:
 
 End of smeargle:
 #+BEGIN_SRC emacs-lisp
-  )
+  );; end of smeargle
 #+END_SRC
 
 ** GitGutter
@@ -8812,10 +8540,7 @@ Customize visualization:
  '(git-gutter:modified-sign "~ ") ;; two space
  '(git-gutter:added-sign "++")    ;; multiple character is OK
  '(git-gutter:deleted-sign "--"))
-#+END_SRC
 
-Customize colors:
-#+BEGIN_SRC emacs-lisp :tangle no
 (set-face-background 'git-gutter:modified "purple") ;; background color
 (set-face-foreground 'git-gutter:added "green")
 (set-face-foreground 'git-gutter:deleted "red")
@@ -8841,6 +8566,106 @@ End of git-gutter:
 
 #+BEGIN_SRC emacs-lisp
 ) ;; end of magit use-package
+#+END_SRC
+
+* PDF
+:PROPERTIES:
+:CREATED:  [2018-03-08 Thu 09:48]
+:END:
+
+For viewing and editing PDF files, Emacs has a lot to offer.
+
+** org-pdfview
+
+This seems to be a pre-requisite to pdf-tools.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-pdfview
+;;:if (my-system-type-is-gnu)
+:ensure t
+:defer 15
+:config
+)
+#+END_SRC
+
+** pdf-tools
+
+pdf-tools provides really cool functionality to annotate PDF files
+within Emacs.
+
+History:
+- My first steps with many drawbacks: id:2014-12-02-pdf-tools
+  - This does not work so far. Unmet (and many) dependencies are in my way. This is quite frustrating.
+- 2018-08-12: first working installation after doing =sudo apt install
+  elpa-pdf-tools-server= in Debian GNU/Linux stable
+
+The package:
+
+#+BEGIN_SRC emacs-lisp
+(use-package pdf-tools
+;;  :if (my-system-type-is-gnu)
+  :ensure t
+  :defer 15
+   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
+  :config
+  (pdf-tools-install)
+  (eval-after-load 'org '(require 'org-pdfview))
+#+END_SRC
+
+Configuration:
+
+#+BEGIN_SRC emacs-lisp
+  ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
+  (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
+#+END_SRC
+
+Open pdfs scaled to fit page: ([[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][Source]])
+#+BEGIN_SRC emacs-lisp
+  (setq-default pdf-view-display-size 'fit-page)
+#+END_SRC
+
+Use normal isearch: ([[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][Source]])
+#+BEGIN_SRC emacs-lisp
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+#+END_SRC
+
+Workaround for [[https://github.com/markus1189/org-pdfview/issues/14][this issue]] on Org-mode 9 on Windows:
+#+BEGIN_SRC emacs-lisp
+  (when (my-system-type-is-windows)
+    (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link))))
+  )
+#+END_SRC
+
+Bindings:
+#+BEGIN_SRC emacs-lisp
+  (bind-keys :map pdf-view-mode-map
+          ("f1" . hydra-pdftools/body)
+          ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+          ("g"  . pdf-view-first-page)
+          ("G"  . pdf-view-last-page)
+          ("l"  . image-forward-hscroll)
+          ("h"  . image-backward-hscroll)
+          ("j"  . pdf-view-next-page)
+          ("k"  . pdf-view-previous-page)
+          ("e"  . pdf-view-goto-page)
+          ("u"  . pdf-view-revert-buffer)
+          ("al" . pdf-annot-list-annotations)
+          ("ad" . pdf-annot-delete)
+          ("aa" . pdf-annot-attachment-dired)
+          ("am" . pdf-annot-add-markup-annotation)
+          ("at" . pdf-annot-add-text-annotation)
+          ("y"  . pdf-view-kill-ring-save)
+          ("i"  . pdf-misc-display-metadata)
+          ("s"  . pdf-occur)
+          ("b"  . pdf-view-set-slice-from-bounding-box)
+          ("r"  . pdf-view-reset-slice))
+#+END_SRC
+
+
+** End of pdf-tools
+
+#+BEGIN_SRC emacs-lisp
+ );; end of pdf-tools
 #+END_SRC
 
 * Misc modes/packages
@@ -10316,43 +10141,6 @@ As with many major modes, I do have a helpful hydra mapped to F1.
   (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
   (autoload 'csv-mode "csv-mode"
     "Major mode for editing comma-separated value files." t)
-
-  (defhydra hydra-csv (:color blue)
-    (concat my-f-key-settings
-      "
-  ^^
-  _a_lign Fields into Columns     C-c C-a          _B_ Set Buffer's Comment Start       C-c C-c
-  _u_nalign Columns into Fields   C-c C-u          _L_ Sort By Field Lexicographically  C-c C-s
-  ^^                                               _N_ Sort By Field Numerically        C-c C-n
-      _,_  ← Field →  _._           C-M-b/f          _D_ Use Descending Sort Order        C-c C-d
-  ^^                                               _r_everse Order of Lines             C-c C-r
-  _S_ Make Separators Invisible   C-c C-v          _t_ranspose Rows and Columns         C-c C-t
-  _i_ Toggle Field Index Mode                       ^^
-  ^^                                               _k_ Kill Fields          C-c C-k
-  ^^                                               _y_ank Fields (Columns)  C-c C-y
-  ^^                                               _Y_ank As New Table      C-c C-z
-  ^^
-    ")
-    ("a" csv-align-fields        nil :color red)
-    ("u" csv-unalign-fields      nil :color red)
-    ("B" csv-set-comment-start   nil)
-    ("D" csv-toggle-descending   nil)
-    ("k" csv-kill-fields         nil)
-    ("N" csv-sort-numeric-fields nil)
-    ("r" csv-reverse-region      nil)
-    ("L" csv-sort-fields         nil)
-    ("t" csv-transpose           nil)
-    ("S" csv-toggle-invisibility nil :color red)
-    ("y" csv-yank-fields         nil)
-    ("Y" csv-yank-as-new-table   nil)
-    ("." csv-forward-field       nil :color red)
-    ("," (csv-forward-field -1)           nil :color red)
-    ("i" csv-field-index-mode    nil :color red)
-    ("q" nil "quit")
-  )
-
-  (define-key csv-mode-map [f1] 'hydra-csv/body)
-
 )
 #+END_SRC
 
@@ -10414,137 +10202,6 @@ commands should be mapped to easy to type shortcuts.
 #+END_SRC
 
 You can see the current result by calling =keyfreq-show=.
-
-** pdf-tools
-:PROPERTIES:
-:CREATED:  [2018-03-08 Thu 09:48]
-:END:
-
-pdf-tools provides really cool functionality to annotate PDF files
-within Emacs.
-
-- My first steps with many drawbacks: id:2014-12-02-pdf-tools
-- 2018-08-12: first working installation after doing =sudo apt install
-  elpa-pdf-tools-server= in Debian GNU/Linux stable
-
-This does *not* work so far. Unmet (and many) dependencies are in my
-way. This is quite frustrating.
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-pdfview
-;;:if (my-system-type-is-gnu)
-:ensure t
-:defer 15
-:config
-)
-#+END_SRC
-
-Starting the pdf-tools configuration:
-
-#+BEGIN_SRC emacs-lisp
-  (use-package pdf-tools
-;;  :if (my-system-type-is-gnu)
-  :ensure t
-  :defer 15
-   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
-  :config
-  (pdf-tools-install)
-  (eval-after-load 'org '(require 'org-pdfview))
-  ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
-  (add-to-list 'org-file-apps '("\\.pdf::\\([[:digit:]]+\\)\\'" . org-pdfview-open))
-
-  (setq-default pdf-view-display-size 'fit-page);; open pdfs scaled to fit page (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward);; use normal isearch (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
-
-  ;; workaround for https://github.com/markus1189/org-pdfview/issues/14 on Org-mode 9/Windows:
-  (when (my-system-type-is-windows)
-    (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link))))
-  )
-
-  (bind-keys :map pdf-view-mode-map
-          ("f1" . hydra-pdftools/body)
-          ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
-          ("g"  . pdf-view-first-page)
-          ("G"  . pdf-view-last-page)
-          ("l"  . image-forward-hscroll)
-          ("h"  . image-backward-hscroll)
-          ("j"  . pdf-view-next-page)
-          ("k"  . pdf-view-previous-page)
-          ("e"  . pdf-view-goto-page)
-          ("u"  . pdf-view-revert-buffer)
-          ("al" . pdf-annot-list-annotations)
-          ("ad" . pdf-annot-delete)
-          ("aa" . pdf-annot-attachment-dired)
-          ("am" . pdf-annot-add-markup-annotation)
-          ("at" . pdf-annot-add-text-annotation)
-          ("y"  . pdf-view-kill-ring-save)
-          ("i"  . pdf-misc-display-metadata)
-          ("s"  . pdf-occur)
-          ("b"  . pdf-view-set-slice-from-bounding-box)
-          ("r"  . pdf-view-reset-slice))
-#+END_SRC
-
-hydra for pdf-tools: https://github.com/abo-abo/hydra/wiki/PDF-Tools
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-pdftools (:color blue :hint nil)
-    (concat my-f-key-settings
-        "
-                                                                      ╭───────────┐
-       Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
-   ╭──────────────────────────────────────────────────────────────────┴───────────╯
-         ^^_g_^^      _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
-         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
-         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
-         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
-    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
-         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
-         ^^_n_^^      ^ ^  _r_eset slice box
-         ^^^↓^^^
-         ^^_G_^^
-   --------------------------------------------------------------------------------
-        ")
-        ("\\" hydra-master/body "back")
-        ("q" nil "quit")
-        ("al" pdf-annot-list-annotations)
-        ("ad" pdf-annot-delete)
-        ("aa" pdf-annot-attachment-dired)
-        ("am" pdf-annot-add-markup-annotation)
-        ("at" pdf-annot-add-text-annotation)
-        ("y"  pdf-view-kill-ring-save)
-        ("+" pdf-view-enlarge :color red)
-        ("-" pdf-view-shrink :color red)
-        ("0" pdf-view-scale-reset)
-        ("H" pdf-view-fit-height-to-window)
-        ("W" pdf-view-fit-width-to-window)
-        ("P" pdf-view-fit-page-to-window)
-        ("n" pdf-view-next-page-command :color red)
-        ("p" pdf-view-previous-page-command :color red)
-        ("d" pdf-view-dark-minor-mode)
-        ("b" pdf-view-set-slice-from-bounding-box)
-        ("r" pdf-view-reset-slice)
-        ("g" pdf-view-first-page)
-        ("G" pdf-view-last-page)
-        ("e" pdf-view-goto-page)
-        ("o" pdf-outline)
-        ("s" pdf-occur)
-        ("i" pdf-misc-display-metadata)
-        ("u" pdf-view-revert-buffer)
-        ("F" pdf-links-action-perfom)
-        ("f" pdf-links-isearch-link)
-        ("B" pdf-history-backward :color red)
-        ("N" pdf-history-forward :color red)
-        ("l" image-forward-hscroll :color red)
-        ("h" image-backward-hscroll :color red))
-
-(define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
-#+END_SRC
-
-Closing the pdf-tools configuration:
-
-#+begin_src emacs-lisp :tangle yes
-)
-#+end_src
 
 ** eyebrowse → my-map ,
 :PROPERTIES:
@@ -10689,32 +10346,6 @@ by using nxml's indentation rules."
   )
 #+END_SRC
 
-*** hydra-nxml → F1
-:PROPERTIES:
-:CREATED:  [2018-08-21 Tue 11:36]
-:END:
-
-#+BEGIN_SRC emacs-lisp
-(defhydra hydra-nxml (:color blue)
-    (concat my-f-key-settings
-  "
-  ^^                               ^^                           ^^                ←→ element  C-M n|p
-  ^^View                           ^^                           ^^                ↑↓ element  C-M u|d
-  ^────────^───────────────────────^──────^─────────────────────^─────────^─────
-  _r_egion prettyfy                ^^                           ^^                C-M-i  auto-complete
-  _b_uffer prettify                ^^                           ^^                C-/    finish element
-  ^^                               ^^                           ^^
-  ^^                               ^^                           ^^
-  ")
-  ("r" my-xml-pretty-print-region nil)
-  ("b" my-xml-pretty-print-buffer nil)
-
-  ("q" nil "quit")
-)
-
-(require 'nxml-mode)
-(define-key nxml-mode-map [f1] 'hydra-nxml/body)
-#+END_SRC
 
 * My helper functions (part II)
 
@@ -11139,13 +10770,268 @@ which I included here:
 (global-set-key (kbd "M-k") (lambda () (interactive) (my-codenav-next-definition)))
 #+END_SRC
 
-* Collective Functionality
+* hydra
+
+[[https://github.com/abo-abo/hydra][Hydra]] is a method to customize personal and visual menus to summarize
+various functionality.
+
+------------
+
+Please note: =:color red= is for repeating actions, =:color blue= for
+one-time actions. From [[https://github.com/abo-abo/hydra][the web site]]:
+
+#+BEGIN_QUOTE
+The =:color= key is a shortcut. It aggregates =:exit= and
+=:foreign-keys= key in the following way:
+
+| color    | toggle                     |
+|----------+----------------------------|
+| red      | stay                       |
+| blue     | :exit t                    |
+| amaranth | :foreign-keys warn         |
+| teal     | :foreign-keys warn :exit t |
+| pink     | :foreign-keys run          |
+#+END_QUOTE
+
+** START of hydra
+
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :ensure t
+  :defer 5
+  :config ;; executed after loading package
+#+END_SRC
+
+** toggle things with Ruby-style docstring → my-map M
+
+Example 7 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  (defvar whitespace-mode nil)
+  (defhydra hydra-toggle (:color teal)
+    "
+  _f_ auto-fill-mode:    %`auto-fill-function
+  _t_ truncate-lines:    %`truncate-lines
+  _w_ whitespace-mode:   %`whitespace-mode
+  _l_ org link display:  %`org-descriptive-links
+  _a_ abbrev-mode:       %`abbrev-mode
+  _d_ debug-on-error:    %`debug-on-error
+  "
+  ;;  ("q" nil "quit")
+    ("a" abbrev-mode nil)
+    ("d" toggle-debug-on-error nil)
+    ("f" auto-fill-mode nil)
+    ("t" toggle-truncate-lines nil)
+    ("w" whitespace-mode nil)
+    ("l" org-toggle-link-display nil)
+  )
+  ;; Recommended binding:
+  ;;(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+  (bind-key "M" #'hydra-toggle/body my-map)
+#+END_SRC
+
+#+RESULTS:
+: hydra-toggle/body
+
+** DISABLED s-expressions in the docstring
+
+Example 9 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  ;; You can inline s-expresssions into the docstring like this:
+  (defvar dired-mode-map)
+  (declare-function dired-mark "dired")
+  (when (bound-and-true-p hydra-examples-verbatim)
+    (require 'dired)
+    (defhydra hydra-marked-items (dired-mode-map "")
+      "
+  Number of marked items: %(length (dired-get-marked-files))
+  "
+      ("m" dired-mark "mark")))
+#+END_SRC
+
+** apropos → C-c h
+
+Example 10 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-apropos (:color blue
+                           :hint nil)
+    "
+  _a_propos        _c_ommand
+  _d_ocumentation  _l_ibrary
+  _v_ariable       _u_ser-option
+  ^ ^       valu_e_"
+    ("a" apropos)
+    ("d" apropos-documentation)
+    ("v" apropos-variable)
+    ("c" apropos-command)
+    ("l" apropos-library)
+    ("u" apropos-user-option)
+    ("e" apropos-value))
+  ;; Recommended binding:
+  (global-set-key (kbd "C-c h") 'hydra-apropos/body)
+#+END_SRC
+
+** rectangle-mark-mode → C-x r h
+
+Example 11 from hydra-examples.el
+
+#+BEGIN_SRC emacs-lisp
+  (require 'rect)
+  (defhydra hydra-rectangle (:body-pre (rectangle-mark-mode 1)
+                             :color pink
+                             :post (deactivate-mark))
+    "
+    ^_k_^     _d_elete    _s_tring
+  _h_   _l_   _o_k        _y_ank
+    ^_j_^     _n_ew-copy  _r_eset
+  ^^^^        _e_xchange  _u_ndo
+  ^^^^        ^ ^         _p_aste
+  "
+    ("h" rectangle-backward-char nil)
+    ("l" rectangle-forward-char nil)
+    ("k" rectangle-previous-line nil)
+    ("j" rectangle-next-line nil)
+    ("e" hydra-ex-point-mark nil)
+    ("n" copy-rectangle-as-kill nil)
+    ("d" delete-rectangle nil)
+    ("r" (if (region-active-p)
+             (deactivate-mark)
+           (rectangle-mark-mode 1)) nil)
+    ("y" yank-rectangle nil)
+    ("u" undo nil)
+    ("s" string-rectangle nil)
+    ("p" kill-rectangle nil)
+    ("o" nil nil))
+
+  (global-set-key (kbd "C-x r h") 'hydra-rectangle/body)
+#+END_SRC
+
+** reStructuredText → F1
 :PROPERTIES:
-:CREATED:  [2018-08-24 Fri 09:44]
+:CREATED:  [2018-07-16 Mon 13:54]
 :END:
 
-In this section, I am putting things that need multiple definitions
-from above in order to work.
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-rst (:color blue)
+    (concat my-f-key-settings
+      "
+    _a_ insert • complete • promote adornment ( C-c C-a C-a     )
+    _c_ycle adornment                         ( C-- C-=         )        Let's love
+    _r_e-adjust adornments of buffer          ( C-c C-a C-s     )                    reStructured Text
+    _v_isualize adornment formats used        ( C-c C-a C-d     )
+
+    _,_      ↑                                ( C-M-e           )
+          section
+    _._      ↓                                ( C-M-a           )
+
+    _m_ark section                            ( C-M-h           )
+    _n_ew line with indent                    ( C-j             )
+  ────^^────────────────────────────────────────────────────────────
+      _s_hift region →         ( C-c C-r TAB     )
+    ← _S_hift region           ( M-- C-c C-r TAB )
+  ────^^───────────────────────────────────────────^^───────────────────────────────────────────────────────────
+    _C_omment region           ( M-;         )     _t_oc temp view  (close with c; zip with z) ( C-c C-t C-t )
+    _b_ullet list region       ( C-c C-l C-b )     _T_oc insert TOC (did not work)             ( C-c C-t C-i )
+    _e_numerated list region   ( C-c C-l C-e )     _u_pdate TOC                                ( C-c C-t C-u )
+    _i_nsert item              ( C-c C-l C-i )
+  ^^
+    ")
+    ("a" rst-adjust nil)
+    ("c" (rst-adjust -1) nil :color red)
+    ("r" rst-straighten-adornments nil)
+    ("v" rst-display-adornments-hierarchy nil)
+    ("," rst-forward-section nil :color red)
+    ("." rst-backward-section nil :color red)
+    ("m" rst-mark-section nil :color red)
+    ("s" rst-shift-region nil :color red)
+    ("S" rst-shift-region nil :color red)
+    ("n" newline-and-indent nil)
+    ("C" comment-dwim nil)
+    ("b" rst-bullet-list-region nil)
+    ("e" rst-enumerate-region nil)
+    ("i" rst-insert-list nil)
+    ("t" rst-toc nil)
+    ("T" rst-toc-insert nil)
+    ("u" rst-toc-update nil)
+    ("q" nil "quit")
+  )
+
+(require 'rst)
+(define-key rst-mode-map [f1] 'hydra-rst/body)
+#+END_SRC
+
+** hydra-nxml → F1
+:PROPERTIES:
+:CREATED:  [2018-08-21 Tue 11:36]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-nxml (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^                               ^^                           ^^                ←→ element  C-M n|p
+  ^^View                           ^^                           ^^                ↑↓ element  C-M u|d
+  ^────────^───────────────────────^──────^─────────────────────^─────────^─────
+  _r_egion prettyfy                ^^                           ^^                C-M-i  auto-complete
+  _b_uffer prettify                ^^                           ^^                C-/    finish element
+  ^^                               ^^                           ^^
+  ^^                               ^^                           ^^
+  ")
+  ("r" my-xml-pretty-print-region nil)
+  ("b" my-xml-pretty-print-buffer nil)
+
+  ("q" nil "quit")
+)
+
+(require 'nxml-mode)
+(define-key nxml-mode-map [f1] 'hydra-nxml/body)
+#+END_SRC
+
+** hydra-csv → F1
+:PROPERTIES:
+:CREATED:  [2018-09-02 Sun 11:38]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-csv (:color blue)
+    (concat my-f-key-settings
+      "
+  ^^
+  _a_lign Fields into Columns     C-c C-a          _B_ Set Buffer's Comment Start       C-c C-c
+  _u_nalign Columns into Fields   C-c C-u          _L_ Sort By Field Lexicographically  C-c C-s
+  ^^                                               _N_ Sort By Field Numerically        C-c C-n
+      _,_  ← Field →  _._           C-M-b/f          _D_ Use Descending Sort Order        C-c C-d
+  ^^                                               _r_everse Order of Lines             C-c C-r
+  _S_ Make Separators Invisible   C-c C-v          _t_ranspose Rows and Columns         C-c C-t
+  _i_ Toggle Field Index Mode                       ^^
+  ^^                                               _k_ Kill Fields          C-c C-k
+  ^^                                               _y_ank Fields (Columns)  C-c C-y
+  ^^                                               _Y_ank As New Table      C-c C-z
+  ^^
+    ")
+    ("a" csv-align-fields        nil :color red)
+    ("u" csv-unalign-fields      nil :color red)
+    ("B" csv-set-comment-start   nil)
+    ("D" csv-toggle-descending   nil)
+    ("k" csv-kill-fields         nil)
+    ("N" csv-sort-numeric-fields nil)
+    ("r" csv-reverse-region      nil)
+    ("L" csv-sort-fields         nil)
+    ("t" csv-transpose           nil)
+    ("S" csv-toggle-invisibility nil :color red)
+    ("y" csv-yank-fields         nil)
+    ("Y" csv-yank-as-new-table   nil)
+    ("." csv-forward-field       nil :color red)
+    ("," (csv-forward-field -1)           nil :color red)
+    ("i" csv-field-index-mode    nil :color red)
+    ("q" nil "quit")
+  )
+
+  (require 'csv-mode)
+  (define-key csv-mode-map [f1] 'hydra-csv/body)
+#+END_SRC
 
 ** hydra-org → F1
 :PROPERTIES:
@@ -11253,6 +11139,182 @@ Not org related but might be candidates as well:
 #+RESULTS:
 : hydra-org/body
 
+** hydra-python → F1
+:PROPERTIES:
+:CREATED:  [2018-07-01 Sun 11:12]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-python (:color blue)
+    (concat my-f-key-settings
+  "
+  ^View^                 ^Navigation^        ^^Git                C-↑↓   goto line of same level
+  ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
+  _h_ide/show fun  M-h   _,_ ← error    F5   ^^← Git hunk →
+  _c_ycle all      M-H   _._   error →  F6   S-F_2_
+   S-F_3_
+  ^^                     _<_ ← symbol        _s_tage hunk
+  ^^                     _>_   symbol →      _R_evert hunk
+  ^^                     ^^                  ^^
+  ^Edit^                 ^Help^              ^^
+  ^^─────────────────────^^──────────────────^^────────────────
+  _i_mplement    C-c i   _H_elp (pylookup)   ^^
+  _r_efactor C-c C-r r   ^^                  ^^
+  sphinx-_d_oc           ^^                  ^^
+  ^^                     ^^                  ^^
+  ")
+  ("q" nil "quit")
+  ("h" hs-cycle nil :color red)
+  ("c" hs-cycle-all nil)
+
+  ("," flymake-goto-prev-error nil :color red)
+  ("." flymake-goto-next-error nil :color red)
+  ("<" highlight-symbol-prev nil)
+  (">" highlight-symbol-next nil)
+
+  ("2" git-gutter:previous-hunk nil :color red)
+  ("3" git-gutter:next-hunk nil :color red)
+  ("s" git-gutter:stage-hunk nil)
+  ("R" git-gutter:revert-hunk nil)
+
+  ("i" elpygen-implement nil)
+  ("r" elpy-refactor nil)
+  ("d" sphinx-doc nil)
+
+  ("H" pylookup-lookup nil)
+;  (""  nil)
+)
+
+(with-eval-after-load 'python
+  (define-key python-mode-map [f1] 'hydra-python/body)
+)
+#+END_SRC
+
+#+RESULTS:
+: hydra-python/body
+
+** hydra-dired → F1
+:PROPERTIES:
+:CREATED:  [2018-06-30 Sat 19:10]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-dired (:color blue)
+    (concat my-f-key-settings
+  "
+  _t_agtrees            _f_ilter              _d_ate2name        g  refresh           M-c      dired-ranger-copy
+  _T_agtrees recursive  _F_ilter recursive    _t_ime2name        +  mkdir             M-v      dired-ranger-paste
+  ^────────^────────────^──────^──────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
+  _a_bsolute link       _m_emacs tsfile link  _D_ate2name.el     D  delete marked
+  _A_bsolute basename   ^^                    tk hide marked       C-c C-o  open externally
+  ^^                    ^^                    ^^                 U  unmark all        C-o      open in new frame
+  ^View    ^            ^Edit^                ^Order^
+  ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
+  _c_ollapse mode       _v_idir (C-x C-q)     _s_ize ordered     !  pipe to shell     C-t d    image-dired+ of marked files
+  _o_pen in file manager      ^^              _n_ormal ordered                        <percent> l  lowercase
+  _i_mage thumbnails    _SPC_ filetags.el     ^^                 x  delete flagged    <percent> u  uppercase
+  _(_ toggle details  ( ^^                    ^^                                      <percent> &  flag temp files
+  ^^                    ^^                    ^^
+  ")
+  ("t" my-dired-tagtrees nil)
+  ("T" my-dired-tagtrees-recursive nil)
+
+  ("f" my-dired-filetags-filter nil)
+  ("F" my-dired-filetags-filter-recursive nil)
+
+  ("d" my-dired-date2name nil)
+  ("t" my-dired-time2name nil)
+;  ("D" filetags-dired-update-tags nil)
+  ("D" date2name-dired-add-date-to-name nil)
+
+  ("a" my-dired-copy-filename-as-absolute-link nil)
+  ("m" my-dired-copy-filename-as-tsfile-link nil)
+  ("A" (let ((current-prefix-arg '(4))) ;; emulate C-u
+         (call-interactively 'my-dired-copy-filename-as-absolute-link)
+       )
+   nil)
+
+  ("c" dired-collapse-mode nil)
+  ("o" my-dired-open-in-file-manager nil)
+  ("i" my-dired-mark-images-and-thumbnail nil)
+  ("(" dired-hide-details-mode nil)
+
+  ("v" dired-toggle-read-only nil)
+  ("SPC" filetags-dired-update-tags nil)
+
+  ("s" (dired-sort-other "-alS --block-size=\'1") nil)
+  ("n" (dired-sort-other "-al --block-size=\'1") nil)
+
+  ("q" nil "quit")
+
+;  ("s" (setq dired-listing-switches "-alS --block-size=\'1") nil)
+;  ("n" (setq dired-listing-switches "-al --block-size=\'1") nil)
+
+)
+
+(define-key dired-mode-map [f1] 'hydra-dired/body)
+#+END_SRC
+
+** hydra-pdftools → F1
+
+- Example hydra: https://github.com/abo-abo/hydra/wiki/PDF-Tools
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-pdftools (:color blue :hint nil)
+    (concat my-f-key-settings
+        "
+                                                                      ╭───────────┐
+       Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
+   ╭──────────────────────────────────────────────────────────────────┴───────────╯
+         ^^_g_^^      _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
+         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
+         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
+         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
+    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
+         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
+         ^^_n_^^      ^ ^  _r_eset slice box
+         ^^^↓^^^
+         ^^_G_^^
+   --------------------------------------------------------------------------------
+        ")
+        ("\\" hydra-master/body "back")
+        ("q" nil "quit")
+        ("al" pdf-annot-list-annotations)
+        ("ad" pdf-annot-delete)
+        ("aa" pdf-annot-attachment-dired)
+        ("am" pdf-annot-add-markup-annotation)
+        ("at" pdf-annot-add-text-annotation)
+        ("y"  pdf-view-kill-ring-save)
+        ("+" pdf-view-enlarge :color red)
+        ("-" pdf-view-shrink :color red)
+        ("0" pdf-view-scale-reset)
+        ("H" pdf-view-fit-height-to-window)
+        ("W" pdf-view-fit-width-to-window)
+        ("P" pdf-view-fit-page-to-window)
+        ("n" pdf-view-next-page-command :color red)
+        ("p" pdf-view-previous-page-command :color red)
+        ("d" pdf-view-dark-minor-mode)
+        ("b" pdf-view-set-slice-from-bounding-box)
+        ("r" pdf-view-reset-slice)
+        ("g" pdf-view-first-page)
+        ("G" pdf-view-last-page)
+        ("e" pdf-view-goto-page)
+        ("o" pdf-outline)
+        ("s" pdf-occur)
+        ("i" pdf-misc-display-metadata)
+        ("u" pdf-view-revert-buffer)
+        ("F" pdf-links-action-perfom)
+        ("f" pdf-links-isearch-link)
+        ("B" pdf-history-backward :color red)
+        ("N" pdf-history-forward :color red)
+        ("l" image-forward-hscroll :color red)
+        ("h" image-backward-hscroll :color red))
+
+(with-eval-after-load 'pdf-mode
+  (define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
+)
+#+END_SRC
+
 ** hydra-buffers → Shift F1   my-map ,
 :PROPERTIES:
 :CREATED:  [2018-07-16 Mon 13:54]
@@ -11337,64 +11399,55 @@ FIXXME: add more features:
 
 #+RESULTS:
 : hydra-buffers/body
-
-** hydra-python → F1
+** hydra-spelling → F5
 :PROPERTIES:
-:CREATED:  [2018-07-01 Sun 11:12]
+:ID:       hydra-spellchecking
+:END:
+
+Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-spelling (:color red)
+    (concat my-f-key-settings
+  "
+  ^
+  ^Spelling^          ^Errors^            ^Checker^
+  ^────────^──────────^──────^────────────^───────^───────
+  check _r_egion      _n_ext error        _m_ode
+  check _b_uffer      _c_orrect           toggle _l_anguage
+  _s_ynonym
+  _d_efine word
+  ^^
+  ")
+  ("q" nil "quit")
+  ("r" flyspell-region nil)
+  ("l" my-toggle-ispell-language nil)
+  ("n" flyspell-goto-next-error nil)
+  ("s" my-synonym-current-word nil :color blue)
+  ("d" define-word-at-point nil :color blue) ;; define-word
+;;  ("<" flyspell-correct-previous :color pink nil)
+;;  (">" flyspell-correct-next :color pink nil)
+  ("c" flyspell-correct-word-before-point nil)
+;;  ("d" ispell-change-dictionary)
+  ("b" flyspell-buffer nil)
+  ("m" flyspell-mode nil))
+
+  (global-set-key [f5] 'hydra-spelling/body)
+#+END_SRC
+** END of hydra
+:PROPERTIES:
+:CREATED:  [2018-09-02 Sun 11:36]
 :END:
 
 #+BEGIN_SRC emacs-lisp
-(defhydra hydra-python (:color blue)
-    (concat my-f-key-settings
-  "
-  ^View^                 ^Navigation^        ^^Git                C-↑↓   goto line of same level
-  ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
-  _h_ide/show fun  M-h   _,_ ← error    F5   ^^← Git hunk →
-  _c_ycle all      M-H   _._   error →  F6   S-F_2_
-   S-F_3_
-  ^^                     _<_ ← symbol        _s_tage hunk
-  ^^                     _>_   symbol →      _R_evert hunk
-  ^^                     ^^                  ^^
-  ^Edit^                 ^Help^              ^^
-  ^^─────────────────────^^──────────────────^^────────────────
-  _i_mplement    C-c i   _H_elp (pylookup)   ^^
-  _r_efactor C-c C-r r   ^^                  ^^
-  sphinx-_d_oc           ^^                  ^^
-  ^^                     ^^                  ^^
-  ")
-  ("q" nil "quit")
-  ("h" hs-cycle nil :color red)
-  ("c" hs-cycle-all nil)
-
-  ("," flymake-goto-prev-error nil :color red)
-  ("." flymake-goto-next-error nil :color red)
-  ("<" highlight-symbol-prev nil)
-  (">" highlight-symbol-next nil)
-
-  ("2" git-gutter:previous-hunk nil :color red)
-  ("3" git-gutter:next-hunk nil :color red)
-  ("s" git-gutter:stage-hunk nil)
-  ("R" git-gutter:revert-hunk nil)
-
-  ("i" elpygen-implement nil)
-  ("r" elpy-refactor nil)
-  ("d" sphinx-doc nil)
-
-  ("H" pylookup-lookup nil)
-;  (""  nil)
-)
-
-(define-key python-mode-map [f1] 'hydra-python/body)
+);; end of hydra
 #+END_SRC
 
-#+RESULTS:
-: hydra-python/body
-
-** Key bindings
+* Key bindings
 
 In this heading, I do define many key bindings.
 
-*** my-map, the ressurection → C-c C-,
+** my-map, the ressurection → C-c C-,
 
 =C-c ,= is defined by Org-mode and must be re-defined here, after Org-mode has messed it up:
 
@@ -11408,7 +11461,7 @@ In this heading, I do define many key bindings.
 (bind-key "," #'hydra-buffers/body my-map)
 #+END_SRC
 
-*** general navigation keys: Home, End, forward/backward word, scrolling
+** general navigation keys: Home, End, forward/backward word, scrolling
 
 Home/End should behave like everywhere else:
 #+BEGIN_SRC emacs-lisp
@@ -11446,7 +11499,7 @@ I tried some of those but they did not stick:
 (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
 #+END_SRC
 
-*** boxquote → my-map [qQ]
+** boxquote → my-map [qQ]
 
 [[https://www.emacswiki.org/emacs/BoxQuote][Box quote]] does something like this:
 : ,----
@@ -11458,7 +11511,7 @@ I tried some of those but they did not stick:
 (bind-key "Q" #'boxquote-title my-map)
 #+END_SRC
 
-*** switching lines → my-map <up/down>
+** switching lines → my-map <up/down>
 
 http://whattheemacsd.com//editing-defuns.el-02.html
 
@@ -11486,7 +11539,7 @@ Swapping two lines:
 (bind-key (kbd "<down>") #'my-move-line-down my-map)
 #+END_SRC
 
-*** joining lines → my-map j
+** joining lines → my-map j
 
 Joining the current line with the next one: http://whattheemacsd.com//key-bindings.el-03.html
 
@@ -11499,7 +11552,7 @@ Joining the current line with the next one: http://whattheemacsd.com//key-bindin
 )
 #+END_SRC
 
-*** DISABLED web-jump → my-map w
+** DISABLED web-jump → my-map w
 
 «[[https://www.emacswiki.org/emacs/WebJump][WebJump]] is a programmable Web hotlist (or bookmark) facility that
 uses Emacs completion to select a hotlist item and can prompt for
@@ -11546,7 +11599,7 @@ query and option parameters.»
 
 #+END_SRC
 
-*** Show recently files → my-map r
+** Show recently files → my-map r
 
 [[help:recentf-open-files][Show a dialog to open a recent file.]]
 
@@ -11554,7 +11607,7 @@ query and option parameters.»
 (bind-key "r" #'recentf-open-files my-map)
 #+END_SRC
 
-*** DISABLED Outlook: edit/save message → my-map oe|os
+** DISABLED Outlook: edit/save message → my-map oe|os
 
 Some interaction with Outlook:
 
@@ -11565,7 +11618,7 @@ Some interaction with Outlook:
   )
 #+END_SRC
 
-*** org-mark-ring-goto() → my-map <left>
+** org-mark-ring-goto() → my-map <left>
 
 [[help:org-mark-ring-goto][Jump to the previous position in the mark ring.]]
 
@@ -11573,7 +11626,7 @@ Some interaction with Outlook:
 (bind-key (kbd "<left>") #'org-mark-ring-goto my-map)
 #+END_SRC
 
-*** open this config.org file → my-map .
+** open this config.org file → my-map .
 
 Very handy to modify my config file: open it ;-)
 
@@ -11586,7 +11639,7 @@ Very handy to modify my config file: open it ;-)
           )
 #+END_SRC
 
-*** open my org-mode teaser → my-map O
+** open my org-mode teaser → my-map O
 
 I've written an org-mode teaser file which can be found on
 https://github.com/novoid/org-mode-workshop
@@ -11611,7 +11664,7 @@ file.
 
 #+END_SRC
 
-*** DISABLED OrgStruct folding
+** DISABLED OrgStruct folding
 
 Until 2017-05, I was using [[http://orgmode.org/manual/Orgstruct-mode.html][the Orgstruct minor mode]] for navigating
 through my Emacs config file. With migrating my old =main.el= to this
@@ -11626,7 +11679,7 @@ in OrgStruct mode:
 (bind-key "]" (lambda () (interactive) (org-cycle)) my-map)
 #+END_SRC
 
-*** DISABLED my-fix-drawer-order() → my-map C
+** DISABLED my-fix-drawer-order() → my-map C
 
 I once noticed broken =PROPERTIES= drawers because of a bug in the
 Org-mode version I was using back then. Unfortunately, it messed up my
@@ -11642,7 +11695,7 @@ is =:LOGBOOK:= and toggles order of them:
 (bind-key "C" #'my-fix-drawer-order my-map)
 #+END_SRC
 
-*** hippie-expand → M-/
+** hippie-expand → M-/
 
 «[[http://emacswiki.org/emacs/HippieExpand][HippieExpand]] looks at the word before point and tries to expand it in
 various ways including expanding from a fixed list (like
@@ -11663,7 +11716,7 @@ a configurable list of functions.»
 (global-set-key (kbd "M-/") 'hippie-expand)
 #+END_SRC
 
-*** my-fill-or-unfill → M-q
+** my-fill-or-unfill → M-q
 :PROPERTIES:
 :CREATED:  [2018-01-27 Sat 11:33]
 :END:
@@ -11674,7 +11727,7 @@ Function defined above.
 (global-set-key (kbd "M-q") 'my-fill-or-unfill)
 #+END_SRC
 
-*** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
+** mark word|line|sentence|sexp|defun → my-map mw|ml|ms|mx|md
 
 With these commands, I get great shortcuts to put the current word,
 line, sentence, sexp or defun into the marked region:
