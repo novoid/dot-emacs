@@ -2979,6 +2979,36 @@ Memacs-indexed files (see Org Mode customized links):
 )
 #+END_SRC
 
+** my-dired-open-here-in-tmux-shell
+:PROPERTIES:
+:CREATED:  [2018-09-04 Tue 18:44]
+:END:
+
+Sometimes, I need the current directory showed in my [[https://en.wikipedia.org/wiki/Tmux][tmux]] session
+running in background. This is how it's done.
+
+- [ ] FIXXME: find a working solution for Windows 10
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-open-here-in-tmux-shell()
+  (interactive)
+  (cond
+       ((my-system-type-is-windows)
+        (message (concat "NOT Opening current dir in Windows/Cygwin tmux (NOT IMPLEMENTED AND TESTED YET): " dired-directory))
+        ;; see id:2018-09-02-open-dir-in-tmux for details on the development and Windows issues
+        ;;(mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)) ) myFileList)
+        )
+       ((string-equal system-type "darwin")
+        (message (concat "NOT Opening current dir in macOS tmux (NOT IMPLEMENTED AND TESTED YET): " dired-directory))
+        )
+       ((my-system-type-is-gnu)
+        (message (concat "Opening current dir in linux tmux: " dired-directory))
+        (shell-command (concat "tmux new-window 'cd \"" dired-directory "\"; pwd; zsh -i'"))
+	)
+	)
+)
+#+END_SRC
+
 ** filetags.el → F1
 :PROPERTIES:
 :CREATED:  [2018-07-04 Wed 15:43]
