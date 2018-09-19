@@ -23,7 +23,7 @@ its code and write additional features.
 Links that start with =id:= won't work for you because they link to my
 personal Org-mode files.
 
------------------------
+------------------------
 
 Some minor tasks I plan to do with my =config.org=:
 
@@ -11235,7 +11235,7 @@ Not org related but might be candidates as well:
   ^^View                 ^^Navigation        ^^Edit
   ^^─────────────────────^^──────────────────^^────────────────
   _s_tatus    my-map g   ^^← Git hunk →      _S_tage hunk
-  _t_ime-machine       S-F_2_    S-F_3_      _R_evert hunk
+  _t_ime-machine         S-F_2_    S-F_3_      _R_evert hunk
   ^^                     ^^                  ^^
   ^^                     ^^                  ^^
   ^^Smeargle             ^^                  ^^
@@ -11288,9 +11288,10 @@ Not org related but might be candidates as well:
   ^View    ^            ^Edit^                ^Order^
   ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
   _c_ollapse mode       _v_idir (C-x C-q)     _s_ize ordered     !  pipe to shell     C-t d    image-dired+ of marked files
-  _o_pen in file manager      ^^              _n_ormal ordered                        <percent> l  lowercase
-  _i_mage thumbnails    _SPC_ filetags.el     ^^                 x  delete flagged    <percent> u  uppercase
-  _(_ toggle details  ( ^^                    ^^                                      <percent> &  flag temp files
+  _o_pen in file manager      ^^              _h_uman size                            <percent> l  lowercase
+  _O_pen in tmux        _SPC_ filetags.el     _1_ time ordered   x  delete flagged    <percent> u  uppercase
+  _i_mage thumbnails    ^^                    _n_ormal ordered                        <percent> &  flag temp files
+  _(_ toggle details    ^^                    ^^
   ^^                    ^^                    ^^
   ")
   ("t" my-dired-tagtrees nil)
@@ -11313,14 +11314,17 @@ Not org related but might be candidates as well:
 
   ("c" dired-collapse-mode nil)
   ("o" my-dired-open-in-file-manager nil)
+  ("O" my-dired-open-here-in-tmux-shell nil)
   ("i" my-dired-mark-images-and-thumbnail nil)
   ("(" dired-hide-details-mode nil)
 
   ("v" dired-toggle-read-only nil)
   ("SPC" filetags-dired-update-tags nil)
 
-  ("s" (dired-sort-other "-alS --block-size=\'1") nil)
-  ("n" (dired-sort-other "-al --block-size=\'1") nil)
+  ("s" (dired-sort-other "-alS --group-directories-first") nil)
+  ("h" (dired-sort-other "-alSh --group-directories-first") nil)
+  ("1" (dired-sort-other "-alt --group-directories-first") nil)
+  ("n" (dired-sort-other "-al --group-directories-first") nil)
 
   ("q" nil "quit")
 
@@ -11331,6 +11335,9 @@ Not org related but might be candidates as well:
 
 (define-key dired-mode-map [f1] 'hydra-dired/body)
 #+END_SRC
+
+#+RESULTS:
+: hydra-dired/body
 
 ** hydra-pdftools → F1
 
