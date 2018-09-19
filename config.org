@@ -6031,12 +6031,6 @@ only see important business stuff.
                   :and (:deadline t :not (:tag ("reward" "@BWG"))))
           (:name "Important" :order 2
                  :and (:priority "A" :not (:tag ("reward" "@BWG"))))
-          (:name "Low Prio"
-                       ;; Show this section after "Today" and "Important", because
-                       ;; their order is unspecified, defaulting to 0. Sections
-                       ;; are displayed lowest-number-first.
-                       :and (:priority<= "B" :not (:tag ("reward" "@BWG")))
-                       :order 2)
           ;;(:name "Habits" :habit t :order 3 :and (:not (:tag ("reward" "@BWG"))))
           (:name "Shopping" :order 4
                  :and (:tag "Besorgung" :not (:tag ("reward" "@BWG"))))
@@ -6054,6 +6048,12 @@ only see important business stuff.
           ;;                     ;; Boolean NOT also has implicit OR between selectors
           ;;                     :not (:regexp "moon" :tag "planet")))
           ;;(:name "BWG" :tag "@BWG" :order 7)
+          (:name "Low Prio"
+                       ;; Show this section after "Today" and "Important", because
+                       ;; their order is unspecified, defaulting to 0. Sections
+                       ;; are displayed lowest-number-first.
+                       :and (:priority<= "B" :not (:tag ("reward" "@BWG")))
+                       :order 7)
           (:name "WAITING" :order 9
                  :and (:todo "WAITING" :not (:tag ("reward" "@BWG"))))  ; Set order of this section
           (:name "2read" :order 15
