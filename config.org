@@ -6583,17 +6583,17 @@ and with a bleeding heart.
 ;;		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
 ;;		  )
     (add-to-list 'org-agenda-category-icon-alist
-		  '("detego" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
-		  )
+            `("detego" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
     (add-to-list 'org-agenda-category-icon-alist
-		  '("ciso" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
-		  )
+            `("ciso" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
     (add-to-list 'org-agenda-category-icon-alist
-		  '("outlook" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
-		  )
+            `("outlook" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
     (add-to-list 'org-agenda-category-icon-alist
-		  '("ISAE3402" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
-		  )
+            `("ISAE3402" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;; OLD version without my-user-emacs-directory; with help of: https://github.com/novoid/dot-emacs/issues/2
+;;OLD:    (add-to-list 'org-agenda-category-icon-alist
+;;OLD:		  '("ciso" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
+;;OLD:		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
     ;;		 )
