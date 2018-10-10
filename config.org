@@ -4670,11 +4670,16 @@ Opening image files with external viewer:
 			       ("\\.jpg\\'" . default)
 			       ("\\.jpeg\\'" . default)
 			       ("\\.tiff\\'" . default)
+			       ("\\.doc\\'" . default)
 			       ("\\.docx\\'" . default)
 			       ("\\.xlsx\\'" . default)
 			       ("\\.pptx\\'" . default)
 			       ) org-file-apps ))))
 #+END_SRC
+
+#+RESULTS:
+| (lambda nil (setq org-file-apps (append (quote ((\.png\' . default) (\.jpg\' . default) (\.jpeg\' . default) (\.tiff\' . default) (\.doc\' . default) (\.docx\' . default) (\.xlsx\' . default) (\.pptx\' . default))) org-file-apps))) | (closure (t) nil (add-hook (quote before-save-hook) (quote org-encrypt-entries) nil t)) | org-table-sticky-header-mode | (lambda nil (setq org-file-apps (append (quote ((\.png\' . default) (\.jpg\' . default) (\.jpeg\' . default) (\.tiff\' . default) (\.docx\' . default) (\.xlsx\' . default) (\.pptx\' . default))) org-file-apps))) | (lambda nil (setq prettify-symbols-alist (cons (quote (TODO . 9608)) prettify-symbols-alist)) (setq prettify-symbols-alist (cons (quote (DONE . 10003)) prettify-symbols-alist)) (setq prettify-symbols-alist (cons (quote (WAITING . 8230)) prettify-symbols-alist)) (setq prettify-symbols-alist (cons (quote (CANCELLED . 215)) prettify-symbols-alist)) (setq prettify-symbols-alist (cons (quote (SOMEDAY . 63)) prettify-symbols-alist))) | (lambda nil (org-bullets-mode 1)) | yas-minor-mode-on | (closure (org-inlinetask-min-level org-mode-abbrev-table org-mode-syntax-table buffer-face-mode-face org-mode-map org-tbl-menu org-org-menu org-struct-menu org-entities org-last-state org-id-track-globally org-clock-start-time texmathp-why remember-data-file org-agenda-tags-todo-honor-ignore-options iswitchb-temp-buflist calc-embedded-open-mode calc-embedded-open-formula calc-embedded-close-formula align-mode-rules-list org-emphasis-alist org-emphasis-regexp-components org-export-registered-backends org-modules org-babel-load-languages org-element-paragraph-separate ffap-url-regexp t) nil (add-hook (quote change-major-mode-hook) (quote org-show-block-all) (quote append) (quote local))) | (closure (org-bracket-link-regexp org-src-window-setup *this* org-babel-confirm-evaluate-answer-no org-src-preserve-indentation org-src-lang-modes org-edit-src-content-indentation org-babel-library-of-babel t) nil (add-hook (quote change-major-mode-hook) (quote org-babel-show-result-all) (quote append) (quote local))) | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
 ** TODO keywords and faces
 
 Define my default keywords:
