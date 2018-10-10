@@ -2318,7 +2318,7 @@ current directory.
 
 #+BEGIN_SRC emacs-lisp
 (setq dired-dwim-target t)
-(setq dired-listing-switches "-al  --group-directories-first")
+;;(setq dired-listing-switches "-al  --group-directories-first")
 #+END_SRC
 
 ** dired-garbage-files-regexp - define garbage file regex
