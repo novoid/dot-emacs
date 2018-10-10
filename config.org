@@ -1575,6 +1575,11 @@ following function:
 - http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html
   - open dired file in external app (specified by the operating system)
 
+- https://www.reddit.com/r/emacs/comments/9iwnwi/w32shellexecute_explore_fails_if_file_type_hasnt/
+  - interesting reddit discussion with several explanations on
+    w32explore, dired-w32explore, w32-shell-execute, and
+    xah-show-in-desktop()
+
 #+BEGIN_SRC emacs-lisp
 (defun my-open-in-external-app (&optional file)
   "Open the current FILE or dired marked files in external app.
