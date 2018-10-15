@@ -7139,6 +7139,47 @@ Here, I apply the patch by overwriting the orgmode function:
 
 *This can be removed* when the patch hits orgmode/maint in git.
 
+*** my-thousands-separate()
+:PROPERTIES:
+:CREATED:  [2018-10-13 Sat 23:32]
+:END:
+
+Formats a long number with thousands separator like =1,234,567.89=.
+This can not be taken as input for further calculations!
+
+From: https://stackoverflow.com/questions/35661173/how-to-format-table-fields-as-currency-in-org-mode
+
+#+BEGIN_SRC emacs-lisp
+(defun my-thousands-separate (num)
+  "Formats the (possibly floating point) number with a thousands
+separator."
+  (let* ((nstr (number-to-string num))
+         (dot-ind (string-match "\\." nstr))
+         (nstr-no-decimal (if dot-ind
+                               (substring nstr 0 dot-ind)
+                             nstr))
+         (nrest (if dot-ind
+                    (substring nstr dot-ind)
+                  nil))
+         (pretty nil)
+         (cnt 0))
+    (dolist (c (reverse (append nstr-no-decimal nil)))
+      (if (and (zerop (% cnt 3)) (> cnt 0))
+          (setq pretty (cons ?, pretty)))
+      (setq pretty (cons c pretty))
+      (setq cnt (1+ cnt)))
+    (concat pretty nrest)))
+#+END_SRC
+
+| Item     | Quantity |      Price |          Ext |
+|----------+----------+------------+--------------|
+| Widget 1 |       10 | 1001001.00 |  10010010.00 |
+| Widget 2 |        5 |  501001.00 |   2505005.00 |
+| Widget 3 |        1 |   51001.00 |     51001.00 |
+|----------+----------+------------+--------------|
+|          |          |      Total | 12,566,016.0 |
+#+TBLFM: $4=($2*$3);%.2f::@5$4='(my-thousands-separate (apply '+ '(@2..@4)));N
+
 ** Exporting
 
 Not necessary any more:
