@@ -6138,7 +6138,7 @@ only see important business stuff.
   (setq org-agenda-custom-commands
         (quote (
 
-                ("a" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
+                ("s" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
                  (org-super-agenda-mode)
                  ((org-super-agenda-groups my-super-agenda-groups))
                  (org-agenda nil "a"))
@@ -6148,7 +6148,7 @@ only see important business stuff.
                  ((org-super-agenda-groups my-super-agenda-important-business-only-groups))
                  (org-agenda nil "a"))
 
-                ("A" "Agenda" agenda ""
+                ("g" "Agenda" agenda ""
                  (org-agenda nil "a"))
 
                 ;; disabled 2014-08-17 ;;          ;; https://lists.gnu.org/archive/html/emacs-orgmode/2011-07/msg01374.html
