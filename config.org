@@ -1,4 +1,4 @@
-# -*- mode: org; coding: utf-8; -*-
+/# -*- mode: org; coding: utf-8; -*-
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -4350,6 +4350,10 @@ On an agenda entry: add "-0d" to deadline
   | [2011-03-01 Tue] |  8:00 | 12:00 | 12:30 | 18:15 | 9:45 |
   #+TBLFM: $6='(with-time t (+ (- $5 $4) (- $3 $2)))
 
+|    13:59 |   839 |
+| 13:59:05 | 50345 |
+#+TBLFM: $2='(my-org-time-string-to-seconds $1)
+
 #+BEGIN_SRC emacs-lisp
   (defun my-org-time-string-to-seconds (s)
     "Convert a string HH:MM:SS to a number of seconds.
@@ -4377,6 +4381,10 @@ On an agenda entry: add "-0d" to deadline
 
 *** my-org-time-string-to-hours(s)
 
+|    13:59 | 0.23305555555555554 |
+| 13:59:05 |  13.984722222222222 |
+#+TBLFM: $2='(my-org-time-string-to-hours $1)
+
 #+BEGIN_SRC emacs-lisp
   (defun my-org-time-string-to-hours (s)
     "Convert a string HH:MM:SS to hours (float).
@@ -4389,6 +4397,10 @@ On an agenda entry: add "-0d" to deadline
 #+END_SRC
 
 *** my-org-time-seconds-to-string(secs)
+
+|    42 |       42 |
+| 98765 | 27:26:05 |
+#+TBLFM: $2='(my-org-time-seconds-to-string (string-to-number $1))
 
 #+BEGIN_SRC emacs-lisp
   (defun my-org-time-seconds-to-string (secs)
