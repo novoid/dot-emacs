@@ -4343,16 +4343,21 @@ On an agenda entry: add "-0d" to deadline
 
 - 2013-10-11
 - From: http://orgmode.org/worg/org-hacks.html#sec-1-4-3
-- calculating with dates and times:
 
-  | Date             | Start | Lunch |  Back |   End |  Sum |
-  |------------------+-------+-------+-------+-------+------|
-  | [2011-03-01 Tue] |  8:00 | 12:00 | 12:30 | 18:15 | 9:45 |
-  #+TBLFM: $6='(with-time t (+ (- $5 $4) (- $3 $2)))
+Example 1: normal dates and times
+| Date             | Start | Lunch |  Back |   End |  Sum |
+|------------------+-------+-------+-------+-------+------|
+| [2011-03-01 Tue] |  8:00 | 12:00 | 12:30 | 18:15 | 9:45 |
+#+TBLFM: $6='(with-time t (+ (- $5 $4) (- $3 $2)))
 
+Example 2: =my-org-time-string-to-seconds= simple case
 |    13:59 |   839 |
 | 13:59:05 | 50345 |
 #+TBLFM: $2='(my-org-time-string-to-seconds $1)
+
+Example 3: calculating with =my-org-time-string-to-seconds= results
+| 21:42:13 | 21:41:00 | 73 |
+#+TBLFM: @1$3='(- (my-org-time-string-to-seconds $1) (my-org-time-string-to-seconds $2))
 
 #+BEGIN_SRC emacs-lisp
   (defun my-org-time-string-to-seconds (s)
