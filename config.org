@@ -1,4 +1,4 @@
-/# -*- mode: org; coding: utf-8; -*-
+# -*- mode: org; coding: utf-8; -*-
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
@@ -3578,6 +3578,13 @@ http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 :      otherwise don't resize
 : (setq org-image-actual-width t)
 :   => Never resize and use original width (the default)
+
+[[https://www.reddit.com/r/emacs/comments/9y1swq/orgbullets_on_windows_workaround_that/][org-bullets on Windows: workaround that significantly improves speed]]
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-windows)
+  (setq inhibit-compacting-font-caches t)
+)
+#+END_SRC
 
 *** DISABLED scimax/org-return
 
