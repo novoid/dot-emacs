@@ -5050,7 +5050,7 @@ Templates for my home:
 Company templates:
 #+BEGIN_SRC emacs-lisp
 	  ("d" "detego")
-    ("ds" "shorts" entry (file+headline "~/org/detego.org" "shorts")
+    ("ds" "shorts" entry (file+headline "~/org/detego.org" "shorts/projects")
 	   ,my-capture-template-next :empty-lines 1)
 	  ("de" "event" entry (file+headline "~/org/detego.org" "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
