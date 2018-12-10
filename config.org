@@ -2321,6 +2321,12 @@ current directory.
 ;;(setq dired-listing-switches "-al  --group-directories-first")
 #+END_SRC
 
+from: [[http://mbork.pl/2018-12-10_Lesser_known_Dired_stuff][Marcin Borkowski: 2018-12-10 Lesser known Dired stuff]]: create
+parent directories when slashes are used when renaming files:
+#+BEGIN_SRC emacs-lisp
+;(setq wdired-create-parent-directories t)  FIXXME: enable when my old installation gets an update
+#+END_SRC
+
 ** dired-garbage-files-regexp - define garbage file regex
 :PROPERTIES:
 :CREATED:  [2018-07-05 Thu 17:39]
