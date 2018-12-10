@@ -7433,6 +7433,37 @@ END of LaTeX class definitions
   )
 #+END_SRC
 
+*** ox-slack
+:PROPERTIES:
+:CREATED:  [2018-12-10 Mon 16:55]
+:END:
+
+From [[https://github.com/titaniumbones/ox-slack][GitHub]]: derived from MD export but optimized for syntax sub-set of slack.
+
+#+BEGIN_QUOTE
+This package provides the interactive function
+=org-slack-export-to-clipboard-as-slack=, which copies the region to the
+kill-ring in slack format. From there it should be easy to paste the
+resultant text into your slack client.
+#+END_QUOTE
+
+=ox-gfm= (GitHub flavoured markdown) is needed for =ox-slack=:
+#+BEGIN_SRC emacs-lisp
+(use-package ox-gfm
+  :defer 10
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :if (my-system-type-is-windows)
+  )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-slack
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-slack/")))
+  :defer 10
+  :if (my-system-type-is-windows)
+  )
+#+END_SRC
+
 *** ox-pandoc - Export via Pandoc
 
 https://github.com/kawabata/ox-pandoc - «This is another exporter that
@@ -7573,6 +7604,8 @@ translates Org-mode file to various other formats via Pandoc.»
       ;;(?^ "as haddock." org-pandoc-export-as-haddock)
       (?7 "to epub2 and open." org-pandoc-export-to-epub2-and-open)
       (?8 "to epub2." org-pandoc-export-to-epub2)
+      (?9 "Slack (clipboard)" org-slack-export-to-clipboard-as-slack)
+      (?0 "as Slack" org-slack-export-as-slack)
       )
     )
 
@@ -7862,6 +7895,7 @@ binding the function:
 #+BEGIN_SRC emacs-lisp
 (bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
 #+END_SRC
+
 ** helm-org-agenda-files-headings: grep within headings → my-map H
 
 This is a neat and fast way of looking for string only within heading
