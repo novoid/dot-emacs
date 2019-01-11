@@ -1618,6 +1618,33 @@ following function:
     (not (eq nil (get-buffer bufname)))
     )
 #+END_SRC
+
+** my-comment-box
+:PROPERTIES:
+:CREATED:  [2019-01-11 Fri 14:36]
+:END:
+
+I got this code from [[http://pragmaticemacs.com/emacs/comment-boxes/][pragmaticemacs]]:
+
+#+BEGIN_SRC emacs-lisp
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; example:                                                                ;;
+  ;; from http://irreal.org/blog/?p=374                                      ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defun my-comment-box (b e)
+  "Draw a box comment around the region but arrange for the region to extend to at least the fill column. Place the point after the comment box."
+
+  (interactive "r")
+
+  (let ((e (copy-marker e t)))
+    (goto-char b)
+    (end-of-line)
+    (insert-char ?  (- fill-column (current-column)))
+    (comment-box b e 1)
+    (goto-char e)
+    (set-marker e nil)))
+#+END_SRC
+
 * Spell checking
 
 «[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
