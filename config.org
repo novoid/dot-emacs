@@ -8839,7 +8839,7 @@ The package:
 (use-package pdf-tools
 ;;  :if (my-system-type-is-gnu)
   :ensure t
-  :defer 15
+  :defer 20
    :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
   :config
   (pdf-tools-install)
@@ -10114,7 +10114,7 @@ and memorize the commands.
 ;; (move-text-default-bindings)
 #+END_SRC
 
-** DISABLED command-log-mode → my-map k
+** DISABLED command-log-mode → my-map k (visualizing keyboard input in buffer)
 
 2017-06-01: package was unavailable → disabled for now since I don't
 use it anyway.
