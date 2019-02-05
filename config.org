@@ -8053,6 +8053,11 @@ http://kitchingroup.cheme.cmu.edu/blog/2014/12/21/Capturing-stderr-from-Python-i
     )
 #+END_SRC
 
+Switch babel to python 3 (see id:2019-01-26-python3-src-blocks)
+#+BEGIN_SRC emacs-lisp
+    (setq org-babel-python-command "ipython3")
+#+END_SRC
+
 Redirect stderr to stdout in order to see it in the results:
 id:2015-01-11-redirect-org-babel-sh-stderr-to-stdout
 #+BEGIN_SRC emacs-lisp :tangle no
