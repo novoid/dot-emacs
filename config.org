@@ -2113,10 +2113,19 @@ enable elpy and use ipython:
 ** Switch for ipython (NOT YET TESTED)
 
 From [[https://www.reddit.com/r/emacs/comments/70chy1/emacs_ipython_completion/][this reddit]] and [[https://emacs.stackexchange.com/questions/24453/weird-shell-output-when-using-ipython-5][this solution]]: NOT TESTED YET! (2017-10-02)
+
+2019-01-20: [[https://www.reddit.com/r/emacs/comments/ahuvm6/how_can_i_switch_my_python_interpreter_to_use/][this reddit]] thread suggests overwriting
+=python-shell-interpreter= in order to switch to Python 3. (not
+tested/confirmed yet)
+
 #+BEGIN_SRC emacs-lisp
-(when (my-eval-if-binary-or-warn "ipython")
-    (setq python-shell-interpreter "ipython"
+(if (my-eval-if-binary-or-warn "ipython3")
+    (setq python-shell-interpreter "ipython3"
         python-shell-interpreter-args "--simple-prompt -i")
+    ;; else:
+    (when (my-eval-if-binary-or-warn "python3")
+      (setq python-shell-interpreter "python3")
+    )
 )
 #+END_SRC
 
