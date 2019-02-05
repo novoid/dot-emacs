@@ -2414,7 +2414,9 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
 )
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
+2019-02-05: disabled because loading a new dired buffer took very
+long with it although it really looked nicely:
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package dired-icon
 :ensure t
 :defer 10
