@@ -830,8 +830,8 @@ It also checks certain operating system/binary combinations which aren't likely 
         )
       )
      ((and (my-system-type-is-windows) (string= binaryname "outlook"))
-      (when (file-exists-p "C:/Program Files (x86)/Microsoft Office/Office16/OUTLOOK.EXE")
-        (concat "C:/Program Files (x86)/Microsoft Office/Office16/OUTLOOK.EXE")
+      (when (file-exists-p "C:/Program Files/Microsoft Office/Office16/OUTLOOK.EXE")
+        (concat "C:/Program Files/Microsoft Office/Office16/OUTLOOK.EXE")
         )
       )
      ;; this is the default check for all binaries which got no special handling above:
