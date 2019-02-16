@@ -4735,6 +4735,8 @@ This is why I had to come up with this helper function:
   (when (re-search-forward "^\\(\\*.*\\)
 \\(.*\\)\\s-* \\(http.*\\)\\s-*\\(\\[20.*\\]\\)" nil t)
     (replace-match "\\1 [[\\3][\\2]]\n\\4" t nil)))
+
+(bind-key "B" 'my-newsrob-capture-fix my-map)
 #+END_SRC
 
 ** org-mode-hook
