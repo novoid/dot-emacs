@@ -4701,6 +4701,42 @@ This is part 4/4 of the soluiton to split up blocks via =M-RET=:
 (advice-add 'org-meta-return :before-until #'my-org-meta-return-advice)
 #+END_SRC
 
+*** my-newsrob-capture-fix()
+:PROPERTIES:
+:CREATED:  [2019-02-16 Sat 16:11]
+:END:
+
+Currently as of 2019-02-16, I'm using [[https://www.appbrain.com/app/newsrob-google-reader-rss/com.newsrob][NewsRob Android]] for reading Atom
+and RSS feeds.
+
+Unfortunately, when I capture NewsRob articles using Mobile Org, I end
+up with a messed up format in my =inbox.org=:
+
+: * NEXT Bookmark
+: Some text is here http://example.com/path/page.html[2019-02-16 Sat. 16:07]
+
+In contrast, I would prefer:
+
+: * NEXT Bookmark [[http://example.com/path/page.html][Some text is here]]
+: [2019-02-16 Sat. 16:07]
+
+Using this preferred format, I may apply =my-save-bookmark()= as usual.
+
+This is why I had to come up with this helper function:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-newsrob-capture-fix ()
+  "Fixes NewsRob OrgMobile capture format error (content starts in 2nd line) and generates proper Org URL link"
+  ;; for details, see id:2019-02-16-my-newsrob-capture-fix
+
+  (interactive)
+  ;; ASSUMPTION: cursor is in FIRST line of the captured heading
+  (beginning-of-line)
+  (when (re-search-forward "^\\(\\*.*\\)
+\\(.*\\)\\s-* \\(http.*\\)\\s-*\\(\\[20.*\\]\\)" nil t)
+    (replace-match "\\1 [[\\3][\\2]]\n\\4" t nil)))
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
