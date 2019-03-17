@@ -8937,23 +8937,48 @@ Bindings:
           ("k"  . pdf-view-previous-page)
           ("e"  . pdf-view-goto-page)
           ("u"  . pdf-view-revert-buffer)
-          ("al" . pdf-annot-list-annotations)
-          ("ad" . pdf-annot-delete)
-          ("aa" . pdf-annot-attachment-dired)
-          ("am" . pdf-annot-add-markup-annotation)
-          ("at" . pdf-annot-add-text-annotation)
+;;          ("al" . pdf-annot-list-annotations)
+;;          ("ad" . pdf-annot-delete)
+;;          ("aa" . pdf-annot-attachment-dired)
+;;          ("am" . pdf-annot-add-markup-annotation)
+;;          ("at" . pdf-annot-add-text-annotation)
           ("y"  . pdf-view-kill-ring-save)
           ("i"  . pdf-misc-display-metadata)
           ("s"  . pdf-occur)
           ("b"  . pdf-view-set-slice-from-bounding-box)
-          ("r"  . pdf-view-reset-slice))
+          ("r"  . pdf-view-reset-slice)
+          ("m"  . pdf-annot-add-highlight-markup-annotation))
 #+END_SRC
 
+Setting highlighting color:
 
-** End of pdf-tools
+- https://github.com/politza/pdf-tools/issues/35
+
+#+BEGIN_SRC emacs-lisp
+;:init
+(with-eval-after-load 'pdf-view-mode
+  (when (my-system-type-is-windows)
+    (push '(color . "yellow") pdf-annot-default-markup-annotation-properties)
+  )
+)
+;    (setq pdf-annot-default-markup-annotation-properties '(color . "yellow"))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
  );; end of pdf-tools
+#+END_SRC
+
+- [ ] FIXXME: this is a dirty workaround in order to make pdf-view mode work as expected by me:
+  - I could not fix following settings:
+    - =F1= shows the hydra within pdf-view-mode
+    - yellow is the default markup annotation color setting
+
+#+BEGIN_SRC emacs-lisp
+(defun my-pdf-tools ()
+  (interactive)
+  (define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
+  (push '(color . "yellow") pdf-annot-default-markup-annotation-properties)
+)
 #+END_SRC
 
 * Misc modes/packages
