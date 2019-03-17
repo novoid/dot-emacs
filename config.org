@@ -7991,6 +7991,43 @@ binding the function:
 (bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
 #+END_SRC
 
+*** ox-koma-letter
+:PROPERTIES:
+:CREATED:  [2019-03-17 Sun 19:16]
+:END:
+
+I configured the [[https://komascript.de][KOMA]] letter exporter according to [[https://orgmode.org/worg/exporters/koma-letter-export.html][this page]].
+
+You can get a default drawer template by invoking =C-c C-e= for export
+and then choose =#= and =koma-letter=.
+
+FIXXME: there is a big *KOMA letter* on the result page which I don't
+know how to get rid of.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-koma-letter
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+)
+(eval-after-load 'ox '(require 'ox-koma-letter))
+#+END_SRC
+
+I prefer the language German in my letters:
+
+#+BEGIN_SRC emacs-lisp
+(eval-after-load 'ox-koma-letter
+  '(progn
+     (add-to-list 'org-latex-classes
+                  '("my-letter"
+                    "\\documentclass\{scrlttr2\}
+     \\usepackage[german]{babel}
+     \\setkomavar{frombank}{(1234)\\,567\\,890}
+     \[DEFAULT-PACKAGES]
+     \[PACKAGES]
+     \[EXTRA]"))
+
+     (setq org-koma-letter-default-class "my-letter")))
+#+END_SRC
+
 ** helm-org-agenda-files-headings: grep within headings → my-map H
 
 This is a neat and fast way of looking for string only within heading
