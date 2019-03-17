@@ -3633,6 +3633,16 @@ http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 )
 #+END_SRC
 
+Inheritance of checkbox toggling: should parent checkboxes be checked
+when all children are checked as well?
+
+- Non-nil means checkbox statistics counts /only the state of direct children/.
+- When nil, /all boxes below/ the cookie are counted.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-checkbox-hierarchical-statistics t)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
@@ -5212,6 +5222,8 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 	  (goto-char (point-min))
 	  (while (search-forward "* NEXT Bookmark " nil t) (replace-match "* " nil t))
 	  (goto-char (point-min))
+;;    (join-line -1) ;; join line because with capturing via NewsBlur app, the content starts in line 2
+;;	  (goto-char (point-min))
 	  (while (search-forward "* NEXT " nil t) (replace-match "* " nil t))
 	  (goto-char (point-min))
 	  (while (search-forward "* Bookmark " nil t) (replace-match "* " nil t))
@@ -5251,6 +5263,10 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 
   (bind-key "b" 'my-save-bookmark my-map)
 #+END_SRC
+
+#+RESULTS:
+: my-save-bookmark
+
 ** Refiling
 
 - http://orgmode.org/manual/Capture-_002d-Refile-_002d-Archive.html
@@ -8907,10 +8923,10 @@ This seems to be a pre-requisite to pdf-tools.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pdfview
-;;:if (my-system-type-is-gnu)
-:ensure t
-:defer 15
-:config
+  ;;:if (my-system-type-is-gnu)
+  :ensure t
+  :defer 15
+  :config
 )
 #+END_SRC
 
@@ -8932,13 +8948,13 @@ The package:
 ;;  :if (my-system-type-is-gnu)
   :ensure t
   :defer 20
-   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
+  :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
   :config
   (pdf-tools-install)
   (eval-after-load 'org '(require 'org-pdfview))
 #+END_SRC
 
-Configuration:
+; ** pdf-tools configuration
 
 #+BEGIN_SRC emacs-lisp
   ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
@@ -8957,15 +8973,16 @@ Use normal isearch: ([[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in
 
 Workaround for [[https://github.com/markus1189/org-pdfview/issues/14][this issue]] on Org-mode 9 on Windows:
 #+BEGIN_SRC emacs-lisp
-  (when (my-system-type-is-windows)
+;  (when (my-system-type-is-windows)
     (add-to-list 'org-file-apps '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link))))
-  )
+;  )
 #+END_SRC
 
 Bindings:
+
 #+BEGIN_SRC emacs-lisp
   (bind-keys :map pdf-view-mode-map
-          ("f1" . hydra-pdftools/body)
+   ;;       ("f1" . hydra-pdftools/body)
           ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
           ("g"  . pdf-view-first-page)
           ("G"  . pdf-view-last-page)
@@ -11607,26 +11624,41 @@ Not org related but might be candidates as well:
     (concat my-f-key-settings
         "
                                                                       ╭───────────┐
-       Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
+       Move  History   Scale/Fit                                      │ PDF Tools │
    ╭──────────────────────────────────────────────────────────────────┴───────────╯
-         ^^_g_^^      _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
-         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
-         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
-         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
-    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
-         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
+         ^^_g_^^      _B_    ^↧^    _+_    ^ ^      [_s_] search    [_u_] revert buffer
+         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤    [_o_] outline   [_i_] info
+         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^      [_F_] link      [_d_] dark mode
+         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐    [_f_] search link
+    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_
+         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯
          ^^_n_^^      ^ ^  _r_eset slice box
          ^^^↓^^^
          ^^_G_^^
-   --------------------------------------------------------------------------------
+
+   Navigation                                    Search                       Annotations
+   ───────────────────────────────────────────────────────────────────────────^─────────^───────────────
+   ↑   C-p  BSPC   p     <            M-<        C-s   search forward         C-c C-a l  list annotations (jump: SPC)
+      line  view  page  page border  document    C-r   search backward        q          close annotations list
+   ↓   C-n   SPC   n     >            M->        f     search in links        C-c C-a h  highlight (m)
+                                                 F     pick link and jump     d          mark for delete
+   M-g g  goto page                              M-s o occur (jump via RET)   x          delete marked
+                                                                              u          unmark
+   Display                         Margins              AuxTeX
+   ───────────────────────────────────────────────────────────────────────────────────────────────────
+   +/-    Zoom                     s b  trim margins    C-c C-g    jump to PDF spot
+   0      reset zoom               s r  reset margins   C-mouse-1  jump to source in PDF
+   W/H/P  fit width/height/page
+   o      outline (jump via RET)          g → reload file     C-c C-p → print file
+
         ")
         ("\\" hydra-master/body "back")
         ("q" nil "quit")
-        ("al" pdf-annot-list-annotations)
-        ("ad" pdf-annot-delete)
-        ("aa" pdf-annot-attachment-dired)
-        ("am" pdf-annot-add-markup-annotation)
-        ("at" pdf-annot-add-text-annotation)
+;;        ("al" pdf-annot-list-annotations)
+;;        ("ad" pdf-annot-delete)
+;;        ("aa" pdf-annot-attachment-dired)
+;;        ("am" pdf-annot-add-markup-annotation)
+;;        ("at" pdf-annot-add-text-annotation)
         ("y"  pdf-view-kill-ring-save)
         ("+" pdf-view-enlarge :color red)
         ("-" pdf-view-shrink :color red)
@@ -11651,12 +11683,12 @@ Not org related but might be candidates as well:
         ("B" pdf-history-backward :color red)
         ("N" pdf-history-forward :color red)
         ("l" image-forward-hscroll :color red)
-        ("h" image-backward-hscroll :color red))
+        ("h" image-backward-hscroll :color red)
+        ("m" pdf-annot-add-highlight-markup-annotation))
 
-(with-eval-after-load 'pdf-mode
-  (define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
-)
 #+END_SRC
+
+#+RESULTS:
 
 ** hydra-buffers → Shift F1   my-map ,
 :PROPERTIES:
@@ -11784,6 +11816,12 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
 
 #+BEGIN_SRC emacs-lisp
 );; end of hydra
+
+(with-eval-after-load 'pdf-view-mode
+  (define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
+)
+;;    (define-key pdf-view-mode-map [f1] 'hydra-pdftools/body)
+
 #+END_SRC
 
 * Key bindings
@@ -12098,6 +12136,8 @@ line, sentence, sexp or defun into the marked region:
 (bind-key "m x" #'mark-sexp my-map)
 (bind-key "m d" #'mark-defun my-map)
 #+END_SRC
+
+
 * autostart
 
 At the end of loading most of my configuration, I want to execute some
