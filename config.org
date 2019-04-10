@@ -8954,13 +8954,16 @@ end of git-timemachine:
 
 For viewing and editing PDF files, Emacs has a lot to offer.
 
+2019-04-08: Had to disable showing PDFs within Windows Emacs because
+of frequent Emacs crashes(!) after displaying PDF buffers. :-(
+
 ** org-pdfview
 
 This seems to be a pre-requisite to pdf-tools.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pdfview
-  ;;:if (my-system-type-is-gnu)
+  :if (my-system-type-is-gnu)
   :ensure t
   :defer 15
   :config
@@ -8982,7 +8985,7 @@ The package:
 
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
-;;  :if (my-system-type-is-gnu)
+  :if (my-system-type-is-gnu)
   :ensure t
   :defer 20
   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
