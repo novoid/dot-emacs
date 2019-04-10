@@ -2550,7 +2550,7 @@ Provides:
 )
 #+END_SRC
 
-** image-dired+
+** DISABLED image-dired+
 :PROPERTIES:
 :CREATED:  [2018-06-29 Fri 12:58]
 :END:
