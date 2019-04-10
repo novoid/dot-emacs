@@ -1686,7 +1686,7 @@ flyspell.el <http://kaolin.unice.fr/~serrano/>
 (setq flyspell-issue-welcome-flag nil)
 
 (when (my-system-type-is-windows)
-  (setq flyspell-default-dictionary "german8")
+  (setq flyspell-default-dictionary "british")
 )
 (when (my-system-type-is-gnu)
   (setq flyspell-default-dictionary "de_AT")
@@ -1704,7 +1704,7 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
 
 (when (my-system-type-is-windows)
     ;; use british english on powerplantwin:
-    (let ((langs '("german8" "british")))
+    (let ((langs '("british" "german8")))
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
   )
