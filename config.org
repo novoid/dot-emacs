@@ -53,6 +53,12 @@ profiling:
 #+BEGIN_SRC emacs-lisp
 (defvar my-config-el-start-time (current-time) "Time when config.el was started")
 ;(profiler-start 'cpu);; test startup performance - create report with M-x profiler-report
+
+;; from http://ergoemacs.org/emacs/elisp_datetime.html
+(setq my-config-el-start-time-iso (concat
+ (format-time-string "%Y-%m-%dT%T")
+ ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+  (format-time-string "%z"))))
 #+END_SRC
 
 2011-04-20: turn off backup files
@@ -514,6 +520,54 @@ grep ":defer " ~/.emacs.d/config.el |  # extract all occurrences of ":defer" fro
 :      11 :defer 90
 : Tue Apr 16 10:31:52 WEDT 2019
 
+* Logging of mode versions
+:PROPERTIES:
+:CREATED:  [2019-04-16 Tue 13:16]
+:END:
+
+Here's the idea: on every Emacs startup, a file like
+=~/.emacs.d/var/log/HOSTNAME.txt= is overwritten with the current
+time-stamp and =emacs-version=.
+
+In miscellaneous module settings, I might decide to append the mode
+version.
+
+This way, I get a list of files of all of my hosts sharing the same
+Emacs configuration that holds the time of the last startup and the
+version strings of interesting modes. This simplifies generating bug
+reports and finding issues with version conflicts.
+
+Here we go. Let's define the common file name, one per host:
+
+#+BEGIN_SRC emacs-lisp
+(setq my-var-log-hostname-file (concat my-user-emacs-directory "var/log/" system-name ".txt"))
+#+END_SRC
+
+At Emacs startup, overwrite the file content and initializing it with
+the current time stamp:
+
+#+BEGIN_SRC emacs-lisp
+(write-region (concat "Started on " my-config-el-start-time-iso "\n") nil my-var-log-hostname-file)
+#+END_SRC
+
+Define the function that is called to append lines to the file:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-append-to-var-log-hostname-file (mystring mycommand)
+  "append a string and the result of a command to the my-var-log-hostname-file file"
+  (interactive)
+;;  (write-region (concat "emacs-version " emacs-version "\n") nil my-var-log-hostname-file t)
+  (write-region (concat mystring " " mycommand "\n") nil my-var-log-hostname-file t)
+)
+#+END_SRC
+
+And let's use this new function to log the version of the GNU/Emacs
+that is starting:
+
+#+BEGIN_SRC emacs-lisp
+(my-append-to-var-log-hostname-file "emacs-version" emacs-version)
+#+END_SRC
+
 * my-load-local-el()
 
 Using this function, I am able to easily load lisp files within my
@@ -797,6 +851,7 @@ END of Cygwin/babun configuration
 
 end of Cygwin config
 #+BEGIN_SRC emacs-lisp
+(my-append-to-var-log-hostname-file "cygwin-mount-version" cygwin-mount-version)
 );; end of if-windows
 #+END_SRC
 
@@ -1402,7 +1457,6 @@ menu of options and the hydra-k offers a prefix for it.
 
 See 33min30s of the video linked in: [[http://irreal.org/blog/?p=6453][Irreal: Hydra Video]]
 
-
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
@@ -1893,6 +1947,7 @@ organization with many tasks and their dependencies).
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
+  (my-append-to-var-log-hostname-file "yas--version" yas--version)
 )
 #+END_SRC
 
@@ -2145,6 +2200,7 @@ enable elpy and use ipython:
 #+BEGIN_SRC emacs-lisp
 (elpy-enable)
 (elpy-use-ipython)
+(my-append-to-var-log-hostname-file "elpy-version" elpy-version) ;; will be written on elpy start, not before
 #+END_SRC
 
 ** Switch for ipython (NOT YET TESTED)
@@ -3396,6 +3452,7 @@ Profiling Org-mode config loading time:
 #+BEGIN_SRC emacs-lisp
 (defvar my-org-config-start-time (current-time) "Time when my org-mode config was started")
 (message "★→ Org-mode")
+(my-append-to-var-log-hostname-file "org-version" org-version)
 #+END_SRC
 
 ** Load Org and misc contrib packages
@@ -8291,6 +8348,9 @@ want to install [[https://github.com/skuro/plantuml-mode][plantuml-mode]]:
   (use-package plantuml-mode
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/plantuml-mode")))
     :config
+
+    (my-append-to-var-log-hostname-file "plantuml-mode-version" plantuml-mode-version)
+
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)) ;; Enable plantuml-mode for PlantUML files
     (add-to-list
      'org-src-lang-modes '("plantuml" . plantuml))
@@ -8740,7 +8800,7 @@ interface of Magit.
     (delete-other-windows))
 
   (defun magit-quit-session ()
-    "Restores the previous window configuration and kills the magit buffer"
+    "restores the previous window configuration and kills the magit buffer"
     (interactive)
     (kill-buffer)
     (jump-to-register :magit-fullscreen))
@@ -8982,6 +9042,7 @@ end of git-timemachine:
 
 #+BEGIN_SRC emacs-lisp
 ) ;; end of magit use-package
+;(my-append-to-var-log-hostname-file "magit-version" magit-version) ;; doesn't work (anywhere here) for some reason
 #+END_SRC
 
 * PDF
@@ -10648,7 +10709,6 @@ is not shown in the modeline.
 
 See hydra definition near the end of this file.
 
-
 ** ibuffer
 
 Replace =list-buffers= with =ibuffer= ([[http://ergoemacs.org/emacs/emacs_buffer_management.html][ergoemacs: List Buffers]]; https://www.emacswiki.org/emacs/IbufferMode)
@@ -10690,7 +10750,6 @@ Replace =list-buffers= with =ibuffer= ([[http://ergoemacs.org/emacs/emacs_buffer
               (lambda ()
                 (ibuffer-switch-to-saved-filter-groups "default")))
 #+END_SRC
-
 
 ** nxml-mode
 :PROPERTIES:
@@ -12213,7 +12272,6 @@ line, sentence, sexp or defun into the marked region:
 (bind-key "m x" #'mark-sexp my-map)
 (bind-key "m d" #'mark-defun my-map)
 #+END_SRC
-
 
 * autostart
 
