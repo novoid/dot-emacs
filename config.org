@@ -587,7 +587,6 @@ Define the function that is called to append lines to the file:
 (defun my-append-to-var-log-hostname-file (mystring mycommand)
   "append a string and the result of a command to the my-var-log-hostname-file file"
   (interactive)
-;;  (write-region (concat "emacs-version " emacs-version "\n") nil my-var-log-hostname-file t)
   (write-region (concat mystring " " mycommand "\n") nil my-var-log-hostname-file t)
 )
 #+END_SRC
