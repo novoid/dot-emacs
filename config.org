@@ -408,7 +408,7 @@ My setup is using John Wiegley's [[https://github.com/jwiegley/use-package][use-
 startup of external libraries. This has many advantages: flexibility,
 startup performance, readability.
 
-----------------------------------------
+** Examples
 
 Here are some examples for future reference:
 
@@ -418,7 +418,7 @@ and ensure it is installed when Emacs launches:
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package dumb-jump
   :ensure t
-  :defer 40
+  :defer 110
 )
 #+END_SRC
 
@@ -476,6 +476,37 @@ OR:
         ("b"  . pdf-view-set-slice-from-bounding-box)
         ("r"  . pdf-view-reset-slice))
 #+END_SRC
+
+** Use of =:defer=
+
+=:defer= [[https://github.com/jwiegley/use-package#defer-now-accepts-an-optional-numeric-argument][also accepts an optional numeric argument]] which causes the
+package to be loaded after N seconds of idle time.
+
+My GNU/Emacs 26 takes approximately 70s to start. This is very long
+but it includes all my many "autostart" activities that also cover
+visibility settings in opened Org mode files and my complex agenda.
+
+Therefore, my defer times start with 90s which is clearly after the
+startup.
+
+Ocurrences in =config.el= (without disabled or not tangled code):
+
+#+BEGIN_SRC sh :results output
+grep ":defer " ~/.emacs.d/config.el |  # extract all occurrences of ":defer" from the tangled init file
+  sed 's/;;.*//' |         # remove emacs-lisp comments
+  sed 's/ //g' |           # remove all space characters to normalize strings
+  sed 's/defer/defer /' |  # add space character again only after ":defer"
+  sort |                   # sort the resulting strings alphabetically
+  uniq -c ;                # uniq them and count their occurrences
+  date                     # add the current time stamp in order to know how recent this output is
+#+END_SRC
+
+#+RESULTS:
+:       1 :defer 110
+:      21 :defer 110
+:       6 :defer 120
+:      11 :defer 90
+: Tue Apr 16 10:31:52 WEDT 2019
 
 * my-load-local-el()
 
@@ -1840,7 +1871,7 @@ organization with many tasks and their dependencies).
   :demand t
   :mode ("/\\.emacs\\.d/etc/yasnippet/snippets/" . snippet-mode)
   :diminish yas-minor-mode
-  :defer 301
+  :defer 90
   :config
   (yas-load-directory (concat my-user-emacs-directory "etc/yasnippet/snippets/"))
   (yas-global-mode 1)
@@ -1870,7 +1901,7 @@ within Org-mode only is defined in my yankpad file.
 #+BEGIN_SRC emacs-lisp
 (use-package yankpad
   :ensure t
-  :defer 40
+  :defer 110
   :init
   (setq yankpad-file "~/org/yankpad.org")
   :bind (:map my-map ("SPC" . yankpad-insert))
@@ -1937,7 +1968,7 @@ Disabled for now because I do not use it at the moment.
 (use-package buttercup
   :ensure t
 ;  :if (my-system-is-floyd)
-  :defer 40
+  :defer 110
   :config
 )
 #+END_SRC
@@ -1997,7 +2028,7 @@ https://github.com/magnars/s.el
 #+BEGIN_SRC emacs-lisp
 (use-package s
   :ensure t
-  :defer 40
+  :defer 90
   :config
 )
 #+END_SRC
@@ -2020,7 +2051,7 @@ use-package]] which links [[https://www.youtube.com/watch?v=2TSKxxYEbII][2015-04
 #+BEGIN_SRC emacs-lisp
   (use-package macrostep
     ;;:ensure t
-    :defer 301
+    :defer 120
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/macrostep/")))
     :config ;; executed after loading package
     (define-key emacs-lisp-mode-map (kbd "C-c e") 'macrostep-expand)
@@ -2391,7 +2422,7 @@ Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file
 #+BEGIN_SRC emacs-lisp
   (use-package dired-details
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
-    :defer 40
+    :defer 90
     :config
     (setq-default dired-details-hidden-string "… ")
     )
@@ -2411,7 +2442,7 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
 (use-package dired+
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-plus/")))
 ;;  :ensure t
-  :defer 40
+  :defer 90
   :config
   (diredp-toggle-find-file-reuse-dir 1) ;; https://www.emacswiki.org/emacs/DiredReuseDirectoryBuffer
 )
@@ -2422,7 +2453,7 @@ long with it although it really looked nicely:
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package dired-icon
 :ensure t
-:defer 40
+:defer 110
 :config
 (add-hook 'dired-mode-hook 'dired-icon-mode)
 )
@@ -2468,7 +2499,7 @@ via [[https://github.com/rupa/z][z]]. You might also look into =GoTo= (on steroi
 #+BEGIN_SRC emacs-lisp
 (use-package dired-recent
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-recent.el/")))
-   :defer 40
+   :defer 90
    :config
    (require 'dired-recent)
    (dired-recent-mode 1)
@@ -2505,7 +2536,7 @@ It narrows down the list of files using a pattern. =g= resets the view.
 #+BEGIN_SRC emacs-lisp
 (use-package dired-narrow
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
-  :defer 40
+  :defer 90
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 #+END_SRC
@@ -2524,7 +2555,7 @@ Provides:
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-open
-  :defer 40
+  :defer 90
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
 )
 #+END_SRC
@@ -2544,7 +2575,7 @@ Provides:
 #+BEGIN_SRC emacs-lisp
 (use-package dired-collapse
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
-  :defer 40
+  :defer 90
   :config
   ;(dired-collapse-mode)
 )
@@ -2595,7 +2626,7 @@ image-diredx--invoke-process: Wrong type argument: processp, [nil 23351 47004 24
 #+BEGIN_SRC emacs-lisp
 (use-package image-dired+
   :ensure t
-  :defer 40
+  :defer 110
   :config
   (require 'image-dired+)
   (image-diredx-async-mode 1)
@@ -2641,7 +2672,7 @@ repeat the copy operation in another dired buffer.
 #+BEGIN_SRC emacs-lisp
 (use-package dired-ranger
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
-  :defer 301 ;; has to be after dired+ in able to overwrite its bindings below
+  :defer 110 ;; has to be after dired+ in able to overwrite its bindings below
   :config
   (define-key dired-mode-map (kbd "M-c") 'dired-ranger-copy)  ;; overwrites: diredp-capitalize-this-file
   (define-key dired-mode-map (kbd "M-v") 'dired-ranger-paste) ;; overwrites: scroll-down-command
@@ -2658,7 +2689,7 @@ Via [[https://www.emacswiki.org/emacs/DiredIsearch][EmacsWiki]] and download fro
 #+BEGIN_SRC emacs-lisp  :tangle no
 (use-package dired-isearch
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
-  :defer 40
+  :defer 110
   :config
 )
 #+END_SRC
@@ -3332,7 +3363,7 @@ Example: place the cursor within the table and evaluate
 (when (my-eval-if-binary-or-warn "gnuplot")
   (use-package gnuplot
     :ensure t
-    :defer 40
+    :defer 110
     :if (my-system-type-is-gnu)
   )
 )
@@ -7522,7 +7553,7 @@ END of LaTeX class definitions
 #+BEGIN_SRC emacs-lisp
   (use-package htmlize
     :ensure t
-    :defer 40
+    :defer 110
     :config
     (require 'htmlize)
   )
@@ -7545,7 +7576,7 @@ resultant text into your slack client.
 =ox-gfm= (GitHub flavoured markdown) is needed for =ox-slack=:
 #+BEGIN_SRC emacs-lisp
 (use-package ox-gfm
-  :defer 40
+  :defer 110
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :if (my-system-type-is-windows)
   )
@@ -7554,7 +7585,7 @@ resultant text into your slack client.
 #+BEGIN_SRC emacs-lisp
 (use-package ox-slack
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-slack/")))
-  :defer 40
+  :defer 110
   :if (my-system-type-is-windows)
   )
 #+END_SRC
@@ -7569,7 +7600,7 @@ translates Org-mode file to various other formats via Pandoc.»
   (use-package ox-pandoc
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-pandoc/")))
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    :defer 40
+    :defer 110
     ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
     :init
 
@@ -7715,7 +7746,7 @@ https://github.com/yashi/org-asciidoc - «An Org Mode Exporter Backend For Ascii
 #+BEGIN_SRC emacs-lisp
   (use-package ox-asciidoc
     ;;:ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-    :defer 40
+    :defer 110
   )
 #+END_SRC
 
@@ -7738,7 +7769,7 @@ unavailable=
 (use-package ox-rst
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-rst/")))
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  :defer 40
+  :defer 110
   :if (my-system-type-is-windows)
   )
 #+END_SRC
@@ -7757,7 +7788,7 @@ https://github.com/yjwen/org-reveal
 (use-package ox-reveal
   :ensure t
   ;;:if (my-system-type-is-windows)
-  :defer 40
+  :defer 110
   :config
 
   ;;(setq org-reveal-root "file:///d:/reveal.js")
@@ -7876,7 +7907,7 @@ Windows, Mac and Linux.
       :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-clip/")))
         ;;:if
       :ensure t
-      :defer 40
+      :defer 110
       )
     )
 #+END_SRC
@@ -8648,7 +8679,7 @@ mine for demonstration purposes for novice or non-Org-users.
 #+BEGIN_SRC emacs-lisp
   (use-package org-mind-map
     ;;:ensure t
-    :defer 301
+    :defer 120
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mind-map/")))
     :config ;; executed after loading package
   )
@@ -8724,7 +8755,7 @@ interface of Magit.
 #+BEGIN_SRC emacs-lisp
   (use-package smeargle
     :ensure t
-    :defer 40
+    :defer 110
     :config ;; executed after loading package
     ;;:bind (:map my-map ("c" . smeargle)) ;; CONFLICTS with my title capitalization
 #+END_SRC
@@ -8902,7 +8933,7 @@ Use the following keys to navigate historic version of the file
 #+BEGIN_SRC emacs-lisp
 (use-package git-timemachine
   :ensure t
-  :defer 301
+  :defer 120
   :init
 #+END_SRC
 
@@ -8965,7 +8996,7 @@ This seems to be a pre-requisite to pdf-tools.
 (use-package org-pdfview
   :if (my-system-type-is-gnu)
   :ensure t
-  :defer 301
+  :defer 110
   :config
 )
 #+END_SRC
@@ -8987,7 +9018,7 @@ The package:
 (use-package pdf-tools
   :if (my-system-type-is-gnu)
   :ensure t
-  :defer 60
+  :defer 120
   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
   :config
   (pdf-tools-install)
@@ -9118,7 +9149,7 @@ editing window.»
   :if (my-system-type-is-gnu)
   :ensure t
   :diminish minimap-mode
-  :defer 40
+  :defer 110
   :config ;; executed after loading package
   (setq minimap-window-location 'right)
   ;;deactivated;; (setq minimap-window-location 'right)
@@ -9428,7 +9459,7 @@ A speed reading mode for Emacs.
 #+BEGIN_SRC emacs-lisp
 (use-package spray
   :ensure t
-  :defer 40
+  :defer 110
   :config ;; executed after loading package
   :bind (:map my-map ("s" . spray-mode))
 )
@@ -9444,7 +9475,7 @@ but most of the time, it's a good companion to me.
 #+BEGIN_SRC emacs-lisp
 (use-package yafolding
   :ensure t
-  :defer 40
+  :defer 110
   :mode ("\\.xml\\'" . yafolding-mode)
 
   :config ;; executed after loading package
@@ -9725,7 +9756,7 @@ I get a popup buffer that tells me what bindings I am able to use.
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-which-key/")))
-    :defer 60
+    :defer 120
     :config ;; executed after loading package
     (which-key-setup-side-window-right)
     (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
@@ -9946,7 +9977,7 @@ https://github.com/magnars/dash.el «A modern list api for Emacs. No 'cl require
 #+BEGIN_SRC emacs-lisp
 (use-package dash
   :ensure t
-  :defer 40
+  :defer 110
   )
 #+END_SRC
 
@@ -9958,7 +9989,7 @@ https://github.com/magnars/dash.el «A modern list api for Emacs. No 'cl require
 #+BEGIN_SRC emacs-lisp
 (use-package edit-at-point
   :ensure t
-  :defer 40
+  :defer 110
   )
 #+END_SRC
 
@@ -9978,7 +10009,7 @@ enter the leading char.
 (use-package eno
   :ensure t
   ;;  :diminish eno
-  :defer 45
+  :defer 110
   ;;  :config ;; executed after loading package
   :bind (:map my-map ("RET" . eno-word-goto))
 )
@@ -9992,7 +10023,7 @@ via: http://ikiwiki.info/tips/Emacs_and_markdown/
 (use-package markdown-mode
   :ensure t
   :if (my-system-type-is-windows)
-  :defer 40
+  :defer 110
   :mode ("\\.md\\'" . markdown-mode)
 )
 #+END_SRC
@@ -10098,7 +10129,6 @@ be of some use.»
 #+BEGIN_SRC emacs-lisp
 (use-package char-menu
   :ensure t
-  ;;:defer 40
   :config
   (setq char-menu
         '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "∅" "©" "†" "␣"
@@ -10136,7 +10166,7 @@ unchained from constraints of backward compatibility.
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :ensure t
-  :defer 40
+  :defer 110
 )
 #+END_SRC
 
@@ -10149,7 +10179,7 @@ unchained from constraints of backward compatibility.
 (use-package wttrin
   :ensure t
   :commands (wttrin)
-  :defer 301
+  :defer 120
   :init
   (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming" "malia"))
   (cond ((my-system-is-sherri)
@@ -10178,7 +10208,7 @@ Cool package but I don't need it at the moment. Therefore disabled.
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package pandoc-mode
     :ensure t
-    :defer 40
+    :defer 110
   )
 )
 #+END_SRC
@@ -10213,7 +10243,7 @@ via: http://pragmaticemacs.com/emacs/use-visible-bookmarks-to-quickly-jump-aroun
 #+BEGIN_SRC emacs-lisp
 (use-package bm
   :ensure t
-  :defer 30
+  :defer 90
   :bind (:map my-map ("8" . bm-toggle))
   :bind (:map my-map ("9" . bm-previous))
   :bind (:map my-map ("0" . bm-next))
@@ -10238,7 +10268,7 @@ but in a faint way, so they can be easily ignored.
 #+BEGIN_SRC emacs-lisp
 (use-package adoc-mode
   :ensure t
-  :defer 30
+  :defer 110
   :config
   (add-to-list
    'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
@@ -10262,7 +10292,7 @@ void: it" when ~C-c C-c~: See id:2016-08-04-suggest
 #+BEGIN_SRC emacs-lisp
 (use-package suggest
   :ensure t
-  :defer 30
+  :defer 110
   )
 #+END_SRC
 
@@ -10312,7 +10342,7 @@ How to use:
 #+BEGIN_SRC emacs-lisp
 (use-package command-log-mode
   :ensure t
-  :defer 40
+  :defer 110
   :diminish command-log-mode
   :config ;; executed after loading package
   (add-hook 'LaTeX-mode-hook 'command-log-mode)
@@ -10348,7 +10378,7 @@ or =customize `scss-sass-command'= to point to your sass executable.
   (use-package scss-mode
     ;;:if (my-system-is-floyd-or-sherri)
     :ensure t
-    :defer 40
+    :defer 110
     :config
     (autoload 'scss-mode "scss-mode")
     (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
@@ -10362,7 +10392,7 @@ or =customize `scss-sass-command'= to point to your sass executable.
 (use-package json-mode
   :if (my-system-type-is-windows)
   :ensure t
-  :defer 40
+  :defer 110
 )
 #+END_SRC
 
@@ -10377,7 +10407,7 @@ This enhances the style of Emacs IMHO.
 #+BEGIN_SRC emacs-lisp
 (use-package mode-icons
   :ensure t
-  :defer 60
+  :defer 120
   :config
   (mode-icons-mode)
 )
@@ -10394,7 +10424,7 @@ https://github.com/rolandwalker/unicode-fonts
 (use-package unicode-fonts
   :ensure t
   :if (my-system-is-floyd)
-  :defer 40
+  :defer 110
   :config
   (unicode-fonts-setup)
 )
@@ -10429,7 +10459,7 @@ handy when programming: visualize all occurrences of a variable/function.
 #+BEGIN_SRC emacs-lisp
 (use-package highlight-symbol
   :ensure t
-  :defer 40
+  :defer 110
   ;;(bind-key (kbd "h") #'highlight-symbol my-map)
   :bind (:map my-map ("h" . highlight-symbol))
   )
@@ -10454,7 +10484,7 @@ also allows for using variables. More flexibility is almost impossible.
 #+BEGIN_SRC emacs-lisp
 (use-package restclient
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  :defer 40
+  :defer 110
   :if (my-system-type-is-windows)
   :init ;; executed before loading package
   (use-package json-reformat
@@ -10473,7 +10503,7 @@ also allows for using variables. More flexibility is almost impossible.
 #+BEGIN_SRC emacs-lisp
 (use-package neotree
   :ensure t
-  :defer 60
+  :defer 120
   :config ;; executed after loading package
   (global-set-key [f1] 'neotree-toggle)
 )
@@ -10488,7 +10518,7 @@ As with many major modes, I do have a helpful hydra mapped to F1.
 #+BEGIN_SRC emacs-lisp
 (use-package csv-mode
   :ensure t
-  :defer 40
+  :defer 110
   :config
   (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
   (autoload 'csv-mode "csv-mode"
@@ -10602,7 +10632,7 @@ is not shown in the modeline.
 #+BEGIN_SRC emacs-lisp
 (use-package eyebrowse
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/eyebrowse/")))
-  :defer 40
+  :defer 90
   :init
   (setq eyebrowse-keymap-prefix (kbd "C-:"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
   :config
@@ -11149,7 +11179,7 @@ The =:color= key is a shortcut. It aggregates =:exit= and
 #+BEGIN_SRC emacs-lisp
 (use-package hydra
   :ensure t
-  :defer 30
+  :defer 90
   :config ;; executed after loading package
 #+END_SRC
 
