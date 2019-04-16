@@ -497,7 +497,7 @@ startup.
 
 Ocurrences in =config.el= (without disabled or not tangled code):
 
-#+BEGIN_SRC sh :results output
+#+BEGIN_SRC sh :results output :exports both
 grep ":defer " ~/.emacs.d/config.el |  # extract all occurrences of ":defer" from the tangled init file
   sed 's/;;.*//' |         # remove emacs-lisp comments
   sed 's/ //g' |           # remove all space characters to normalize strings
