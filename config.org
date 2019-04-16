@@ -482,6 +482,12 @@ OR:
 =:defer= [[https://github.com/jwiegley/use-package#defer-now-accepts-an-optional-numeric-argument][also accepts an optional numeric argument]] which causes the
 package to be loaded after N seconds of idle time.
 
+From: https://www.gnu.org/software/emacs/manual/html_node/elisp/Idle-Timers.html
+#+BEGIN_QUOTE
+Emacs becomes /idle/ when it starts waiting for user input, and it
+remains idle until the user provides some input.
+#+END_QUOTE
+
 My GNU/Emacs 26 takes approximately 70s to start. This is very long
 but it includes all my many "autostart" activities that also cover
 visibility settings in opened Org mode files and my complex agenda.
