@@ -520,6 +520,22 @@ grep ":defer " ~/.emacs.d/config.el |  # extract all occurrences of ":defer" fro
 :      11 :defer 90
 : Tue Apr 16 10:31:52 WEDT 2019
 
+* no-littering
+
+From:
+- [[http://manuel-uberti.github.io/programming/2017/06/17/nolittering/][Manuel Uberti: Keeping your .emacs.d clean]]
+- https://github.com/tarsius/no-littering
+
+It sets some default paths in order to separate automatically created
+files and directories.
+
+#+BEGIN_SRC emacs-lisp
+(use-package no-littering
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/no-littering/")))
+   )
+(require 'no-littering)
+#+END_SRC
+
 * Logging of mode versions
 :PROPERTIES:
 :CREATED:  [2019-04-16 Tue 13:16]
@@ -527,20 +543,35 @@ grep ":defer " ~/.emacs.d/config.el |  # extract all occurrences of ":defer" fro
 
 Here's the idea: on every Emacs startup, a file like
 =~/.emacs.d/var/log/HOSTNAME.txt= is overwritten with the current
-time-stamp and =emacs-version=.
+time-stamp and =emacs-version=. The path scheme follows the
+=no-littering= package I'm using as well.
 
-In miscellaneous module settings, I might decide to append the mode
-version.
+While loading miscellaneous packages, I might decide to append a
+version string.
 
-This way, I get a list of files of all of my hosts sharing the same
-Emacs configuration that holds the time of the last startup and the
-version strings of interesting modes. This simplifies generating bug
-reports and finding issues with version conflicts.
+This way, I get a list of files from all of my hosts sharing the same
+Emacs configuration. Each of these files hold the time of the last
+startup and the version strings of interesting packages. This
+simplifies generating bug reports and finding issues with version
+conflicts.
 
-Here we go. Let's define the common file name, one per host:
+Here is an example file content for one host:
+
+#+BEGIN_EXAMPLE
+Started on 2019-04-16T14:35:04+02:00
+emacs-version 26.0.90
+cygwin-mount-version 1.4.8
+yas--version 0.11.0
+org-version 9.1.6
+plantuml-mode-version 1.2.3
+magit-version 2.10.3
+#+END_EXAMPLE
+
+So how is it done? Here we go. Let's define the common file name, one
+per host:
 
 #+BEGIN_SRC emacs-lisp
-(setq my-var-log-hostname-file (concat my-user-emacs-directory "var/log/" system-name ".txt"))
+(setq my-var-log-hostname-file (concat no-littering-var-directory "log/" system-name ".txt"))
 #+END_SRC
 
 At Emacs startup, overwrite the file content and initializing it with
@@ -583,22 +614,6 @@ from: http://www.zonix.de/html40/linux/emacsgnus.html
     (if (file-exists-p fullname)
 	(load fullname)
       (message (format "Loading %s (source)...failed" fullname)))))
-#+END_SRC
-
-* no-littering
-
-From:
-- [[http://manuel-uberti.github.io/programming/2017/06/17/nolittering/][Manuel Uberti: Keeping your .emacs.d clean]]
-- https://github.com/tarsius/no-littering
-
-It sets some default paths in order to separate automatically created
-files and directories.
-
-#+BEGIN_SRC emacs-lisp
-(use-package no-littering
-   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/no-littering/")))
-   )
-(require 'no-littering)
 #+END_SRC
 
 * Server mode
