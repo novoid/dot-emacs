@@ -12292,6 +12292,14 @@ line, sentence, sexp or defun into the marked region:
 At the end of loading most of my configuration, I want to execute some
 things, some of them only in interactive mode.
 
+*Fast start* of my Emacs: my GNU/Emacs starts within approximately 70
+seconds as of 2019-04-17 on Windows. Large parts of the startup time
+is spent doing the tasks defined in this section. If I don't need
+stuff like agenda or my startup visibility, I create an empty file
+=~/.emacs.d/var/faststart= and the following code omits some
+time-intensive parts of the autostart activity. This brings me down to
+approximately 25 seconds as of 2019-04-17.
+
 #+BEGIN_SRC emacs-lisp
 (message "→★ finished loading config.org (w/o autostart) in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
@@ -12305,13 +12313,13 @@ things, some of them only in interactive mode.
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
   (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
-  ;(when (not (my-system-type-is-windows))
-      (message "Creating agenda …")
-      (my-org-agenda)
-  ;    )
-
-  (message "my-org-startup-visibility …")
-  (my-org-startup-visibility)
+  (if (file-exists-p (concat no-littering-var-directory "faststart"))
+    (message "Faststart activated → omitting some autostart things") ;; see explanation above
+    (progn (message "Creating agenda …")
+       (my-org-agenda)
+       (message "my-org-startup-visibility …")
+       (my-org-startup-visibility))
+      )
 
 )
 #+END_SRC
