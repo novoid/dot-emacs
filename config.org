@@ -9188,6 +9188,27 @@ Setting highlighting color:
 )
 #+END_SRC
 
+** pdf-view-restore
+
+Support for opening last known pdf position in pdf-view-mode provided by pdf-tools.
+
+#+BEGIN_SRC emacs-lisp
+(use-package pdf-view-restore
+  ;:if (my-system-type-is-gnu)
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/pdf-view-restore/")))
+  :after pdf-tools
+  :defer 110
+  :config
+
+  ;; temporary workaround for https://github.com/007kevin/pdf-view-restore/issues/1
+  ;; to prevent metadata files stored in each folder of a PDF-file
+  ;; FIXXME: replace with corresponding setting when implemented
+  (setq pdf-view-restore-filename "~/.emacs.d/var/pdf-view-restore")
+
+  (add-hook 'pdf-view-mode-hook 'pdf-view-restore-mode)
+)
+#+END_SRC
+
 * Misc modes/packages
 
 Misc sources for packages:
