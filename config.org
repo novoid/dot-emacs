@@ -2575,7 +2575,7 @@ via [[https://github.com/rupa/z][z]]. You might also look into =GoTo= (on steroi
 #+BEGIN_SRC emacs-lisp
 (use-package dired-recent
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-recent.el/")))
-   :defer 90
+   ;;:defer 90
    :config
    (require 'dired-recent)
    (dired-recent-mode 1)
@@ -9075,7 +9075,7 @@ This seems to be a pre-requisite to pdf-tools.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pdfview
-  :if (my-system-type-is-gnu)
+  ;:if (my-system-type-is-gnu)
   :ensure t
   :defer 110
   :config
@@ -9097,7 +9097,7 @@ The package:
 
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-tools
-  :if (my-system-type-is-gnu)
+  ;:if (my-system-type-is-gnu)
   :ensure t
   :defer 120
   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
