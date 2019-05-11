@@ -2498,7 +2498,7 @@ Also from [[http://emacsrocks.com/e16.html][Emacsrocks #16]]: hide and show file
 #+BEGIN_SRC emacs-lisp
   (use-package dired-details
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
-    :defer 90
+    ;;:defer 90
     :config
     (setq-default dired-details-hidden-string "… ")
     )
@@ -2518,7 +2518,7 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
 (use-package dired+
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-plus/")))
 ;;  :ensure t
-  :defer 90
+  ;;:defer 90
   :config
   (diredp-toggle-find-file-reuse-dir 1) ;; https://www.emacswiki.org/emacs/DiredReuseDirectoryBuffer
 )
@@ -2529,7 +2529,7 @@ long with it although it really looked nicely:
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package dired-icon
 :ensure t
-:defer 110
+;;:defer 110
 :config
 (add-hook 'dired-mode-hook 'dired-icon-mode)
 )
@@ -2612,7 +2612,7 @@ It narrows down the list of files using a pattern. =g= resets the view.
 #+BEGIN_SRC emacs-lisp
 (use-package dired-narrow
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
-  :defer 90
+  ;;:defer 90
   :bind (:map dired-mode-map
               ("/" . dired-narrow)))
 #+END_SRC
@@ -2631,7 +2631,7 @@ Provides:
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-open
-  :defer 90
+  ;;:defer 90
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
 )
 #+END_SRC
@@ -2651,7 +2651,7 @@ Provides:
 #+BEGIN_SRC emacs-lisp
 (use-package dired-collapse
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-hacks/")))
-  :defer 90
+  ;;:defer 90
   :config
   ;(dired-collapse-mode)
 )
