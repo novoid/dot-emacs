@@ -6928,7 +6928,11 @@ Or within a shell as separate Emacs instance:
 
 I aliased it within =~/.zshrc.local= to =memacs=
 
-*** DISABLED my-export-agenda()
+*** my-export-agenda()
+
+- 2019-05-07: commented out previous postprocessing steps and switched
+  to different output folder "var/export/" that gets synced among my
+  devices. Postprocessing is done via cronjob.
 
 #+BEGIN_SRC emacs-lisp
   (defun my-export-agenda()
@@ -6938,31 +6942,33 @@ I aliased it within =~/.zshrc.local= to =memacs=
     (org-agenda-list nil nil 60)
     (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
-    (org-agenda-write "~/org/agenda-export-raw.ics")
+  ;;  (org-agenda-write "~/org/agenda-export-raw2.ics")
+    (org-agenda-write (concat my-user-emacs-directory "var/export/agenda-export.ics"))
     (message "after org-agenda-write")
     (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
-    (setq icspath "~/org/")
-    (shell-command-to-string (concat
-			      scriptpath "postprocess_Org-mode_iCal_export.py "
-			      "-i " icspath "agenda-export-raw.ics "
-			      "-o " icspath "agenda-export-postprocessed.ics "
-			      "--overwrite "
-			      "--remove-summary-timestamp"
-			      )
-			     )
-    (shell-command-to-string (concat
-			      scriptpath "postprocess_Org-mode_iCal_export.py "
-			      "-i " icspath "agenda-export-raw.ics "
-			      "-o " icspath "agenda-export-freebusy.ics "
-			      "--overwrite "
-			      "--obfuscate"
-			      )
-			     )
-    (message "after shell-command-to-string")
-    (if (my-system-type-is-gnu)
-	(shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
-      (message "Please do sync using unison!")
-      )
+    (setq icspath (concat my-user-emacs-directory "var/export/"))
+  ;;  (setq icspath "~/org/")
+  ;;  (shell-command-to-string (concat
+  ;;      		      scriptpath "postprocess_Org-mode_iCal_export.py "
+  ;;      		      "-i " icspath "agenda-export-raw2.ics "
+  ;;      		      "-o " icspath "agenda-export-postprocessed2.ics "
+  ;;      		      "--overwrite "
+  ;;      		      "--remove-summary-timestamp"
+  ;;      		      )
+  ;;      		     )
+  ;;  (shell-command-to-string (concat
+  ;;      		      scriptpath "postprocess_Org-mode_iCal_export.py "
+  ;;      		      "-i " icspath "agenda-export-raw2.ics "
+  ;;      		      "-o " icspath "agenda-export-freebusy2.ics "
+  ;;      		      "--overwrite "
+  ;;      		      "--obfuscate"
+  ;;      		      )
+  ;;      		     )
+  ;;  (message "after shell-command-to-string")
+  ;;  (if (my-system-type-is-gnu)
+  ;;      (shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
+  ;;    (message "Please do sync using unison!")
+  ;;    )
     )
 #+END_SRC
 
