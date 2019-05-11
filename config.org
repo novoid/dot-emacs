@@ -6871,6 +6871,9 @@ and with a bleeding heart.
 
 *** my-org-agenda() → my-map a
 
+Using the universal argument =C-u= before =my-map a=, I can invoke the
+"other" agenda (normal agenda vs. business agenda):
+
 switch to open Agenda or open new one:
 #+BEGIN_SRC emacs-lisp
   (defun my-org-agenda (&optional arg)
