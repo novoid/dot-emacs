@@ -3751,6 +3751,14 @@ when all children are checked as well?
   (setq org-checkbox-hierarchical-statistics t)
 #+END_SRC
 
+From [[https://yiufung.net/post/org-mode-hidden-gems-pt1/][this blog entry]] I got the hint that setting the variable
+=org-cycle-separator-lines= to zero will omit empty lines between
+headings in the collapsed view, which I prefer:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-cycle-separator-lines 0)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
