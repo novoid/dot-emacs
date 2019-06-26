@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2018-08-17 19:19:49 vk>
+;; Time-stamp:    <2019-06-26 22:15:30 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -129,24 +129,21 @@ Note the weekly scope of the command's precision.")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(csv-separators (quote (";" "	")))
- '(nyan-bar-length 20)
+ '(git-gutter:added-sign "++")
+ '(git-gutter:deleted-sign "--")
+ '(git-gutter:diff-option "-w")
+ '(git-gutter:disabled-modes (quote (asm-mode image-mode)))
+ '(git-gutter:modified-sign "~ ")
+ '(org-agenda-files
+   (quote
+    ("c:/Users/karl.voit/org/misc.org" "c:/Users/karl.voit/org/issues.org" "c:/Users/karl.voit/org/projects.org" "c:/Users/karl.voit/org/finanzen_behoerden_versicherungen.org" "c:/Users/karl.voit/org/bwg.org" "c:/Users/karl.voit/org/contacts.org" "c:/Users/karl.voit/org/hardware.org" "c:/Users/karl.voit/org/fhsp.org" "c:/Users/karl.voit/org/notes.org" "c:/Users/karl.voit/org/public_voit.org" "c:/Users/karl.voit/org/errors_public_voit.org" "c:/Users/karl.voit/org/errors_orgmode_commits.org")))
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
- '(org-contacts-files "~/share/all/org-mode/contacts.org" t)
+ '(org-contacts-files "~/org/contacts.org" t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
- '(package-selected-packages
-   (quote
-    (org-fancy-priorities dired-narrow image-dired+ ivy org-pdfview keyfreq dired+ helm-dired-history dired-icon dired-x ox-rst dumb-jump pcre2el pdf-tools csv-mode pandoc-mode auto-complete guide-key hydra yasnippet buttercup yankpad yafolding wttrin use-package unicode-fonts undo-tree synonyms suggest spray smeargle smart-mode-line scss-mode restclient request-deferred ox-reveal ox-pandoc ox-clip ox-asciidoc org-table-sticky-header org-bullets nyan-mode neotree mode-icons markdown-mode magit json-mode highlight-symbol helm gnuplot git-timemachine flycheck eno elpy counsel char-menu bm anzu alert adoc-mode)))
  '(safe-local-variable-values
    (quote
-    ((DISABLEDeval ispell-change-dictionary "en_US")
-     (DISABLEDmode . flyspell)
-     (epa-file-encrypt-to nil)
-     (TeX-master . "misc")
-     (TeX-master . "references")
-     (eval org-expiry-deinsinuate)
-     (eval ispell-change-dictionary "german8")
+    ((eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))

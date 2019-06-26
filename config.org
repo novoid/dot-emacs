@@ -5821,97 +5821,43 @@ default agenda and all agenda files.
 
 Definition of work files:
 #+BEGIN_SRC emacs-lisp
-  (if (my-system-type-is-windows)
-      (setq my-work-agenda-files (append (` (
-      ;; 2019-06-26: backticks above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
-      ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
-                                                 ,(concat my-org-files-path "detego.org")
-                                                 ,(concat my-org-files-path "ciso.org")
-                                                 ,(concat my-org-files-path "exported-detego-calendar.org")
-                                                 ;;,(concat my-org-files-path "r6-stories.org")
-                                                 ;;,(concat my-org-files-path "infonova.org")
-                                                 ))))
-    (setq my-work-agenda-files (append (` (
-                                               ,(concat my-org-files-path "detego.org")
-                                               ,(concat my-org-files-path "ciso.org")
-                                               ,(concat my-org-files-path "exported-detego-calendar.org")
-                                               ;;,(concat my-org-files-path "infonova.org")
-                                               ;;,(concat my-org-files-path "r6-stories.org")
-                                               ;;,(concat my-org-files-path "infonova.org")
-                                               ;;,(concat my-org-files-path "tagstore.org");;moved to archive
-                                               ;;,(concat my-org-files-path "ist.org");;moved to archive
-                                               ;;,(concat my-org-files-path "test-phd.org")
-                                               ;;,(concat my-org-files-path "postdoc.org");;moved to archive
-                                               ))))
-    )
+  (setq my-work-agenda-files (append (` (
+  ;; 2019-06-26: backtick above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
+  ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
+       ,(concat my-org-files-path "detego.org")
+       ,(concat my-org-files-path "ciso.org")
+       ,(concat my-org-files-path "exported-detego-calendar.org")
+       ;;,(concat my-org-files-path "r6-stories.org")
+       ;;,(concat my-org-files-path "infonova.org")
+       ))))
 #+END_SRC
 
 Definitions of non-work files:
 #+BEGIN_SRC emacs-lisp
-   (if (my-system-type-is-windows)
-      (setq my-nonwork-agenda-files (append (` (
-                                              ,(concat my-org-files-path "misc.org")
-					            ,(concat my-org-files-path "issues.org")
-					            ,(concat my-org-files-path "projects.org")
-					            ,(concat my-org-files-path "finanzen_behoerden_versicherungen.org")
-					            ,(concat my-org-files-path "bwg.org")
-					            ,(concat my-org-files-path "contacts.org")
-					            ;;,(concat my-org-files-path "foodandbeverages.org")
-					            ,(concat my-org-files-path "hardware.org")
-					            ,(concat my-org-files-path "fhsp.org")
-					            ,(concat my-org-files-path "notes.org")
-					            ,(concat my-org-files-path "public_voit.org")
-					            ,(concat my-org-files-path "errors_public_voit.org")
-					            ,(concat my-org-files-path "errors_orgmode_commits.org")
-					            ;;,(concat my-org-files-path "movies.org")
-					            ;;,(concat my-org-files-path "references.org")
-					            ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org")
-					            ;;,(concat my-org-files-path "memacs/error.org")
-					            ;;,(concat my-org-files-path "memacs/git.org")
-					            ;;,(concat my-org-files-path "memacs/ifiles.org")
-					            ;;,(concat my-org-files-path "memacs/phonecalls.org")
-					            ;;,(concat my-org-files-path "memacs/roylog.org")
-					            ;;,(concat my-org-files-path "memacs/SMS.org")
-                                                 ))))
-    (setq my-nonwork-agenda-files (append (` (
-                                            ;;,(concat my-org-files-path "archive.org")
-					          ,(concat my-org-files-path "misc.org")
-					          ,(concat my-org-files-path "issues.org")
-					          ,(concat my-org-files-path "projects.org")
-					          ,(concat my-org-files-path "finanzen_behoerden_versicherungen.org")
-					          ,(concat my-org-files-path "bwg.org")
-					          ,(concat my-org-files-path "contacts.org")
-					          ,(concat my-org-files-path "foodandbeverages.org")
-					          ,(concat my-org-files-path "hardware.org")
-					          ,(concat my-org-files-path "notes.org")
-					          ,(concat my-org-files-path "movies.org")
-					          ,(concat my-org-files-path "references.org")
-					          ,(concat my-org-files-path "public_voit.org")
-					          ,(concat my-org-files-path "errors_public_voit.org")
-					          ,(concat my-org-files-path "errors_orgmode_commits.org")
-					          ,(concat my-org-files-path "fhsp.org")
-					          "~/src/lazyblorg/wiki/Roadmap.org"
-					          ,(concat my-org-files-path "memacs/error.org")
-					          ;;,(concat my-org-files-path "memacs/roylog.org")
-					          ;;,(concat my-org-files-path "memacs/archive.org")
-					          ;;,(concat my-org-files-path "memacs/bank.org")
-					          ;;,(concat my-org-files-path "memacs/datebk6.org")
-					          ;;,(concat my-org-files-path "memacs/delicious.org")
-					          ;;,(concat my-org-files-path "memacs/files.org")
-					          ;;,(concat my-org-files-path "memacs/GCal.org")
-					          ;;,(concat my-org-files-path "memacs/git.org")
-					          ;;,(concat my-org-files-path "memacs/ifiles.org")
-					          ;;,(concat my-org-files-path "memacs/mbox.org")
-					          ;;,(concat my-org-files-path "memacs/news.org")
-					          ;;,(concat my-org-files-path "memacs/phonecalls.org")
-					          ;;,(concat my-org-files-path "memacs/SMS.org")
-					          ;;,(concat my-org-files-path "memacs/tweets.org")
-					          ;;,(concat my-org-files-path "memacs/www.org")
-					          ;;,(concat my-org-files-path "memacs/movies.org")
-					          ;;,(concat my-org-files-path "memacs/Filmliste.org")
-                                               ))))
-    )
-
+  (setq my-nonwork-agenda-files (append (` (
+              ,(concat my-org-files-path "misc.org")
+              ,(concat my-org-files-path "issues.org")
+              ,(concat my-org-files-path "projects.org")
+              ,(concat my-org-files-path "finanzen_behoerden_versicherungen.org")
+              ,(concat my-org-files-path "bwg.org")
+              ,(concat my-org-files-path "contacts.org")
+              ;;,(concat my-org-files-path "foodandbeverages.org")
+              ,(concat my-org-files-path "hardware.org")
+              ,(concat my-org-files-path "fhsp.org")
+              ,(concat my-org-files-path "notes.org")
+              ,(concat my-org-files-path "public_voit.org")
+              ,(concat my-org-files-path "errors_public_voit.org")
+              ,(concat my-org-files-path "errors_orgmode_commits.org")
+              ;;,(concat my-org-files-path "movies.org")
+              ;;,(concat my-org-files-path "references.org")
+              ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org")
+              ;;,(concat my-org-files-path "memacs/error.org")
+              ;;,(concat my-org-files-path "memacs/git.org")
+              ;;,(concat my-org-files-path "memacs/ifiles.org")
+              ;;,(concat my-org-files-path "memacs/phonecalls.org")
+              ;;,(concat my-org-files-path "memacs/roylog.org")
+              ;;,(concat my-org-files-path "memacs/SMS.org")
+           ))))
 #+END_SRC
 
 =my-toggle-agenda-files()= toggles between work/everything and nonwork/everything:
@@ -6911,19 +6857,20 @@ switch to open Agenda or open new one:
 
     (if (my-buffer-exists "*Org Agenda*")
         (switch-to-buffer "*Org Agenda*")
-      (if (my-system-type-is-windows)
+      (cond ((string-equal system-name "GRZN17009")
 
         ;; on Windows, the business agenda is default and the normal agenda accessable via C-u prefix
         (cond ((not arg) (my-super-agenda-business)) ;; without argument: super-agenda of business
               (t (my-super-agenda));; with argument: super-agenda
-          )
+          ))
 
+      (t
         ;; on other systems, it's the other way round
         (cond ((not arg) (my-super-agenda)) ;; without argument: my super-agenda
               (t (message "Business agenda")
                  (my-super-agenda-business));; with argument: super-agenda of business
           )
-      )
+      ))
     )
   )
 
