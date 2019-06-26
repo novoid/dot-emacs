@@ -8231,6 +8231,11 @@ http://orgmode.org/manual/Exporting-code-blocks.html
 ;;  (setq org-export-babel-evaluate nil)
 #+END_SRC
 
+The issue with =org-export-babel-evaluate= set to =nil= disables the
+results parameter may be mitigated by =#+Property: header-args :cache
+yes= according to [[https://stackoverflow.com/questions/29952543/how-do-i-prevent-org-mode-from-executing-all-of-the-babel-source-blocks][this page]].
+
+
 Do not prompt to confirm evaluation:
 This may be dangerous - make sure you understand the consequences
 of setting this -- see the docstring for details
