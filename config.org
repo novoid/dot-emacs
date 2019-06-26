@@ -779,6 +779,20 @@ setting path so that Emacs finds aspell and such:
   )
 #+END_SRC
 
+
+Where my Org mode files reside. They are used all over this config and
+therefore, this has to be defined early:
+
+#+BEGIN_SRC emacs-lisp
+(cond ((and (my-system-type-is-windows) (string-equal system-name "GRZN17009"))
+          (setq my-org-files-path "c:/Users/karl.voit/org/"))
+      ((my-system-type-is-windows)
+          (setq my-org-files-path "~/org/"))
+      (t
+          (setq my-org-files-path "~/org/"))
+)
+#+END_SRC
+
 * Cygwin Paths (Windows)
 
 As mentioned in the chapter of system-specific paths, I do use
@@ -792,7 +806,7 @@ Links:
 - http://www.emacswiki.org/emacs/RobertAdesamConfig
 
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-windows)
+(when (and (my-system-type-is-windows) (string-equal system-name "GRZN17009"))
 #+END_SRC
 
 Hard-coding the cygwin install path (for [[http://babun.github.io/][babun]]):
@@ -1978,7 +1992,7 @@ within Org-mode only is defined in my yankpad file.
   :ensure t
   :defer 110
   :init
-  (setq yankpad-file "~/org/yankpad.org")
+  (setq yankpad-file (concat my-org-files-path "yankpad.org"))
   :bind (:map my-map ("SPC" . yankpad-insert))
   :config
   ;; (bind-key "<f6>" 'yankpad-map))
@@ -3500,9 +3514,9 @@ Loading contributed packages:
 (use-package org-expiry
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
-(use-package ob-restclient
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ob-restclient.el/")))
-)
+;;disabled 2019-06-26;; (use-package ob-restclient
+;;disabled 2019-06-26;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ob-restclient.el/")))
+;;disabled 2019-06-26;; )
 
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
@@ -3577,7 +3591,8 @@ Might cause performance issues; http://orgmode.org/manual/Clean-view.html
 #+END_SRC
 
 
-Logging into drawers:
+Logging into drawers: (also do read [[https://yiufung.net/post/org-mode-hidden-gems-pt4/][this blog article]])
+
 #+BEGIN_SRC emacs-lisp
   (setq org-log-done (quote time))
   (setq org-log-into-drawer t)
@@ -3712,7 +3727,7 @@ Yasnippet settings:
 http://yasnippet.googlecode.com/svn/trunk/doc/index.html
 #+BEGIN_SRC emacs-lisp
   ;;disabled;(my-load-local-el "contrib/yasnippet/yasnippet.el")
-  (add-hook 'org-mode-hook 'yas-minor-mode-on)
+  (add-hook 'org-mode-hook 'yas-minor-mode)
   (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 #+END_SRC
 
@@ -5109,7 +5124,7 @@ emails, manual editing in vim, ...
 
 Setting it up: http://orgmode.org/org.html#Setting-up-capture
 #+BEGIN_SRC emacs-lisp
-(setq org-default-notes-file "~/org/inbox.org")
+(setq org-default-notes-file (concat my-org-files-path "inbox.org"))
 (define-key global-map "\C-cc" 'org-capture)
 #+END_SRC
 
@@ -5197,9 +5212,9 @@ Using test org-capture-templates:
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq org-capture-templates
 `(
-  ("1" "first version with string" entry (file+headline "~/org/misc.org" "shorts")
+  ("1" "first version with string" entry (file+headline (concat my-org-files-path "misc.org") "shorts")
    "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-  ("2" "second version with variable" entry (file+headline "~/org/misc.org" "shorts")
+  ("2" "second version with variable" entry (file+headline (concat my-org-files-path "misc.org") "shorts")
    ,my-capture-template-next :empty-lines 1)
         ))
 #+END_SRC
@@ -5217,43 +5232,43 @@ BEGIN of the templates:
 
 My general templates:
 #+BEGIN_SRC emacs-lisp
-	  ("s" "shorts-todo" entry (file+headline "~/org/misc.org" "shorts")
+	  ("s" "shorts-todo" entry (file+headline (concat my-org-files-path "misc.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("e" "Event" entry (file+headline "~/org/misc.org" "Events")
+	  ("e" "Event" entry (file+headline (concat my-org-files-path "misc.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("b" "Bookmark" entry (file+headline "~/org/notes.org" "Bookmarks")
+	  ("b" "Bookmark" entry (file+headline (concat my-org-files-path "notes.org") "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("p" "public voit" entry (file+headline "~/org/public_voit.org" "Blogbeiträge")
+	  ("p" "public voit" entry (file+headline (concat my-org-files-path "public_voit.org") "Blogbeiträge")
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
-	  ("a" "anzuschauen" entry (file+headline "~/org/misc.org" "Anzuschauen")
+	  ("a" "anzuschauen" entry (file+headline (concat my-org-files-path "misc.org") "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	  ("B" "Besorgung" entry (file+headline "~/org/hardware.org" "Besorgungen")
+	  ("B" "Besorgung" entry (file+headline (concat my-org-files-path "hardware.org") "Besorgungen")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Hardware templates:
 #+BEGIN_SRC emacs-lisp
 	  ("h" "hardware")
-	  ("hs" "sherri" entry (file+olp "~/org/hardware.org" "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+	  ("hs" "sherri" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hf" "floyd" entry (file+olp "~/org/hardware.org" "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
+	  ("hf" "floyd" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hc" "Chromebook" entry (file+olp "~/org/hardware.org" "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
+	  ("hc" "Chromebook" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hp" "RasPlay" entry (file+olp "~/org/hardware.org" "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
+	  ("hp" "RasPlay" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
 	   ,my-capture-template-next :empty-lines 1)
 	  ;;old;;("hb" "blanche" entry (file+olp "~/org/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
 	  ;;old;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("hw" "Winora T3" entry (file+olp "~/org/hardware.org" "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
+	  ("hw" "Winora T3" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Templates for my home:
 #+BEGIN_SRC emacs-lisp
 	  ("w" "Breitenweg")
-	  ("ws" "Breitenweg shorts" entry (file+headline "~/org/bwg.org" "shorts")
+	  ("ws" "Breitenweg shorts" entry (file+headline (concat my-org-files-path "bwg.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("we" "Breitenweg event" entry (file+headline "~/org/bwg.org" "Events")
+	  ("we" "Breitenweg event" entry (file+headline (concat my-org-files-path "bwg.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 #+END_SRC
@@ -5261,28 +5276,28 @@ Templates for my home:
 Company templates:
 #+BEGIN_SRC emacs-lisp
 	  ("d" "detego")
-    ("ds" "shorts" entry (file+headline "~/org/detego.org" "shorts/projects")
+    ("ds" "shorts" entry (file+headline (concat my-org-files-path "detego.org") "shorts/projects")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("de" "event" entry (file+headline "~/org/detego.org" "Events")
+	  ("de" "event" entry (file+headline (concat my-org-files-path "detego.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("dc" "CISO")
-	  ("dcs" "shorts" entry (file+headline "~/org/ciso.org" "shorts")
+	  ("dcs" "shorts" entry (file+headline (concat my-org-files-path "ciso.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("dce" "event" entry (file+headline "~/org/ciso.org" "Events")
+	  ("dce" "event" entry (file+headline (concat my-org-files-path "ciso.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 #+END_SRC
 
 Template for my lecture:
 #+BEGIN_SRC emacs-lisp
-	  ("f" "FH St. Pölten shorts" entry (file+headline "~/org/fhsp.org" "shorts")
+	  ("f" "FH St. Pölten shorts" entry (file+headline (concat my-org-files-path "fhsp.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Put it in the inbox, refile it later:
 #+BEGIN_SRC emacs-lisp
-	  ("I" "inbox, refile later" entry (file "~/org/inbox.org")
+	  ("I" "inbox, refile later" entry (file (concat my-org-files-path "inbox.org"))
 	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("W" "WWW: inbox, refile later" entry (file "~/org/inbox.org")
+	  ("W" "WWW: inbox, refile later" entry (file (concat my-org-files-path "inbox.org"))
 	   "* %a :website:\n\n%U %?\n\n%:initial\n" :empty-lines 1)
 #+END_SRC
 
@@ -5301,12 +5316,12 @@ Old templates for the records:
 ("xR" "elmex rot" table-line (id "fbd9be0e-5077-4ba9-89eb-6041f945991a") "| %T |")
 ("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
 ("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
-("xx" "xlogtest" table-line (file+headline "~/org/misc.org" "xlogtest2012-06-17") "| %T |")
+("xx" "xlogtest" table-line (file+headline (concat my-org-files-path "misc.org") "xlogtest2012-06-17") "| %T |")
 #+END_SRC
 
 Test template:
 #+BEGIN_SRC emacs-lisp
-	  ("X" "test" entry (file+headline "~/org/misc.org" "Tests")
+	  ("X" "test" entry (file+headline (concat my-org-files-path "misc.org") "Tests")
 	   ,my-capture-template-test :empty-lines 1)
 #+END_SRC
 
@@ -5466,17 +5481,17 @@ certain kind of data.
 
 #+BEGIN_SRC emacs-lisp
   (setq org-link-abbrev-alist
-	'(
+	`(
 	  ("bib" . "~/archive/library/%s.bib")
-	  ("cite" . "file:~/org/references.org::/%s/")
+	  ("cite" . ,(concat "file:" my-org-files-path "references.org::/%s/"))
 					;	("mynotes" . "file:~/org/references.org::%s")
 					;	("papers" . "~/archive/library/%s.pdf")
 	  ("photo" . "file:~/people/all_photographs/%s")
 	  ("pdf" . "~/archive/library/%s.pdf")
 	  ("notes" . "~/archive/library/%s-notes.pdf")
-	  ("contact" . "~/org/contacts.org::/\*.*%s/")
-;	  ("tsfile" . "~/org/memacs/files.org_archive::/\*.*%s/") replaced by org-link-set-parameters() + my-handle-tsfile-link()
-	  ("ifile" . "~/org/memacs/ifiles.org::/\*.*%s/")
+	  ("contact" . ,(concat my-org-files-path "contacts.org::/\*.*%s/"))
+;	  ("tsfile" . ,(concat my-org-files-path "memacs/files.org_archive::/\*.*%s/")) replaced by org-link-set-parameters() + my-handle-tsfile-link()
+	  ("ifile" . ,(concat my-org-files-path "memacs/ifiles.org::/\*.*%s/"))
 	  ;;("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
 	  ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
 	  ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
@@ -5597,7 +5612,7 @@ Helper function =string-replace (this withthat in)=
 
 Defining memacs variables:
 #+BEGIN_SRC emacs-lisp
-  (defvar memacs-root "~/org/memacs/")
+  (defvar memacs-root (concat my-org-files-path "memacs/"))
   (defvar memacs-file-pattern "files.org_archive") ;; also possible: "*.org"
 #+END_SRC
 
@@ -5807,24 +5822,26 @@ default agenda and all agenda files.
 Definition of work files:
 #+BEGIN_SRC emacs-lisp
   (if (my-system-type-is-windows)
-      (setq my-work-agenda-files (append (quote (
-                                                 "c:/Users/karl.voit/org/detego.org"
-                                                 "c:/Users/karl.voit/org/ciso.org"
-                                                 "c:/Users/karl.voit/org/exported-detego-calendar.org"
-                                                 ;;"c:/Users/karl.voit/org/r6-stories.org"
-                                                 ;;"c:/Users/karl.voit/org/infonova.org"
+      (setq my-work-agenda-files (append (` (
+      ;; 2019-06-26: backticks above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
+      ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
+                                                 ,(concat my-org-files-path "detego.org")
+                                                 ,(concat my-org-files-path "ciso.org")
+                                                 ,(concat my-org-files-path "exported-detego-calendar.org")
+                                                 ;;,(concat my-org-files-path "r6-stories.org")
+                                                 ;;,(concat my-org-files-path "infonova.org")
                                                  ))))
-    (setq my-work-agenda-files (append (quote (
-                                               "~/org/detego.org"
-                                               "~/org/ciso.org"
-                                               "~/org/exported-detego-calendar.org"
-                                               ;;"~/org/infonova.org"
-                                               ;;"~/org/r6-stories.org"
-                                               ;;"~/org/infonova.org"
-                                               ;;"~/org/tagstore.org";;moved to archive
-                                               ;;"~/org/ist.org";;moved to archive
-                                               ;;"~/org/test-phd.org"
-                                               ;;"~/org/postdoc.org";;moved to archive
+    (setq my-work-agenda-files (append (` (
+                                               ,(concat my-org-files-path "detego.org")
+                                               ,(concat my-org-files-path "ciso.org")
+                                               ,(concat my-org-files-path "exported-detego-calendar.org")
+                                               ;;,(concat my-org-files-path "infonova.org")
+                                               ;;,(concat my-org-files-path "r6-stories.org")
+                                               ;;,(concat my-org-files-path "infonova.org")
+                                               ;;,(concat my-org-files-path "tagstore.org");;moved to archive
+                                               ;;,(concat my-org-files-path "ist.org");;moved to archive
+                                               ;;,(concat my-org-files-path "test-phd.org")
+                                               ;;,(concat my-org-files-path "postdoc.org");;moved to archive
                                                ))))
     )
 #+END_SRC
@@ -5832,66 +5849,66 @@ Definition of work files:
 Definitions of non-work files:
 #+BEGIN_SRC emacs-lisp
    (if (my-system-type-is-windows)
-      (setq my-nonwork-agenda-files (append (quote (
-                                              "c:/Users/karl.voit/org/misc.org"
-					            "c:/Users/karl.voit/org/issues.org"
-					            "c:/Users/karl.voit/org/projects.org"
-					            "c:/Users/karl.voit/org/finanzen_behoerden_versicherungen.org"
-					            "c:/Users/karl.voit/org/bwg.org"
-					            "c:/Users/karl.voit/org/contacts.org"
-					            ;;"c:/Users/karl.voit/org/foodandbeverages.org"
-					            "c:/Users/karl.voit/org/hardware.org"
-					            "c:/Users/karl.voit/org/fhsp.org"
-					            "c:/Users/karl.voit/org/notes.org"
-					            "c:/Users/karl.voit/org/public_voit.org"
-					            "c:/Users/karl.voit/org/errors_public_voit.org"
-					            "c:/Users/karl.voit/org/errors_orgmode_commits.org"
-					            ;;"c:/Users/karl.voit/org/movies.org"
-					            ;;"c:/Users/karl.voit/org/references.org"
-					            ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org"
-					            ;;"c:/Users/karl.voit/org/memacs/error.org"
-					            ;;"c:/Users/karl.voit/org/memacs/git.org"
-					            ;;"c:/Users/karl.voit/org/memacs/ifiles.org"
-					            ;;"c:/Users/karl.voit/org/memacs/phonecalls.org"
-					            ;;"c:/Users/karl.voit/org/memacs/roylog.org"
-					            ;;"c:/Users/karl.voit/org/memacs/SMS.org"
+      (setq my-nonwork-agenda-files (append (` (
+                                              ,(concat my-org-files-path "misc.org")
+					            ,(concat my-org-files-path "issues.org")
+					            ,(concat my-org-files-path "projects.org")
+					            ,(concat my-org-files-path "finanzen_behoerden_versicherungen.org")
+					            ,(concat my-org-files-path "bwg.org")
+					            ,(concat my-org-files-path "contacts.org")
+					            ;;,(concat my-org-files-path "foodandbeverages.org")
+					            ,(concat my-org-files-path "hardware.org")
+					            ,(concat my-org-files-path "fhsp.org")
+					            ,(concat my-org-files-path "notes.org")
+					            ,(concat my-org-files-path "public_voit.org")
+					            ,(concat my-org-files-path "errors_public_voit.org")
+					            ,(concat my-org-files-path "errors_orgmode_commits.org")
+					            ;;,(concat my-org-files-path "movies.org")
+					            ;;,(concat my-org-files-path "references.org")
+					            ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org")
+					            ;;,(concat my-org-files-path "memacs/error.org")
+					            ;;,(concat my-org-files-path "memacs/git.org")
+					            ;;,(concat my-org-files-path "memacs/ifiles.org")
+					            ;;,(concat my-org-files-path "memacs/phonecalls.org")
+					            ;;,(concat my-org-files-path "memacs/roylog.org")
+					            ;;,(concat my-org-files-path "memacs/SMS.org")
                                                  ))))
-    (setq my-nonwork-agenda-files (append (quote (
-                                            ;;"~/org/archive.org"
-					          "~/org/misc.org"
-					          "~/org/issues.org"
-					          "~/org/projects.org"
-					          "~/org/finanzen_behoerden_versicherungen.org"
-					          "~/org/bwg.org"
-					          "~/org/contacts.org"
-					          "~/org/foodandbeverages.org"
-					          "~/org/hardware.org"
-					          "~/org/notes.org"
-					          "~/org/movies.org"
-					          "~/org/references.org"
-					          "~/org/public_voit.org"
-					          "~/org/errors_public_voit.org"
-					          "~/org/errors_orgmode_commits.org"
-					          "~/org/fhsp.org"
+    (setq my-nonwork-agenda-files (append (` (
+                                            ;;,(concat my-org-files-path "archive.org")
+					          ,(concat my-org-files-path "misc.org")
+					          ,(concat my-org-files-path "issues.org")
+					          ,(concat my-org-files-path "projects.org")
+					          ,(concat my-org-files-path "finanzen_behoerden_versicherungen.org")
+					          ,(concat my-org-files-path "bwg.org")
+					          ,(concat my-org-files-path "contacts.org")
+					          ,(concat my-org-files-path "foodandbeverages.org")
+					          ,(concat my-org-files-path "hardware.org")
+					          ,(concat my-org-files-path "notes.org")
+					          ,(concat my-org-files-path "movies.org")
+					          ,(concat my-org-files-path "references.org")
+					          ,(concat my-org-files-path "public_voit.org")
+					          ,(concat my-org-files-path "errors_public_voit.org")
+					          ,(concat my-org-files-path "errors_orgmode_commits.org")
+					          ,(concat my-org-files-path "fhsp.org")
 					          "~/src/lazyblorg/wiki/Roadmap.org"
-					          "~/org/memacs/error.org"
-					          ;;"~/org/memacs/roylog.org"
-					          ;;"~/org/memacs/archive.org"
-					          ;;"~/org/memacs/bank.org"
-					          ;;"~/org/memacs/datebk6.org"
-					          ;;"~/org/memacs/delicious.org"
-					          ;;"~/org/memacs/files.org"
-					          ;;"~/org/memacs/GCal.org"
-					          ;;"~/org/memacs/git.org"
-					          ;;"~/org/memacs/ifiles.org"
-					          ;;"~/org/memacs/mbox.org"
-					          ;;"~/org/memacs/news.org"
-					          ;;"~/org/memacs/phonecalls.org"
-					          ;;"~/org/memacs/SMS.org"
-					          ;;"~/org/memacs/tweets.org"
-					          ;;"~/org/memacs/www.org"
-					          ;;"~/org/memacs/movies.org"
-					          ;;"~/org/memacs/Filmliste.org"
+					          ,(concat my-org-files-path "memacs/error.org")
+					          ;;,(concat my-org-files-path "memacs/roylog.org")
+					          ;;,(concat my-org-files-path "memacs/archive.org")
+					          ;;,(concat my-org-files-path "memacs/bank.org")
+					          ;;,(concat my-org-files-path "memacs/datebk6.org")
+					          ;;,(concat my-org-files-path "memacs/delicious.org")
+					          ;;,(concat my-org-files-path "memacs/files.org")
+					          ;;,(concat my-org-files-path "memacs/GCal.org")
+					          ;;,(concat my-org-files-path "memacs/git.org")
+					          ;;,(concat my-org-files-path "memacs/ifiles.org")
+					          ;;,(concat my-org-files-path "memacs/mbox.org")
+					          ;;,(concat my-org-files-path "memacs/news.org")
+					          ;;,(concat my-org-files-path "memacs/phonecalls.org")
+					          ;;,(concat my-org-files-path "memacs/SMS.org")
+					          ;;,(concat my-org-files-path "memacs/tweets.org")
+					          ;;,(concat my-org-files-path "memacs/www.org")
+					          ;;,(concat my-org-files-path "memacs/movies.org")
+					          ;;,(concat my-org-files-path "memacs/Filmliste.org")
                                                ))))
     )
 
@@ -6350,7 +6367,7 @@ only see important business stuff.
 (if noninteractive
   ;; if Emacs is started in batch mode: omit org-super-agenda since I don't need it here and there were issues with it:
   (setq org-agenda-custom-commands
-        (quote (
+        (` (
                 ("n" "no TODO events +180d"
                  ((agenda "no TODO events +180d"
                           ((org-agenda-span 180)
@@ -6365,19 +6382,19 @@ only see important business stuff.
                             )
                            ;;(org-agenda-skip-function '(my-skip-tag "lp"))
                           )))
-                 nil ("~/org/agenda_180d_filtered.html"))
+                 nil (,(concat my-org-files-path "agenda_180d_filtered.html")))
 
                 ("D" "detail agenda"
                  ((agenda "detail agenda"
                           ((org-agenda-span 31)
                            (org-agenda-time-grid nil)
                           )))
-                 nil ("~/org/agenda_details.html"))
+                 nil (,(concat my-org-files-path "agenda_details.html")))
                 )))
 
   ;; if Emacs is started in interactive mode:
   (setq org-agenda-custom-commands
-        (quote (
+        (` (
 
                 ("s" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
                  (org-super-agenda-mode)
@@ -6411,14 +6428,14 @@ only see important business stuff.
                             )
                            ;;(org-agenda-skip-function '(my-skip-tag "lp"))
                           )))
-                 nil ("~/org/agenda_180d_filtered.html"))
+                 nil (,(concat my-org-files-path "agenda_180d_filtered.html")))
 
                 ("D" "detail agenda"
                  ((agenda "detail agenda"
                           ((org-agenda-span 31)
                            (org-agenda-time-grid nil)
                           )))
-                 nil ("~/org/agenda_details.html"))
+                 nil (,(concat my-org-files-path "agenda_details.html")))
 
                 ;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
                 ;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
@@ -8175,10 +8192,10 @@ Set org-contacts defaults that differ from standard
 #+BEGIN_SRC emacs-lisp
   (setq org-contacts-address-property "CITY")
   (setq org-contacts-birthday-property "BORN")
-  (setq org-contacts-files "~/org/contacts.org")
+  (setq org-contacts-files (concat my-org-files-path "contacts.org"))
   (setq org-contacts-icon-property "PHOTOGRAPH")
   (custom-set-variables
-   '(org-contacts-files "~/org/contacts.org")
+   '(org-contacts-files (concat my-org-files-path "contacts.org"))
    '(org-contacts-address-property "CITY")
    '(org-contacts-birthday-property "BORN")
    '(org-contacts-icon-property "PHOTOGRAPH")
@@ -8200,7 +8217,7 @@ Activate Babel languages:
      (org . t)
      (emacs-lisp . t)
      (sql . t)
-     (restclient . t)
+;;disabled 2019-06-26;;     (restclient . t)
      (plantuml . t)
      ))
   )
@@ -8494,13 +8511,13 @@ General OrgMobile setup:
 #+BEGIN_SRC emacs-lisp
   (cond ((my-system-type-is-windows)
          (setq org-directory "~/org")
-         (setq org-mobile-directory "~/org/mobile-org/")
-         (setq org-mobile-inbox-for-pull "~/org/inbox.org")
+         (setq org-mobile-directory (concat my-org-files-path "mobile-org/"))
+         (setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
          )
         (t
          (setq org-directory "~/org")
-         (setq org-mobile-directory "~/org/mobile-org/")
-         (setq org-mobile-inbox-for-pull "~/org/inbox.org")
+         (setq org-mobile-directory (concat my-org-files-path "mobile-org/"))
+         (setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
          )
         )
 #+END_SRC
@@ -8520,7 +8537,7 @@ binding brings me the most current captured items into my =inbox.org=:
     "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
     (interactive "P")
     (org-mobile-pull)
-    (find-file "~/org/inbox.org")
+    (find-file (concat my-org-files-path "inbox.org"))
     )
 #+END_SRC
 
@@ -8740,10 +8757,10 @@ org-feed - aggregating RSS feeds in news.org file:
       '(
   ("heise"
          "http://www.heise.de/newsticker/heise.rdf"
-         "~/org/news.org" "heise")
+         (concat my-org-files-path "news.org") "heise")
   ("Dilbert"
          "http://feeds.feedburner.com/DilbertDailyStrip"
-         "~/org/news.org" "Dilbert")
+         (concat my-org-files-path "news.org") "Dilbert")
   )
       )
 #+END_SRC
@@ -12389,7 +12406,7 @@ not I should keep this here. Well, it does not hurt either.
  ;; If there is more than one, they won't work right.
  '(org-contacts-address-property "CITY")
  '(org-contacts-birthday-property "BORN")
- '(org-contacts-files "~/org/contacts.org")
+ `(org-contacts-files ,(concat my-org-files-path "contacts.org"))
  '(org-contacts-icon-property "PHOTOGRAPH")
  '(safe-local-variable-values
    (quote
