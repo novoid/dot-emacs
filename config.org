@@ -5877,7 +5877,7 @@ files; on my other machines, start with my non-work-related files.
     (if (get 'my-toggle-agenda-files 'state)
         (progn
           (message "Agenda files: host-specific")
-          (if (my-system-type-is-windows)
+          (if (string-equal system-name "GRZN17009")
               (setq org-agenda-files (append my-work-agenda-files ))
             (setq org-agenda-files (append my-nonwork-agenda-files ))
             )
