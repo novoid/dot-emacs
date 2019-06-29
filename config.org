@@ -1765,6 +1765,32 @@ I got this code from [[http://pragmaticemacs.com/emacs/comment-boxes/][pragmatic
     (set-marker e nil)))
 #+END_SRC
 
+** my-scroll-up-command() my-scroll-down-command()
+:PROPERTIES:
+:CREATED:  [2019-06-29 Sat 12:00]
+:END:
+
+Usually, =C-p= and =C-n= are mapped to =scroll-down-command= and
+=scroll-up-command=. Contrary to this, I like to scroll only half of a
+screen so that I can follow the content in a better way.
+
+The following implementation was inspired by (and copied from)
+https://www.emacswiki.org/emacs/HalfScrolling
+
+#+BEGIN_SRC emacs-lisp
+(defun my-window-half-height ()
+  (max 1 (/ (1- (window-height (selected-window))) 2)))
+
+(defun my-scroll-up-half ()
+  (interactive)
+  (scroll-up (my-window-half-height)))
+
+(defun my-scroll-down-half ()
+  (interactive)
+  (scroll-down (my-window-half-height)))
+#+END_SRC
+
+
 * Spell checking
 
 «[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
@@ -6784,8 +6810,8 @@ also in agenda. Default setting is C-p/C-n for scrolling one line at a
 time.
 
 #+BEGIN_SRC emacs-lisp
-(define-key org-agenda-mode-map (kbd "C-p") 'scroll-down-command)
-(define-key org-agenda-mode-map (kbd "C-n") 'scroll-up-command)
+(define-key org-agenda-mode-map (kbd "C-p") 'my-scroll-down-half)
+(define-key org-agenda-mode-map (kbd "C-n") 'my-scroll-up-half)
 #+END_SRC
 
 *** Agenda category icons
@@ -12046,8 +12072,8 @@ Move back/forward word is essential to me:
 
 2016-03-23: PageUp/Down (instead of line up/down) for keyboards without PgUp/Dn-keys:
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-p") 'scroll-down-command)
-(global-set-key (kbd "C-n") 'scroll-up-command)
+(global-set-key (kbd "C-p") 'my-scroll-down-half)
+(global-set-key (kbd "C-n") 'my-scroll-up-half)
 #+END_SRC
 
 I tried some of those but they did not stick:
