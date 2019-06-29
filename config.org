@@ -9145,7 +9145,17 @@ The package:
   (eval-after-load 'org '(require 'org-pdfview))
 #+END_SRC
 
-; ** pdf-tools configuration
+--------------------------------------------------------------------
+
+pdf-tools configuration:
+
+Some default configs (as in id:2019-06-29-fix-pdf-tools-cosmo) do
+feature =("\\.pdf\\'" . default)= which might then overwriting my
+desired setting. Therefore, I just make sure that this setting is not
+in the list of =org-file-apps= any more:
+#+BEGIN_SRC emacs-lisp
+  (setq org-file-apps (delete '("\\.pdf\\'" . default) org-file-apps))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   ;;(add-to-list 'org-file-apps '("\\.pdf\\'" . org-pdfview-open))
