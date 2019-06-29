@@ -5241,43 +5241,43 @@ BEGIN of the templates:
 
 My general templates:
 #+BEGIN_SRC emacs-lisp
-	  ("s" "shorts-todo" entry (file+headline (concat my-org-files-path "misc.org") "shorts")
+	  ("s" "shorts-todo" entry (file+headline ,(concat my-org-files-path "misc.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("e" "Event" entry (file+headline (concat my-org-files-path "misc.org") "Events")
+	  ("e" "Event" entry (file+headline ,(concat my-org-files-path "misc.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("b" "Bookmark" entry (file+headline (concat my-org-files-path "notes.org") "Bookmarks")
+	  ("b" "Bookmark" entry (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("p" "public voit" entry (file+headline (concat my-org-files-path "public_voit.org") "Blogbeiträge")
+	  ("p" "public voit" entry (file+headline ,(concat my-org-files-path "public_voit.org") "Blogbeiträge")
 	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
-	  ("a" "anzuschauen" entry (file+headline (concat my-org-files-path "misc.org") "Anzuschauen")
+	  ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
 	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	  ("B" "Besorgung" entry (file+headline (concat my-org-files-path "hardware.org") "Besorgungen")
+	  ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Hardware templates:
 #+BEGIN_SRC emacs-lisp
 	  ("h" "hardware")
-	  ("hs" "sherri" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+	  ("hs" "sherri" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hf" "floyd" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
+	  ("hf" "floyd" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hc" "Chromebook" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
+	  ("hc" "Chromebook" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hp" "RasPlay" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
+	  ("hp" "RasPlay" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
 	   ,my-capture-template-next :empty-lines 1)
 	  ;;old;;("hb" "blanche" entry (file+olp "~/org/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
 	  ;;old;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("hw" "Winora T3" entry (file+olp (concat my-org-files-path "hardware.org") "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
+	  ("hw" "Winora T3" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Templates for my home:
 #+BEGIN_SRC emacs-lisp
 	  ("w" "Breitenweg")
-	  ("ws" "Breitenweg shorts" entry (file+headline (concat my-org-files-path "bwg.org") "shorts")
+	  ("ws" "Breitenweg shorts" entry (file+headline ,(concat my-org-files-path "bwg.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("we" "Breitenweg event" entry (file+headline (concat my-org-files-path "bwg.org") "Events")
+	  ("we" "Breitenweg event" entry (file+headline ,(concat my-org-files-path "bwg.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 #+END_SRC
@@ -5285,28 +5285,28 @@ Templates for my home:
 Company templates:
 #+BEGIN_SRC emacs-lisp
 	  ("d" "detego")
-    ("ds" "shorts" entry (file+headline (concat my-org-files-path "detego.org") "shorts/projects")
+    ("ds" "shorts" entry (file+headline ,(concat my-org-files-path "detego.org") "shorts/projects")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("de" "event" entry (file+headline (concat my-org-files-path "detego.org") "Events")
+	  ("de" "event" entry (file+headline ,(concat my-org-files-path "detego.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 	  ("dc" "CISO")
-	  ("dcs" "shorts" entry (file+headline (concat my-org-files-path "ciso.org") "shorts")
+	  ("dcs" "shorts" entry (file+headline ,(concat my-org-files-path "ciso.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("dce" "event" entry (file+headline (concat my-org-files-path "ciso.org") "Events")
+	  ("dce" "event" entry (file+headline ,(concat my-org-files-path "ciso.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 #+END_SRC
 
 Template for my lecture:
 #+BEGIN_SRC emacs-lisp
-	  ("f" "FH St. Pölten shorts" entry (file+headline (concat my-org-files-path "fhsp.org") "shorts")
+	  ("f" "FH St. Pölten shorts" entry (file+headline ,(concat my-org-files-path "fhsp.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Put it in the inbox, refile it later:
 #+BEGIN_SRC emacs-lisp
-	  ("I" "inbox, refile later" entry (file (concat my-org-files-path "inbox.org"))
+	  ("I" "inbox, refile later" entry (file ,(concat my-org-files-path "inbox.org"))
 	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("W" "WWW: inbox, refile later" entry (file (concat my-org-files-path "inbox.org"))
+	  ("W" "WWW: inbox, refile later" entry (file ,(concat my-org-files-path "inbox.org"))
 	   "* %a :website:\n\n%U %?\n\n%:initial\n" :empty-lines 1)
 #+END_SRC
 
@@ -5325,12 +5325,12 @@ Old templates for the records:
 ("xR" "elmex rot" table-line (id "fbd9be0e-5077-4ba9-89eb-6041f945991a") "| %T |")
 ("xD" "dentalux Complex 3" table-line (id "2013-08-06-detalux3") "| %T |")
 ("xk" "Keyboard Akkus leer" table-line (id "3407c9b7-1b41-443b-9254-32c4af3a54e8") "| %T |")
-("xx" "xlogtest" table-line (file+headline (concat my-org-files-path "misc.org") "xlogtest2012-06-17") "| %T |")
+("xx" "xlogtest" table-line (file+headline ,(concat my-org-files-path "misc.org") "xlogtest2012-06-17") "| %T |")
 #+END_SRC
 
 Test template:
 #+BEGIN_SRC emacs-lisp
-	  ("X" "test" entry (file+headline (concat my-org-files-path "misc.org") "Tests")
+	  ("X" "test" entry (file+headline ,(concat my-org-files-path "misc.org") "Tests")
 	   ,my-capture-template-test :empty-lines 1)
 #+END_SRC
 
