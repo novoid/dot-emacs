@@ -768,6 +768,7 @@ setting path so that Emacs finds aspell and such:
      ;;disabled;		  ":/Users/vk/bin:/usr/local/texlive/2010/bin/x86_64-darwin:/opt/local/bin:/opt/local/sbin"))
      (setq exec-path (append exec-path
       			     '("C:/Program Files (x86)/Aspell/bin"
+                                     "C:/ProgramData/chocolatey/bin"
       			       ;;disabled; "/usr/local/texlive/2010/bin/x86_64-darwin"
       			       ;;disabled; "/usr/local/teTeX/bin/powerpc-apple-darwin-current"
       			       )))
@@ -784,10 +785,10 @@ Where my Org mode files reside. They are used all over this config and
 therefore, this has to be defined early:
 
 #+BEGIN_SRC emacs-lisp
-(cond ((and (my-system-type-is-windows) (string-equal system-name "GRZN17009"))
+(cond ((string-equal system-name "GRZN17009")
           (setq my-org-files-path "c:/Users/karl.voit/org/"))
-      ((my-system-type-is-windows)
-          (setq my-org-files-path "~/org/"))
+      ((string-equal system-name "cosmo")
+          (setq my-org-files-path "c:/Users/John/AppData/Roaming/org/"))
       (t
           (setq my-org-files-path "~/org/"))
 )
@@ -2802,7 +2803,7 @@ search):
   "Run \"filetags\" on current or marked files"
   (interactive)
   (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
-    (when (my-system-type-is-windows)
+    (when (string-equal system-name "GRZN17009")
       ;;works            (let ((proc (start-process "cmd" nil "cmd.exe" "/C" "start" "cmd.exe" "/K" "echo \"Hello\"")))
       ;;(message (concat "CALLING: c:/Users/karl.voit/bin/filetags.bat -sv " marked-files))
       (let ((proc (start-process "cmd" nil "cmd.exe" "/C" "start" "cmd.exe" "/C"
@@ -2811,6 +2812,14 @@ search):
         (set-process-query-on-exit-flag proc nil)))
       ;;(dired-do-shell-command "cmd.exe /K c:/Users/karl.voit/bin/filetags.bat *" nil marked-files)
       )
+
+    (when (string-equal system-name "cosmo")
+      (let ((proc (start-process "cmd" nil "cmd.exe" "/C" "start" "cmd.exe" "/C"
+                                 "C:/Users/John/AppData/Roaming/filetags.bat -sv"
+                                 (shell-quote-argument marked-files)))
+        (set-process-query-on-exit-flag proc nil)))
+      )
+
     (when (my-system-type-is-gnu)
       ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
       ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
@@ -7862,9 +7871,12 @@ https://github.com/yjwen/org-reveal
   (cond ((my-system-type-is-gnu)
          (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
          (setq org-reveal-extra-css "file:///home/vk/.emacs.d/bin/reveal_theme_night_local.css"))
-        ((my-system-type-is-windows)
+        ((string-equal system-name "GRZN17009")
          (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/bin/reveal.js/")
          (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/bin/reveal_theme_night_local.css"))
+        ((string-equal system-name "cosmo")
+         (setq org-reveal-root "file:///C:/Users/John/AppData/Roaming/.emacs.d/bin/reveal.js/")
+         (setq org-reveal-extra-css "file:///C:/Users/John/AppData/Roaming/.emacs.d/bin/reveal_theme_night_local.css"))
         (t
          (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
     )
@@ -8507,7 +8519,7 @@ Note that even though I use [[http://www.orgzly.com/][Orgzly]] to /view/ Org-mod
 Android phone, I use MobileOrg to capture. This might change in
 future, when I am able to choose whether or not single [[https://syncthing.net/][SyncThing]]
 folders gets synced on WiFi or on 4G networks (instead of all or
-nothing). Take a look at [[https://github.com/syncthing/syncthing-android/issues/888][my feature wish report]] and [[https://github.com/syncthing/syncthing-android/issues/511][the other issue it
+nothing). Take a look at [[https://github.com/syncthing/syncthing-android/issues/888][my feature wish report]] and [[https://github.com/syncthing/syncthing-android/issues/511][the other issue I
 was referred to]].
 
 *** DISABLED my-org-mobile-push() - pushing to org-mobile
@@ -10048,6 +10060,7 @@ and smart truncation.»
   (add-to-list 'sml/replacer-regexp-list '("^~/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/src/lazyblorg" ":LB:") t)
   (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/org" ":ORG:") t)
+  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/John/AppData/Roaming/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/" "~/") t)
   (smart-mode-line-enable)
 )
@@ -12210,9 +12223,13 @@ file.
                                  (find-file
                                "~/src/org-mode-workshop/featureshow/org-mode-teaser.org")
                                  )
-                               (when (my-system-type-is-windows)
+                               (when (string-equal system-name "GRZN17009")
                                  (find-file
                                "c:/Users/karl.voit/src/org-mode-workshop/featureshow/org-mode-teaser.org")
+                                 )
+                               (when (string-equal system-name "cosmo")
+                                 (find-file
+                               "c:/Users/John/src/org-mode-workshop/featureshow/org-mode-teaser.org")
                                  )
 			       )
           my-map
@@ -12393,6 +12410,7 @@ configuration file here.
 cd ~/.emacs.d
 ## extracting define-keys and global-set-keys:
 egrep '(global-set|define)-key' *el | \
+
 ## getting rid of file names:
 egrep -v '^.*\.el:( )+?;' | \
 ## remove my-map lines:
