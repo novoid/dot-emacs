@@ -6770,6 +6770,15 @@ keystroke. This is a big time saver.
 (setq org-agenda-sticky t)
 #+END_SRC
 
+Scrolling through agenda using C-p and C-n instead of PageUp/PageDown
+also in agenda. Default setting is C-p/C-n for scrolling one line at a
+time.
+
+#+BEGIN_SRC emacs-lisp
+(define-key org-agenda-mode-map (kbd "C-p") 'scroll-down-command)
+(define-key org-agenda-mode-map (kbd "C-n") 'scroll-up-command)
+#+END_SRC
+
 *** Agenda category icons
 
 There is the possibility of adding icons to categories:
