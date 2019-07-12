@@ -6816,6 +6816,14 @@ time.
 (define-key org-agenda-mode-map (kbd "C-n") 'my-scroll-up-half)
 #+END_SRC
 
+From [[https://www.reddit.com/r/orgmode/comments/cc5vz5/how_to_avoid_duplicates_in_orgsuperagenda/][reddit]] I got the settings that deadlines are not shown when
+SCHEDULED is set:
+#+BEGIN_SRC emacs-lisp
+;; (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
+(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
+#+END_SRC
+
+
 *** Agenda category icons
 
 There is the possibility of adding icons to categories:
