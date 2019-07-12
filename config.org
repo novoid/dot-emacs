@@ -3957,7 +3957,9 @@ Statistic cookies count ALL subtasks not only direkt ones
 (setq org-hierarchical-todo-statistics t)
 #+END_SRC
 
-Stop the mouse cursor from highlighting lines in the agenda: http://orgmode.org/worg/org-faq.html
+Stop the mouse cursor from highlighting lines in the agenda:
+http://orgmode.org/worg/org-faq.html
+Somehow this stopped working with org-super-agenda I guess.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-finalize-agenda-hook
             (lambda () (remove-text-properties
