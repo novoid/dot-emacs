@@ -9205,7 +9205,10 @@ Bindings:
           ("s"  . pdf-occur)
           ("b"  . pdf-view-set-slice-from-bounding-box)
           ("r"  . pdf-view-reset-slice)
-          ("m"  . pdf-annot-add-highlight-markup-annotation))
+          ("m"  . pdf-annot-add-highlight-markup-annotation)
+          ("<C-n>" . '(lambda nil (interactive) (pdf-view-next-line-or-page 20)))
+          ("<C-p>" . '(lambda nil (interactive) (pdf-view-previous-line-or-page 20)))
+)
 #+END_SRC
 
 Setting highlighting color:
