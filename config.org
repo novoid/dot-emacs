@@ -4185,16 +4185,16 @@ Take a look at =my-reset-org()= as well.
               (switch-to-buffer "public_voit.org")
               (org-set-startup-visibility)
               )
-            (when (my-system-type-is-windows)
-              (when (my-buffer-exists "detego.org")
-                (switch-to-buffer "detego.org")
-                (org-set-startup-visibility)
-                )
-              (when (my-buffer-exists "ciso.org")
-                (switch-to-buffer "ciso.org")
-                (org-set-startup-visibility)
-                )
-              )
+            ;; (when (my-system-type-is-windows)
+            ;;   (when (my-buffer-exists "detego.org")
+            ;;     (switch-to-buffer "detego.org")
+            ;;     (org-set-startup-visibility)
+            ;;     )
+            ;;   (when (my-buffer-exists "ciso.org")
+            ;;     (switch-to-buffer "ciso.org")
+            ;;     (org-set-startup-visibility)
+            ;;     )
+            ;;   )
             )
           )
 #+END_SRC
@@ -5310,8 +5310,8 @@ Templates for my home:
 	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 #+END_SRC
 
-Company templates:
-#+BEGIN_SRC emacs-lisp
+Company templates: (2019-07-17 disabled)
+#+BEGIN_SRC emacs-lisp :tangle no
 	  ("d" "detego")
     ("ds" "shorts" entry (file+headline ,(concat my-org-files-path "detego.org") "shorts/projects")
 	   ,my-capture-template-next :empty-lines 1)
@@ -5535,8 +5535,8 @@ certain kind of data.
 	  ;;("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
 	  ;;("ipd" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
 	  ;;("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
-	  ("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
-	  ("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
+	  ;;("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
+	  ;;("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
 	  ))
 #+END_SRC
 
@@ -5861,9 +5861,9 @@ Definition of work files:
   (setq my-work-agenda-files (append (` (
   ;; 2019-06-26: backtick above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
   ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
-       ,(concat my-org-files-path "detego.org")
-       ,(concat my-org-files-path "ciso.org")
-       ,(concat my-org-files-path "exported-detego-calendar.org")
+       ;;,(concat my-org-files-path "detego.org")
+       ;;,(concat my-org-files-path "ciso.org")
+       ;;,(concat my-org-files-path "exported-detego-calendar.org")
        ;;,(concat my-org-files-path "r6-stories.org")
        ;;,(concat my-org-files-path "infonova.org")
        ))))
@@ -6310,8 +6310,8 @@ only see important business stuff.
                  :and (:todo "WAITING" :not (:tag ("reward" "@BWG"))))  ; Set order of this section
           (:name "2read" :order 15
                  :and (:tag "2read" :not (:tag ("reward" "@BWG"))))
-          (:name "Other (Business)" :order 20
-                 :and (:category ("ciso" "detego" "ISAE3402") :not (:tag ("reward" "@BWG"))))
+          ;;(:name "Other (Business)" :order 20
+          ;;       :and (:category ("ciso" "detego" "ISAE3402") :not (:tag ("reward" "@BWG"))))
           ;; Groups supply their own section names when none are given
           (:name "SOMEDAY or WATCHING"
                  ;; Show this group at the end of the agenda (since it has the
@@ -6850,14 +6850,14 @@ and with a bleeding heart.
 ;;    (add-to-list 'org-agenda-category-icon-alist
 ;;		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
 ;;		  )
-    (add-to-list 'org-agenda-category-icon-alist
-            `("detego" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
-    (add-to-list 'org-agenda-category-icon-alist
-            `("ciso" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
-    (add-to-list 'org-agenda-category-icon-alist
-            `("outlook" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
-    (add-to-list 'org-agenda-category-icon-alist
-            `("ISAE3402" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;            `("detego" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;            `("ciso" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;            `("outlook" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;    (add-to-list 'org-agenda-category-icon-alist
+;;            `("ISAE3402" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;; OLD version without my-user-emacs-directory; with help of: https://github.com/novoid/dot-emacs/issues/2
 ;;OLD:    (add-to-list 'org-agenda-category-icon-alist
 ;;OLD:		  '("ciso" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
@@ -11650,18 +11650,18 @@ Not org related but might be candidates as well:
           (org-decrypt-entry)
   ) nil)
 
-  ("b" (lambda ()
-          (interactive)
-          (switch-to-buffer "detego.org")
-          (org-id-goto "det-shared-credentials")
-          (org-decrypt-entry)
-  ) nil)
-  ("B" (lambda ()
-          (interactive)
-          (switch-to-buffer "detego.org")
-          (org-id-goto "det-personal-credentials")
-          (org-decrypt-entry)
-  ) nil)
+  ;;("b" (lambda ()
+  ;;        (interactive)
+  ;;        (switch-to-buffer "detego.org")
+  ;;        (org-id-goto "det-shared-credentials")
+  ;;        (org-decrypt-entry)
+  ;;) nil)
+  ;;("B" (lambda ()
+  ;;        (interactive)
+  ;;        (switch-to-buffer "detego.org")
+  ;;        (org-id-goto "det-personal-credentials")
+  ;;        (org-decrypt-entry)
+  ;;) nil)
 
   ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
   ("u" my-insert-orgmode-url-from-clipboard nil)
