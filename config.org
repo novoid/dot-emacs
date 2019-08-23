@@ -792,6 +792,7 @@ therefore, this has to be defined early:
       (t
           (setq my-org-files-path "~/org/"))
 )
+;;(message (format "Set \"my-org-files-path\" to: %s" my-org-files-path))
 #+END_SRC
 
 * Cygwin Paths (Windows)
@@ -6971,6 +6972,17 @@ I aliased it within =~/.zshrc.local= to =memacs=
     "Exports monthly Org-mode agenda to agenda.ics file"
     (interactive)
     (save-some-buffers)
+
+    ;; 2019-06-29: FIXXME soon: this is a dirty workaround (by
+    ;; hard-coding org-agenda-files) that disables some (rather unused)
+    ;; settings/features of mine but fixes the issue that
+    ;; org-agenda-files is losing some files
+    (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
+
+;;    (message (format "DEBUG: my-nonwork-agenda-files [%s]" my-nonwork-agenda-files))
+;;    (message (format "DEBUG: my-org-files-path [%s]" my-org-files-path))
+;;    (message (format "DEBUG: org-agenda-files [%s]" org-agenda-files))
+
     (org-agenda-list nil nil 60)
     (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
