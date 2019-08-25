@@ -4921,6 +4921,29 @@ This is why I had to come up with this helper function:
 (bind-key "B" 'my-newsrob-capture-fix my-map)
 #+END_SRC
 
+*** my-filename-to-attr-snippet
+:PROPERTIES:
+:CREATED:  [2019-08-25 Sun 18:42]
+:END:
+
+A macro that is very handy when inserting images to a lazyblorg entry.
+
+- Process:
+  1. Copy and paste a file base name as a new line
+     - example: =2019-08-25T18.43 An example image file -- publicvoit.jpg=
+  2. Place the cursor at the begin of its line
+  3. Invoke the macro
+  4. Resulting snippet looks like:
+
+: #+CAPTION:
+: #+ATTR_HTML: :align center :width 560
+: [[tsfile:2019-08-25T18.43 An example image file -- publicvoit.jpg][2019-08-25T18.43 An example image file -- publicvoit.jpg]]
+
+#+BEGIN_SRC emacs-lisp
+(fset 'my-filename-to-attr-snippet
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([return up 35 43 67 65 80 84 73 79 78 58 32 return 35 43 65 84 84 82 95 72 84 77 76 58 32 58 97 108 59 backspace 105 103 110 32 99 101 110 116 101 114 32 58 119 105 100 116 104 32 53 54 48 1 down 91 91 116 115 102 105 108 101 58 67108896 5 escape 119 93 91 25 93 93 15 1 down down] 0 "%d")) arg)))
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
