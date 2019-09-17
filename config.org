@@ -12310,7 +12310,8 @@ query and option parameters.»
 [[help:recentf-open-files][Show a dialog to open a recent file.]]
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "r" #'recentf-open-files my-map)
+;;(bind-key "r" #'recentf-open-files my-map) ;; old mapping
+(bind-key "r" #'helm-recentf my-map)
 #+END_SRC
 
 ** DISABLED Outlook: edit/save message → my-map oe|os
