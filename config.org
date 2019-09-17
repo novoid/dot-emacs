@@ -2640,6 +2640,10 @@ Make better use of =dired-recent-open= using ivy:
 (global-set-key (kbd "C-z") 'my-dired-recent-dirs)
 #+END_SRC
 
+Maybe, this can be optimized by using [[http://melpa.org/#/frecentf][frecency for scoring entries]]
+(like in [[https://fman.io/][fman]] or [[http://www.forum.freecommander.com/viewtopic.php?f=20&t=8371][this feature-request for FreeCommander]]). So far, I'm
+quite happy with the current feature.
+
 ** dired-narrow → /
 :PROPERTIES:
 :CREATED:  [2018-06-29 Fri 20:49]
