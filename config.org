@@ -8662,7 +8662,7 @@ use any more:
 #+BEGIN_SRC emacs-lisp
 (bind-key "I" #'my-org-mobile-push my-map)
 #+END_SRC
-** Reference management → my-map (|)
+** DISABLED Reference management → my-map (|)
 
 Do read http://karl-voit.at/2015/12/26/reference-management-with-orgmode/
 
@@ -8771,6 +8771,48 @@ Setup my own org-mode-reftex-setup:
 (bind-key (kbd "R") #'org-mode-reftex-setup my-map)
 ;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
 #+END_SRC
+
+** org-ref
+:PROPERTIES:
+:CREATED:  [2019-09-12 Thu 19:12]
+:END:
+
+On 2019-09-12, I disabled my DIY-reference-management (above) and
+started to test drive org-ref. This might not be in a stable status.
+
+Setup according to https://github.com/jkitchin/org-ref:
+#+BEGIN_SRC emacs-lisp
+;; setting the path using the my-org-files-path:
+;;(setq reftex-default-bibliography '("~/org/org-ref.bib"))                         ;; Its value is ("~/org/org-ref.bib")
+(setq reftex-default-bibliography `( ,(concat my-org-files-path "org-ref.bib")))  ;; Its value is ("~/org/org-ref.bib")
+
+
+;; see org-ref for use of these variables
+(setq org-ref-bibliography-notes (concat my-org-files-path "org-ref.org")  ;;"~/org/org-ref.org"
+      org-ref-default-bibliography `( ,(concat my-org-files-path "org-ref.bib"))
+      org-ref-pdf-directory "~/archive/library/org-ref/")
+
+
+
+(setq bibtex-completion-bibliography (concat my-org-files-path "org-ref.bib")
+      bibtex-completion-library-path "~/archive/library/org-ref"
+      bibtex-completion-notes-path "~/archive/library/helm-bibtex-notes")
+
+;; open pdf with system pdf viewer (works on mac)
+(setq bibtex-completion-pdf-open-function
+  (lambda (fpath)
+    (start-process "open" "*open*" "open" fpath)))
+
+;; alternative
+;; (setq bibtex-completion-pdf-open-function 'org-open-file)
+
+
+;(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+
+(require 'org-ref)
+(require 'doi-utils)
+#+END_SRC
+
 
 ** Org-mode docu → my-map o
 
