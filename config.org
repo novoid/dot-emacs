@@ -139,7 +139,9 @@ re-opening the file: (2018-07-26 disabled because it is not always a good thing 
 
 ** Package
 
-Configure the package manager of my GNU/Emacs.
+Configure the package manager(s) of my GNU/Emacs.
+
+*** MELPA
 
 http://www.reddit.com/r/emacs/comments/2u1bml/gnu_or_melpa_version_of_yasnippet_both_in_mx/
 
@@ -166,12 +168,15 @@ installs its local copies of the packages:
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 #+END_SRC
 
+*** Elpy
+
 Add [[https://github.com/jorgenschaefer/elpy][elpy repository]]:
 
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'package-archives '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 #+END_SRC
 
+*** fix certificate issue
 
 Bugfixing:
 2016-01-26: fix certificate issue: "gnutls.c: [0] (Emacs) fatal error: The TLS connection was non-properly terminated."
@@ -187,7 +192,7 @@ Bugfixing:
       )
 #+END_SRC
 
-Initialize packages:
+*** Initialize misc packages
 
 #+BEGIN_SRC emacs-lisp
 ;; 2015-11-25: https://github.com/jwiegley/use-package
@@ -201,6 +206,71 @@ Initialize packages:
   (package-refresh-contents)
   (package-install 'use-package))
 #+END_SRC
+
+*** DISABLED [[https://framagit.org/steckerhalter/quelpa][Quelpa]]
+
+DISABLED because of:
+#+BEGIN_EXAMPLE
+Debugger entered--Lisp error: (file-error "Cannot open load file" "No such file or directory" "use-package-core")
+  require(use-package-core)
+  eval-buffer(#<buffer  *load*-463556> nil "/home/vk/.emacs.d/elpa/quelpa-use-package-20190210.1938/quelpa-use-package.el" nil t)  ; Reading at buffer position 1691
+  load-with-code-conversion("/home/vk/.emacs.d/elpa/quelpa-use-package-20190210.1938/quelpa-use-package.el" "/home/vk/.emacs.d/elpa/quelpa-use-package-20190210.1938/quelpa-use-package.el" nil t)
+  require(quelpa-use-package)
+  eval-buffer(#<buffer  *load*-218457> nil "/home/vk/.emacs.d/config.el" nil t)  ; Reading at buffer position 4033
+  load-with-code-conversion("/home/vk/.emacs.d/config.el" "/home/vk/.emacs.d/config.el" nil nil)
+  load("/home/vk/.emacs.d/config.el" nil nil t)
+  load-file("~/.emacs.d/config.el")
+#+END_EXAMPLE
+
+... including auto-update:
+
+#+BEGIN_SRC emacs-lisp
+(if (require 'quelpa nil t)
+    (quelpa-self-upgrade)
+  (with-temp-buffer
+    (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
+    (eval-buffer)))
+#+END_SRC
+
+[[https://framagit.org/steckerhalter/quelpa-use-package][quelpa-use-package]]:
+
+#+BEGIN_SRC emacs-lisp
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+(require 'quelpa-use-package)
+#+END_SRC
+
+After that it is possible to call use-package with the :quelpa
+keyword:
+
+EXAMPLES:
+#+BEGIN_SRC emacs-lisp  :tangle no
+;; installs abc-mode with quelpa
+(use-package abc-mode :quelpa)
+
+;; does the same (`t' is optional)
+(use-package abc-mode :quelpa t)
+
+;; again... (if the package would have another name)
+(use-package abc-mode :quelpa abc-mode)
+
+;; passes upgrade parameter to quelpa
+(use-package abc-mode :quelpa (:upgrade t))
+
+;; uses the given recipe
+(use-package abc-mode
+  :quelpa (abc-mode :fetcher github :repo "mkjunker/abc-mode"))
+
+;; recipe with plist arguments
+(use-package abc-mode
+  :quelpa ((abc-mode :fetcher github :repo "mkjunker/abc-mode") :upgrade t))
+#+END_SRC
+
+Read
+https://github.com/alphapapa/unpackaged.el#upgrade-a-quelpa-use-package-forms-package
+for upgrading quelpa packages.
 
 ** Upper/lower-case
 
