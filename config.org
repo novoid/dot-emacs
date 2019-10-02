@@ -8974,6 +8974,36 @@ mine for demonstration purposes for novice or non-Org-users.
 had to disable it]]. Maybe I'd give it another try in a couple of months
 or so.
 
+** DISABLED org-sidebar
+:PROPERTIES:
+:CREATED:  [2019-10-02 Wed 13:46]
+:END:
+
+DISABLED org-sidebar because org-ql can't be installed via melpa and
+I'm giving up for now.
+
+For testing =org-sidebar-tree= from https://github.com/alphapapa/org-sidebar
+
+DISABLED setup via quelpa because of quelpa error (see above):
+#+BEGIN_SRC emacs-lisp  :tangle no
+(use-package org-sidebar
+  :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
+#+END_SRC
+
+Dependency: -> is not installable ATM
+#+BEGIN_SRC emacs-lisp
+(use-package org-ql
+  :ensure t
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-sidebar
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-sidebar/")))
+)
+#+END_SRC
+
+
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
