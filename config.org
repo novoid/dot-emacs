@@ -7978,7 +7978,9 @@ https://github.com/yashi/org-asciidoc - «An Org Mode Exporter Backend For Ascii
   )
 #+END_SRC
 
-*** ox-rst - Export to reStructuredText
+*** DISABLED ox-rst - Export to reStructuredText
+
+2019-09-28: disabled because I don't need it at the moment
 
 https://github.com/msnoigrs/ox-rst
 
@@ -8253,10 +8255,12 @@ binding the function:
 (bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
 #+END_SRC
 
-*** ox-koma-letter
+*** DISABLED ox-koma-letter
 :PROPERTIES:
 :CREATED:  [2019-03-17 Sun 19:16]
 :END:
+
+2019-09-28: disabled because I don't need it at the moment.
 
 I configured the [[https://komascript.de][KOMA]] letter exporter according to [[https://orgmode.org/worg/exporters/koma-letter-export.html][this page]].
 
@@ -8842,7 +8846,7 @@ Setup my own org-mode-reftex-setup:
 ;; 2015-05-14: does NOT work (yet). See id:2015-05-14-disable-orgmode-reftex-autoload
 #+END_SRC
 
-** org-ref
+** DISABLED org-ref
 :PROPERTIES:
 :CREATED:  [2019-09-12 Thu 19:12]
 :END:
