@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2019-06-26 22:15:30 vk>
+;; Time-stamp:    <2019-10-02 13:44:28 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -141,12 +141,26 @@ Note the weekly scope of the command's precision.")
  '(org-contacts-birthday-property "BORN" t)
  '(org-contacts-files "~/org/contacts.org" t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
+ '(package-selected-packages
+   (quote
+    (quelpa org-ref ivy yankpad yafolding wttrin use-package unicode-fonts undo-tree synonyms suggest spray smeargle smart-mode-line scss-mode restclient request-deferred pcre2el ox-reveal ox-pandoc ox-gfm ox-clip ox-asciidoc org-table-sticky-header org-pdfview org-bullets nyan-mode neotree mode-icons minimap markdown-mode magit keyfreq json-mode image-dired+ hydra htmlize highlight-symbol helm-dired-history guide-key gnuplot git-timemachine flycheck eno elpy dumb-jump dired-icon dash-functional csv-mode counsel char-menu buttercup bm auto-complete anzu alert adoc-mode)))
  '(safe-local-variable-values
    (quote
     ((eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
-     (flyspell-default-dictionary . "german8")))))
+     (flyspell-default-dictionary . "german8"))))
+ '(smeargle-age-colors
+   (quote
+    ((0)
+     (1 . "grey80")
+     (2 . "grey70")
+     (3 . "grey60")
+     (4 . "grey50")
+     (5 . "grey40")
+     (6 . "grey30")
+     (7 . "grey20")
+     (8 . "grey10")))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
