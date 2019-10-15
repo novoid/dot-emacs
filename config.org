@@ -5991,7 +5991,7 @@ Definitions of non-work files:
               ;;,(concat my-org-files-path "movies.org")
               ;;,(concat my-org-files-path "references.org")
               ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org")
-              ;;,(concat my-org-files-path "memacs/error.org")
+              ,(concat my-org-files-path "memacs/error.org")
               ;;,(concat my-org-files-path "memacs/git.org")
               ;;,(concat my-org-files-path "memacs/ifiles.org")
               ;;,(concat my-org-files-path "memacs/phonecalls.org")
