@@ -11935,15 +11935,15 @@ Not org related but might be candidates as well:
   "
   ^View^                 ^Navigation^        ^^Git                C-↑↓   goto line of same level
   ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
-  _h_ide/show fun  M-h   _,_ ← error    F5   ^^← Git hunk →
-  _c_ycle all      M-H   _._   error →  F6   S-F_2_   S-F_3_
+  _h_ide/show fun  M-h   _p_ ← error    F5   ^^← Git hunk →
+  _c_ycle all      M-H   _n_   error →  F6   S-F_2_   S-F_3_
   ^^                     _<_ ← symbol        _s_tage hunk
   ^^                     _>_   symbol →      _R_evert hunk
   ^^                     ^^                  ^^
   ^Edit^                 ^Help^              ^^
   ^^─────────────────────^^──────────────────^^────────────────
   _i_mplement    C-c i   _H_elp (pylookup)   ^^
-  _r_efactor C-c C-r r   ^^                  ^^
+  _r_efactor C-c C-r r   M-_._  goto definition                  ^^
   sphinx-_d_oc           ^^                  ^^
   ^^                     ^^                  ^^
   ")
@@ -11951,8 +11951,8 @@ Not org related but might be candidates as well:
   ("h" hs-cycle nil :color red)
   ("c" hs-cycle-all nil)
 
-  ("," flymake-goto-prev-error nil :color red)
-  ("." flymake-goto-next-error nil :color red)
+  ("p" flymake-goto-prev-error nil :color red)
+  ("n" flymake-goto-next-error nil :color red)
   ("<" highlight-symbol-prev nil)
   (">" highlight-symbol-next nil)
 
@@ -11964,6 +11964,7 @@ Not org related but might be candidates as well:
   ("i" elpygen-implement nil)
   ("r" elpy-refactor nil)
   ("d" sphinx-doc nil)
+  ("." elpy-goto-definition nil)
 
   ("H" pylookup-lookup nil)
 ;  (""  nil)
