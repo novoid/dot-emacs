@@ -2277,6 +2277,10 @@ maintainability. It also ships with a large set of libraries.
 
 Misc stuff is taken from: https://github.com/jorgenschaefer/elpy/wiki/
 
+If you want to learn about setting up Emacs for Python, I'd recommend
+you to read https://realpython.com/emacs-the-best-python-editor/ which
+does a great job in explaining everything.
+
 Selected keyboard commands (summary): (see defined hydra for python mode!)
 
 | Key       | Command                                               | Command                           |
