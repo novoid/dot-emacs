@@ -3699,7 +3699,7 @@ Might cause performance issues; http://orgmode.org/manual/Clean-view.html
   (setq org-show-following-heading t)
   (setq org-show-hierarchy-above t)
   (setq org-show-siblings nil)
-  (setq org-deadline-warning-days 1)
+  (setq org-deadline-warning-days 7)
   (setq org-blank-before-new-entry (quote ((heading . t)
 					   (plain-list-item . nil))))
 #+END_SRC
@@ -6922,8 +6922,8 @@ time.
 From [[https://www.reddit.com/r/orgmode/comments/cc5vz5/how_to_avoid_duplicates_in_orgsuperagenda/][reddit]] I got the settings that deadlines are not shown when
 SCHEDULED is set:
 #+BEGIN_SRC emacs-lisp
-;; (setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
-(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
+(setq org-agenda-skip-scheduled-if-deadline-is-shown nil)
+;;(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
 #+END_SRC
 
 
