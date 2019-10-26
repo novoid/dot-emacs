@@ -3888,6 +3888,14 @@ headings in the collapsed view, which I prefer:
 (setq org-cycle-separator-lines 0)
 #+END_SRC
 
+org-inlinetask is a method to define tasks via =C-c C-x t= anywhere in
+the hierarchy by using at least =org-inlinetask-min-level= number of
+asterisks. Since some of my normal heading levels do reach the
+standard value for it of 15, I had to extend it to 20 for now:
+#+BEGIN_SRC emacs-lisp
+(setq org-inlinetask-min-level 20)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
