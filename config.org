@@ -1391,7 +1391,8 @@ Host-specific font size:
   )
 (when (my-system-is-sherri)
   ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
-  (set-face-attribute 'default (selected-frame) :height 105)
+  ;;(set-face-attribute 'default (selected-frame) :height 105) ;; before 2019-10-24: I want to try smaller font
+  (set-face-attribute 'default (selected-frame) :height 100)
   )
 #+END_SRC
 
