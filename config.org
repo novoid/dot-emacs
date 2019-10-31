@@ -6945,7 +6945,7 @@ This is a neat way of beautifying the agenda.
 
 Unfortunately, the clean way of defining the data directory relatively
 to the path stored in =my-user-emacs-directory= does not work:
-: (concat my-user-emacs-directory "bin/R6-logo_18x12.jpg") nil nil :ascent center)
+: (concat my-user-emacs-directory "bin/images/R6-logo_18x12.jpg") nil nil :ascent center)
 
 I don't know how to fix this and so I stick with the hard coded path
 and with a bleeding heart.
@@ -6957,22 +6957,22 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;		  '("r6" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
+;;		  '("r6" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
 ;;		  )
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;		  '("infonova" "~/.emacs.d/bin/R6-logo_18x12.jpg" nil nil :ascent center)
+;;		  '("infonova" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
 ;;		  )
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;            `("detego" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;            `("detego" ,(concat my-user-emacs-directory "bin/images/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;            `("ciso" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;            `("ciso" ,(concat my-user-emacs-directory "bin/images/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;            `("outlook" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;            `("outlook" ,(concat my-user-emacs-directory "bin/images/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;            `("ISAE3402" ,(concat my-user-emacs-directory "bin/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
+;;            `("ISAE3402" ,(concat my-user-emacs-directory "bin/images/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;; OLD version without my-user-emacs-directory; with help of: https://github.com/novoid/dot-emacs/issues/2
 ;;OLD:    (add-to-list 'org-agenda-category-icon-alist
-;;OLD:		  '("ciso" "~/.emacs.d/bin/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
+;;OLD:		  '("ciso" "~/.emacs.d/bin/images/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
 ;;OLD:		  )
     ;;(add-to-list 'org-agenda-category-icon-alist
     ;;		 '("misc" '(space . (:width (18))))
@@ -6984,23 +6984,23 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("contacts" "~/.emacs.d/bin/user-identity.png" nil nil :ascent center)
+		 '("contacts" "~/.emacs.d/bin/images/user-identity.png" nil nil :ascent center)
 		     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("public_voit" "~/.emacs.d/bin/application-rss+xml.png" nil nil :ascent center)
+		 '("public_voit" "~/.emacs.d/bin/images/application-rss+xml.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png
 		  )
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;		 '("misc" "~/.emacs.d/bin/emblem-new.png" nil nil :ascent center)
+;;		 '("misc" "~/.emacs.d/bin/images/emblem-new.png" nil nil :ascent center)
 ;;                 ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
 ;;		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("hardware" "~/.emacs.d/bin/camera-photo.png" nil nil :ascent center)
+		 '("hardware" "~/.emacs.d/bin/images/camera-photo.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/devices/camera-photo.png
 		  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("bwg" "~/.emacs.d/bin/go-home.png" nil nil :ascent center)
+		 '("bwg" "~/.emacs.d/bin/images/go-home.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
 		  )
    )
@@ -7724,7 +7724,7 @@ Customized «scrartcl»
                     \\usepackage\{helvet\}
                     \\renewcommand\{\\familydefault\}\{\\sfdefault\}
                     \\DeclareRobustCommand\{\\myacro\}\[1\]\{\\textsc\{\\lowercase\{#1\}\}\} %%  abbrevations using small caps
-                    \\usepackage{scrlayer-scrpage} \\rehead{\\includegraphics\[height=1cm\]{{c:/Users/karl.voit/.emacs.d/bin/Detego-Logo-209x41.png}}} \\pagestyle{scrheadings} %% Logo in header
+                    \\usepackage{scrlayer-scrpage} \\rehead{\\includegraphics\[height=1cm\]{{c:/Users/karl.voit/.emacs.d/bin/images/Detego-Logo-209x41.png}}} \\pagestyle{scrheadings} %% Logo in header
                     \\newenvironment{NOTES}{}{}  %% declares org-reveal environment in PDF output
                     \\usepackage[space]{grffile} %% enable spaces in filenames of includegraphics
                     %% colorful headings:
@@ -11149,10 +11149,10 @@ https://github.com/iqbalansari/emacs-emojify
   :init
   :config
   (setq emojify-user-emojis `((":org:" . (("name" . "Org mode")
-                                          ("image" . (concat my-user-emacs-directory "bin/org-mode-logo_22x22.png"))
+                                          ("image" . (concat my-user-emacs-directory "bin/images/org-mode-logo_22x22.png"))
                                           ("style" . "github")))
                               (":emacs:" . (("name" . "Emacs")
-                                            ("image" . (concat my-user-emacs-directory "bin/emacs_22x22.png"))
+                                            ("image" . (concat my-user-emacs-directory "bin/images/emacs_22x22.png"))
                                             ("style" . "github")))))
   ;; If emojify is already loaded refresh emoji data
   (when (featurep 'emojify)
@@ -11313,11 +11313,11 @@ setup to look like a default Emacs.
   ;;          (lambda ()
   ;;            (define-key global-map [tool-bar pdf-button]
   ;;              '(menu-item "Export to PDF" org-latex-export-to-pdf
-  ;;                          :image (image :type png :file "~/.emacs.d/bin/icon_PDF_16x16.png")
+  ;;                          :image (image :type png :file "~/.emacs.d/bin/images/icon_PDF_16x16.png")
   ;;                          ))))
   (define-key global-map [tool-bar pdf-button]
     '(menu-item "Export to PDF" org-latex-export-to-pdf
-                :image (image :type png :file (concat my-user-emacs-directory "bin/icon_PDF_16x16.png"))
+                :image (image :type png :file (concat my-user-emacs-directory "bin/images/icon_PDF_16x16.png"))
                 ))
 )
 
