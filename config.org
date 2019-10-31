@@ -11132,6 +11132,36 @@ by using nxml's indentation rules."
   )
 #+END_SRC
 
+
+** emojify
+:PROPERTIES:
+:CREATED:  [2019-10-31 Thu 00:58]
+:END:
+
+Emoticons for the Emacs :org: :emacs: :wink:
+
+https://github.com/iqbalansari/emacs-emojify
+
+#+BEGIN_SRC emacs-lisp
+(use-package emojify
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-emojify/")))
+  :defer 90
+  :init
+  :config
+  (setq emojify-user-emojis `((":org:" . (("name" . "Org mode")
+                                          ("image" . (concat my-user-emacs-directory "bin/org-mode-logo_22x22.png"))
+                                          ("style" . "github")))
+                              (":emacs:" . (("name" . "Emacs")
+                                            ("image" . (concat my-user-emacs-directory "bin/emacs_22x22.png"))
+                                            ("style" . "github")))))
+  ;; If emojify is already loaded refresh emoji data
+  (when (featurep 'emojify)
+    (emojify-set-emoji-data))
+
+  (add-hook 'after-init-hook #'global-emojify-mode)
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
