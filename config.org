@@ -11138,7 +11138,7 @@ by using nxml's indentation rules."
 :CREATED:  [2019-10-31 Thu 00:58]
 :END:
 
-Emoticons for the Emacs :org: :emacs: :wink:
+Emoticons for the Emacs :org: :emacs: :wink: :smile:
 
 https://github.com/iqbalansari/emacs-emojify
 
@@ -11148,11 +11148,12 @@ https://github.com/iqbalansari/emacs-emojify
   :defer 90
   :init
   :config
+  (setq emojify-emoji-styles '(ascii github)) ;; omit "unicode" style
   (setq emojify-user-emojis `((":org:" . (("name" . "Org mode")
-                                          ("image" . (concat my-user-emacs-directory "bin/images/org-mode-logo_22x22.png"))
+                                          ("image" . ,(concat my-user-emacs-directory "bin/images/org-mode-logo_22x22.png"))
                                           ("style" . "github")))
                               (":emacs:" . (("name" . "Emacs")
-                                            ("image" . (concat my-user-emacs-directory "bin/images/emacs_22x22.png"))
+                                            ("image" . ,(concat my-user-emacs-directory "bin/images/emacs_22x22.png"))
                                             ("style" . "github")))))
   ;; If emojify is already loaded refresh emoji data
   (when (featurep 'emojify)
@@ -12289,6 +12290,35 @@ FIXXME: add more features:
 
 #+RESULTS:
 : hydra-buffers/body
+
+** hydra-emojis → Shift F4
+:PROPERTIES:
+:CREATED:  [2019-10-31 Thu 02:23]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defhydra hydra-emojis (:color blue)
+    (concat my-f-key-settings
+      "
+      %s(eyebrowse-mode-line-indicator)
+  _i_nteractively inserting emojis
+  _a_propos emojis
+  ────^^────────────────────────────────────────────────────────────
+    ")
+
+    ;; red = stay; blue = close
+    ("i" emojify-insert-emoji nil :color blue)
+    ("a" emojify-apropos-emoji nil :color blue)
+
+    ("q" nil "quit")
+  )
+
+(define-key global-map [(shift f4)] 'hydra-emojis/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-emojis/body
+
 ** hydra-spelling → F5
 :PROPERTIES:
 :ID:       hydra-spellchecking
