@@ -11896,6 +11896,7 @@ Not org related but might be candidates as well:
   _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _p_ersonal credentials
   ^^                               _T_ags include inherited         _b_usiness shared
   ^^                               _1_ split block (M-RET)          _B_usiness personal
+  ^^                               add _n_ote to logbook            ^^
   ^^                               ^^                               ^^
   ^^Filter                         ^^Export                         ^^MISC
   ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
@@ -11949,6 +11950,7 @@ Not org related but might be candidates as well:
   ("d" define-word-at-point nil)
   ("S" spray-mode nil)
   ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
+  ("n" org-add-note nil)
 
 ;;  ("t" my-dired-tagtrees nil)
 ;;  ("T" my-dired-tagtrees-recursive nil)
