@@ -12300,7 +12300,6 @@ FIXXME: add more features:
   (defhydra hydra-emojis (:color blue)
     (concat my-f-key-settings
       "
-      %s(eyebrowse-mode-line-indicator)
   _i_nteractively inserting emojis
   _a_propos emojis
   ────^^────────────────────────────────────────────────────────────
