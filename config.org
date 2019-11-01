@@ -11138,7 +11138,7 @@ by using nxml's indentation rules."
 :CREATED:  [2019-10-31 Thu 00:58]
 :END:
 
-Emoticons for the Emacs :org: :emacs: :wink: :smile:
+Emoticons for the Emacs: :org: :emacs: :wink: :smile: ;^)
 
 https://github.com/iqbalansari/emacs-emojify
 
@@ -11149,6 +11149,10 @@ https://github.com/iqbalansari/emacs-emojify
   :init
   :config
   (setq emojify-emoji-styles '(ascii github)) ;; omit "unicode" style
+
+  ;; display emojis using images since looks nicer
+  (setq emojify-display-style 'image)
+
   (setq emojify-user-emojis `((":org:" . (("name" . "Org mode")
                                           ("image" . ,(concat my-user-emacs-directory "bin/images/org-mode-logo_22x22.png"))
                                           ("style" . "github")))
@@ -11159,7 +11163,8 @@ https://github.com/iqbalansari/emacs-emojify
   (when (featurep 'emojify)
     (emojify-set-emoji-data))
 
-  (add-hook 'after-init-hook #'global-emojify-mode)
+  (global-emojify-mode 1)
+  ;;(add-hook 'after-init-hook #'global-emojify-mode)
 )
 #+END_SRC
 
