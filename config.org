@@ -11148,7 +11148,7 @@ https://github.com/iqbalansari/emacs-emojify
   :defer 90
   :init
   :config
-  (setq emojify-emoji-styles '(ascii github)) ;; omit "unicode" style
+  (setq emojify-emoji-styles '(github)) ;; omit "ascii" and "unicode" style
 
   ;; display emojis using images since looks nicer
   (setq emojify-display-style 'image)
