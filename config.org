@@ -8606,7 +8606,7 @@ Activate org-crypt if =gpg= is installed:
 Encrypt all entries before saving
 #+BEGIN_SRC emacs-lisp
     (org-crypt-use-before-save-magic)
-    (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+    (setq org-tags-exclude-from-inheritance (quote ("crypt" "project")))
 #+END_SRC
 
 GPG key to use for encryption:
