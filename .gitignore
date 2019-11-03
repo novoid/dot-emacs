@@ -28,3 +28,7 @@ etc
 bin
 /config_Windows_working_ID_links.el
 server
+.places
+faststart_disable.sh
+faststart_enable.sh
+transient/
