@@ -5031,6 +5031,62 @@ A macro that is very handy when inserting images to a lazyblorg entry.
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([return up 35 43 67 65 80 84 73 79 78 58 32 return 35 43 65 84 84 82 95 72 84 77 76 58 32 58 97 108 59 backspace 105 103 110 32 99 101 110 116 101 114 32 58 119 105 100 116 104 32 53 54 48 1 down 91 91 116 115 102 105 108 101 58 67108896 5 escape 119 93 91 25 93 93 15 1 down down] 0 "%d")) arg)))
 #+END_SRC
 
+*** my-mark-as-project
+:PROPERTIES:
+:CREATED:  [2019-11-08 Fri 12:00]
+:END:
+
+With [[https://karl-voit.at/2019/11/03/org-projects/][UOMF: On How to Define Projects in Org Mode]] I started to use
+marking projects with a specific tag and made sure the =COOKIE_DATA=
+property ignores the checkboxes.
+
+Following function makes sure that these things are set properly (and
+a bit more):
+
+#+BEGIN_SRC emacs-lisp
+(defun my-mark-as-project ()
+"This function makes sure that the current heading has
+(1) the tag :project:
+(2) has property COOKIE_DATA set to \"todo recursive\"
+(3) has any TODO keyword and
+(4) a leading progress indicator"
+    (interactive)
+    (org-toggle-tag "project" 'on)
+    (org-set-property "COOKIE_DATA" "todo recursive")
+    (org-back-to-heading t)
+    (let* ((title (nth 4 (org-heading-components)))
+           (keyword (nth 2 (org-heading-components))))
+       (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
+           (message "TODO keyword and progress indicator found")
+           )
+       (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
+           (message "no TODO keyword but progress indicator found")
+           (forward-whitespace 1)
+           (insert "NEXT ")
+           )
+       (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
+           (message "no TODO keyword and no progress indicator found")
+           (forward-whitespace 1)
+           (insert "NEXT [/] ")
+           )
+       (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
+           (message "TODO keyword but no progress indicator found")
+           (forward-whitespace 2)
+           (insert "[/] ")
+           )
+       )
+)
+#+END_SRC
+
+#+RESULTS:
+: my-mark-as-project
+
+Personal notes from the implementation task: id:2019-11-08-my-mark-as-project
+
+I found following interesting elisp sources for implementing this function:
+- get heading parsed: http://ergoemacs.org/emacs/elisp_parse_org_mode.html
+- insert text: http://ergoemacs.org/emacs/elisp_examples.html
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -11902,6 +11958,7 @@ Not org related but might be candidates as well:
   ^^                               _T_ags include inherited         _b_usiness shared
   ^^                               _1_ split block (M-RET)          _B_usiness personal
   ^^                               add _n_ote to logbook            ^^
+  ^^                               mark as _P_roject                ^^
   ^^                               ^^                               ^^
   ^^Filter                         ^^Export                         ^^MISC
   ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
@@ -11927,6 +11984,8 @@ Not org related but might be candidates as well:
           (org-id-goto "browser-restart")
           (org-decrypt-entry)
   ) nil)
+
+  ("P" my-mark-as-project nil)
 
   ;;("b" (lambda ()
   ;;        (interactive)
