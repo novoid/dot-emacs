@@ -5087,6 +5087,42 @@ I found following interesting elisp sources for implementing this function:
 - get heading parsed: http://ergoemacs.org/emacs/elisp_parse_org_mode.html
 - insert text: http://ergoemacs.org/emacs/elisp_examples.html
 
+*** my-org-auto-tag
+:PROPERTIES:
+:CREATED:  [2019-11-08 Fri 14:00]
+:END:
+
+I got the code and the idea from [[https://stackoverflow.com/questions/29788639/automatically-assigning-tags-in-org-mode][this stackoverflow page]]. Invoking
+this function tags the current headline with words that can also be
+found in the combined lists of:
+
+1. =my-org-tag-alist=
+   - defined below just for this function
+2. =org-tag-persistent-alist=
+   - according to standard Org mode usage
+3. =org-tag-alist=
+   - according to standard Org mode usage
+
+#+BEGIN_SRC emacs-lisp
+(setq my-org-tag-alist (quote (
+			      ("Org" . ?@)
+			      ("keywords" . ?@)
+			      )))
+
+(defun my-org-auto-tag ()
+  (interactive)
+  (let ((alltags (append my-org-tag-alist org-tag-persistent-alist org-tag-alist))
+        (headline-words (split-string (org-get-heading t t)))
+        )
+    (mapcar (lambda (word) (if (assoc word alltags)
+                             (org-toggle-tag word 'on)))
+            headline-words))
+    )
+#+END_SRC
+
+#+RESULTS:
+: my-org-auto-tag
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -11959,6 +11995,7 @@ Not org related but might be candidates as well:
   ^^                               _1_ split block (M-RET)          _B_usiness personal
   ^^                               add _n_ote to logbook            ^^
   ^^                               mark as _P_roject                ^^
+  ^^                               _t_ag headline according to words^^
   ^^                               ^^                               ^^
   ^^Filter                         ^^Export                         ^^MISC
   ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
@@ -12003,6 +12040,7 @@ Not org related but might be candidates as well:
   ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
   ("u" my-insert-orgmode-url-from-clipboard nil)
   ("T" my-set-tags-including-inherited nil)
+  ("t" my-org-tag-alist nil)
   ("1" my-org-split-block nil)
 
   ("t" my-sparse-tree-with-tag-filter nil)
