@@ -3574,7 +3574,7 @@ Example: place the cursor within the table and evaluate
 )
 #+END_SRC
 
-* Org-mode
+* Org mode
 
 [[http://orgmode.org/][Org-mode]] is my digital life. I do almost anything within Org-mode:
 http://karl-voit.at/tags/emacs/
