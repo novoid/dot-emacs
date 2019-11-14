@@ -5123,6 +5123,106 @@ found in the combined lists of:
 #+RESULTS:
 : my-org-auto-tag
 
+*** my-generate-sanitized-alnum-dash-string
+:PROPERTIES:
+:CREATED:  [2019-11-14 Thu 23:38]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-generate-sanitized-alnum-dash-string(str)
+  "Returns a string which contains only a-zA-Z0-9 with single dashes
+   replacing all other characters in-between them.
+
+   Some parts were copied and adapted from org-hugo-slug
+   from https://github.com/kaushalmodi/ox-hugo (GPLv3)."
+  (let* (;; Remove "<FOO>..</FOO>" HTML tags if present.
+         (str (replace-regexp-in-string "<\\(?1:[a-z]+\\)[^>]*>.*</\\1>" "" str))
+         ;; Remove URLs if present in the string.  The ")" in the
+         ;; below regexp is the closing parenthesis of a Markdown
+         ;; link: [Desc](Link).
+         (str (replace-regexp-in-string (concat "\\](" ffap-url-regexp "[^)]+)") "]" str))
+         ;; Replace "&" with " and ", "." with " dot ", "+" with
+         ;; " plus ".
+         (str (replace-regexp-in-string
+               "&" " and "
+               (replace-regexp-in-string
+                "\\." " dot "
+                (replace-regexp-in-string
+                 "\\+" " plus " str))))
+         ;; Replace German Umlauts with 7-bit ASCII.
+         (str (replace-regexp-in-string "[Ä]" "Ae" str t))
+         (str (replace-regexp-in-string "[Ü]" "Ue" str t))
+         (str (replace-regexp-in-string "[Ö]" "Oe" str t))
+         (str (replace-regexp-in-string "[ä]" "ae" str t))
+         (str (replace-regexp-in-string "[ü]" "ue" str t))
+         (str (replace-regexp-in-string "[ö]" "oe" str t))
+         (str (replace-regexp-in-string "[ß]" "ss" str t))
+         ;; Replace all characters except alphabets, numbers and
+         ;; parentheses with spaces.
+         (str (replace-regexp-in-string "[^[:alnum:]()]" " " str))
+         ;; On emacs 24.5, multibyte punctuation characters like "："
+         ;; are considered as alphanumeric characters! Below evals to
+         ;; non-nil on emacs 24.5:
+         ;;   (string-match-p "[[:alnum:]]+" "：")
+         ;; So replace them with space manually..
+         (str (if (version< emacs-version "25.0")
+                  (let ((multibyte-punctuations-str "：")) ;String of multibyte punctuation chars
+                    (replace-regexp-in-string (format "[%s]" multibyte-punctuations-str) " " str))
+                str))
+         ;; Remove leading and trailing whitespace.
+         (str (replace-regexp-in-string "\\(^[[:space:]]*\\|[[:space:]]*$\\)" "" str))
+         ;; Replace 2 or more spaces with a single space.
+         (str (replace-regexp-in-string "[[:space:]]\\{2,\\}" " " str))
+         ;; Replace parentheses with double-hyphens.
+         (str (replace-regexp-in-string "\\s-*([[:space:]]*\\([^)]+?\\)[[:space:]]*)\\s-*" " -\\1- " str))
+         ;; Remove any remaining parentheses character.
+         (str (replace-regexp-in-string "[()]" "" str))
+         ;; Replace spaces with hyphens.
+         (str (replace-regexp-in-string " " "-" str))
+         ;; Remove leading and trailing hyphens.
+         (str (replace-regexp-in-string "\\(^[-]*\\|[-]*$\\)" "" str)))
+    str)
+  )
+#+END_SRC
+
+History of this function: id:2019-11-14-Org-Project-Management-Workflow
+
+*** my-id-get-or-generate
+:PROPERTIES:
+:CREATED:  [2019-11-14 Thu 23:37]
+:ID:       2019-11-14-my-id-get-or-generate
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-id-get-or-generate()
+"Returns the ID property if set or generates and returns a new one if not set.
+ The generated ID is stripped off potential progress indicator cookies and
+ sanitized to get a slug. Furthermore, it is prepended with an ISO date-stamp
+ if none was found before."
+    (interactive)
+        (when (not (org-id-get))
+            (progn
+    	       (let* (
+    	              (my-heading-text (nth 4 (org-heading-components)));; retrieve heading string
+		      (my-heading-text (replace-regexp-in-string "[[][0-9%/]+[]] " "" my-heading-text));; remove progress indicators like "[2/7]" or "[25%]"
+                      (new-id (my-generate-sanitized-alnum-dash-string my-heading-text));; get slug from heading text
+    	             )
+		   ;;(message (concat "HEADING: " my-heading-text))
+                   (when (not (string-match "[12][0-9][0-9][0-9]-[01][0-9]-[0123][0-9]-.+" new-id))
+                           ;; only if no ISO date-stamp is found at the beginning of the new id:
+        	           (setq new-id (concat (format-time-string "%Y-%m-%d-") new-id)))
+                   (org-set-property "ID" new-id)
+                   )
+                 )
+        )
+	(kill-new (org-id-get))
+	(org-id-get)
+)
+
+(bind-key (kbd "I") #'my-id-get-or-generate my-map)
+#+END_SRC
+
+History of this function: id:2019-11-14-Org-Project-Management-Workflow
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -10711,6 +10811,8 @@ Cool package but I don't need it at the moment. Therefore disabled.
 )
 #+END_SRC
 
+#+RESULTS:
+
 ** bm - visible bookmarks → my-map 8|9|0
 
 https://github.com/joodland/bm
@@ -11994,7 +12096,9 @@ Not org related but might be candidates as well:
   ^^                               _T_ags include inherited         _b_usiness shared
   ^^                               _1_ split block (M-RET)          _B_usiness personal
   ^^                               add _n_ote to logbook            ^^
+  ^^                               ^^                               ^^
   ^^                               mark as _P_roject                ^^
+  ^^                               generate & copy _i_d             ^^
   ^^                               _t_ag headline according to words^^
   ^^                               ^^                               ^^
   ^^Filter                         ^^Export                         ^^MISC
@@ -12053,6 +12157,7 @@ Not org related but might be candidates as well:
   ("S" spray-mode nil)
   ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
   ("n" org-add-note nil)
+  ("i" my-id-get-or-generate nil)
 
 ;;  ("t" my-dired-tagtrees nil)
 ;;  ("T" my-dired-tagtrees-recursive nil)
