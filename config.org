@@ -857,7 +857,7 @@ therefore, this has to be defined early:
 #+BEGIN_SRC emacs-lisp
 (cond ((string-equal system-name "GRZN17009")
           (setq my-org-files-path "c:/Users/karl.voit/org/"))
-      ((string-equal system-name "cosmo")
+      ((my-system-type-is-windows)
           (setq my-org-files-path "c:/Users/John/AppData/Roaming/org/"))
       (t
           (setq my-org-files-path "~/org/"))
