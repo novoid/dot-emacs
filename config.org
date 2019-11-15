@@ -4586,9 +4586,10 @@ heading and invoke this function, I get asked for an existing property
 and the marked region gets the new value for this property.
 
 Please do read [[http://karl-voit.at/2016/12/23/my-org-region-to-property/][my blog article on this topic]] for all the details.
-You're gonna like it.
+You're gonna like it. It also features [[https://asciinema.org/a/D55MFKElA0RVpu9A0c6kpcH1N][a short screencast where you
+see this in action]].
 
-See: id:2015-05-28-ask-for-properties
+Internal link: id:2015-05-28-ask-for-properties
 
 Version that tries to read only properties of current entry:
 - From: "Antoine R. Dumont" <antoine.romain.dumont@gmail.com>
