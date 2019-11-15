@@ -12094,8 +12094,8 @@ Not org related but might be candidates as well:
   ^^Go to                          ^^Inserting                      ^^Crypto
   ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
   _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _p_ersonal credentials
-  ^^                               _T_ags include inherited         _b_usiness shared
-  ^^                               _1_ split block (M-RET)          _B_usiness personal
+  ^^                               _T_ags include inherited         ^b^usiness shared
+  ^^                               _1_ split block (M-RET)          ^B^usiness personal
   ^^                               add _n_ote to logbook            ^^
   ^^                               ^^                               ^^
   ^^                               mark as _P_roject                ^^
