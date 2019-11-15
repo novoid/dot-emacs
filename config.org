@@ -1360,7 +1360,8 @@ My favorite light themes: leuven, whiteboard, solarized-light,
 - 2011-04-20: increase/set font size
   - http://www.emacswiki.org/emacs/SetFonts
 
-#+BEGIN_SRC emacs-lisp
+2019-11-15: disabled because not used for a very long time:
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun my-increase-fontsize ()
   (interactive)
   "Sets the font to bigger size"
@@ -1373,11 +1374,12 @@ My favorite light themes: leuven, whiteboard, solarized-light,
   )
 #+END_SRC
 
-Host-specific font size:
+Host-specific font sizes:
+
 #+BEGIN_SRC emacs-lisp
-(when (my-system-type-is-gnu)
-  (my-increase-fontsize);; increase fonts on some hosts by default
-  )
+;;(when (my-system-type-is-gnu)
+;;  (my-increase-fontsize);; increase fonts on some hosts by default
+;;  )
 (when (my-system-type-is-darwin)
   (set-face-attribute 'default (selected-frame) :height 170);; 2011-04-20: increase/set font size http://www.emacswiki.org/emacs/SetFonts
   )
@@ -1392,7 +1394,7 @@ Host-specific font size:
 (when (my-system-is-sherri)
   ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
   ;;(set-face-attribute 'default (selected-frame) :height 105) ;; before 2019-10-24: I want to try smaller font
-  (set-face-attribute 'default (selected-frame) :height 95)
+  (set-face-attribute 'default (selected-frame) :height 102)
   )
 #+END_SRC
 
