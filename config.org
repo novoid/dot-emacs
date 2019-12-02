@@ -1345,17 +1345,10 @@ My favorite light themes: leuven, whiteboard, solarized-light,
 (add-hook 'emacs-startup-hook 'delete-other-windows t)
 #+END_SRC
 
-** Font
+** Font and Font sizes
 :PROPERTIES:
 :CREATED:  [2017-10-02 Mon 15:18]
 :END:
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist
-                       '(font . "DejaVu Sans Mono-12"))
-#+END_SRC
-
-** Font sizes
 
 - 2011-04-20: increase/set font size
   - http://www.emacswiki.org/emacs/SetFonts
@@ -1396,6 +1389,24 @@ Host-specific font sizes:
   ;;(set-face-attribute 'default (selected-frame) :height 105) ;; before 2019-10-24: I want to try smaller font
   (set-face-attribute 'default (selected-frame) :height 102)
   )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
+;(add-to-list 'default-frame-alist
+;                       '(font . "DejaVu Sans Mono-10"))
+#+END_SRC
+
+Different font size for mode-line (from [[https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-sizes-for-buffers-and-for-the-mode-line][this stackexchange page]]):
+#+BEGIN_SRC emacs-lisp
+(let ((faces '(mode-line
+               mode-line-buffer-id
+               mode-line-emphasis
+               mode-line-highlight
+               mode-line-inactive)))
+     (mapc
+      (lambda (face) (set-face-attribute face nil :font "DejaVu Sans Mono-8"))
+      faces))
 #+END_SRC
 
 ** DISABLED Modeline with icons
