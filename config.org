@@ -10557,13 +10557,12 @@ and smart truncation.»
   (setq sml/no-confirm-load-theme t)
   (setq sml/theme 'respectful) ;; select theme: light, dark, respectful
   ;; hiding minor modes from mode line (don't forget the leading space)
-  (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ," " PCRE" " counsel" " OTSH" "dired-icon "))
+  (setq rm-blacklist '(" Fill" " Ind" " MRev" " hl-p" " Guide" " OrgStruct" " ," " PCRE" " counsel" " OTSH" " dired-icon" " GitGutter" " WK" " FlyC-" " Ddl" " Diary"))
   ;; does not hide in Org-agenda:  "Diary " "Ddl " "Grid " "Habit " "FlyC " "WK "
   ;; replacing path names with abbrevations:
   (add-to-list 'sml/replacer-regexp-list '("^~/hosts/all/config/emacs.d" ":EMACS:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/src/lazyblorg" ":LB:") t)
-  (add-to-list 'sml/replacer-regexp-list '("^C:/Users/karl.voit/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^C:/Users/John/AppData/Roaming/org" ":ORG:") t)
   (add-to-list 'sml/replacer-regexp-list '("^~/frankie/" "~/") t)
   (smart-mode-line-enable)
