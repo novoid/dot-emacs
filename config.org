@@ -10487,6 +10487,9 @@ for it, I can save precious horizontal space.
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :init
   (when (my-system-type-is-windows)
+    (setq nyan-bar-length 10);; reduce length on narrow upward/tilted display
+  )
+  (when (my-system-type-is-linux)
     (setq nyan-bar-length 20);; reduce length on narrow upward/tilted display
   )
   :config
