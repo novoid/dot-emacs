@@ -5229,14 +5229,16 @@ History of this function: id:2019-11-14-Org-Project-Management-Workflow
                    )
                  )
         )
-	(kill-new (org-id-get))
-	(org-id-get)
+	(kill-new (org-id-get));; put ID in kill-ring
+	(org-id-get);; retrieve the current ID in any case as return value
 )
 
 (bind-key (kbd "I") #'my-id-get-or-generate my-map)
 #+END_SRC
 
-History of this function: id:2019-11-14-Org-Project-Management-Workflow
+History of this function:
+id:2019-11-14-Org-Project-Management-Workflow
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
