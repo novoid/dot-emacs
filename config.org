@@ -1387,18 +1387,19 @@ Host-specific font sizes:
 (when (my-system-is-sherri)
   ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
   ;;(set-face-attribute 'default (selected-frame) :height 105) ;; before 2019-10-24: I want to try smaller font
-  (set-face-attribute 'default (selected-frame) :height 102)
+  ;;(set-face-attribute 'default (selected-frame) :height 102) ;; before 2019-12-04: even smaller on reduced resolution
+  (set-face-attribute 'default (selected-frame) :height 110) ;; 2019-12-04: bigger font on native 30" resolution
   )
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
 ;(add-to-list 'default-frame-alist
 ;                       '(font . "DejaVu Sans Mono-10"))
 #+END_SRC
 
 Different font size for mode-line (from [[https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-sizes-for-buffers-and-for-the-mode-line][this stackexchange page]]):
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (let ((faces '(mode-line
                mode-line-buffer-id
                mode-line-emphasis
