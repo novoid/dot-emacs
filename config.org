@@ -10104,7 +10104,7 @@ but most of the time, it's a good companion to me.
 )
 #+END_SRC
 
-** Naked full screen Emacs → my-map F12
+** Naked full screen Emacs → F12
 
 I love to work in full-screen mode where nothing is distracting me
 from the information I am working with: the content of Emacs.
@@ -10418,7 +10418,7 @@ disabled 2015-08-31 since I don't use it for now.
 ** DISABLED RAML-mode
 
 - via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
-- [[https://en.wikipedia.org/wiki/RAML_%2528software%2529][What is RAML?]] (RESTful API Modeling Language)
+- [[https://en.wikipedia.org/wiki/RAML_%28software%29][What is RAML?]] (RESTful API Modeling Language)
 
 #+BEGIN_SRC emacs-lisp
 (use-package raml-mode
