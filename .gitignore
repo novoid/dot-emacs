@@ -32,3 +32,6 @@ server
 faststart_disable.sh
 faststart_enable.sh
 transient/
+test.*
+tmp.*
+2del.*
