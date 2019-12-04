@@ -11251,7 +11251,7 @@ is not shown in the modeline.
 #+BEGIN_SRC emacs-lisp
 (use-package eyebrowse
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/eyebrowse/")))
-  :defer 90
+  ;;:defer 90
   :init
   (setq eyebrowse-keymap-prefix (kbd "C-:"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
   :config
