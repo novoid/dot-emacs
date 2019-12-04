@@ -11381,6 +11381,69 @@ https://github.com/iqbalansari/emacs-emojify
 )
 #+END_SRC
 
+** alert
+:PROPERTIES:
+:CREATED:  [2019-12-04 Wed 22:39]
+:END:
+
+https://github.com/jwiegley/alert → Desktop notifications
+
+#+BEGIN_SRC emacs-lisp
+   (require 'alert)
+
+   (setq alert-default-style 'libnotify)
+   (setq alert-persist-idle-time 60);; After this many idle seconds, alerts will become sticky, and not fade away more.  The default is 15 minutes.
+
+;;   ;; This is the most basic form usage
+;;   (alert "This is an alert")
+;;
+;;   ;; You can adjust the severity for more important messages
+;;   (alert "This is an alert" :severity 'high)
+;;
+;;   ;; Or decrease it for purely informative ones
+;;   (alert "This is an alert" :severity 'trivial)
+;;
+;;   ;; Alerts can have optional titles.  Otherwise, the title is the
+;;   ;; buffer-name of the (current-buffer) where the alert originated.
+;;   (alert "This is an alert" :title "My Alert")
+;;
+;;   ;; Further, alerts can have categories.  This allows users to
+;;   ;; selectively filter on them.
+;;   (alert "This is an alert" :title "My Alert" :category 'debug)
+#+END_SRC
+
+My personal alert wrapper functions:
+#+BEGIN_SRC emacs-lisp
+(defun my-alert (mymessage)
+"wrapper for high-prio (sticky?) alert"
+   (interactive)
+   (alert (concat mymessage "\n\n" (concat
+   (format-time-string "%Y-%m-%dT%T")
+   ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+   (format-time-string "%z")))) :severity 'high)
+)
+
+(defun my-flash (mymessage)
+"wrapper for low-prio (non-sticky) alert flash"
+   (interactive)
+   (alert (concat mymessage "\n\n" (concat
+   (format-time-string "%Y-%m-%dT%T")
+   ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+   (format-time-string "%z")))))
+)
+#+END_SRC
+
+#+RESULTS:
+: my-flash
+
+Test of my alert function:
+#+begin_src emacs-lisp :tangle no
+  (my-alert "This is high prio sticky.")
+  (my-flash "This is low prio flash.")
+#+end_src
+
+#+RESULTS:
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
@@ -12947,7 +13010,7 @@ approximately 25 seconds as of 2019-04-17.
        (message "my-org-startup-visibility …")
        (my-org-startup-visibility))
       )
-
+  (my-flash "Emacs boot finished")
 )
 #+END_SRC
 
