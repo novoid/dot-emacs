@@ -1553,20 +1553,31 @@ for decreasing the font size of GNU/Emacs.
 (define-prefix-command 'my-map)
 #+END_SRC
 
+2019-12-04: With Org mode version 9.2, =C-c C-,= got mapped to
+=org-insert-structure-template=. In order to avoid any conflict
+situation (also for communication with peers), I switch to a new
+binding: =C-c C-k= which is bound to =org-kill-note-or-show-branches=
+but it's a less popular function.
+
 Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key package]]:
 #+BEGIN_SRC emacs-lisp
 (require 'bind-key);; https://github.com/emacsattic/bind-key
 
+;;(org-defkey org-mode-map (kbd "C-c C-k") nil);; clear binding
+
 (bind-keys
  :prefix-map my-map
  :prefix-docstring "My own keyboard map"
- :prefix "C-c C-,"
+ :prefix "C-c k"
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
  ("-" . text-scale-decrease)
  ("+" . text-scale-increase)
- ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget shift
+ ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget to press shift
  )
 #+END_SRC
+
+#+RESULTS:
+: text-scale-increase
 
 
 Usage example:
