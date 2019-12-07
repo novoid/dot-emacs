@@ -12419,7 +12419,7 @@ Not org related but might be candidates as well:
   _O_pen in tmux        _SPC_ filetags.el     _1_ time ordered   x  delete flagged    <percent> u  uppercase
   _i_mage thumbnails    ^^                    _n_ormal ordered                        <percent> &  flag temp files
   _(_ toggle details    ^^                    ^^
-  ^^                    ^^                    ^^
+  ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
   ("t" my-dired-tagtrees nil)
   ("T" my-dired-tagtrees-recursive nil)
@@ -12452,6 +12452,27 @@ Not org related but might be candidates as well:
   ("h" (dired-sort-other "-alSh --group-directories-first") nil)
   ("1" (dired-sort-other "-alt --group-directories-first") nil)
   ("n" (dired-sort-other "-al --group-directories-first") nil)
+
+  ("3" (lambda ()
+                (interactive)
+                (let ((org-attach-method 'lns))
+                  (call-interactively #'org-attach-dired-to-subtree)))
+                  nil)
+  ("4" (lambda ()
+                (interactive)
+                (let ((org-attach-method 'ln))
+                  (call-interactively #'org-attach-dired-to-subtree)))
+                  nil)
+  ("5" (lambda ()
+                (interactive)
+                (let ((org-attach-method 'cp))
+                  (call-interactively #'org-attach-dired-to-subtree)))
+                  nil)
+  ("6" (lambda ()
+                (interactive)
+                (let ((org-attach-method 'mv))
+                  (call-interactively #'org-attach-dired-to-subtree)))
+                  nil)
 
   ("q" nil "quit")
 
