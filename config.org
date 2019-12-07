@@ -882,6 +882,123 @@ therefore, this has to be defined early:
 ;;(message (format "Set \"my-org-files-path\" to: %s" my-org-files-path))
 #+END_SRC
 
+** Emax64 settings
+
+2019-11-09: settings according to the emax64 default =.emacs= file:
+
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-windows)
+;;  ;; Set repositories
+;;  (require 'package)
+;;  (setq-default
+;;   load-prefer-newer t
+;;   package-enable-at-startup nil)
+;;  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+;;  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+  (setq package-user-dir "~/emax/elpa")
+;;  (package-initialize)
+
+;;  ;; Install dependencies
+;;  (unless (and (package-installed-p 'delight)
+;;               (package-installed-p 'use-package))
+;;    (package-refresh-contents)
+;;    (package-install 'delight t)
+;;    (package-install 'use-package t))
+;;  (setq-default
+;;   use-package-always-defer t
+;;   use-package-always-ensure t)
+
+;;  ;; Use latest Org
+;;  (use-package org
+;;    ;;:pin org
+;;    :ensure org-plus-contrib)
+
+  (defvar emax-root (concat (expand-file-name "~") "/emax"))
+  (defvar emax-bin (concat emax-root "/bin"))
+  (defvar emax-bin64 (concat emax-root "/bin64"))
+  (defvar emax-mingw64 (concat emax-root "/mingw64/bin"))
+  (defvar emax-lisp (concat emax-root "/lisp"))
+
+  (setq exec-path (cons emax-bin exec-path))
+  (setenv "PATH" (concat emax-bin ";" (getenv "PATH")))
+
+  (setq exec-path (cons emax-bin64 exec-path))
+  (setenv "PATH" (concat emax-bin64 ";" (getenv "PATH")))
+
+  (setq exec-path (cons emax-mingw64 exec-path))
+  (setenv "PATH" (concat emax-mingw64 ";" (getenv "PATH")))
+
+  (setenv "PATH" (concat "C:\\msys64\\usr\\bin;C:\\msys64\\mingw64\\bin;" (getenv "PATH")))
+
+  (dolist (dir '("~/emax/" "~/emax/bin/" "~/emax/bin64/" "~/emax/mingw64/bin/" "~/emax/lisp/" "~/emax/elpa/"))
+  (add-to-list 'load-path dir))
+
+  (set-language-environment 'utf-8)
+  (setq locale-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+
+  ;; Tangle configuration
+  (org-babel-load-file (expand-file-name "~/emax/emax.org" user-emacs-directory))
+  ;;(garbage-collect)
+
+)
+#+END_SRC
+
+from emax.org:
+
+#+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-windows)
+    (setq-default
+        (defvar mp/font-family            "Consolas"  "The font to use.")
+    )
+
+    ;; Running Windows Powershell from within Emacs
+    ; (setq explicit-shell-file-name "c:\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe")
+    ; (setq explicit-powershell.exe-args '("-Command" "-" )) ; interactive, but no command prompt
+
+    ; (autoload 'powershell "powershell" "Run powershell as a shell within emacs." t)
+
+
+    ;; Changes made for Aspell
+    (setq-default ispell-program-name "~/emax/mingw64/bin/aspell.exe")
+    (setq-default ispell-extra-args  '("--sug-mode=ultra"))
+    ;; (setq ispell-dictionary "en_US")
+
+    ;; Set "DICTDIR" variable
+    (setenv "DICTDIR" (concat emax-mingw64 "/lib/aspell-0.60/"))
+
+
+    ;; Automatically enable flyspell-mode in text-mode
+    ;;(require 'flyspell)
+    ;;(add-hook 'text-mode-hook 'flyspell-mode)
+    (setq text-mode-hook '(lambda() (flyspell-mode t) ))
+    ;;(setq text-mode-hook '(lambda()
+    ;;                        (flyspell-mode t)))
+
+    ;;(dolist (hook '(text-mode-hook))
+    ;;  (add-hook hook (lambda () (flyspell-mode 1))))
+    ;;(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+    ;;  (add-hook hook (lambda () (flyspell-mode -1))))
+
+    ;;(setq flyspell-issue-message-flag nil)
+
+    ;;(require 'auto-dictionary)
+    ;;(add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
+
+    (require 'ispell)
+
+
+     (setq epg-gpg-home-directory "~/emax/mingw64/bin/")
+     (setq epg-gpg-program "~/emax/mingw64/bin/gpg.exe")
+     (setq epg-gpgconf-program "~/emax/mingw64/bin/gpgconf.exe")
+
+
+    (pdf-tools-install :no-query)
+)
+#+END_SRC
+
 * Cygwin Paths (Windows)
 
 As mentioned in the chapter of system-specific paths, I do use
