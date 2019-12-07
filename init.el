@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2019-10-02 13:44:28 vk>
+;; Time-stamp:    <2019-12-07 15:37:56 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -143,7 +143,7 @@ Note the weekly scope of the command's precision.")
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(package-selected-packages
    (quote
-    (quelpa org-ref ivy yankpad yafolding wttrin use-package unicode-fonts undo-tree synonyms suggest spray smeargle smart-mode-line scss-mode restclient request-deferred pcre2el ox-reveal ox-pandoc ox-gfm ox-clip ox-asciidoc org-table-sticky-header org-pdfview org-bullets nyan-mode neotree mode-icons minimap markdown-mode magit keyfreq json-mode image-dired+ hydra htmlize highlight-symbol helm-dired-history guide-key gnuplot git-timemachine flycheck eno elpy dumb-jump dired-icon dash-functional csv-mode counsel char-menu buttercup bm auto-complete anzu alert adoc-mode)))
+    (magit org eno dumb-jump dired-icon buttercup auto-complete anzu alert adoc-mode)))
  '(safe-local-variable-values
    (quote
     ((eval ispell-change-dictionary "german8")
