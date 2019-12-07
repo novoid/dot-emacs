@@ -3791,9 +3791,23 @@ Loading contributed packages:
 (use-package org-checklist
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
+
+;;2019-11-13: disabled to test org-edna ;; (use-package org-depend
+;;2019-11-13: disabled to test org-edna ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+;;2019-11-13: disabled to test org-edna ;; )
+
 (use-package org-depend
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
+
+;; (use-package org-edna
+;;   ;; 2019-11-13: I'm testing a fork: https://github.com/akirak/org-edna via https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/
+;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-edna/")))
+;;   :config
+;;   (require 'org-edna)
+;;   (org-edna-load)
+;; )
+
 (use-package org-expiry
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
