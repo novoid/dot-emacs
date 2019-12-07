@@ -154,18 +154,21 @@ installs its local copies of the packages:
 
 #+BEGIN_SRC emacs-lisp
 (setq package-user-dir (concat my-user-emacs-directory "elpa"))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
+(require 'package)
 (package-initialize)
-;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
-;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
-(add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
-;;unstable;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
-;; 2017-03-26: from https://www.reddit.com/r/emacs/comments/61jsvy/melpa_stopped_working_over_https_for_me_any_ideas/
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+;;2019-12-07;;  ;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+;;2019-12-07;;  ;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
+;;2019-12-07;;  (add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
+;;2019-12-07;;  ;;unstable;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+;;2019-12-07;;
+;;2019-12-07;;  ;; 2017-03-26: from https://www.reddit.com/r/emacs/comments/61jsvy/melpa_stopped_working_over_https_for_me_any_ideas/
+;;2019-12-07;;  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+;;2019-12-07;;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+
+;; 2019-12-07: severe issues with old package versions brings me to remove old config and start with this from docu:
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
 #+END_SRC
 
 *** Elpy
@@ -196,7 +199,11 @@ Bugfixing:
 
 #+BEGIN_SRC emacs-lisp
 ;; 2015-11-25: https://github.com/jwiegley/use-package
-(eval-when-compile (require 'use-package))
+;(when (string-equal system-type "windows-nt")
+;   (add-to-list 'load-path (concat package-user-dir "/use-package-20190405.2047"))
+;)
+(eval-when-compile
+   (require 'use-package))
 (require 'diminish)
 (require 'bind-key)
 
@@ -205,6 +212,16 @@ Bugfixing:
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+(use-package f
+  :ensure t
+)
+(use-package ivy
+  :ensure t
+)
+(use-package ht
+  :ensure t
+)
 #+END_SRC
 
 *** DISABLED [[https://framagit.org/steckerhalter/quelpa][Quelpa]]
@@ -1976,12 +1993,13 @@ What a relief for bilingual people like me (German/English).
 
 - from: https://github.com/nschum/auto-dictionary-mode
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package auto-dictionary
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/auto-dictionary-mode/")))
 )
 
 (require 'auto-dictionary)
+(add-hook 'text-mode-hook 'flyspell-mode) ;; according to https://github.com/nschum/auto-dictionary-mode/issues/11#issuecomment-557741953
 (add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
 #+END_SRC
 
@@ -10444,7 +10462,8 @@ disabled 2015-08-31 since I don't use it for now.
 #+BEGIN_SRC emacs-lisp
 (if (file-exists-p (concat my-user-emacs-directory "bin/mthes10/mthesaur.txt"))
   (use-package synonyms
-    :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/synonyms/")))
+    ;;:ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :init ;; executed before loading package
     (setq synonyms-file        (concat my-user-emacs-directory "bin/mthes10/mthesaur.txt"))
     (setq synonyms-cache-file  (concat my-user-emacs-directory "bin/vkcachefile"))
@@ -11397,8 +11416,9 @@ https://github.com/iqbalansari/emacs-emojify
 https://github.com/jwiegley/alert → Desktop notifications
 
 #+BEGIN_SRC emacs-lisp
-   (require 'alert)
-
+(use-package alert
+  :ensure t
+  :config
    (setq alert-default-style 'libnotify)
    (setq alert-persist-idle-time 60);; After this many idle seconds, alerts will become sticky, and not fade away more.  The default is 15 minutes.
 
@@ -11418,6 +11438,11 @@ https://github.com/jwiegley/alert → Desktop notifications
 ;;   ;; Further, alerts can have categories.  This allows users to
 ;;   ;; selectively filter on them.
 ;;   (alert "This is an alert" :title "My Alert" :category 'debug)
+
+)
+
+;   (require 'alert)
+
 #+END_SRC
 
 My personal alert wrapper functions:
