@@ -36,7 +36,7 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧   Windows    ← hunk →        ┃                           ┃  Bright  minimap  Beginner
+"⇧   Windows    ← hunk →        ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
 "                                                                                                       (propertize
 "    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
 "                                                                                                        'face '(:foreground "green"))
@@ -2069,6 +2069,7 @@ organization with many tasks and their dependencies).
 
 #+BEGIN_SRC emacs-lisp
 (use-package yasnippet
+  ;:load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/yasnippet/")))
   :demand t
   :mode ("/\\.emacs\\.d/etc/yasnippet/snippets/" . snippet-mode)
   :diminish yas-minor-mode
@@ -2092,6 +2093,9 @@ organization with many tasks and their dependencies).
 )
 #+END_SRC
 
+As of 2019-12-07, I moved more or less all snippets from plain
+yasnippet to yankpad.
+
 ** yankpad
 
 [[https://github.com/Kungsgeten/yankpad][yankpad]] is an add-on that enables easy management of yasnippet
@@ -2108,9 +2112,13 @@ within Org-mode only is defined in my yankpad file.
   (setq yankpad-file (concat my-org-files-path "yankpad.org"))
   :bind (:map my-map ("SPC" . yankpad-insert))
   :config
-  ;; (bind-key "<f6>" 'yankpad-map))
+  (bind-key "<S-f5>" 'yankpad-expand)
+  (bind-key "<S-f6>" 'yankpad-map)
 )
 #+END_SRC
+
+#+RESULTS:
+
 * Elisp
 
 This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Elisp][Elisp]] code.
