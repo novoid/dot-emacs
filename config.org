@@ -5973,6 +5973,26 @@ Allow refile to create parent tasks with confirmation:
 #+BEGIN_SRC emacs-lisp
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 #+END_SRC
+
+** Attaching
+:PROPERTIES:
+:CREATED:  [2019-12-08 Sun 18:49]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-attach-use-inheritance t)
+(setq org-attach-preferred-new-method 'dir)
+(setq org-attach-archive-delete nil)
+#+END_SRC
+
+As of 2019-12-08, =org-attach-git= does have an issue:
+: cd: No such directory found via CDPATH environment variableInvalid face reference: t
+
+I did not invest much in finding the reason. So it's disabled for now:
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'org-attach-git)
+#+END_SRC
+
 ** Archiving - preserve top level node and tags when archiving
 
 When I archive a heading (and its sub-headings), it gets moved from
