@@ -9066,6 +9066,20 @@ Do not ask for disabling auto-save
     (setq org-crypt-disable-auto-save nil)
 #+END_SRC
 
+[[https://www.gnu.org/software/emacs/manual/html_node/org/org_002dcrypt.html][From this page:]] Auto-saving does not cooperate with org-crypt.el: so
+you need to turn it off if you plan to use org-crypt.el quite often.
+Otherwise, you'll get an (annoying) message each time you start Org.
+
+To turn it off only locally, you can insert this:
+
+#+BEGIN_EXAMPLE
+-*- buffer-auto-save-file-name: nil; -*-
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp
+ (setq auto-save-default nil)
+#+END_SRC
+
 END of org-crypt setup
 #+BEGIN_SRC emacs-lisp
     )
