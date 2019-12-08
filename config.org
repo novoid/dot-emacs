@@ -7429,6 +7429,8 @@ switch to open Agenda or open new one:
                  (my-super-agenda-business));; with argument: super-agenda of business
           )
       ))
+     (my-flash "Agenda built.")
+     )
     )
   )
 
@@ -13218,7 +13220,6 @@ approximately 25 seconds as of 2019-04-17.
        (message "my-org-startup-visibility …")
        (my-org-startup-visibility))
       )
-  (my-flash "Emacs boot finished")
 )
 #+END_SRC
 
@@ -13252,7 +13253,9 @@ loading my configuration (famous last words):
 
 #+BEGIN_SRC emacs-lisp
 (message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
+(my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
 (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
+(my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
 #+END_SRC
 
 * Current key mappings (sorted)
