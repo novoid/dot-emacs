@@ -7415,6 +7415,7 @@ switch to open Agenda or open new one:
 
     (if (my-buffer-exists "*Org Agenda*")
         (switch-to-buffer "*Org Agenda*")
+      (progn
       (cond ((string-equal system-name "GRZN17009")
 
         ;; on Windows, the business agenda is default and the normal agenda accessable via C-u prefix
@@ -9028,7 +9029,7 @@ http://orgmode.org/worg/org-tutorials/encrypting-files.html
 disabling auto-save for sensitive files
 http://anirudhs.chaosnet.org/blog/2005.01.21.html
 #+BEGIN_SRC emacs-lisp
-    (define-minor-mode sensitive-mode
+    (define-minor-mode my-sensitive-mode
       "For sensitive files like password lists.
 It disables backup creation and auto saving.
 
