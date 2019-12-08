@@ -9661,7 +9661,9 @@ End of git-gutter:
 )
 #+END_SRC
 
-** git-timemachine
+** DISABLED git-timemachine
+
+2019-12-08: disabled because I was not using it.
 
 Step through historic versions: https://github.com/pidu/git-timemachine (2018-09-02: repo has been removed)
 
