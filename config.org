@@ -128,6 +128,13 @@ re-opening the file: (2018-07-26 disabled because it is not always a good thing 
 (save-place-mode 1)
 #+END_SRC
 
+2019-12-09 Test for issue
+id:2019-12-09-fix-Lisp-nesting-exceeds-max-lisp-eval-depth (did not
+help here, disabling again)
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq max-lisp-eval-depth 1500)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
