@@ -13297,6 +13297,10 @@ loading my configuration (famous last words):
 (my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
 (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 (my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
+
+(write-region
+  (format-message "Emacs boot finished (took %.2fs)\n" (float-time (time-subtract (current-time) my-config-el-start-time)))
+  nil my-var-log-hostname-file)
 #+END_SRC
 
 * Current key mappings (sorted)
