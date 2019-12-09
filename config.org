@@ -5640,7 +5640,7 @@ when invoking on the heading "My Task", the end result would be:
 					; 'get-text-property
 					; 'car
 					;)
-    (org-set-tags-to alltags)
+    (org-set-tags alltags)
     )
   )
 #+END_SRC
@@ -6026,7 +6026,7 @@ http://orgmode.org/worg/org-hacks.html#sec-1-7-1
       (with-current-buffer (find-file-noselect (org-extract-archive-file))
         (save-excursion
           (while (org-up-heading-safe))
-          (org-set-tags-to tags)))))
+          (org-set-tags tags)))))
 #+END_SRC
 ** Links
 
