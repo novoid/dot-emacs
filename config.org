@@ -7436,6 +7436,8 @@ switch to open Agenda or open new one:
     "Opens the already opened agenda or opens new one instead. With
      universal prefix, use business agenda."
     (interactive "P")
+    (defvar my-org-agenda-start-time (current-time) "Time when building the Org agenda was started")
+
 
     ;; 2019-06-29: FIXXME soon: this is a dirty workaround (by
     ;; hard-coding org-agenda-files) that disables some (rather unused)
@@ -7463,7 +7465,8 @@ switch to open Agenda or open new one:
                  (my-super-agenda-business));; with argument: super-agenda of business
           )
       ))
-     (my-flash "Agenda built.")
+     (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
+
      )
     )
   )
@@ -13306,10 +13309,11 @@ This is the end of the Elisp blocks to be tangled. Finishing up
 loading my configuration (famous last words):
 
 #+BEGIN_SRC emacs-lisp
-(message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
 (my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
-(message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 (my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
+
+(message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
+(message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
 (write-region
   (format-message "Emacs boot finished (took %.2fs)\n" (float-time (time-subtract (current-time) my-config-el-start-time)))
