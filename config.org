@@ -3840,26 +3840,31 @@ Loading contributed packages:
 Enable misc org modules:
 #+BEGIN_SRC emacs-lisp
 (setq org-modules (quote
-                   (org-bbdb
-        	        org-bibtex
-                    org-crypt
-                    org-gnus
+                   (org-crypt
                     org-id
                     org-info
                     org-habit
                     org-inlinetask
-                    org-irc
-                    org-mew
-                    org-mhe
                     org-protocol
-                    org-rmail
-                    org-vm
-                    org-wl
-                    org-w3m
                     )
                    )
       )
 #+END_SRC
+
+2019-12-09: "Problems while trying to load feature" and therefore
+removed from the list above:
+- org-mew
+- org-vm
+- org-wl
+
+2019-12-09: I've got no idea why they are in this list and therefore removed:
+- org-bbdb
+- org-gnus
+- org-bibtex
+- org-irc
+- org-mhe
+- org-rmail
+- org-w3m
 
 [[http://orgmode.org/worg/org-contrib/org-favtable.html][org-favtable]]:
 I was not able to find the advantage of favtables in comparison to
