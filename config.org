@@ -2507,7 +2507,8 @@ BEGIN of elpy package
 enable elpy and use ipython:
 #+BEGIN_SRC emacs-lisp
 (elpy-enable)
-(elpy-use-ipython)
+;; (elpy-use-ipython) ;; 2019-12-09: after updating packages, this got deprecated:
+;;      Error (use-package): elpy/:config: elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup
 (my-append-to-var-log-hostname-file "elpy-version" elpy-version) ;; will be written on elpy start, not before
 #+END_SRC
 
