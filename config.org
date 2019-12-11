@@ -7436,7 +7436,7 @@ switch to open Agenda or open new one:
     "Opens the already opened agenda or opens new one instead. With
      universal prefix, use business agenda."
     (interactive "P")
-    (defvar my-org-agenda-start-time (current-time) "Time when building the Org agenda was started")
+    (setq my-org-agenda-start-time (current-time))
 
 
     ;; 2019-06-29: FIXXME soon: this is a dirty workaround (by
