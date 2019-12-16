@@ -128,13 +128,6 @@ re-opening the file: (2018-07-26 disabled because it is not always a good thing 
 (save-place-mode 1)
 #+END_SRC
 
-2019-12-09 Test for issue
-id:2019-12-09-fix-Lisp-nesting-exceeds-max-lisp-eval-depth (did not
-help here, disabling again)
-#+BEGIN_SRC emacs-lisp :tangle no
-(setq max-lisp-eval-depth 1500)
-#+END_SRC
-
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
@@ -7519,14 +7512,16 @@ I aliased it within =~/.zshrc.local= to =memacs=
 ;;    (message (format "DEBUG: my-org-files-path [%s]" my-org-files-path))
 ;;    (message (format "DEBUG: org-agenda-files [%s]" org-agenda-files))
 
+    (setq max-specpdl-size 10000)
+    (setq max-lisp-eval-depth 50000)
     (org-agenda-list nil nil 60)
     (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
   ;;  (org-agenda-write "~/org/agenda-export-raw2.ics")
     (org-agenda-write (concat my-user-emacs-directory "var/export/agenda-export.ics"))
     (message "after org-agenda-write")
-    (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
-    (setq icspath (concat my-user-emacs-directory "var/export/"))
+  ;;  (setq scriptpath "~/src/postprocess_Org-mode_iCal_export/")
+  ;;  (setq icspath (concat my-user-emacs-directory "var/export/"))
   ;;  (setq icspath "~/org/")
   ;;  (shell-command-to-string (concat
   ;;      		      scriptpath "postprocess_Org-mode_iCal_export.py "
