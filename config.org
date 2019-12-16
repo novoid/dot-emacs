@@ -4477,6 +4477,10 @@ Take a look at =my-reset-org()= as well.
               (switch-to-buffer "public_voit.org")
               (org-set-startup-visibility)
               )
+            (when (my-buffer-exists "rise.org")
+              (switch-to-buffer "rise.org")
+              (org-set-startup-visibility)
+              )
             ;; (when (my-system-type-is-windows)
             ;;   (when (my-buffer-exists "detego.org")
             ;;     (switch-to-buffer "detego.org")
@@ -4781,6 +4785,7 @@ bind to my-map U
 #+BEGIN_SRC emacs-lisp
   (bind-key "U" 'my-insert-orgmode-url-from-clipboard my-map)
 #+END_SRC
+
 *** my-org-region-to-property() → my-map p
 
 This is ultra-handy for writing properties. For example for my
@@ -5822,15 +5827,10 @@ Templates for my home:
 
 Company templates: (2019-07-17 disabled)
 #+BEGIN_SRC emacs-lisp :tangle no
-	  ("d" "detego")
-    ("ds" "shorts" entry (file+headline ,(concat my-org-files-path "detego.org") "shorts/projects")
+	  ("r" "RISE")
+    ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "rise.org") "shorts/projects")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("de" "event" entry (file+headline ,(concat my-org-files-path "detego.org") "Events")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("dc" "CISO")
-	  ("dcs" "shorts" entry (file+headline ,(concat my-org-files-path "ciso.org") "shorts")
-	   ,my-capture-template-next :empty-lines 1)
-	  ("dce" "event" entry (file+headline ,(concat my-org-files-path "ciso.org") "Events")
+	  ("re" "event" entry (file+headline ,(concat my-org-files-path "rise.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 #+END_SRC
 
@@ -6391,6 +6391,7 @@ Definition of work files:
   (setq my-work-agenda-files (append `(
   ;; 2019-06-26: backtick above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
   ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
+       ,(concat my-org-files-path "rise.org")
        ;;,(concat my-org-files-path "detego.org")
        ;;,(concat my-org-files-path "ciso.org")
        ;;,(concat my-org-files-path "exported-detego-calendar.org")
@@ -6401,7 +6402,7 @@ Definition of work files:
 
 Definitions of non-work files:
 #+BEGIN_SRC emacs-lisp
-  (setq my-nonwork-agenda-files (append (` (
+  (setq my-nonwork-agenda-files (append ` (
               ,(concat my-org-files-path "misc.org")
               ,(concat my-org-files-path "issues.org")
               ,(concat my-org-files-path "projects.org")
@@ -6841,8 +6842,8 @@ only see important business stuff.
                  :and (:todo "WAITING" :not (:tag ("reward" "@BWG"))))  ; Set order of this section
           (:name "2read" :order 15
                  :and (:tag "2read" :not (:tag ("reward" "@BWG"))))
-          ;;(:name "Other (Business)" :order 20
-          ;;       :and (:category ("ciso" "detego" "ISAE3402") :not (:tag ("reward" "@BWG"))))
+          (:name "Other (Business)" :order 20
+                 :and (:category ("rise") :not (:tag ("reward" "@BWG"))))
           ;; Groups supply their own section names when none are given
           (:name "SOMEDAY or WATCHING"
                  ;; Show this group at the end of the agenda (since it has the
@@ -7375,6 +7376,8 @@ and with a bleeding heart.
     (add-to-list 'org-agenda-category-icon-alist
 		 '(".*" '(space . (:width (16))))
 		 )
+    (add-to-list 'org-agenda-category-icon-alist
+            `("rise" ,(concat my-user-emacs-directory "bin/images/RISE_icon_16x16.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
 ;;		  '("r6" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
 ;;		  )
@@ -8140,7 +8143,7 @@ Customized «scrartcl»
 #+END_SRC
 
 «detego»
-- 2017-09-13: must be tested
+- 2017-09-13:
 #+BEGIN_SRC emacs-lisp
     (add-to-list 'org-latex-classes
                  '("detego"
@@ -8152,6 +8155,38 @@ Customized «scrartcl»
                     \\renewcommand\{\\familydefault\}\{\\sfdefault\}
                     \\DeclareRobustCommand\{\\myacro\}\[1\]\{\\textsc\{\\lowercase\{#1\}\}\} %%  abbrevations using small caps
                     \\usepackage{scrlayer-scrpage} \\rehead{\\includegraphics\[height=1cm\]{{c:/Users/karl.voit/.emacs.d/bin/images/Detego-Logo-209x41.png}}} \\pagestyle{scrheadings} %% Logo in header
+                    \\newenvironment{NOTES}{}{}  %% declares org-reveal environment in PDF output
+                    \\usepackage[space]{grffile} %% enable spaces in filenames of includegraphics
+                    %% colorful headings:
+                    %\\setheadsepline\{.4pt\}\[\\color\{DispositionColor\}\]
+                    \\renewcommand\{\\headfont\}\{\\normalfont\\sffamily\\color\{DispositionColor\}\}
+                    \\renewcommand\{\\pnumfont\}\{\\normalfont\\sffamily\\color\{DispositionColor\}\}
+                    \\addtokomafont\{disposition\}\{\\color\{DispositionColor\}\}
+                    \\addtokomafont\{caption\}\{\\color\{DispositionColor\}\\footnotesize\}
+                    \\addtokomafont\{captionlabel\}\{\\color\{DispositionColor\}\}
+
+                    \\usepackage\{enumitem\}
+                    \\setlist\{noitemsep\} %% kills the space between items
+
+                   "
+                   ("\\section\{%s\}" . "\\section*\{%s\}")
+                   ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+                   ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+#+END_SRC
+
+«rise»
+- 2019-12-16
+#+BEGIN_SRC emacs-lisp
+    (add-to-list 'org-latex-classes
+                 '("rise"
+                   "\\documentclass\[a4paper,parskip=half,11pt,headinclude=false,footinclude=false\]\{scrartcl\}
+                    \\usepackage\[ngerman,american\]\{babel\}\\usepackage\{eurosym\}\\usepackage\{xspace\}\\usepackage\[usenames,dvipsnames\]\{xcolor\}
+                    \\usepackage\[protrusion=true,factor=900\]\{microtype\}\\usepackage\{enumitem\}
+                    \\definecolor\{DispositionColor\}\{RGB\}\{0,54,90\}
+                    \\usepackage\{helvet\}
+                    \\renewcommand\{\\familydefault\}\{\\sfdefault\}
+                    \\DeclareRobustCommand\{\\myacro\}\[1\]\{\\textsc\{\\lowercase\{#1\}\}\} %%  abbrevations using small caps
+                    \\usepackage{scrlayer-scrpage} \\rehead{\\includegraphics\[height=1cm\]{{c:/Users/karl.voit/.emacs.d/bin/images/RISE_logo_202x500.jpeg}}} \\pagestyle{scrheadings} %% Logo in header
                     \\newenvironment{NOTES}{}{}  %% declares org-reveal environment in PDF output
                     \\usepackage[space]{grffile} %% enable spaces in filenames of includegraphics
                     %% colorful headings:
@@ -12427,8 +12462,8 @@ Not org related but might be candidates as well:
   ^^Go to                          ^^Inserting                      ^^Crypto
   ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
   _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _p_ersonal credentials
-  ^^                               _T_ags include inherited         ^b^usiness shared
-  ^^                               _1_ split block (M-RET)          ^B^usiness personal
+  ^^                               _T_ags include inherited         _b_usiness shared
+  ^^                               _1_ split block (M-RET)          _B_usiness personal
   ^^                               add _n_ote to logbook            ^^
   ^^                               ^^                               ^^
   ^^                               mark as _P_roject                ^^
@@ -12462,18 +12497,18 @@ Not org related but might be candidates as well:
 
   ("P" my-mark-as-project nil)
 
-  ;;("b" (lambda ()
-  ;;        (interactive)
-  ;;        (switch-to-buffer "detego.org")
-  ;;        (org-id-goto "det-shared-credentials")
-  ;;        (org-decrypt-entry)
-  ;;) nil)
-  ;;("B" (lambda ()
-  ;;        (interactive)
-  ;;        (switch-to-buffer "detego.org")
-  ;;        (org-id-goto "det-personal-credentials")
-  ;;        (org-decrypt-entry)
-  ;;) nil)
+  ("b" (lambda ()
+          (interactive)
+          (switch-to-buffer "rise.org")
+          (org-id-goto "rise-shared-credentials")
+          (org-decrypt-entry)
+  ) nil)
+  ("B" (lambda ()
+          (interactive)
+          (switch-to-buffer "rise.org")
+          (org-id-goto "rise-personal-credentials")
+          (org-decrypt-entry)
+  ) nil)
 
   ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
   ("u" my-insert-orgmode-url-from-clipboard nil)
