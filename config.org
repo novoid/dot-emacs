@@ -11661,10 +11661,12 @@ My personal alert wrapper functions:
    (when (not noninteractive)
      ;; only in interactive mode:
 
-     (alert (concat mymessage "\n\n" (concat
+     (setq mymessage (concat mymessage "\n\n" (concat
          (format-time-string "%Y-%m-%dT%T")
          ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
-             (format-time-string "%z")))) :severity 'high))
+             (format-time-string "%z")))))
+     (message mymessage)
+     (alert mymessage :severity 'high))
 )
 
 (defun my-flash (mymessage)
@@ -11673,10 +11675,12 @@ My personal alert wrapper functions:
    (when (not noninteractive)
      ;; only in interactive mode:
 
-     (alert (concat mymessage "\n\n" (concat
+     (setq mymessage (concat mymessage "\n\n" (concat
          (format-time-string "%Y-%m-%dT%T")
          ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
-             (format-time-string "%z"))))))
+             (format-time-string "%z")))))
+     (message mymessage)
+     (alert mymessage))
 )
 #+END_SRC
 
