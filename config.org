@@ -204,7 +204,7 @@ Bugfixing:
 ;)
 (eval-when-compile
    (require 'use-package))
-(require 'diminish)
+;(require 'diminish)
 (require 'bind-key)
 
 ;; http://www.lunaryorn.com/2015/01/06/my-emacs-configuration-with-use-package.html
@@ -6388,7 +6388,7 @@ default agenda and all agenda files.
 
 Definition of work files:
 #+BEGIN_SRC emacs-lisp
-  (setq my-work-agenda-files (append (` (
+  (setq my-work-agenda-files (append `(
   ;; 2019-06-26: backtick above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
   ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
        ;;,(concat my-org-files-path "detego.org")
@@ -6396,7 +6396,7 @@ Definition of work files:
        ;;,(concat my-org-files-path "exported-detego-calendar.org")
        ;;,(concat my-org-files-path "r6-stories.org")
        ;;,(concat my-org-files-path "infonova.org")
-       ))))
+       )))
 #+END_SRC
 
 Definitions of non-work files:
@@ -6425,7 +6425,7 @@ Definitions of non-work files:
               ;;,(concat my-org-files-path "memacs/phonecalls.org")
               ;;,(concat my-org-files-path "memacs/roylog.org")
               ;;,(concat my-org-files-path "memacs/SMS.org")
-           ))))
+           )))
 #+END_SRC
 
 =my-toggle-agenda-files()= toggles between work/everything and nonwork/everything:
@@ -6881,7 +6881,7 @@ only see important business stuff.
 (if noninteractive
   ;; if Emacs is started in batch mode: omit org-super-agenda since I don't need it here and there were issues with it:
   (setq org-agenda-custom-commands
-        (` (
+        ` (
                 ("n" "no TODO events +180d"
                  ((agenda "no TODO events +180d"
                           ((org-agenda-span 180)
@@ -6904,11 +6904,11 @@ only see important business stuff.
                            (org-agenda-time-grid nil)
                           )))
                  nil (,(concat my-org-files-path "agenda_details.html")))
-                )))
+                ))
 
   ;; if Emacs is started in interactive mode:
   (setq org-agenda-custom-commands
-        (` (
+        ` (
 
                 ("s" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
                  (org-super-agenda-mode)
@@ -7150,7 +7150,7 @@ only see important business stuff.
                 ;;                (org-agenda-todo-ignore-timestamp nil)
                 ;;                (org-agenda-todo-list-sublevels t)
                 ;;                (org-tags-match-list-sublevels 'indented)))
-                )))
+                ))
 )
 #+END_SRC
 
