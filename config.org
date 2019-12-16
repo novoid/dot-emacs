@@ -359,7 +359,10 @@ function to remove them mapped to =my-map SPC= but then I found out
 that adding this as a general =before-save-hook= does the job
 automatically:
 
-#+BEGIN_SRC emacs-lisp
+2019-12-14: disabled because it consumed 20-40% of the time when
+saving large files. 22% on http://paste.grml.org/hidden/27a87675/
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;(bind-key (kbd "SPC") #'delete-trailing-whitespace my-map)
 ;  (define-key org-mode-map (kbd "C-c C-, SPC") #'delete-trailing-whitespace);; workaround since line above doesn't work
 
@@ -3908,8 +3911,12 @@ Logging into drawers: (also do read [[https://yiufung.net/post/org-mode-hidden-g
 #+BEGIN_SRC emacs-lisp
   (setq org-log-done (quote time))
   (setq org-log-into-drawer t)
-  (setq org-log-redeadline (quote note));; record when the deadline date of a tasks is modified
-  (setq org-log-reschedule (quote time))
+
+  ;; record when the deadline or scheduled date of a tasks is modified
+  ;;(setq org-log-redeadline (quote note));; performance risk due to long LOG drawers!
+  (setq org-log-redeadline nil)
+  ;;(setq org-log-reschedule (quote time));; performance risk due to long LOG drawers!
+  (setq org-log-reschedule nil)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
