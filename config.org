@@ -6934,6 +6934,14 @@ only see important business stuff.
                 ;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
                 ;; disabled 2014-08-17 ;;            ))
                 ("n" "no TODO events +180d"
+                ((org-ql-block '(and (tags "project")
+                              (ts-active :from -1 :to +180)
+                              (not (todo))
+                              ;(not (descendants (not (done))))
+                              ;(not (descendants (scheduled)))
+                              )
+                        ((org-ql-block-header "no TODO events +180d")))))
+                ("7" "no TODO events +180d"
                  ((agenda "no TODO events +180d"
                           ((org-agenda-span 180)
                            (org-agenda-time-grid nil)
@@ -7018,17 +7026,51 @@ only see important business stuff.
                 ;;disabled;		(org-agenda-overriding-header "rewards: TODO or SOMEDAY")
                 ;;disabled;		))
 
-                ("B" "borrowed" tags "+borrowed"
-                 (
-                  (org-agenda-overriding-header "borrowed or lend")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
+                ("B" "borrowed"
+                ((org-ql-block '(and (tags "borrowed")
+                              (not (done))
+                              )
+                        ((org-ql-block-header "borrowed")))))
+                ;;2019-12-17 replaced by org-ql-block ;; ("8" "borrowed" tags "+borrowed"
+                ;;2019-12-17 replaced by org-ql-block ;;  (
+                ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-overriding-header "borrowed or lend")
+                ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-skip-function 'tag-without-done-or-canceled)
+                ;;2019-12-17 replaced by org-ql-block ;;   ))
 
-                ("$" "Besorgungen" tags "+Besorgung"
-                 (
-                  (org-agenda-overriding-header "Besorgungen")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
+                ("$" "Besorgungen"
+                ((org-ql-block '(and (tags "Besorgungen")
+                              (not (done))
+                              )
+                        ((org-ql-block-header "Besorgungen")))))
+                ;;2019-12-17 replaced by org-ql-block ;; ("9" "OLDBesorgungen" tags "+Besorgung"
+                ;;2019-12-17 replaced by org-ql-block ;;  (
+                ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-overriding-header "Besorgungen")
+                ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-skip-function 'tag-without-done-or-canceled)
+                ;;2019-12-17 replaced by org-ql-block ;;   ))
+
+                ;; examples: https://github.com/alphapapa/org-ql/blob/master/examples.org#stuck-projects-block-agenda
+                ("x" "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled"
+                ((org-ql-block '(and (tags "project")
+                              (not (done))
+                              (not (todo "SOMEDAY"))
+                              (not (descendants (not (done))))
+                              (not (descendants (scheduled))))
+                        ((org-ql-block-header "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled")))))
+                ("1" "Stuck: open todos with unscheduled open sub-tasks"
+                ((org-ql-block '(and 
+                              (not (done))
+                              ; (todo "NEXT STARTED WAITING");; no result instead of "just get rid of SOMEDAY"
+                              (descendants (not (done)))
+                              (descendants (not (scheduled))))
+                        ((org-ql-block-header "Stuck: open todos with unscheduled open sub-tasks")))))
+                ("2" "Stuck: scheduled todos with scheduled sub-tasks"
+                ((org-ql-block '(and 
+                              (not (done))
+                              (scheduled)
+                              (not (descendants (not (done))))
+                              (not (descendants (scheduled))))
+                              ;;(descendants (and (scheduled) (not (done))))
+                        ((org-ql-block-header "Stuck todos: scheduled open todos with scheduled sub-tasks")))))
 
                 ;; disabled 2015-02-15 - can filter by tag ;; ("O" "SOMEDAY" tags-todo "+TODO=\"SOMEDAY\""
                 ;; disabled 2015-02-15 - can filter by tag ;;  (
@@ -9471,6 +9513,7 @@ org-feed - aggregating RSS feeds in news.org file:
   )
       )
 #+END_SRC
+
 ** org-protocol-capture-html - turn HTML into Org-mode
 
 https://github.com/alphapapa/org-protocol-capture-html
