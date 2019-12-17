@@ -10259,6 +10259,10 @@ ediff from command line usage: =emacs -diff file1 file2=
 )
 #+END_SRC
 
+FIXXME: Compare to
+https://github.com/alphapapa/unpackaged.el#smerge-mode smerge-mode
+with its hydra from alphapapa.
+
 ** Counting words → M-=
 
 Counting lines, words, characters.
