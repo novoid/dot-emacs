@@ -9550,25 +9550,20 @@ A powerful query language for Org mode: https://github.com/alphapapa/org-ql
 
 For testing =org-sidebar-tree= from https://github.com/alphapapa/org-sidebar
 
-DISABLED setup via quelpa because of quelpa error (see above):
+disabled setup via quelpa because of quelpa error (see above):
 #+BEGIN_SRC emacs-lisp  :tangle no
 (use-package org-sidebar
   :quelpa (org-sidebar :fetcher github :repo "alphapapa/org-sidebar"))
 #+END_SRC
 
-Dependency: -> is not installable ATM
-#+BEGIN_SRC emacs-lisp
-(use-package org-ql
-  :ensure t
-)
-#+END_SRC
+Dependency = org-ql
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-sidebar
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-sidebar/")))
+  :ensure t
+  ;;:load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-sidebar/")))
 )
 #+END_SRC
-
 
 ** debug message: config orgmode finished.
 
