@@ -7445,13 +7445,6 @@ switch to open Agenda or open new one:
     (interactive "P")
     (setq my-org-agenda-start-time (current-time))
 
-
-    ;; 2019-06-29: FIXXME soon: this is a dirty workaround (by
-    ;; hard-coding org-agenda-files) that disables some (rather unused)
-    ;; settings/features of mine but fixes the issue that
-    ;; org-agenda-files is losing some files
-    (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
-
     (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
     (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
@@ -7516,15 +7509,6 @@ I aliased it within =~/.zshrc.local= to =memacs=
     (interactive)
     (save-some-buffers)
 
-    ;; 2019-06-29: FIXXME soon: this is a dirty workaround (by
-    ;; hard-coding org-agenda-files) that disables some (rather unused)
-    ;; settings/features of mine but fixes the issue that
-    ;; org-agenda-files is losing some files
-    (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
-
-;;    (message (format "DEBUG: my-nonwork-agenda-files [%s]" my-nonwork-agenda-files))
-;;    (message (format "DEBUG: my-org-files-path [%s]" my-org-files-path))
-;;    (message (format "DEBUG: org-agenda-files [%s]" org-agenda-files))
 
     (setq max-specpdl-size 10000)
     (setq max-lisp-eval-depth 50000)
