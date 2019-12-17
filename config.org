@@ -2507,6 +2507,10 @@ BEGIN of elpy package
   :config ;; executed after loading package
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(setq elpy-rpc-virtualenv-path package-user-dir (concat my-user-emacs-directory "var/elpy/rpc-venv"))
+#+END_SRC
+
 enable elpy and use ipython:
 #+BEGIN_SRC emacs-lisp
 (elpy-enable)
