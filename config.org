@@ -8773,6 +8773,25 @@ I prefer the language German in my letters:
      (setq org-koma-letter-default-class "my-letter")))
 #+END_SRC
 
+** helm-org
+:PROPERTIES:
+:CREATED:  [2019-12-17 Tue 12:17]
+:END:
+
+Completion package for Org mode: https://github.com/emacs-helm/helm-org
+
+Used by: org-ql
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org
+  ;;:defer 90
+  :ensure t
+  :config
+  (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
+  (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
+)
+#+END_SRC
+
 ** helm-org-agenda-files-headings: grep within headings → my-map H
 
 This is a neat and fast way of looking for string only within heading
@@ -9509,13 +9528,25 @@ mine for demonstration purposes for novice or non-Org-users.
 had to disable it]]. Maybe I'd give it another try in a couple of months
 or so.
 
+** org-ql
+:PROPERTIES:
+:CREATED:  [2019-12-17 Tue 12:13]
+:END:
+
+A powerful query language for Org mode: https://github.com/alphapapa/org-ql
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ql
+  :ensure t
+)
+#+END_SRC
+
 ** DISABLED org-sidebar
 :PROPERTIES:
 :CREATED:  [2019-10-02 Wed 13:46]
 :END:
 
-DISABLED org-sidebar because org-ql can't be installed via melpa and
-I'm giving up for now.
+2019-12-17 DISABLED: I don't need it at the moment
 
 For testing =org-sidebar-tree= from https://github.com/alphapapa/org-sidebar
 
