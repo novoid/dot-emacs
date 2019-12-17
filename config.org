@@ -7509,6 +7509,9 @@ I aliased it within =~/.zshrc.local= to =memacs=
     (interactive)
     (save-some-buffers)
 
+    ;; I don't want the error messages in my exported agenda:
+    (setq org-agenda-files (remove "~/org/errors_orgmode_commits.org") org-agenda-files)
+    (setq org-agenda-files (remove "~/org/errors_misc.org") org-agenda-files)
 
     (setq max-specpdl-size 10000)
     (setq max-lisp-eval-depth 50000)
