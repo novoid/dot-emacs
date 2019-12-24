@@ -3537,6 +3537,94 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
   universal prefix
 - [ ] FIXXME: do for time2name as well
 
+* Email
+:PROPERTIES:
+:CREATED:  [2019-12-19 Thu 14:37]
+:END:
+
+This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I use together with isync/mbsync/
+
+#+BEGIN_SRC emacs-lisp
+(use-package notmuch
+   ;;:if (my-system-type-is-gnu)
+   :config
+
+   (load-library "smtpmail")
+
+   (setq smtpmail-default-smtp-server my-business-mail-server
+         smtpmail-local-domain my-business-mail-server)
+
+   (setq send-mail-function    'smtpmail-send-it
+         smtpmail-smtp-server  my-business-mail-server
+         smtpmail-stream-type  'starttls
+         smtpmail-smtp-service 587)
+
+   ;; Somehow, this variable gets overwritten by something to 'message-send-mail-with-outlook
+   ;; and therefore it's been set in "custom variables" as well.
+   (setq message-send-mail-function 'message-smtpmail-send-it)
+
+   (setq notmuch-message-headers '("Subject" "To" "Cc" "Date" "Reply-To"))
+   (setq notmuch-mua-cite-function 'message-cite-original-without-signature)
+   (setq notmuch-saved-searches
+     '((:name "inbox" :query "tag:inbox" :key "i")
+       (:name "unread" :query "tag:unread" :key "u")
+       (:name "flagged" :query "tag:flagged" :key "f")
+       (:name "sent" :query "tag:sent" :key "t")
+       (:name "drafts" :query "tag:draft" :key "d")
+       (:name "all mail" :query "*" :key "a")
+       (:name "Sent" :query "folder:Sent")))
+   (setq message-default-headers "Reply-to: \nCC: \nBCC: \n")
+   (setq notmuch-fcc-dirs "Sent")
+
+   (add-hook 'notmuch-message-mode-hook #'footnote-mode)
+   (add-hook 'notmuch-message-mode-hook #'auto-dictionary-mode)
+   (add-hook 'notmuch-message-mode-hook #'flyspell-mode)
+
+   ;; ignore email header for flyspell (and thus dictionary mode):
+   ;; https://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell-1.7q.el
+   ;; as of 2019-12-21: doesn't work as it uses in German emails the English one :-(
+   (add-hook 'notmuch-message-mode-hook
+	     '(lambda () (setq flyspell-generic-check-word-p
+			       'mail-mode-flyspell-verify)))
+
+   (defun my-notmuch-sync-and-update-index-and-buffer ()
+     "Update the index after sync."
+     (interactive)
+     (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "")
+     ;;(notmuch-poll)
+     (notmuch-refresh-this-buffer))
+   (define-key notmuch-hello-mode-map "g" 'my-notmuch-sync-and-update-index-and-buffer)
+
+)
+#+END_SRC
+
+switch to open notmuch biffer or open new one:
+#+BEGIN_SRC emacs-lisp
+  (defun my-notmuch (&optional arg)
+    "Opens the already opened notmuch buffer or opens new one instead."
+    (interactive "P")
+
+    (my-notmuch-sync-and-update-index-and-buffer)
+    (if (my-buffer-exists "*notmuch-hello*")
+        (switch-to-buffer "*notmuch-hello*")
+      (notmuch)
+    )
+  )
+
+  ;; (bind-key "n" 'my-notmuch my-map) → within "Key bindings" heading since binding overwrites a standard Org mode binding
+#+END_SRC
+
+from: https://gist.github.com/fedxa/fac592424473f1b70ea489cc64e08911
+
+Provides Org mode links to notmuch emails: copy with =C-c l= (org-notmuch-store-link) + paste with =C-c C-l=
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-notmuch
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
+)
+#+END_SRC
+
+
 * LaTeX
 
 [[https://en.wikipedia.org/wiki/LaTeX][LaTeX]] is a powerful text setting system I use for creating letters,
@@ -12720,6 +12808,114 @@ Not org related but might be candidates as well:
 #+RESULTS:
 : hydra-python/body
 
+** hydra-notmuch → F1
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-notmuch (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^─────────────────────^^──────────────────^^────────────────
+  _g_ fetch mails        ^^                  ^^
+  _m_ new email          ^^                  ^^
+  ^^                     ^^                  ^^
+  ^^                     ^^                  ^^
+  ")
+  ("q" nil "quit")
+  ("g" my-notmuch-sync-and-update-index-and-buffer nil)
+  ("m" notmuch-mua-new-mail nil)
+
+;  ("p" flymake-goto-prev-error nil :color red)
+;  ("<" highlight-symbol-prev nil)
+
+)
+
+(define-key notmuch-hello-mode-map [f1] 'hydra-notmuch/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-notmuch/body
+
+** hydra-notmuch-message-mode → F1
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-notmuch-message-mode (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^Header                      ^^Footnotes               ^^Format
+  ^^────────────────────────────^^────────────────────────^^────────────────
+  change _s_ubject (C-c C-s f)  _a_dd          (C-c ! a)  _i_nsert quote (M-RET)
+  ^^                            _b_ack to text (C-c ! b)  ^^
+  ^^                            _g_oto FN      (C-c ! g)  ^^
+  ^^                            _d_elete       (C-c ! d)  ^^
+  ^^                            _r_enumber     (C-c ! r)  ^^
+  ^^                            ^^                        ^^
+  ^^                            ^^                        ^^
+  ")
+  ("q" nil "quit")
+  ("s" message-change-subject nil)
+  ("i" message-newline-and-reformat nil)
+
+  ("a" footnote-add-footnote       nil)
+  ("b" footnote-back-to-message    nil)
+  ("g" footnote-goto-footnote      nil)
+  ("d" footnote-delete-footnote    nil)
+  ("r" footnote-renumber-footnotes nil)
+
+;  ("p" flymake-goto-prev-error nil :color red)
+;  ("<" highlight-symbol-prev nil)
+
+)
+
+(define-key notmuch-message-mode-map [f1] 'hydra-notmuch-message-mode/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-notmuch-message-mode/body
+
+** hydra-notmuch-show-mode → F1
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-notmuch-show-mode (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^Email                               ^^Thread
+  ^^────────────────────────────────────^^────────────────────────
+  raw message _V_                       _P_revious _N_ext message
+  add/remove tag: _+_ _-_                 fi_l_ter thread
+  toggle _h_eaders                      ^^
+  _h_tml part → browser                 ^^
+  save attachments _w_                  ^^
+  ^^                                    ^^
+  _r_eply   _R_eply all                   ^^
+  _o_rg link (C-c l  paste: C-c C-l)    ^^
+  ^^                                    ^^
+  ")
+  ("q" nil "quit")
+
+  (""  nil)
+
+  ("V" notmuch-show-view-raw-message nil)
+  ("w" notmuch-show-save-attachments nil)
+  ("+" notmuch-show-add-tag nil)
+  ("-" notmuch-show-remove-tag nil)
+  ("h" notmuch-show-toggle-visibility-headers nil)
+  ("P" notmuch-show-previous-message nil)
+  ("N" notmuch-show-next-message nil)
+  ("R" notmuch-show-reply nil)
+  ("r" notmuch-show-reply-sender nil)
+  ("l" notmuch-show-filter-thread nil)
+  ("w" notmuch-show-save-attachments nil)
+
+  ("h" notmuch-show-view-part nil)
+  ("o" org-notmuch-store-link nil)
+)
+
+(define-key notmuch-show-mode-map [f1] 'hydra-notmuch-show-mode/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-notmuch-show-mode/body
+
 ** hydra-git → F9
 
 #+BEGIN_SRC emacs-lisp
@@ -13409,6 +13605,15 @@ line, sentence, sexp or defun into the marked region:
 (bind-key "m d" #'mark-defun my-map)
 #+END_SRC
 
+** my-notmuch → my-map n
+:PROPERTIES:
+:CREATED:  [2019-12-21 Sat 13:16]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "n" 'my-notmuch my-map)
+#+END_SRC
+
 * autostart
 
 At the end of loading most of my configuration, I want to execute some
@@ -13466,6 +13671,11 @@ not I should keep this here. Well, it does not hurt either.
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
      (flyspell-default-dictionary . "german8")))))
+
+;; Somehow, this variable got overwritten by something from the
+;; email config section to here to 'message-send-mail-with-outlook
+;; and therefore it's been set here as well:
+(setq message-send-mail-function 'message-smtpmail-send-it)
 #+END_SRC
 
 * Closing and end for profiling
