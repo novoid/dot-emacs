@@ -35,3 +35,4 @@ transient/
 test.*
 tmp.*
 2del.*
+private.el
