@@ -1532,7 +1532,8 @@ Host-specific font sizes:
   (set-face-attribute 'default (selected-frame) :height 110);; 2017-09-06 detego
   )
 (when (my-system-is-floyd)
-  (set-face-attribute 'default (selected-frame) :height 105)
+;;  (set-face-attribute 'default (selected-frame) :height 105);; until 2019-12-23
+  (set-face-attribute 'default (selected-frame) :height 100)
   )
 (when (my-system-is-sherri)
   ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
@@ -2137,14 +2138,14 @@ What a relief for bilingual people like me (German/English).
 
 - from: https://github.com/nschum/auto-dictionary-mode
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
 (use-package auto-dictionary
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/auto-dictionary-mode/")))
 )
 
 (require 'auto-dictionary)
-(add-hook 'text-mode-hook 'flyspell-mode) ;; according to https://github.com/nschum/auto-dictionary-mode/issues/11#issuecomment-557741953
-(add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
+;;(add-hook 'text-mode-hook 'flyspell-mode) ;; according to https://github.com/nschum/auto-dictionary-mode/issues/11#issuecomment-557741953
+;;(add-hook 'flyspell-mode-hook (lambda () (auto-dictionary-mode 1)))
 #+END_SRC
 
 ** Spellchecking Source Code
@@ -4012,6 +4013,7 @@ Logging into drawers: (also do read [[https://yiufung.net/post/org-mode-hidden-g
   ;;(setq org-log-redeadline (quote note));; performance risk due to long LOG drawers!
   (setq org-log-redeadline nil)
   ;;(setq org-log-reschedule (quote time));; performance risk due to long LOG drawers!
+
   (setq org-log-reschedule nil)
 #+END_SRC
 
@@ -7149,14 +7151,14 @@ only see important business stuff.
                               (not (descendants (scheduled))))
                         ((org-ql-block-header "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled")))))
                 ("1" "Stuck: open todos with unscheduled open sub-tasks"
-                ((org-ql-block '(and 
+                ((org-ql-block '(and
                               (not (done))
                               ; (todo "NEXT STARTED WAITING");; no result instead of "just get rid of SOMEDAY"
                               (descendants (not (done)))
                               (descendants (not (scheduled))))
                         ((org-ql-block-header "Stuck: open todos with unscheduled open sub-tasks")))))
                 ("2" "Stuck: scheduled todos with scheduled sub-tasks"
-                ((org-ql-block '(and 
+                ((org-ql-block '(and
                               (not (done))
                               (scheduled)
                               (not (descendants (not (done))))
@@ -7515,7 +7517,7 @@ and with a bleeding heart.
 		 '(".*" '(space . (:width (16))))
 		 )
     (add-to-list 'org-agenda-category-icon-alist
-            `("rise" ,(concat my-user-emacs-directory "bin/images/RISE_icon_16x16.png") nil nil :ascent center))
+            `("rise" ,(concat my-user-emacs-directory "bin/images/RISE_icon_16x16_dark.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
 ;;		  '("r6" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
 ;;		  )
