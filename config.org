@@ -128,6 +128,10 @@ re-opening the file: (2018-07-26 disabled because it is not always a good thing 
 (save-place-mode 1)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(load-file (concat my-user-emacs-directory "private.el"))
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
