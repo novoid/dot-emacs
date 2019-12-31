@@ -11844,10 +11844,12 @@ by using nxml's indentation rules."
 #+END_SRC
 
 
-** emojify
+** DISABLED emojify
 :PROPERTIES:
 :CREATED:  [2019-10-31 Thu 00:58]
 :END:
+
+2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
 
 Emoticons for the Emacs: :org: :emacs: :wink: :smile: ;^)
 
@@ -13215,10 +13217,12 @@ FIXXME: add more features:
 #+RESULTS:
 : hydra-buffers/body
 
-** hydra-emojis → Shift F4
+** DISABLED hydra-emojis → Shift F4
 :PROPERTIES:
 :CREATED:  [2019-10-31 Thu 02:23]
 :END:
+
+2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
 
 #+BEGIN_SRC emacs-lisp
   (defhydra hydra-emojis (:color blue)
