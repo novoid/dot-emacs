@@ -4025,9 +4025,14 @@ Logging into drawers: (also do read [[https://yiufung.net/post/org-mode-hidden-g
 					      ("1." . "-")
 					      ("1)" . "-"))))
   (setq split-width-threshold 9999);; Minimum width for splitting windows sensibly.
-  (setq global-auto-revert-mode t)
+
   (setq require-final-newline nil)
   (setq org-adapt-indentation nil);; do not indent drawers/body according to heading level
+#+END_SRC
+
+Performance implications! See [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/][reddit comment]] for details:
+#+BEGIN_SRC emacs-lisp
+  (setq global-auto-revert-mode t)
 #+END_SRC
 
 Default state for repeating/recurring events
@@ -11070,6 +11075,8 @@ and smart truncation.»
   (smart-mode-line-enable)
 )
 #+END_SRC
+
+Performance implications! See [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/][reddit comment]] for details.
 
 ** display-time-mode - Enable the display of time in the modeline
 
