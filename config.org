@@ -36,7 +36,7 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧   Windows    ← hunk →        ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
+"⇧   Windows                    ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
 "                                                                                                       (propertize
 "    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
 "                                                                                                        'face '(:foreground "green"))
@@ -7619,6 +7619,7 @@ switch to open Agenda or open new one:
   (bind-key "a" 'my-org-agenda my-map)
 #+END_SRC
 
+
 *** my-memacs-org-agenda() → my-map m     C-cm
 
 Memacs org-agenda shortcut
@@ -9822,10 +9823,12 @@ End of smeargle:
   );; end of smeargle
 #+END_SRC
 
-** GitGutter
+** DISABLED GitGutter
 :PROPERTIES:
 :CREATED:  [2018-09-01 Sat 16:39]
 :END:
+
+2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
 
 [[https://github.com/syohex/emacs-git-gutter][GitGutter]] is visualizing modified lines within the source code buffer.
 
@@ -12776,12 +12779,12 @@ Not org related but might be candidates as well:
 (defhydra hydra-python (:color blue)
     (concat my-f-key-settings
   "
-  ^View^                 ^Navigation^        ^^Git                C-↑↓   goto line of same level
+  ^View^                 ^Navigation^        ^^                   C-↑↓   goto line of same level
   ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
-  _h_ide/show fun  M-h   _p_ ← error    F5   ^^← Git hunk →
-  _c_ycle all      M-H   _n_   error →  F6   S-F_2_   S-F_3_
-  ^^                     _<_ ← symbol        _s_tage hunk
-  ^^                     _>_   symbol →      _R_evert hunk
+  _h_ide/show fun  M-h   _p_ ← error    F5   ^^
+  _c_ycle all      M-H   _n_   error →  F6   ^^
+  ^^                     _<_ ← symbol        ^^
+  ^^                     _>_   symbol →      ^^
   ^^                     ^^                  ^^
   ^Edit^                 ^Help^              ^^
   ^^─────────────────────^^──────────────────^^────────────────
@@ -12798,11 +12801,6 @@ Not org related but might be candidates as well:
   ("n" flymake-goto-next-error nil :color red)
   ("<" highlight-symbol-prev nil)
   (">" highlight-symbol-next nil)
-
-  ("2" git-gutter:previous-hunk nil :color red)
-  ("3" git-gutter:next-hunk nil :color red)
-  ("s" git-gutter:stage-hunk nil)
-  ("R" git-gutter:revert-hunk nil)
 
   ("i" elpygen-implement nil)
   ("r" elpy-refactor nil)
@@ -12935,10 +12933,10 @@ Not org related but might be candidates as well:
 (defhydra hydra-git (:color blue)
     (concat my-f-key-settings
   "
-  ^^View                 ^^Navigation        ^^Edit
+  ^^View                 ^^                  ^^
   ^^─────────────────────^^──────────────────^^────────────────
-  _s_tatus    my-map g   ^^← Git hunk →      _S_tage hunk
-  _t_ime-machine         S-F_2_    S-F_3_      _R_evert hunk
+  _s_tatus    my-map g   ^^                  ^^
+  _t_ime-machine         ^^                  ^^
   ^^                     ^^                  ^^
   ^^                     ^^                  ^^
   ^^Smeargle             ^^                  ^^
@@ -12952,12 +12950,6 @@ Not org related but might be candidates as well:
 
   ("s" magit-status nil)
   ("t" git-timemachine-toggle)
-
-  ("2" git-gutter:previous-hunk nil :color red)
-  ("3" git-gutter:next-hunk nil :color red)
-
-  ("S" git-gutter:stage-hunk nil)
-  ("R" git-gutter:revert-hunk nil)
 
   ("h" smeargle nil :color red)
   ("c" smeargle-commits nil :color red)
