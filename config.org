@@ -7601,6 +7601,16 @@ switch to open Agenda or open new one:
                  (my-super-agenda-business));; with argument: super-agenda of business
           )
       ))
+
+     (setq current-timestamp
+       (concat
+         (format-time-string "%Y-%m-%dT%T")
+         ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+         (format-time-string "%z"))))
+     (write-region
+       (format-message "%s %s: my-org-agenda took %.2fs\n" current-timestamp system-name (float-time (time-subtract (current-time) my-org-agenda-start-time)))
+       nil (concat no-littering-var-directory "log/my-org-agenda.txt") "append")
+
      (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
 
      )
