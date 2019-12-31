@@ -13667,6 +13667,10 @@ approximately 25 seconds as of 2019-04-17.
 
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
 
+  (write-region
+    (format-message "%s %s: Emacs is started\n" current-timestamp system-name)
+     nil (concat no-littering-var-directory "log/my-org-agenda.txt") "append")
+
   ;(sleep-for 2)
   (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
@@ -13724,7 +13728,7 @@ loading my configuration (famous last words):
 
 (write-region
   (format-message "Emacs boot finished (took %.2fs)\n" (float-time (time-subtract (current-time) my-config-el-start-time)))
-  nil my-var-log-hostname-file)
+  nil my-var-log-hostname-file "append")
 #+END_SRC
 
 * Current key mappings (sorted)
