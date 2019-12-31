@@ -9671,6 +9671,8 @@ A powerful query language for Org mode: https://github.com/alphapapa/org-ql
 #+BEGIN_SRC emacs-lisp
 (use-package org-ql
   :ensure t
+  :config
+  (require 'org-ql-search) ;; workaround for https://github.com/alphapapa/org-ql/issues/53
 )
 #+END_SRC
 
