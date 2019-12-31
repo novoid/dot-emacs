@@ -2277,10 +2277,9 @@ within Org-mode only is defined in my yankpad file.
   :config
   (bind-key "<S-f5>" 'yankpad-expand)
   (bind-key "<S-f6>" 'yankpad-map)
+  (setq yankpad-default-category "org-mode")
 )
 #+END_SRC
-
-#+RESULTS:
 
 * Elisp
 
