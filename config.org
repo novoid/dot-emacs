@@ -10224,6 +10224,22 @@ Support for opening last known pdf position in pdf-view-mode provided by pdf-too
 Misc sources for packages:
 - 2017-05: [[https://www.reddit.com/r/emacs/comments/6dk5tv/what_are_some_packages_you_once_used_but_have/][What are some packages you once used but have found a better alternative? : emacs]]
 
+** Garbage Collection Magic Hack
+:PROPERTIES:
+:CREATED:  [2019-12-31 Tue 17:06]
+:END:
+
+Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/][this reddit comment]] because of performance issues.
+
+#+BEGIN_SRC emacs-lisp
+(use-package gcmh
+  :ensure t
+  :config
+  (setq garbage-collection-messages t)
+  (setq gcmh-verbose t)
+)
+#+END_SRC
+
 ** DISABLED tabbar
 
 «[[https://www.emacswiki.org/emacs/TabBarMode][Tabbar]] is an emacs minor mode that displays a tab bar at the top,
