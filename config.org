@@ -6516,7 +6516,7 @@ Definitions of non-work files:
               ,(concat my-org-files-path "fhsp.org")
               ,(concat my-org-files-path "notes.org")
               ,(concat my-org-files-path "public_voit.org")
-              ,(concat my-org-files-path "errors_misc.org")
+              ,(concat my-org-files-path "errors.org")
               ,(concat my-org-files-path "errors_public_voit.org")
               ,(concat my-org-files-path "errors_orgmode_commits.org")
               ;;,(concat my-org-files-path "movies.org")
@@ -7662,7 +7662,7 @@ I aliased it within =~/.zshrc.local= to =memacs=
 
     ;; I don't want the error messages in my exported agenda:
     (setq org-agenda-files (remove "~/org/errors_orgmode_commits.org" org-agenda-files))
-    (setq org-agenda-files (remove "~/org/errors_misc.org" org-agenda-files))
+    (setq org-agenda-files (remove "~/org/errors.org" org-agenda-files))
 
     (setq max-specpdl-size 10000)
     (setq max-lisp-eval-depth 50000)
