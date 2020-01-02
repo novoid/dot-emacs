@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2019-12-22 23:12:00 vk>
+;; Time-stamp:    <2020-01-02 10:24:44 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -144,7 +144,9 @@ Note the weekly scope of the command's precision.")
      (:name "Sent" :query "folder:Sent")
      (:name "today¬me" :query "date:today and not from:karl.voit")
      (:name "today" :query "date:today")
-     (:name "todo" :query "tag:todo")))
+     (:name "todo" :query "tag:todo")
+     (:name "thisweek" :query "from:\"this week\"")
+     (:name "this_week" :query "date:\"this week\"")))
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
  '(org-contacts-files "~/org/contacts.org" t)
