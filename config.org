@@ -639,10 +639,12 @@ files and directories.
 (require 'no-littering)
 #+END_SRC
 
-* Logging of mode versions
+* Logging
 :PROPERTIES:
-:CREATED:  [2019-04-16 Tue 13:16]
+:CREATED:  [2020-01-02 Thu 17:29]
 :END:
+
+** host-specific log file: =my-log-hostspecific()=
 
 Here's the idea: on every Emacs startup, a file like
 =~/.emacs.d/var/log/HOSTNAME.txt= is overwritten with the current
@@ -687,7 +689,7 @@ the current time stamp:
 Define the function that is called to append lines to the file:
 
 #+BEGIN_SRC emacs-lisp
-(defun my-append-to-var-log-hostname-file (mystring mycommand)
+(defun my-log-hostspecific (mystring mycommand)
   "append a string and the result of a command to the my-var-log-hostname-file file"
   (interactive)
   (write-region (concat mystring " " mycommand "\n") nil my-var-log-hostname-file t)
@@ -698,7 +700,38 @@ And let's use this new function to log the version of the GNU/Emacs
 that is starting:
 
 #+BEGIN_SRC emacs-lisp
-(my-append-to-var-log-hostname-file "emacs-version" emacs-version)
+(my-log-hostspecific "emacs-version" emacs-version)
+#+END_SRC
+
+** general log file: =my-log-misc()=
+
+I'm using a central logging file for all kind of logging messages. I
+started with my agenda genreation performance.
+
+Where do I log to?
+#+BEGIN_SRC emacs-lisp
+(setq my-log-file (concat no-littering-var-directory "log/misc.log"))
+#+END_SRC
+
+How do I log?
+#+BEGIN_SRC emacs-lisp
+(defun my-log-misc (message)
+   (interactive)
+   (let ((current-timestamp
+        (concat
+          (format-time-string "%Y-%m-%dT%T")
+          ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+          (format-time-string "%z")))
+        ))
+  (write-region
+    (concat (format-message "%s %s: %s\n" current-timestamp system-name message))
+     nil my-log-file "append"))
+)
+#+END_SRC
+
+Example:
+#+BEGIN_SRC emacs-lisp :tangle no
+(my-log "foo bar")
 #+END_SRC
 
 * my-load-local-el()
@@ -1101,7 +1134,7 @@ END of Cygwin/babun configuration
 
 end of Cygwin config
 #+BEGIN_SRC emacs-lisp
-(my-append-to-var-log-hostname-file "cygwin-mount-version" cygwin-mount-version)
+(my-log-hostspecific "cygwin-mount-version" cygwin-mount-version)
 );; end of if-windows
 #+END_SRC
 
@@ -1402,8 +1435,8 @@ I do not use.
 
 Interesting read: http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
 
-Show current column:
-#+BEGIN_SRC emacs-lisp
+Show current column: 2020-01-01 disabled because of performance impact (re-drawing modeline at each keystroke)
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq column-number-mode t)
 #+END_SRC
 
@@ -2252,7 +2285,7 @@ organization with many tasks and their dependencies).
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
-  (my-append-to-var-log-hostname-file "yas--version" yas--version)
+  (my-log-hostspecific "yas--version" yas--version)
 )
 #+END_SRC
 
@@ -2520,7 +2553,7 @@ enable elpy and use ipython:
 (elpy-enable)
 ;; (elpy-use-ipython) ;; 2019-12-09: after updating packages, this got deprecated:
 ;;      Error (use-package): elpy/:config: elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup
-(my-append-to-var-log-hostname-file "elpy-version" elpy-version) ;; will be written on elpy start, not before
+(my-log-hostspecific "elpy-version" elpy-version) ;; will be written on elpy start, not before
 #+END_SRC
 
 ** Switch for ipython (NOT YET TESTED)
@@ -3872,7 +3905,7 @@ Profiling Org-mode config loading time:
 #+BEGIN_SRC emacs-lisp
 (defvar my-org-config-start-time (current-time) "Time when my org-mode config was started")
 (message "★→ Org-mode")
-(my-append-to-var-log-hostname-file "org-version" org-version)
+(my-log-hostspecific "org-version" org-version)
 #+END_SRC
 
 ** Load Org and misc contrib packages
@@ -7005,7 +7038,7 @@ only see important business stuff.
                           ((org-agenda-span 31)
                            (org-agenda-time-grid nil)
                           )))
-                 nil (,(concat my-org-files-path "agenda_details.html")))
+                 nil (,(concat my-org-files-path "agenda_details_raw.html")))
                 ))
 
   ;; if Emacs is started in interactive mode:
@@ -7610,9 +7643,7 @@ switch to open Agenda or open new one:
          (format-time-string "%Y-%m-%dT%T")
          ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
          (format-time-string "%z"))))
-     (write-region
-       (format-message "%s %s: my-org-agenda took %.2fs\n" current-timestamp system-name (float-time (time-subtract (current-time) my-org-agenda-start-time)))
-       nil (concat no-littering-var-directory "log/my-org-agenda.txt") "append")
+     (setq my-tmp-message (format-message "my-org-agenda took %.2fs\n" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
 
      (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
 
@@ -7622,7 +7653,6 @@ switch to open Agenda or open new one:
 
   (bind-key "a" 'my-org-agenda my-map)
 #+END_SRC
-
 
 *** my-memacs-org-agenda() → my-map m     C-cm
 
@@ -9202,7 +9232,7 @@ want to install [[https://github.com/skuro/plantuml-mode][plantuml-mode]]:
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/plantuml-mode")))
     :config
 
-    (my-append-to-var-log-hostname-file "plantuml-mode-version" plantuml-mode-version)
+    (my-log-hostspecific "plantuml-mode-version" plantuml-mode-version)
 
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)) ;; Enable plantuml-mode for PlantUML files
     (add-to-list
@@ -10051,7 +10081,7 @@ This requires ov.el: https://github.com/emacsorphanage/ov
 
 #+BEGIN_SRC emacs-lisp
 ) ;; end of magit use-package
-;(my-append-to-var-log-hostname-file "magit-version" magit-version) ;; doesn't work (anywhere here) for some reason
+;(my-log-hostspecific "magit-version" magit-version) ;; doesn't work (anywhere here) for some reason
 #+END_SRC
 
 * PDF
@@ -11870,7 +11900,9 @@ by using nxml's indentation rules."
 :CREATED:  [2019-10-31 Thu 00:58]
 :END:
 
-2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
+- 2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
+  - Although this might not be that severe: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcnsbe4/
+  - I leave it disabled because it does not give me that much advantage.
 
 Emoticons for the Emacs: :org: :emacs: :wink: :smile: ;^)
 
@@ -13665,9 +13697,7 @@ approximately 25 seconds as of 2019-04-17.
 
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
 
-  (write-region
-    (format-message "%s %s: Emacs is started\n" current-timestamp system-name)
-     nil (concat no-littering-var-directory "log/my-org-agenda.txt") "append")
+  (my-log-misc "Emacs is started")
 
   ;(sleep-for 2)
   (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
@@ -13675,8 +13705,13 @@ approximately 25 seconds as of 2019-04-17.
   (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
   (if (file-exists-p (concat no-littering-var-directory "faststart"))
-    (message "Faststart activated → omitting some autostart things") ;; see explanation above
-    (progn (message "Creating agenda …")
+    (progn
+      (message "Faststart activated → omitting some autostart things") ;; see explanation above
+      (my-log-misc "Faststart activated → omitting some autostart things")
+    )
+    (progn 
+       (message "Creating agenda …")
+       ;;(my-log-misc "Creating agenda …")
        (my-org-agenda)
        (message "my-org-startup-visibility …")
        (my-org-startup-visibility))
@@ -13722,11 +13757,12 @@ loading my configuration (famous last words):
 (my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
 
 (message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
+;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
 (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
-(write-region
-  (format-message "Emacs boot finished (took %.2fs)\n" (float-time (time-subtract (current-time) my-config-el-start-time)))
-  nil my-var-log-hostname-file "append")
+(my-log-misc
+  (format-message "Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
+)
 #+END_SRC
 
 * Current key mappings (sorted)
