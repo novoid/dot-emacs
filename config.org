@@ -4515,7 +4515,7 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
 	    (url (buffer-substring-no-properties p1 p2))
 	    )
 	;; retrieve title
-	(let ((title (my-www-get-page-title url)))
+	(let ((title (replace-regexp-in-string "\n" " • " (my-www-get-page-title url))))
 	  (message (concat "title is: " title))
 	  ;;(setq url (replace-regexp-in-string "&" "&amp;" url))
 	  (let ((resultLinkStr (concat "[[" url "][" title "]]")))
