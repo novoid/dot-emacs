@@ -7531,6 +7531,14 @@ SCHEDULED is set:
 ;;(setq org-agenda-skip-deadline-prewarning-if-scheduled t)
 #+END_SRC
 
+From [[https://www.reddit.com/r/orgmode/comments/e4stk2/adding_a_separator_line_between_days_in_emacs/][reddit]]: Adding a separator line between days.
+Disabled 2020-01-03 because I usually see one single day only.
+#+BEGIN_SRC emacs-lisp :tangle on
+(setq org-agenda-format-date (lambda (date) (concat "\n"
+        (make-string (window-width) 9472)
+        "\n"
+        (org-agenda-format-date-aligned date))))
+#+END_SRC
 
 *** Agenda category icons
 
