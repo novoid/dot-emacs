@@ -836,6 +836,13 @@ because with them, I lose some generic approach:
     )
   )
 
+(defun my-system-is-rise ()
+  "Return true if the system we are running on is floyd"
+  (or
+    (string-equal system-name "LAPTOP-SO79O8O3")
+    )
+  )
+
 (defun my-system-is-blanche ()
   "Return true if the system we are running on is blanche"
   (or (string-equal system-name "blanche") (string-equal system-name "blanche.lan"))
@@ -923,8 +930,9 @@ therefore, this has to be defined early:
 #+BEGIN_SRC emacs-lisp
 (cond ((string-equal system-name "GRZN17009")
           (setq my-org-files-path "c:/Users/karl.voit/org/"))
-      ((my-system-type-is-windows)
-          (setq my-org-files-path "c:/Users/John/AppData/Roaming/org/"))
+      ((string-equal system-name "Cosmo")
+          (setq my-org-files-path "c:/Users/John/AppData/Roaming/org/")
+       )
       (t
           (setq my-org-files-path "~/org/"))
 )
@@ -944,7 +952,7 @@ therefore, this has to be defined early:
 ;;   package-enable-at-startup nil)
 ;;  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;;  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-  (setq package-user-dir "~/emax/elpa")
+;;  (setq package-user-dir "~/emax/elpa")
 ;;  (package-initialize)
 
 ;;  ;; Install dependencies
@@ -979,7 +987,7 @@ therefore, this has to be defined early:
 
   (setenv "PATH" (concat "C:\\msys64\\usr\\bin;C:\\msys64\\mingw64\\bin;" (getenv "PATH")))
 
-  (dolist (dir '("~/emax/" "~/emax/bin/" "~/emax/bin64/" "~/emax/mingw64/bin/" "~/emax/lisp/" "~/emax/elpa/"))
+  (dolist (dir '("~/emax/" "~/emax/bin/" "~/emax/bin64/" "~/emax/mingw64/bin/" "~/emax/lisp/" "~/emax/elpa/" "~/bin/"))
   (add-to-list 'load-path dir))
 
   (set-language-environment 'utf-8)
@@ -999,9 +1007,9 @@ from emax.org:
 
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
-    (setq-default
-        (defvar mp/font-family            "Consolas"  "The font to use.")
-    )
+  ;  (setq-default
+  ;      (defvar mp/font-family            "Consolas"  "The font to use.")
+  ;  )
 
     ;; Running Windows Powershell from within Emacs
     ; (setq explicit-shell-file-name "c:\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe")
@@ -1011,7 +1019,8 @@ from emax.org:
 
 
     ;; Changes made for Aspell
-    (setq-default ispell-program-name "~/emax/mingw64/bin/aspell.exe")
+  ;;  (setq-default ispell-program-name "~/emax/mingw64/bin/aspell.exe")
+    (setq-default ispell-program-name "~/bin/aspell.cmd")
     (setq-default ispell-extra-args  '("--sug-mode=ultra"))
     ;; (setq ispell-dictionary "en_US")
 
@@ -1039,12 +1048,12 @@ from emax.org:
     (require 'ispell)
 
 
-     (setq epg-gpg-home-directory "~/emax/mingw64/bin/")
-     (setq epg-gpg-program "~/emax/mingw64/bin/gpg.exe")
-     (setq epg-gpgconf-program "~/emax/mingw64/bin/gpgconf.exe")
+;     (setq epg-gpg-home-directory "~/emax/mingw64/bin/")
+;     (setq epg-gpg-program "~/emax/mingw64/bin/gpg.exe")
+;     (setq epg-gpgconf-program "~/emax/mingw64/bin/gpgconf.exe")
 
 
-    (pdf-tools-install :no-query)
+;    (pdf-tools-install :no-query)
 )
 #+END_SRC
 
@@ -1426,7 +1435,6 @@ https://chrome.google.com/webstore/detail/ljobjlafonikaiipfkggjbhkghgicgoh?hl=de
 
 2017-06-20: [[https://www.reddit.com/r/emacs/comments/6ha4tl/a_little_trick_with_eww/][A little trick with EWW : emacs]] - presents code to
 interactively select your browser of choice.
-
 * Styling
 
 The (sub-)headings here deal with the visual appeal of my GNU/Emacs. I
@@ -1574,6 +1582,9 @@ Host-specific font sizes:
   ;;(set-face-attribute 'default (selected-frame) :height 102) ;; before 2019-12-04: even smaller on reduced resolution
   (set-face-attribute 'default (selected-frame) :height 110) ;; 2019-12-04: bigger font on native 30" resolution
   )
+(when (my-system-is-rise)
+  (set-face-attribute 'default (selected-frame) :height 90)
+)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -3575,11 +3586,13 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 :CREATED:  [2019-12-19 Thu 14:37]
 :END:
 
+** isync + notmuch
+
 This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I use together with isync/mbsync/
 
 #+BEGIN_SRC emacs-lisp
 (use-package notmuch
-   ;;:if (my-system-type-is-gnu)
+   :if (my-system-type-is-gnu)
    :config
 
    (load-library "smtpmail")
@@ -3608,6 +3621,9 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
        (:name "Sent" :query "folder:Sent")))
    (setq message-default-headers "Reply-to: \nCC: \nBCC: \n")
    (setq notmuch-fcc-dirs "Sent")
+   (when (my-system-is-rise)
+      (setq notmuch-command "notmuch.cmd")
+   )
 
    (add-hook 'notmuch-message-mode-hook #'footnote-mode)
    (add-hook 'notmuch-message-mode-hook #'auto-dictionary-mode)
@@ -3623,10 +3639,15 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
    (defun my-notmuch-sync-and-update-index-and-buffer ()
      "Update the index after sync."
      (interactive)
-     (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "")
+     (when (not (my-system-is-rise))
+       (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "")
      ;;(notmuch-poll)
+     )
      (notmuch-refresh-this-buffer))
-   (define-key notmuch-hello-mode-map "g" 'my-notmuch-sync-and-update-index-and-buffer)
+
+   (when (not (my-system-is-rise))
+     (define-key notmuch-hello-mode-map "g" 'my-notmuch-sync-and-update-index-and-buffer)
+   )
 
 )
 #+END_SRC
@@ -3636,11 +3657,12 @@ switch to open notmuch biffer or open new one:
   (defun my-notmuch (&optional arg)
     "Opens the already opened notmuch buffer or opens new one instead."
     (interactive "P")
-
-    (my-notmuch-sync-and-update-index-and-buffer)
-    (if (my-buffer-exists "*notmuch-hello*")
-        (switch-to-buffer "*notmuch-hello*")
-      (notmuch)
+    (when (my-system-type-is-gnu)
+        (my-notmuch-sync-and-update-index-and-buffer)
+        (if (my-buffer-exists "*notmuch-hello*")
+            (switch-to-buffer "*notmuch-hello*")
+          (notmuch)
+        )
     )
   )
 
@@ -3653,10 +3675,43 @@ Provides Org mode links to notmuch emails: copy with =C-c l= (org-notmuch-store-
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-notmuch
+   :if (my-system-type-is-gnu)
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
 )
 #+END_SRC
 
+** Thunderbird
+
+Snippet according to https://vxlabs.com/2019/04/20/link-thunderbird-emails-from-emacs-orgmode/
+
+Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
+
+#+BEGIN_SRC emacs-lisp
+;; with org-mac-link message:// links are handed over to the macOS system,
+;; which has built-in handling. On Windows and Linux, we can use thunderlink!
+(when (not (string-equal system-type "darwin"))
+  ;; modify this for your system
+  (setq thunderbird-program "C:/Program Files/Mozilla Thunderbird/thunderbird")
+
+  (defun org-message-thunderlink-open (slash-message-id)
+    "Handler for org-link-set-parameters that converts a standard message:// link into
+   a thunderlink and then invokes thunderbird."
+    ;; remove any / at the start of slash-message-id to create real message-id
+    (let ((message-id
+           (replace-regexp-in-string (rx bos (* "/"))
+                                     ""
+                                     slash-message-id)))
+      (start-process
+       (concat "thunderlink: " message-id)
+       nil
+       thunderbird-program
+       "-thunderlink"
+       (concat "thunderlink://" message-id);; by default, the messageid is already included in the link
+       ;;(concat "thunderlink://messageid=" message-id)
+       )))
+  ;; on message://aoeu link, this will call handler with //aoeu
+  (org-link-set-parameters "thunderlink" :follow #'org-message-thunderlink-open))
+#+END_SRC
 
 * LaTeX
 
@@ -5960,10 +6015,10 @@ Templates for my home:
 	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 #+END_SRC
 
-Company templates: (2019-07-17 disabled)
-#+BEGIN_SRC emacs-lisp :tangle no
+Company templates:
+#+BEGIN_SRC emacs-lisp
 	  ("r" "RISE")
-    ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "rise.org") "shorts/projects")
+    ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "rise.org") "shorts")
 	   ,my-capture-template-next :empty-lines 1)
 	  ("re" "event" entry (file+headline ,(concat my-org-files-path "rise.org") "Events")
 	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
@@ -7025,13 +7080,13 @@ only see important business stuff.
                            (org-agenda-skip-function
                             '(or
                               (org-agenda-skip-entry-if 'todo 'any);; skip if any TODO state is found
-                              (org-agenda-skip-entry-if 'category "infonova");; skip if any TODO state is found
+                              (org-agenda-skip-entry-if 'category "errors");; skip if any TODO state is found
                               (my-skip-tag "lp")
                               )
                             )
                            ;;(org-agenda-skip-function '(my-skip-tag "lp"))
                           )))
-                 nil (,(concat my-org-files-path "agenda_180d_filtered.html")))
+                 nil (,(concat my-org-files-path "agenda_180d_filtered_raw.html")))
 
                 ("D" "detail agenda"
                  ((agenda "detail agenda"
@@ -7651,9 +7706,8 @@ switch to open Agenda or open new one:
          (format-time-string "%Y-%m-%dT%T")
          ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
          (format-time-string "%z"))))
-     (setq my-tmp-message (format-message "my-org-agenda took %.2fs\n" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
-
      (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
+     (my-log-misc (format-message "my-org-agenda took %.2fs" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
 
      )
     )
@@ -9774,7 +9828,7 @@ interface of Magit.
 (use-package magit
   ;;2018-07-09 disabled because lots of errors on load;; :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/magit/lisp/")))
 
-  :if (my-eval-if-binary-or-warn "git")
+  :if (and (my-eval-if-binary-or-warn "git") (my-system-type-is-gnu))
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
   :config ;; executed after loading package
@@ -9797,7 +9851,9 @@ interface of Magit.
 (bind-key "g" #'magit-status my-map)
 #+END_SRC
 
-** smeargle (highlighting)
+** DISABLED smeargle (highlighting)
+
+Disabled 2020-01-07 because I don't use it.
 
 - smeargle - Highlighting Regions by Last Updated Time (my-map c)
   - https://github.com/syohex/emacs-smeargle/
@@ -12903,7 +12959,9 @@ Not org related but might be candidates as well:
 
 )
 
-(define-key notmuch-hello-mode-map [f1] 'hydra-notmuch/body)
+(when (my-system-type-is-gnu)
+    (define-key notmuch-hello-mode-map [f1] 'hydra-notmuch/body)
+)
 #+END_SRC
 
 #+RESULTS:
@@ -12912,6 +12970,7 @@ Not org related but might be candidates as well:
 ** hydra-notmuch-message-mode → F1
 
 #+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
 (defhydra hydra-notmuch-message-mode (:color blue)
     (concat my-f-key-settings
   "
@@ -12941,6 +13000,7 @@ Not org related but might be candidates as well:
 )
 
 (define-key notmuch-message-mode-map [f1] 'hydra-notmuch-message-mode/body)
+)
 #+END_SRC
 
 #+RESULTS:
@@ -12949,6 +13009,7 @@ Not org related but might be candidates as well:
 ** hydra-notmuch-show-mode → F1
 
 #+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
 (defhydra hydra-notmuch-show-mode (:color blue)
     (concat my-f-key-settings
   "
@@ -12985,6 +13046,7 @@ Not org related but might be candidates as well:
 )
 
 (define-key notmuch-show-mode-map [f1] 'hydra-notmuch-show-mode/body)
+)
 #+END_SRC
 
 #+RESULTS:
@@ -13681,7 +13743,9 @@ line, sentence, sexp or defun into the marked region:
 :END:
 
 #+BEGIN_SRC emacs-lisp
+(when (my-system-type-is-gnu)
   (bind-key "n" 'my-notmuch my-map)
+)
 #+END_SRC
 
 * autostart
@@ -13717,7 +13781,7 @@ approximately 25 seconds as of 2019-04-17.
       (message "Faststart activated → omitting some autostart things") ;; see explanation above
       (my-log-misc "Faststart activated → omitting some autostart things")
     )
-    (progn 
+    (progn
        (message "Creating agenda …")
        ;;(my-log-misc "Creating agenda …")
        (my-org-agenda)
