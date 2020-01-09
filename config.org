@@ -3682,7 +3682,7 @@ Provides Org mode links to notmuch emails: copy with =C-c l= (org-notmuch-store-
 
 ** Thunderbird
 
-Snippet according to https://vxlabs.com/2019/04/20/link-thunderbird-emails-from-emacs-orgmode/
+I got this workflow from https://vxlabs.com/2019/04/20/link-thunderbird-emails-from-emacs-orgmode/
 
 Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
 
@@ -3698,7 +3698,7 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
    a thunderlink and then invokes thunderbird."
     ;; remove any / at the start of slash-message-id to create real message-id
     (let ((message-id
-           (replace-regexp-in-string (rx bos (* "/"))
+           (replace-regexp-in-string (rx bos (* ":"))
                                      ""
                                      slash-message-id)))
       (start-process
@@ -3706,12 +3706,40 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
        nil
        thunderbird-program
        "-thunderlink"
-       (concat "thunderlink://" message-id);; by default, the messageid is already included in the link
-       ;;(concat "thunderlink://messageid=" message-id)
+       (concat "thunderlink://messageid=" message-id)
        )))
   ;; on message://aoeu link, this will call handler with //aoeu
-  (org-link-set-parameters "thunderlink" :follow #'org-message-thunderlink-open))
+  (org-link-set-parameters "messageid" :follow #'org-message-thunderlink-open))
 #+END_SRC
+
+Installation:
+1. install "Thunderlink" add-on in Thunderbird
+2. close Thunderbird
+3. manually add the snippet below to the =prefs.js= of the Thunderbird profile
+4. activate the Elisp code above within Emacs
+5. start Thunderbird
+
+#+BEGIN_EXAMPLE
+user_pref("extensions.thunderlink.custom-tl-string-1-title", "Org mode message-ID");
+user_pref("extensions.thunderlink.custom-tl-string-1", "[[messageid:<messageid>][<subject>]]");
+user_pref("extensions.thunderlink.custom-tl-string-1-selection-delimiter", " / ");
+user_pref("extensions.thunderlink.custom-tl-string-1-clipboard-checkbox", true);
+user_pref("extensions.thunderlink.custom-tl-string-1-tagcheckbox", false);
+user_pref("extensions.thunderlink.custom-tl-string-1-tag", 1);
+user_pref("extensions.thunderlink.custom-tl-string-1-appendtofile-checkbox", false);
+user_pref("extensions.thunderlink.custom-tl-string-1-appendtofile-path", "");
+#+END_EXAMPLE
+
+Workflow to use it:
+1. Click on the message with the secondary mouse button (context menu)
+2. Select: "Thunderlink ..." > "Org mode message-ID"
+3. Switch to Emacs and yank from the clipboard
+
+You should then get something similar to:
+: [[messageid:1578475923.390512.037689999@example.com][[Things I wanted to say to you]]
+
+When =C-c C-o= onto it, Thunderbird should pop up showing the email
+with the corresponding message ID.
 
 * LaTeX
 
