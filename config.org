@@ -3649,10 +3649,10 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
    (defun my-notmuch-sync-and-update-index-and-buffer ()
      "Update the index after sync."
      (interactive)
-     (when (not (my-system-is-rise))
-       (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "")
-     ;;(notmuch-poll)
-     )
+     ;;(when (not (my-system-is-rise))
+     ;;  (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "")
+     ;;)
+     (notmuch-poll)
      (notmuch-refresh-this-buffer))
 
    (when (not (my-system-is-rise))
@@ -3701,7 +3701,7 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
 ;; which has built-in handling. On Windows and Linux, we can use thunderlink!
 (when (not (string-equal system-type "darwin"))
   ;; modify this for your system
-  (setq thunderbird-program "C:/Program Files/Mozilla Thunderbird/thunderbird")
+  (setq thunderbird-program "/usr/bin/thunderbird")
 
   (defun org-message-thunderlink-open (slash-message-id)
     "Handler for org-link-set-parameters that converts a standard message:// link into
@@ -3731,7 +3731,7 @@ Installation:
 
 #+BEGIN_EXAMPLE
 user_pref("extensions.thunderlink.custom-tl-string-1-title", "Org mode message-ID");
-user_pref("extensions.thunderlink.custom-tl-string-1", "[[messageid:<messageid>][<subject>]]");
+user_pref("extensions.thunderlink.custom-tl-string-1", "[[messageid:<messageid>][<time> <sender>: <subject>]]");
 user_pref("extensions.thunderlink.custom-tl-string-1-selection-delimiter", " / ");
 user_pref("extensions.thunderlink.custom-tl-string-1-clipboard-checkbox", true);
 user_pref("extensions.thunderlink.custom-tl-string-1-tagcheckbox", false);
@@ -3740,13 +3740,16 @@ user_pref("extensions.thunderlink.custom-tl-string-1-appendtofile-checkbox", fal
 user_pref("extensions.thunderlink.custom-tl-string-1-appendtofile-path", "");
 #+END_EXAMPLE
 
+Possible values for the thunderlink template: https://github.com/mikehardy/thunderlink/blob/master/chrome/thunderlink/content/preferences.xul#L108
+: <thunderlink> <messageid> <subject> <filteredSubject> <sender> <tbexe> <time>
+
 Workflow to use it:
 1. Click on the message with the secondary mouse button (context menu)
 2. Select: "Thunderlink ..." > "Org mode message-ID"
 3. Switch to Emacs and yank from the clipboard
 
 You should then get something similar to:
-: [[messageid:1578475923.390512.037689999@example.com][[Things I wanted to say to you]]
+: [[messageid:1578475923.390512.037689999@example.com][[1/9/2020 - 11:30:41 First Last <name@example.com>: Things I wanted to say to you]]
 
 When =C-c C-o= onto it, Thunderbird should pop up showing the email
 with the corresponding message ID.
