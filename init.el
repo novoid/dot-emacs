@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2020-01-02 10:24:44 vk>
+;; Time-stamp:    <2020-01-11 23:26:35 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -129,45 +129,21 @@ Note the weekly scope of the command's precision.")
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(git-gutter:added-sign "++")
- '(git-gutter:deleted-sign "--")
- '(git-gutter:diff-option "-w")
- '(git-gutter:disabled-modes '(asm-mode image-mode))
- '(git-gutter:modified-sign "~ ")
  '(notmuch-saved-searches
-   '((:name "inbox" :query "tag:inbox" :key "i")
+   (quote
+    ((:name "inbox" :query "tag:inbox" :key "i")
      (:name "unread" :query "tag:unread" :key "u")
      (:name "flagged" :query "tag:flagged" :key "f")
      (:name "sent" :query "tag:sent" :key "t")
      (:name "drafts" :query "tag:draft" :key "d")
      (:name "all mail" :query "*" :key "a")
-     (:name "Sent" :query "folder:Sent")
-     (:name "today¬me" :query "date:today and not from:karl.voit")
-     (:name "today" :query "date:today")
-     (:name "todo" :query "tag:todo")
-     (:name "thisweek" :query "from:\"this week\"")
-     (:name "this_week" :query "date:\"this week\"")))
+     (:name "Sent" :query "folder:archive")
+     (:name "this_week" :query "date:\"this week\"")
+     (:name "today¬me" :query "date:today and not from:karl.voit"))))
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
- '(org-contacts-files "~/org/contacts.org" t)
- '(org-contacts-icon-property "PHOTOGRAPH" t)
- '(package-selected-packages
-   '(gif-screencast magit org eno dumb-jump dired-icon buttercup auto-complete anzu alert adoc-mode))
- '(safe-local-variable-values
-   '((eval ispell-change-dictionary "german8")
-     (eval ispell-change-dictionary "american")
-     (eval ispell-change-dictionary "en_US")
-     (flyspell-default-dictionary . "german8")))
- '(smeargle-age-colors
-   '((0)
-     (1 . "grey80")
-     (2 . "grey70")
-     (3 . "grey60")
-     (4 . "grey50")
-     (5 . "grey40")
-     (6 . "grey30")
-     (7 . "grey20")
-     (8 . "grey10"))))
+ '(org-contacts-files (concat my-org-files-path "contacts.org") t)
+ '(org-contacts-icon-property "PHOTOGRAPH" t))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
