@@ -677,7 +677,7 @@ So how is it done? Here we go. Let's define the common file name, one
 per host:
 
 #+BEGIN_SRC emacs-lisp
-(setq my-var-log-hostname-file (concat no-littering-var-directory "log/" system-name ".txt"))
+(setq my-var-log-hostname-file (concat no-littering-var-directory "log/host-" system-name ".txt"))
 #+END_SRC
 
 At Emacs startup, overwrite the file content and initializing it with
