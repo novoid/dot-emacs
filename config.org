@@ -4493,7 +4493,7 @@ Note: on some computers, this results in higher line height as described on http
 See: id:2016-08-19-unicode-enlarges-line-height
 
 #+BEGIN_SRC emacs-lisp
-(setq org-ellipsis " ⤵")
+(setq org-ellipsis " •")
 #+END_SRC
 
 Set the width of inline images:
