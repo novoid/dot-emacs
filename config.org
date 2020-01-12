@@ -538,6 +538,7 @@ package service):
 (use-package define-word
    :if (my-system-type-is-gnu)
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/mypackage/")))
+   :after org
 )
 #+END_SRC
 
@@ -1737,16 +1738,16 @@ situation (also for communication with peers), I switch to a new
 binding: =C-c C-k= which is bound to =org-kill-note-or-show-branches=
 but it's a less popular function.
 
-Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key package]]:
-#+BEGIN_SRC emacs-lisp
+Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key package]]: (OLD method without use-package:)
+#+BEGIN_SRC emacs-lisp :tangle no
 (require 'bind-key);; https://github.com/emacsattic/bind-key
 
-;;(org-defkey org-mode-map (kbd "C-c C-k") nil);; clear binding
+;;(org-defkey org-mode-map (kbd "C-c C-,") nil);; clear binding
 
 (bind-keys
  :prefix-map my-map
  :prefix-docstring "My own keyboard map"
- :prefix "C-c k"
+ :prefix "C-c C-,"
  ;; 2013-03-31: http://stackoverflow.com/questions/3124844/what-are-your-favorite-global-key-bindings-in-emacs
  ("-" . text-scale-decrease)
  ("+" . text-scale-increase)
@@ -1754,9 +1755,18 @@ Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key 
  )
 #+END_SRC
 
-#+RESULTS:
-: text-scale-increase
-
+New method that allows overwriting of bindings (see [[https://github.com/jwiegley/use-package/issues/811#issuecomment-573314421][this comment]] using the [[https://github.com/jwiegley/use-package#loading-packages-in-sequence][after feature of use-package]]):
+#+BEGIN_SRC emacs-lisp
+(use-package bind-key                                                                                                                                                                                                                                                                     
+  :ensure t                                                                                                                                                                                                                                                                               
+  :bind (:prefix-map my-map                                                                                                                                                                                                                                                               
+         :prefix-docstring "My own keyboard map"                                                                                                                                                                                                                                          
+         :prefix "C-c C-,"                                                                                                                                                                                                                                                                
+         ("-" . text-scale-decrease)                                                                                                                                                                                                                                                      
+         ("+" . text-scale-increase))                                                                                                                                                                                                                                                     
+         ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget to press shift
+  :after org)
+#+END_SRC
 
 Usage example:
 : (bind-key "m w" #'mark-word my-map)
@@ -4576,6 +4586,13 @@ fix broken mapping (because of prelude and so on).
   )
 (add-hook 'org-mode-hook 'my-org-mode-hook)
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(org-defkey org-mode-map (kbd "C-c C-,") nil);; clear binding
+(org-defkey org-mode-map (kbd "C-c C-k") nil);; clear binding
+(org-defkey org-mode-map (kbd "C-c k") nil);; clear binding
+#+END_SRC
+
 ** My general Org helper functions
 
 *** my-url-linkify() → my-map u
