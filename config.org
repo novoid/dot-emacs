@@ -11478,12 +11478,10 @@ unchained from constraints of backward compatibility.
 
 #+END_SRC
 
-** DISABLED pandoc-mode - An Emacs minor mode for interacting with Pandoc
+** pandoc-mode - An Emacs minor mode for interacting with Pandoc
 
 - http://joostkremers.github.io/pandoc-mode/
 - https://github.com/joostkremers/pandoc-mode
-
-Cool package but I don't need it at the moment. Therefore disabled.
 
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
