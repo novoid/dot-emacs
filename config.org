@@ -3746,9 +3746,12 @@ user_pref("extensions.thunderlink.custom-tl-string-1-appendtofile-path", "");
 Possible values for the thunderlink template: https://github.com/mikehardy/thunderlink/blob/master/chrome/thunderlink/content/preferences.xul#L108
 : <thunderlink> <messageid> <subject> <filteredSubject> <sender> <tbexe> <time>
 
+My feature request for more format options: https://github.com/mikehardy/thunderlink/issues/49
+
 Workflow to use it:
 1. Click on the message with the secondary mouse button (context menu)
 2. Select: "Thunderlink ..." > "Org mode message-ID"
+   - alternatively: =C-M-1= (1 reflecting the format position in the Thunderlink menu)
 3. Switch to Emacs and yank from the clipboard
 
 You should then get something similar to:
@@ -11303,7 +11306,7 @@ via: http://ikiwiki.info/tips/Emacs_and_markdown/
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t
-  :if (my-system-type-is-windows)
+  :if (my-system-is-rise)
   :defer 110
   :mode ("\\.md\\'" . markdown-mode)
 )
