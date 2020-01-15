@@ -3613,7 +3613,8 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
    (setq send-mail-function    'smtpmail-send-it
          smtpmail-smtp-server  my-business-mail-server
          smtpmail-stream-type  'starttls
-         smtpmail-smtp-service 587)
+         smtpmail-smtp-service 587
+         mail-host-address "karl.voit.rise-world.com")
 
    ;; Somehow, this variable gets overwritten by something to 'message-send-mail-with-outlook
    ;; and therefore it's been set in "custom variables" as well.
@@ -3630,7 +3631,7 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
        (:name "all mail" :query "*" :key "a")
        (:name "Sent" :query "folder:archive")))
    (setq message-default-headers "Reply-to: \nCC: \nBCC: \n")
-   (setq notmuch-fcc-dirs "Sent")
+   (setq notmuch-fcc-dirs "archive")
    ;;(when (my-system-is-rise)
    ;;   (setq notmuch-command "notmuch.cmd")
    ;;)
@@ -3649,9 +3650,7 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
    (defun my-notmuch-sync-and-update-index-and-buffer ()
      "Update the index after sync."
      (interactive)
-     ;;(when (not (my-system-is-rise))
-     ;;  (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "")
-     ;;)
+     (call-process (concat my-user-emacs-directory "bin/mbsync_notmuch.sh") nil nil t "");; necessary to untag my own emails with -new
      (notmuch-poll)
      (notmuch-refresh-this-buffer))
 
