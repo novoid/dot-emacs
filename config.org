@@ -29,6 +29,10 @@ Some minor tasks I plan to do with my =config.org=:
 
 - [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
 - [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
+- [ ] FIXXME: add a table to each package with its history in my config:
+  | 2020-01-13 | installed because of X            |
+  | 2020-01-15 | disabled because issue Y          |
+  | 2020-01-19 | enabled again after fixing with Z |
 
 * Function keys
 
