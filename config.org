@@ -6049,8 +6049,6 @@ Hardware templates:
 	   ,my-capture-template-next :empty-lines 1)
 	  ("hf" "floyd" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
 	   ,my-capture-template-next :empty-lines 1)
-	  ("hc" "Chromebook" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Toshiba Chromebook 2 (<2016-03-14 Mon>, 334,02€, Amazon)" "shorts")
-	   ,my-capture-template-next :empty-lines 1)
 	  ("hp" "RasPlay" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
 	   ,my-capture-template-next :empty-lines 1)
 	  ;;old;;("hb" "blanche" entry (file+olp "~/org/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
