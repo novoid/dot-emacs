@@ -1761,13 +1761,13 @@ Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key 
 
 New method that allows overwriting of bindings (see [[https://github.com/jwiegley/use-package/issues/811#issuecomment-573314421][this comment]] using the [[https://github.com/jwiegley/use-package#loading-packages-in-sequence][after feature of use-package]]):
 #+BEGIN_SRC emacs-lisp
-(use-package bind-key                                                                                                                                                                                                                                                                     
-  :ensure t                                                                                                                                                                                                                                                                               
-  :bind (:prefix-map my-map                                                                                                                                                                                                                                                               
-         :prefix-docstring "My own keyboard map"                                                                                                                                                                                                                                          
-         :prefix "C-c C-,"                                                                                                                                                                                                                                                                
-         ("-" . text-scale-decrease)                                                                                                                                                                                                                                                      
-         ("+" . text-scale-increase))                                                                                                                                                                                                                                                     
+(use-package bind-key
+  :ensure t
+  :bind (:prefix-map my-map
+         :prefix-docstring "My own keyboard map"
+         :prefix "C-c C-,"
+         ("-" . text-scale-decrease)
+         ("+" . text-scale-increase))
          ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget to press shift
   :after org)
 #+END_SRC
@@ -3540,8 +3540,8 @@ running in background. This is how it's done.
        ((my-system-type-is-gnu)
         (message (concat "Opening current dir in linux tmux: " dired-directory))
         (shell-command (concat "tmux new-window 'cd \"" dired-directory "\"; pwd; zsh -i'"))
-	)
-	)
+        )
+        )
 )
 #+END_SRC
 
@@ -3648,8 +3648,8 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
    ;; https://www-sop.inria.fr/members/Manuel.Serrano/flyspell/flyspell-1.7q.el
    ;; as of 2019-12-21: doesn't work as it uses in German emails the English one :-(
    (add-hook 'notmuch-message-mode-hook
-	     '(lambda () (setq flyspell-generic-check-word-p
-			       'mail-mode-flyspell-verify)))
+             '(lambda () (setq flyspell-generic-check-word-p
+                               'mail-mode-flyspell-verify)))
 
    (defun my-notmuch-sync-and-update-index-and-buffer ()
      "Update the index after sync."
@@ -3802,30 +3802,30 @@ http://www.bleedingmind.com/index.php/2010/06/17/synctex-on-linux-and-mac-os-x-w
 Define system-specific PDF viewers and further Synctex settings:
 #+BEGIN_SRC emacs-lisp
 (defun okular-make-url () (concat
-      		     "file://"
-      		     (expand-file-name (funcall file (TeX-output-extension) t)
-      				       (file-name-directory (TeX-master-file)))
-      		     "#src:"
-      		     (TeX-current-line)
-      		     (TeX-current-file-name-master-relative))
+                     "file://"
+                     (expand-file-name (funcall file (TeX-output-extension) t)
+                                       (file-name-directory (TeX-master-file)))
+                     "#src:"
+                     (TeX-current-line)
+                     (TeX-current-file-name-master-relative))
        "./"
        (TeX-current-file-name-master-relative)
        )
 
 (defun skim-make-url () (
-      		   concat
-      		   (TeX-current-line)
-      		   " "
-      		   (expand-file-name (funcall file (TeX-output-extension) t)
-      				     (file-name-directory (TeX-master-file)))
-      		   " "
-      		   (buffer-file-name))
+                   concat
+                   (TeX-current-line)
+                   " "
+                   (expand-file-name (funcall file (TeX-output-extension) t)
+                                     (file-name-directory (TeX-master-file)))
+                   " "
+                   (buffer-file-name))
        )
 
 (setq TeX-view-program-list '(
-      			("Okular" "okular --unique %u")
-      			("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %q")
-      			)
+                        ("Okular" "okular --unique %u")
+                        ("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline %q")
+                        )
       )
 
 (when (my-system-type-is-gnu)
@@ -3883,7 +3883,7 @@ http://www.mail-archive.com/auctex@gnu.org/msg04137.html
 #+BEGIN_SRC emacs-lisp
 (eval-after-load "tex"
   '(add-to-list 'TeX-command-list
-      	  '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber") t))
+          '("Biber" "biber %s" TeX-run-Biber nil t :help "Run Biber") t))
 
 (defun TeX-run-Biber (name command file)
   "Create a process for NAME using COMMAND to format FILE with Biber."
@@ -3899,18 +3899,18 @@ http://www.mail-archive.com/auctex@gnu.org/msg04137.html
   (cond
    ;; Check whether Biber reports any warnings or errors.
    ((re-search-backward (concat
-      		   "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
-      		   "\\(warnings?\\|error messages?\\))") nil t)
+                   "^(There \\(?:was\\|were\\) \\([0-9]+\\) "
+                   "\\(warnings?\\|error messages?\\))") nil t)
     ;; Tell the user their number so that she sees whether the
     ;; situation is getting better or worse.
     (message (concat "Biber finished with %s %s. "
-      	       "Type `%s' to display output.")
+               "Type `%s' to display output.")
              (match-string 1) (match-string 2)
              (substitute-command-keys
-      	"\\\\[TeX-recenter-output-buffer]")))
+        "\\\\[TeX-recenter-output-buffer]")))
    (t
     (message (concat "Biber finished successfully. "
-      	       "Run LaTeX again to get citations right."))))
+               "Run LaTeX again to get citations right."))))
   (setq TeX-command-next TeX-command-default))
 #+END_SRC
 
@@ -4040,9 +4040,9 @@ Loading contributed packages:
 ;;2019-11-13: disabled to test org-edna ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 ;;2019-11-13: disabled to test org-edna ;; )
 
-(use-package org-depend
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
-)
+;(use-package org-depend
+;  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+;)
 
 ;; (use-package org-edna
 ;;   ;; 2019-11-13: I'm testing a fork: https://github.com/akirak/org-edna via https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/
@@ -4133,7 +4133,7 @@ Might cause performance issues; http://orgmode.org/manual/Clean-view.html
   (setq org-show-siblings nil)
   (setq org-deadline-warning-days 7)
   (setq org-blank-before-new-entry (quote ((heading . t)
-					   (plain-list-item . nil))))
+                                           (plain-list-item . nil))))
 #+END_SRC
 
 
@@ -4156,9 +4156,9 @@ Logging into drawers: (also do read [[https://yiufung.net/post/org-mode-hidden-g
   (setq org-remove-highlights-with-change nil)
   (setq org-read-date-prefer-future nil)
   (setq org-list-demote-modify-bullet (quote (("+" . "-")
-					      ("*" . "-")
-					      ("1." . "-")
-					      ("1)" . "-"))))
+                                              ("*" . "-")
+                                              ("1." . "-")
+                                              ("1)" . "-"))))
   (setq split-width-threshold 9999);; Minimum width for splitting windows sensibly.
 
   (setq require-final-newline nil)
@@ -4617,11 +4617,11 @@ Replaces URL with Org-mode link including description
 from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
     (let ((title))
       (with-current-buffer (url-retrieve-synchronously url)
-	(goto-char (point-min))
-	(re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
-	(setq title (match-string 1))
-	(goto-char (point-min))
-	(re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
+        (goto-char (point-min))
+        (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
+        (setq title (match-string 1))
+        (goto-char (point-min))
+        (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
         (string-replace "&nbsp;" " "
                         ;;(decode-coding-string title (intern (match-string 1)))
                         ;; following line fixes charset issues from
@@ -4647,26 +4647,26 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
     (let (resultLinkStr bds p1 p2 domainName)
       ;; get the boundary of URL or text selection
       (if (region-active-p)
-	  (setq bds (cons (region-beginning) (region-end)) )
-	(setq bds (bounds-of-thing-at-point 'url))
-	)
+          (setq bds (cons (region-beginning) (region-end)) )
+        (setq bds (bounds-of-thing-at-point 'url))
+        )
       ;; set URL
       (setq p1 (car bds))
       (setq p2 (cdr bds))
       (let (
-	    (url (buffer-substring-no-properties p1 p2))
-	    )
-	;; retrieve title
-	(let ((title (replace-regexp-in-string "\n" " • " (my-www-get-page-title url))))
-	  (message (concat "title is: " title))
-	  ;;(setq url (replace-regexp-in-string "&" "&amp;" url))
-	  (let ((resultLinkStr (concat "[[" url "][" title "]]")))
-	    ;; delete url and insert the link
-	    (delete-region p1 p2)
-	    (insert resultLinkStr)
-	    )
-	  )
-	)
+            (url (buffer-substring-no-properties p1 p2))
+            )
+        ;; retrieve title
+        (let ((title (replace-regexp-in-string "\n" " • " (my-www-get-page-title url))))
+          (message (concat "title is: " title))
+          ;;(setq url (replace-regexp-in-string "&" "&amp;" url))
+          (let ((resultLinkStr (concat "[[" url "][" title "]]")))
+            ;; delete url and insert the link
+            (delete-region p1 p2)
+            (insert resultLinkStr)
+            )
+          )
+        )
       )
     )
 
@@ -4809,12 +4809,12 @@ my side:
 (defun my-extract-minutes-of-hm-string(hm-string)
   "returns the minutes of a string like 9:42 -> 42 (and 0 if there are no minutes)"
   (let (
-	;; minutes is the second element after splitting with ":"
-	(minutes (nth 1 (split-string hm-string ":")))
-	)
+        ;; minutes is the second element after splitting with ":"
+        (minutes (nth 1 (split-string hm-string ":")))
+        )
     ;; if there is no second element, return "0" (instead of nil)
     (if (eq minutes 'nil)
-	0
+        0
       (string-to-number minutes)
       )
     )
@@ -4832,10 +4832,10 @@ my side:
 (defun my-hm-string-to-minutes(hm-string)
   "returns the minutes of a string like 2:42 -> 162"
   (let (
-	;; minutes is the second element after splitting with ":"
-	(minutes (my-extract-minutes-of-hm-string hm-string))
-	(hours (my-extract-hours-of-hm-string hm-string))
-	)
+        ;; minutes is the second element after splitting with ":"
+        (minutes (my-extract-minutes-of-hm-string hm-string))
+        (hours (my-extract-hours-of-hm-string hm-string))
+        )
     (+ minutes (* hours 60))
     )
   )
@@ -4849,8 +4849,8 @@ my side:
 (defun my-percentage-of-hm-string-with-day(hm-string day)
   "percentage of HH:MM when 8h30min (Mon-Thu) or 4h30min (Fri) are 100 percent"
   (let (
-	(hours (my-extract-hours-of-hm-string hm-string));; integer of hours from hm-string
-	(minutes (my-extract-minutes-of-hm-string hm-string));; integer of minutes from hm-string
+        (hours (my-extract-hours-of-hm-string hm-string));; integer of hours from hm-string
+        (minutes (my-extract-minutes-of-hm-string hm-string));; integer of minutes from hm-string
         (norm-hour-minutes (cond
                             ((string= day "Mon") 8.5)
                             ((string= day "Mo")  8.5)
@@ -4864,11 +4864,11 @@ my side:
                             ((string= day "Fr")  8.5)
                             )
                            )
-	)
+        )
     ;;debug;;(message (concat "norm-hour-minutes for " day " is " (number-to-string norm-hour-minutes)))
     (let (
-	  (hoursminutes (+ hours (/ minutes 60.00))) ;; 8h30min -> 8.5h
-	  )
+          (hoursminutes (+ hours (/ minutes 60.00))) ;; 8h30min -> 8.5h
+          )
       (round (* 100 (/ hoursminutes norm-hour-minutes)));; hoursminutes in relation to norm-hoursminutes
       )
     )
@@ -4877,11 +4877,11 @@ my side:
 (defun my-calculate-office-hour-total(officestart officeend lunchstart lunchend)
   "calculates the total hours:minutes of a work-day depending on time of arrival/leave and lunch break in HH:MM"
   (let (
-	(officestartminutes (my-hm-string-to-minutes officestart));; integer of minutes
-	(officeendminutes (my-hm-string-to-minutes officeend));; integer of minutes
-	(lunchstartminutes (my-hm-string-to-minutes lunchstart));; integer of minutes
-	(lunchendminutes (my-hm-string-to-minutes lunchend));; integer of minutes
-	)
+        (officestartminutes (my-hm-string-to-minutes officestart));; integer of minutes
+        (officeendminutes (my-hm-string-to-minutes officeend));; integer of minutes
+        (lunchstartminutes (my-hm-string-to-minutes lunchstart));; integer of minutes
+        (lunchendminutes (my-hm-string-to-minutes lunchend));; integer of minutes
+        )
     (let* (
           (officeminutes (- (- officeendminutes officestartminutes) (- lunchendminutes lunchstartminutes)))
           (officeminutesstring (format-time-string "%H:%M" (seconds-to-time (* 60 officeminutes)) t))
@@ -4923,42 +4923,42 @@ The replacement table is taken from [[http://ergoemacs.org/emacs/elisp_replace_h
                            ("\\]" . "}")
                            ("&#8217;" . "’")
                            ("&amp;" . "&") ("&#039;" . "'") ("&#8211;" . "–") ("&#8212;" . "—")
-			         ("&nbsp;" . " ") ("&ensp;" . " ") ("&emsp;" . " ") ("&thinsp;" . " ")
-			         ("&rlm;" . "‏") ("&lrm;" . "‎") ("&zwj;" . "‍") ("&zwnj;" . "‌")
-			         ("&iexcl;" . "¡") ("&cent;" . "¢") ("&pound;" . "£") ("&curren;" . "¤") ("&yen;" . "¥") ("&brvbar;" . "¦") ("&sect;" . "§")
-			         ("&uml;" . "¨") ("&copy;" . "©") ("&ordf;" . "ª") ("&laquo;" . "«") ("&not;" . "¬") ("&shy;" . "­") ("&reg;" . "®")
-			         ("&macr;" . "¯") ("&deg;" . "°") ("&plusmn;" . "±") ("&sup2;" . "²") ("&sup3;" . "³") ("&acute;" . "´") ("&micro;" . "µ")
-			         ("&para;" . "¶") ("&middot;" . "·") ("&cedil;" . "¸") ("&sup1;" . "¹") ("&ordm;" . "º") ("&raquo;" . "»") ("&frac14;" . "¼")
-			         ("&frac12;" . "½") ("&frac34;" . "¾") ("&iquest;" . "¿") ("&Agrave;" . "À") ("&Aacute;" . "Á") ("&Acirc;" . "Â")
-			         ("&Atilde;" . "Ã") ("&Auml;" . "Ä") ("&Aring;" . "Å") ("&AElig;" . "Æ") ("&Ccedil;" . "Ç") ("&Egrave;" . "È") ("&Eacute;" . "É")
-			         ("&Ecirc;" . "Ê") ("&Euml;" . "Ë") ("&Igrave;" . "Ì") ("&Iacute;" . "Í") ("&Icirc;" . "Î") ("&Iuml;" . "Ï") ("&ETH;" . "Ð")
-			         ("&Ntilde;" . "Ñ") ("&Ograve;" . "Ò") ("&Oacute;" . "Ó") ("&Ocirc;" . "Ô") ("&Otilde;" . "Õ") ("&Ouml;" . "Ö") ("&times;" . "×")
-			         ("&Oslash;" . "Ø") ("&Ugrave;" . "Ù") ("&Uacute;" . "Ú") ("&Ucirc;" . "Û") ("&Uuml;" . "Ü") ("&Yacute;" . "Ý") ("&THORN;" . "Þ")
-			         ("&szlig;" . "ß") ("&agrave;" . "à") ("&aacute;" . "á") ("&acirc;" . "â") ("&atilde;" . "ã") ("&auml;" . "ä") ("&aring;" . "å")
-			         ("&aelig;" . "æ") ("&ccedil;" . "ç") ("&egrave;" . "è") ("&eacute;" . "é") ("&ecirc;" . "ê") ("&euml;" . "ë") ("&igrave;" . "ì")
-			         ("&iacute;" . "í") ("&icirc;" . "î") ("&iuml;" . "ï") ("&eth;" . "ð") ("&ntilde;" . "ñ") ("&ograve;" . "ò") ("&oacute;" . "ó")
-			         ("&ocirc;" . "ô") ("&otilde;" . "õ") ("&ouml;" . "ö") ("&divide;" . "÷") ("&oslash;" . "ø") ("&ugrave;" . "ù") ("&uacute;" . "ú")
-			         ("&ucirc;" . "û") ("&uuml;" . "ü") ("&yacute;" . "ý") ("&thorn;" . "þ") ("&yuml;" . "ÿ") ("&fnof;" . "ƒ") ("&Alpha;" . "Α")
-			         ("&Beta;" . "Β") ("&Gamma;" . "Γ") ("&Delta;" . "Δ") ("&Epsilon;" . "Ε") ("&Zeta;" . "Ζ") ("&Eta;" . "Η") ("&Theta;" . "Θ")
-			         ("&Iota;" . "Ι") ("&Kappa;" . "Κ") ("&Lambda;" . "Λ") ("&Mu;" . "Μ") ("&Nu;" . "Ν") ("&Xi;" . "Ξ") ("&Omicron;" . "Ο") ("&Pi;" . "Π")
-			         ("&Rho;" . "Ρ") ("&Sigma;" . "Σ") ("&Tau;" . "Τ") ("&Upsilon;" . "Υ") ("&Phi;" . "Φ") ("&Chi;" . "Χ") ("&Psi;" . "Ψ")
-			         ("&Omega;" . "Ω") ("&alpha;" . "α") ("&beta;" . "β") ("&gamma;" . "γ") ("&delta;" . "δ") ("&epsilon;" . "ε") ("&zeta;" . "ζ")
-			         ("&eta;" . "η") ("&theta;" . "θ") ("&iota;" . "ι") ("&kappa;" . "κ") ("&lambda;" . "λ") ("&mu;" . "μ") ("&nu;" . "ν") ("&xi;" . "ξ")
-			         ("&omicron;" . "ο") ("&pi;" . "π") ("&rho;" . "ρ") ("&sigmaf;" . "ς") ("&sigma;" . "σ") ("&tau;" . "τ") ("&upsilon;" . "υ")
-			         ("&phi;" . "φ") ("&chi;" . "χ") ("&psi;" . "ψ") ("&omega;" . "ω") ("&thetasym;" . "ϑ") ("&upsih;" . "ϒ") ("&piv;" . "ϖ")
-			         ("&bull;" . "•") ("&hellip;" . "…") ("&prime;" . "′") ("&Prime;" . "″") ("&oline;" . "‾") ("&frasl;" . "⁄") ("&weierp;" . "℘")
-			         ("&image;" . "ℑ") ("&real;" . "ℜ") ("&trade;" . "™") ("&alefsym;" . "ℵ") ("&larr;" . "←") ("&uarr;" . "↑") ("&rarr;" . "→")
-			         ("&darr;" . "↓") ("&harr;" . "↔") ("&crarr;" . "↵") ("&lArr;" . "⇐") ("&uArr;" . "⇑") ("&rArr;" . "⇒") ("&dArr;" . "⇓") ("&hArr;" . "⇔")
-			         ("&forall;" . "∀") ("&part;" . "∂") ("&exist;" . "∃") ("&empty;" . "∅") ("&nabla;" . "∇") ("&isin;" . "∈") ("&notin;" . "∉")
-			         ("&ni;" . "∋") ("&prod;" . "∏") ("&sum;" . "∑") ("&minus;" . "−") ("&lowast;" . "∗") ("&radic;" . "√") ("&prop;" . "∝")
-			         ("&infin;" . "∞") ("&ang;" . "∠") ("&and;" . "∧") ("&or;" . "∨") ("&cap;" . "∩") ("&cup;" . "∪") ("&int;" . "∫") ("&there4;" . "∴")
-			         ("&sim;" . "∼") ("&cong;" . "≅") ("&asymp;" . "≈") ("&ne;" . "≠") ("&equiv;" . "≡") ("&le;" . "≤") ("&ge;" . "≥") ("&sub;" . "⊂")
-			         ("&sup;" . "⊃") ("&nsub;" . "⊄") ("&sube;" . "⊆") ("&supe;" . "⊇") ("&oplus;" . "⊕") ("&otimes;" . "⊗") ("&perp;" . "⊥")
-			         ("&sdot;" . "⋅") ("&lceil;" . "⌈") ("&rceil;" . "⌉") ("&lfloor;" . "⌊") ("&rfloor;" . "⌋") ("&lang;" . "〈") ("&rang;" . "〉")
-			         ("&loz;" . "◊") ("&spades;" . "♠") ("&clubs;" . "♣") ("&hearts;" . "♥") ("&diams;" . "♦") ("&quot;" . "\"") ("&OElig;" . "Œ")
-			         ("&oelig;" . "œ") ("&Scaron;" . "Š") ("&scaron;" . "š") ("&Yuml;" . "Ÿ") ("&circ;" . "ˆ") ("&tilde;" . "˜") ("&ndash;" . "–")
-			         ("&mdash;" . "—") ("&lsquo;" . "‘") ("&rsquo;" . "’") ("&sbquo;" . "‚") ("&ldquo;" . "“") ("&rdquo;" . "”") ("&bdquo;" . "„")
-			         ("&dagger;" . "†") ("&Dagger;" . "‡") ("&permil;" . "‰") ("&lsaquo;" . "‹") ("&rsaquo;" . "›") ("&euro;" . "€")
+                                 ("&nbsp;" . " ") ("&ensp;" . " ") ("&emsp;" . " ") ("&thinsp;" . " ")
+                                 ("&rlm;" . "‏") ("&lrm;" . "‎") ("&zwj;" . "‍") ("&zwnj;" . "‌")
+                                 ("&iexcl;" . "¡") ("&cent;" . "¢") ("&pound;" . "£") ("&curren;" . "¤") ("&yen;" . "¥") ("&brvbar;" . "¦") ("&sect;" . "§")
+                                 ("&uml;" . "¨") ("&copy;" . "©") ("&ordf;" . "ª") ("&laquo;" . "«") ("&not;" . "¬") ("&shy;" . "­") ("&reg;" . "®")
+                                 ("&macr;" . "¯") ("&deg;" . "°") ("&plusmn;" . "±") ("&sup2;" . "²") ("&sup3;" . "³") ("&acute;" . "´") ("&micro;" . "µ")
+                                 ("&para;" . "¶") ("&middot;" . "·") ("&cedil;" . "¸") ("&sup1;" . "¹") ("&ordm;" . "º") ("&raquo;" . "»") ("&frac14;" . "¼")
+                                 ("&frac12;" . "½") ("&frac34;" . "¾") ("&iquest;" . "¿") ("&Agrave;" . "À") ("&Aacute;" . "Á") ("&Acirc;" . "Â")
+                                 ("&Atilde;" . "Ã") ("&Auml;" . "Ä") ("&Aring;" . "Å") ("&AElig;" . "Æ") ("&Ccedil;" . "Ç") ("&Egrave;" . "È") ("&Eacute;" . "É")
+                                 ("&Ecirc;" . "Ê") ("&Euml;" . "Ë") ("&Igrave;" . "Ì") ("&Iacute;" . "Í") ("&Icirc;" . "Î") ("&Iuml;" . "Ï") ("&ETH;" . "Ð")
+                                 ("&Ntilde;" . "Ñ") ("&Ograve;" . "Ò") ("&Oacute;" . "Ó") ("&Ocirc;" . "Ô") ("&Otilde;" . "Õ") ("&Ouml;" . "Ö") ("&times;" . "×")
+                                 ("&Oslash;" . "Ø") ("&Ugrave;" . "Ù") ("&Uacute;" . "Ú") ("&Ucirc;" . "Û") ("&Uuml;" . "Ü") ("&Yacute;" . "Ý") ("&THORN;" . "Þ")
+                                 ("&szlig;" . "ß") ("&agrave;" . "à") ("&aacute;" . "á") ("&acirc;" . "â") ("&atilde;" . "ã") ("&auml;" . "ä") ("&aring;" . "å")
+                                 ("&aelig;" . "æ") ("&ccedil;" . "ç") ("&egrave;" . "è") ("&eacute;" . "é") ("&ecirc;" . "ê") ("&euml;" . "ë") ("&igrave;" . "ì")
+                                 ("&iacute;" . "í") ("&icirc;" . "î") ("&iuml;" . "ï") ("&eth;" . "ð") ("&ntilde;" . "ñ") ("&ograve;" . "ò") ("&oacute;" . "ó")
+                                 ("&ocirc;" . "ô") ("&otilde;" . "õ") ("&ouml;" . "ö") ("&divide;" . "÷") ("&oslash;" . "ø") ("&ugrave;" . "ù") ("&uacute;" . "ú")
+                                 ("&ucirc;" . "û") ("&uuml;" . "ü") ("&yacute;" . "ý") ("&thorn;" . "þ") ("&yuml;" . "ÿ") ("&fnof;" . "ƒ") ("&Alpha;" . "Α")
+                                 ("&Beta;" . "Β") ("&Gamma;" . "Γ") ("&Delta;" . "Δ") ("&Epsilon;" . "Ε") ("&Zeta;" . "Ζ") ("&Eta;" . "Η") ("&Theta;" . "Θ")
+                                 ("&Iota;" . "Ι") ("&Kappa;" . "Κ") ("&Lambda;" . "Λ") ("&Mu;" . "Μ") ("&Nu;" . "Ν") ("&Xi;" . "Ξ") ("&Omicron;" . "Ο") ("&Pi;" . "Π")
+                                 ("&Rho;" . "Ρ") ("&Sigma;" . "Σ") ("&Tau;" . "Τ") ("&Upsilon;" . "Υ") ("&Phi;" . "Φ") ("&Chi;" . "Χ") ("&Psi;" . "Ψ")
+                                 ("&Omega;" . "Ω") ("&alpha;" . "α") ("&beta;" . "β") ("&gamma;" . "γ") ("&delta;" . "δ") ("&epsilon;" . "ε") ("&zeta;" . "ζ")
+                                 ("&eta;" . "η") ("&theta;" . "θ") ("&iota;" . "ι") ("&kappa;" . "κ") ("&lambda;" . "λ") ("&mu;" . "μ") ("&nu;" . "ν") ("&xi;" . "ξ")
+                                 ("&omicron;" . "ο") ("&pi;" . "π") ("&rho;" . "ρ") ("&sigmaf;" . "ς") ("&sigma;" . "σ") ("&tau;" . "τ") ("&upsilon;" . "υ")
+                                 ("&phi;" . "φ") ("&chi;" . "χ") ("&psi;" . "ψ") ("&omega;" . "ω") ("&thetasym;" . "ϑ") ("&upsih;" . "ϒ") ("&piv;" . "ϖ")
+                                 ("&bull;" . "•") ("&hellip;" . "…") ("&prime;" . "′") ("&Prime;" . "″") ("&oline;" . "‾") ("&frasl;" . "⁄") ("&weierp;" . "℘")
+                                 ("&image;" . "ℑ") ("&real;" . "ℜ") ("&trade;" . "™") ("&alefsym;" . "ℵ") ("&larr;" . "←") ("&uarr;" . "↑") ("&rarr;" . "→")
+                                 ("&darr;" . "↓") ("&harr;" . "↔") ("&crarr;" . "↵") ("&lArr;" . "⇐") ("&uArr;" . "⇑") ("&rArr;" . "⇒") ("&dArr;" . "⇓") ("&hArr;" . "⇔")
+                                 ("&forall;" . "∀") ("&part;" . "∂") ("&exist;" . "∃") ("&empty;" . "∅") ("&nabla;" . "∇") ("&isin;" . "∈") ("&notin;" . "∉")
+                                 ("&ni;" . "∋") ("&prod;" . "∏") ("&sum;" . "∑") ("&minus;" . "−") ("&lowast;" . "∗") ("&radic;" . "√") ("&prop;" . "∝")
+                                 ("&infin;" . "∞") ("&ang;" . "∠") ("&and;" . "∧") ("&or;" . "∨") ("&cap;" . "∩") ("&cup;" . "∪") ("&int;" . "∫") ("&there4;" . "∴")
+                                 ("&sim;" . "∼") ("&cong;" . "≅") ("&asymp;" . "≈") ("&ne;" . "≠") ("&equiv;" . "≡") ("&le;" . "≤") ("&ge;" . "≥") ("&sub;" . "⊂")
+                                 ("&sup;" . "⊃") ("&nsub;" . "⊄") ("&sube;" . "⊆") ("&supe;" . "⊇") ("&oplus;" . "⊕") ("&otimes;" . "⊗") ("&perp;" . "⊥")
+                                 ("&sdot;" . "⋅") ("&lceil;" . "⌈") ("&rceil;" . "⌉") ("&lfloor;" . "⌊") ("&rfloor;" . "⌋") ("&lang;" . "〈") ("&rang;" . "〉")
+                                 ("&loz;" . "◊") ("&spades;" . "♠") ("&clubs;" . "♣") ("&hearts;" . "♥") ("&diams;" . "♦") ("&quot;" . "\"") ("&OElig;" . "Œ")
+                                 ("&oelig;" . "œ") ("&Scaron;" . "Š") ("&scaron;" . "š") ("&Yuml;" . "Ÿ") ("&circ;" . "ˆ") ("&tilde;" . "˜") ("&ndash;" . "–")
+                                 ("&mdash;" . "—") ("&lsquo;" . "‘") ("&rsquo;" . "’") ("&sbquo;" . "‚") ("&ldquo;" . "“") ("&rdquo;" . "”") ("&bdquo;" . "„")
+                                 ("&dagger;" . "†") ("&Dagger;" . "‡") ("&permil;" . "‰") ("&lsaquo;" . "‹") ("&rsaquo;" . "›") ("&euro;" . "€")
                            ))
           ;; Maximum length of the title.
           (max-length 100)
@@ -5088,29 +5088,29 @@ Version that tries to read only properties of current entry:
 On an agenda entry: add "-0d" to deadline
 #+BEGIN_SRC emacs-lisp
   (fset 'my-0d
-	[return ?\C-s ?> left ?  ?- ?0 ?d ?\C-x ?b return down])
+        [return ?\C-s ?> left ?  ?- ?0 ?d ?\C-x ?b return down])
 #+END_SRC
 
 *** my-agenda-cancel-event-and-set-to-inactive() - Change active timestamp to inactive and cancel event in the agenda
 
 #+BEGIN_SRC emacs-lisp
 (fset 'my-agenda-cancel-event-and-set-to-inactive
-	(lambda (&optional arg) "Keyboard macro."
-	  (interactive "p")
-	  (kmacro-exec-ring-item (quote ([return S-up 3 20 99] 0 "%d")) arg)
-	  )
-	)
+        (lambda (&optional arg) "Keyboard macro."
+          (interactive "p")
+          (kmacro-exec-ring-item (quote ([return S-up 3 20 99] 0 "%d")) arg)
+          )
+        )
 #+END_SRC
 
 *** my-cancel-event-and-set-to-inactive() - Change active timestamp to inactive and cancel event outside of the agenda
 
 #+BEGIN_SRC emacs-lisp
 (fset 'my-cancel-event-and-set-to-inactive
-	(lambda (&optional arg) "Keyboard macro."
-	  (interactive "p")
-	  (kmacro-exec-ring-item (quote ([5 18 62 13 S-up 3 20 99] 0 "%d")) arg)
-	  )
-	)
+        (lambda (&optional arg) "Keyboard macro."
+          (interactive "p")
+          (kmacro-exec-ring-item (quote ([5 18 62 13 S-up 3 20 99] 0 "%d")) arg)
+          )
+        )
 #+END_SRC
 
 *** my-org-time-string-to-seconds(s)
@@ -5142,16 +5142,16 @@ Example 3: calculating with =my-org-time-string-to-seconds= results
     ;; (message (concat "result is: " (number-to-string (my-org-time-string-to-seconds "57:45"))))
     (cond
      ((and (stringp s)
-	   (string-match "\\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)" s))
+           (string-match "\\([0-9]+\\):\\([0-9]+\\):\\([0-9]+\\)" s))
       (let ((hour (string-to-number (match-string 1 s)))
-	    (min (string-to-number (match-string 2 s)))
-	    (sec (string-to-number (match-string 3 s))))
-	(+ (* hour 3600) (* min 60) sec)))
+            (min (string-to-number (match-string 2 s)))
+            (sec (string-to-number (match-string 3 s))))
+        (+ (* hour 3600) (* min 60) sec)))
      ((and (stringp s)
-	   (string-match "\\([0-9]+\\):\\([0-9]+\\)" s))
+           (string-match "\\([0-9]+\\):\\([0-9]+\\)" s))
       (let ((min (string-to-number (match-string 1 s)))
-	    (sec (string-to-number (match-string 2 s))))
-	(+ (* min 60) sec)))
+            (sec (string-to-number (match-string 2 s))))
+        (+ (* min 60) sec)))
      ;;((stringp s) (string-to-number s))
      ;;(t s)
      )
@@ -5185,8 +5185,8 @@ Example 3: calculating with =my-org-time-string-to-seconds= results
   (defun my-org-time-seconds-to-string (secs)
     "Convert a number of seconds to a time string."
     (cond ((>= secs 3600) (format-seconds "%h:%.2m:%.2s" secs))
-	  ((>= secs 60) (format-seconds "%m:%.2s" secs))
-	  (t (format-seconds "%s" secs))))
+          ((>= secs 60) (format-seconds "%m:%.2s" secs))
+          (t (format-seconds "%s" secs))))
 #+END_SRC
 
 *** with-time() - evaluate formula and return time
@@ -5199,16 +5199,16 @@ the result as a time value."
     (list
      (if time-output-p 'my-org-time-seconds-to-string 'identity)
      (cons 'progn
-	   (mapcar
-	    (lambda (expr)
-	      `,(cons (car expr)
-		      (mapcar
-		       (lambda (el)
-			 (if (listp el)
-			     (list 'with-time nil el)
-			   (my-org-time-string-to-seconds el)))
-		       (cdr expr))))
-	    `,@exprs))))
+           (mapcar
+            (lambda (expr)
+              `,(cons (car expr)
+                      (mapcar
+                       (lambda (el)
+                         (if (listp el)
+                             (list 'with-time nil el)
+                           (my-org-time-string-to-seconds el)))
+                       (cdr expr))))
+            `,@exprs))))
 #+END_SRC
 
 *** org-decrypt-entries()
@@ -5559,9 +5559,9 @@ found in the combined lists of:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-org-tag-alist (quote (
-			      ("Org" . ?@)
-			      ("keywords" . ?@)
-			      )))
+                              ("Org" . ?@)
+                              ("keywords" . ?@)
+                              )))
 
 (defun my-org-auto-tag ()
   (interactive)
@@ -5656,21 +5656,21 @@ History of this function: id:2019-11-14-Org-Project-Management-Workflow
     (interactive)
         (when (not (org-id-get))
             (progn
-    	       (let* (
-    	              (my-heading-text (nth 4 (org-heading-components)));; retrieve heading string
-		      (my-heading-text (replace-regexp-in-string "[[][0-9%/]+[]] " "" my-heading-text));; remove progress indicators like "[2/7]" or "[25%]"
+               (let* (
+                      (my-heading-text (nth 4 (org-heading-components)));; retrieve heading string
+                      (my-heading-text (replace-regexp-in-string "[[][0-9%/]+[]] " "" my-heading-text));; remove progress indicators like "[2/7]" or "[25%]"
                       (new-id (my-generate-sanitized-alnum-dash-string my-heading-text));; get slug from heading text
-    	             )
-		   ;;(message (concat "HEADING: " my-heading-text))
+                     )
+                   ;;(message (concat "HEADING: " my-heading-text))
                    (when (not (string-match "[12][0-9][0-9][0-9]-[01][0-9]-[0123][0-9]-.+" new-id))
                            ;; only if no ISO date-stamp is found at the beginning of the new id:
-        	           (setq new-id (concat (format-time-string "%Y-%m-%d-") new-id)))
+                           (setq new-id (concat (format-time-string "%Y-%m-%d-") new-id)))
                    (org-set-property "ID" new-id)
                    )
                  )
         )
-	(kill-new (org-id-get));; put ID in kill-ring
-	(org-id-get);; retrieve the current ID in any case as return value
+        (kill-new (org-id-get));; put ID in kill-ring
+        (org-id-get);; retrieve the current ID in any case as return value
 )
 
 (bind-key (kbd "I") #'my-id-get-or-generate my-map)
@@ -5698,34 +5698,34 @@ Set some modes when openening a file in Org-mode:
 Make TAB the yas trigger key in the org-mode-hook and enable flyspell mode and autofill:
 #+BEGIN_SRC emacs-lisp :tangle no
   (add-hook 'org-mode-hook
-	    (lambda ()
-	      ;; flyspell mode for spell checking everywhere
-	      ;;disabled; (flyspell-mode 1)
-	      ;; Undefine C-c [ and C-c ] since this breaks my org-agenda files when directories are include
-	      ;; It expands the files in the directories individually
-	      (org-defkey org-mode-map "\C-c["    'undefined)
-	      (org-defkey org-mode-map "\C-c]"    'undefined)
-	      ;;            (local-set-key (kbd "C-c M-o") 'bh/mail-subtree)
-	      )
-	    )
+            (lambda ()
+              ;; flyspell mode for spell checking everywhere
+              ;;disabled; (flyspell-mode 1)
+              ;; Undefine C-c [ and C-c ] since this breaks my org-agenda files when directories are include
+              ;; It expands the files in the directories individually
+              (org-defkey org-mode-map "\C-c["    'undefined)
+              (org-defkey org-mode-map "\C-c]"    'undefined)
+              ;;            (local-set-key (kbd "C-c M-o") 'bh/mail-subtree)
+              )
+            )
 #+END_SRC
 
 Opening image files with external viewer:
 - http://stackoverflow.com/questions/3973896/emacs-org-mode-file-viewer-associations
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook
-	    '(lambda ()
-	       (setq org-file-apps
-		     (append '(
-			       ("\\.png\\'" . default)
-			       ("\\.jpg\\'" . default)
-			       ("\\.jpeg\\'" . default)
-			       ("\\.tiff\\'" . default)
-			       ("\\.doc\\'" . default)
-			       ("\\.docx\\'" . default)
-			       ("\\.xlsx\\'" . default)
-			       ("\\.pptx\\'" . default)
-			       ) org-file-apps ))))
+            '(lambda ()
+               (setq org-file-apps
+                     (append '(
+                               ("\\.png\\'" . default)
+                               ("\\.jpg\\'" . default)
+                               ("\\.jpeg\\'" . default)
+                               ("\\.tiff\\'" . default)
+                               ("\\.doc\\'" . default)
+                               ("\\.docx\\'" . default)
+                               ("\\.xlsx\\'" . default)
+                               ("\\.pptx\\'" . default)
+                               ) org-file-apps ))))
 #+END_SRC
 
 #+RESULTS:
@@ -5746,22 +5746,22 @@ Define my default keywords:
 Define the style of the keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keyword-faces
-	(quote (("TODO"      :foreground "lightblue"    :weight bold)
-		("NEXT"      :foreground "red"          :weight bold)
-		("STARTED"   :foreground "red"          :weight bold)
-		("DONE"      :foreground "forest green" :weight bold)
-		("WAITING"   :foreground "orange"       :weight bold)
-		("TEAM"      :foreground "orange"       :weight bold)
-		("SOMEDAY"   :foreground "magenta"      :weight bold)
-		("CANCELLED" :foreground "forest green" :weight bold)
-		("QUOTE"     :foreground "red"          :weight bold)
-		("QUOTED"    :foreground "magenta"      :weight bold)
-		("APPROVED"  :foreground "forest green" :weight bold)
-		("EXPIRED"   :foreground "forest green" :weight bold)
-		("REJECTED"  :foreground "forest green" :weight bold)
-		("OPEN"      :foreground "blue"         :weight bold)
-		("CLOSED"    :foreground "forest green" :weight bold)
-		("PHONE"     :foreground "forest green" :weight bold))))
+        (quote (("TODO"      :foreground "lightblue"    :weight bold)
+                ("NEXT"      :foreground "red"          :weight bold)
+                ("STARTED"   :foreground "red"          :weight bold)
+                ("DONE"      :foreground "forest green" :weight bold)
+                ("WAITING"   :foreground "orange"       :weight bold)
+                ("TEAM"      :foreground "orange"       :weight bold)
+                ("SOMEDAY"   :foreground "magenta"      :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("QUOTE"     :foreground "red"          :weight bold)
+                ("QUOTED"    :foreground "magenta"      :weight bold)
+                ("APPROVED"  :foreground "forest green" :weight bold)
+                ("EXPIRED"   :foreground "forest green" :weight bold)
+                ("REJECTED"  :foreground "forest green" :weight bold)
+                ("OPEN"      :foreground "blue"         :weight bold)
+                ("CLOSED"    :foreground "forest green" :weight bold)
+                ("PHONE"     :foreground "forest green" :weight bold))))
 #+END_SRC
 
 «Non-nil means use the fast todo selection scheme with ‘C-c C-t’.
@@ -5787,21 +5787,21 @@ CANCELED -> add ARCHIVE-tag: http://article.gmane.org/gmane.emacs.orgmode/64852
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq org-todo-state-tags-triggers
       (quote (("CANCELLED"
-      	 ("ARCHIVE" . t))
-      	("WAITING"
-      	 ("WAITING" . t))
-      	(done
-      	 ("WAITING"))
-      	("TODO"
-      	 ("WAITING")
-      	 ("CANCELLED"))
-      	("NEXT"
-      	 ("WAITING"))
-      	("STARTED"
-      	 ("WAITING"))
-      	("DONE"
-      	 ("WAITING")
-      	 ("CANCELLED")))))
+         ("ARCHIVE" . t))
+        ("WAITING"
+         ("WAITING" . t))
+        (done
+         ("WAITING"))
+        ("TODO"
+         ("WAITING")
+         ("CANCELLED"))
+        ("NEXT"
+         ("WAITING"))
+        ("STARTED"
+         ("WAITING"))
+        ("DONE"
+         ("WAITING")
+         ("CANCELLED")))))
 #+END_SRC
 
 Change font for DONE tasks
@@ -5824,29 +5824,29 @@ http://orgmode.org/org.html#Setting-tags
 
 #+BEGIN_SRC emacs-lisp
   (setq org-tag-alist (quote (
-			      ;;("Kommunikation" . ?k)
-			      ("Besorgung" . ?B)
-			      ("nonComputer" . ?n)
-			      ("fitness" . ?f)
-			      (:startgroup)
-			      ("@BWG" . ?b)
-			      ;;("@Infonova" . ?i)
-			      ;;("@out_of_town" . ?o)
-			      ;;("@FHStP" . ?F)
+                              ;;("Kommunikation" . ?k)
+                              ("Besorgung" . ?B)
+                              ("nonComputer" . ?n)
+                              ("fitness" . ?f)
+                              (:startgroup)
+                              ("@BWG" . ?b)
+                              ;;("@Infonova" . ?i)
+                              ;;("@out_of_town" . ?o)
+                              ;;("@FHStP" . ?F)
                               ;;("@Ebreichsdorf" . ?e)
                               ;;("@TUG" . ?t)
-			      (:endgroup)
-			      (:startgroup)
-			      ("private" . ?p)
-			      ("public" . ?P)
-			      (:endgroup)
-			      (:startgroup)
-			      ;;("bigRock" . ?b)
-			      ("MIT" . ?m)
-			      ("lp" . ?l)
-			      ("reward" . ?r)
-			      (:endgroup)
-			      )))
+                              (:endgroup)
+                              (:startgroup)
+                              ("private" . ?p)
+                              ("public" . ?P)
+                              (:endgroup)
+                              (:startgroup)
+                              ;;("bigRock" . ?b)
+                              ("MIT" . ?m)
+                              ("lp" . ?l)
+                              ("reward" . ?r)
+                              (:endgroup)
+                              )))
 #+END_SRC
 
 Allow setting single tags without the menu
@@ -5888,9 +5888,9 @@ when invoking on the heading "My Task", the end result would be:
 (defun my-set-tags-including-inherited ()
   (interactive)
   (let (
-	(alltags (org-get-tags-at))
-	;(ignored-tags '(ISAE3402 2del crypt))
-	)
+        (alltags (org-get-tags-at))
+        ;(ignored-tags '(ISAE3402 2del crypt))
+        )
 
     ;; 2018-01-23: any method I tried to remove certain tags did not work due to my inability to filter according to strings:
     ;; example string: (#("ISAE3402" 0 8 (inherited t)) #("test1" 0 5 (inherited t)) #("foobar" 0 6 (inherited t)) #("test2" 0 5 (inherited t)) #("baz" 0 3 (inherited t)))
@@ -5899,9 +5899,9 @@ when invoking on the heading "My Task", the end result would be:
     ;; remove "a" from al, using equal as the test, applied to the car of each element
 ;    (setq alltags
     ;(remove* "ISAE3402" alltags :test 'equal :key 'get-text-property)
-					; 'get-text-property
-					; 'car
-					;)
+                                        ; 'get-text-property
+                                        ; 'car
+                                        ;)
     (org-set-tags alltags)
     )
   )
@@ -6023,71 +6023,71 @@ Using test org-capture-templates:
 BEGIN of the templates:
 #+BEGIN_SRC emacs-lisp
   (setq org-capture-templates
-	`(
+        `(
 #+END_SRC
 
 My general templates:
 #+BEGIN_SRC emacs-lisp
-	  ("s" "shorts-todo" entry (file+headline ,(concat my-org-files-path "misc.org") "shorts")
-	   ,my-capture-template-next :empty-lines 1)
-	  ("e" "Event" entry (file+headline ,(concat my-org-files-path "misc.org") "Events")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("b" "Bookmark" entry (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("p" "public voit" entry (file+headline ,(concat my-org-files-path "public_voit.org") "Unfinished (non-series, non-persistent)")
-	   "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
-	  ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
-	   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
-	  ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
-	   ,my-capture-template-next :empty-lines 1)
+          ("s" "shorts-todo" entry (file+headline ,(concat my-org-files-path "misc.org") "shorts")
+           ,my-capture-template-next :empty-lines 1)
+          ("e" "Event" entry (file+headline ,(concat my-org-files-path "misc.org") "Events")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+          ("b" "Bookmark" entry (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+          ("p" "public voit" entry (file+headline ,(concat my-org-files-path "public_voit.org") "Unfinished (non-series, non-persistent)")
+           "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 1)
+          ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
+           "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 1)
+          ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
+           ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Hardware templates:
 #+BEGIN_SRC emacs-lisp
-	  ("h" "hardware")
-	  ("hs" "sherri" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
-	   ,my-capture-template-next :empty-lines 1)
-	  ("hf" "floyd" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
-	   ,my-capture-template-next :empty-lines 1)
-	  ("hp" "RasPlay" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
-	   ,my-capture-template-next :empty-lines 1)
-	  ;;old;;("hb" "blanche" entry (file+olp "~/org/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
-	  ;;old;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("hw" "Winora T3" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
-	   ,my-capture-template-next :empty-lines 1)
+          ("h" "hardware")
+          ("hs" "sherri" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+           ,my-capture-template-next :empty-lines 1)
+          ("hf" "floyd" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
+           ,my-capture-template-next :empty-lines 1)
+          ("hp" "RasPlay" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Raspberry Pi 2 Model B (<2015-06-29 Mon>, 38€, Pollin.de)")
+           ,my-capture-template-next :empty-lines 1)
+          ;;old;;("hb" "blanche" entry (file+olp "~/org/hardware.org" "Inventar" "Mac Mini mit OS X 10.5 (2009-0?0??)" "shorts")
+          ;;old;; "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+          ("hw" "Winora T3" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "Fahrrad: Winora T3 ([[contact:Kotnik][Kotnik]], 2464€, <2013-08-02 Fri>)")
+           ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Templates for my home:
 #+BEGIN_SRC emacs-lisp
-	  ("w" "Breitenweg")
-	  ("ws" "Breitenweg shorts" entry (file+headline ,(concat my-org-files-path "bwg.org") "shorts")
-	   ,my-capture-template-next :empty-lines 1)
-	  ("we" "Breitenweg event" entry (file+headline ,(concat my-org-files-path "bwg.org") "Events")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
+          ("w" "Breitenweg")
+          ("ws" "Breitenweg shorts" entry (file+headline ,(concat my-org-files-path "bwg.org") "shorts")
+           ,my-capture-template-next :empty-lines 1)
+          ("we" "Breitenweg event" entry (file+headline ,(concat my-org-files-path "bwg.org") "Events")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+          ;;old;;("wa" "Breitenweg Ausgaben" table-line (file+headline "~/org/bwg.org" "getätigte Ausgaben") "| %t | %? ||||")
 #+END_SRC
 
 Company templates:
 #+BEGIN_SRC emacs-lisp
-	  ("r" "RISE")
+          ("r" "RISE")
     ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "rise.org") "shorts")
-	   ,my-capture-template-next :empty-lines 1)
-	  ("re" "event" entry (file+headline ,(concat my-org-files-path "rise.org") "Events")
-	   "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+           ,my-capture-template-next :empty-lines 1)
+          ("re" "event" entry (file+headline ,(concat my-org-files-path "rise.org") "Events")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
 #+END_SRC
 
 Template for my lecture:
 #+BEGIN_SRC emacs-lisp
-	  ("f" "FH St. Pölten shorts" entry (file+headline ,(concat my-org-files-path "fhsp.org") "shorts")
-	   ,my-capture-template-next :empty-lines 1)
+          ("f" "FH St. Pölten shorts" entry (file+headline ,(concat my-org-files-path "fhsp.org") "shorts")
+           ,my-capture-template-next :empty-lines 1)
 #+END_SRC
 
 Put it in the inbox, refile it later:
 #+BEGIN_SRC emacs-lisp
-	  ("I" "inbox, refile later" entry (file ,(concat my-org-files-path "inbox.org"))
-	   "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
-	  ("W" "WWW: inbox, refile later" entry (file ,(concat my-org-files-path "inbox.org"))
-	   "* %a :website:\n\n%U %?\n\n%:initial\n" :empty-lines 1)
+          ("I" "inbox, refile later" entry (file ,(concat my-org-files-path "inbox.org"))
+           "\n* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+          ("W" "WWW: inbox, refile later" entry (file ,(concat my-org-files-path "inbox.org"))
+           "* %a :website:\n\n%U %?\n\n%:initial\n" :empty-lines 1)
 #+END_SRC
 
 Old templates for the records:
@@ -6110,14 +6110,14 @@ Old templates for the records:
 
 Test template:
 #+BEGIN_SRC emacs-lisp
-	  ("X" "test" entry (file+headline ,(concat my-org-files-path "misc.org") "Tests")
-	   ,my-capture-template-test :empty-lines 1)
+          ("X" "test" entry (file+headline ,(concat my-org-files-path "misc.org") "Tests")
+           ,my-capture-template-test :empty-lines 1)
 #+END_SRC
 
 END of the templates:
 #+BEGIN_SRC emacs-lisp
-	  )
-	)
+          )
+        )
 #+END_SRC
 *** Moving web bookmarks from =inbox.org= to =notes.org= → my-map b
 
@@ -6135,49 +6135,49 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
       ;;(outline-next-visible-heading 1)      ;; jumps to beginning of the current (interesting) heading
       (beginning-of-line)                   ;; jump to beginning of line
       (let ((mybegin (point)))              ;; mark beginning of line as start point
-	(outline-next-visible-heading 1)    ;; jumps to EOF if it is the last entry
-	(save-restriction
-	  (narrow-to-region mybegin (point))  ;; ignore everything outside of region
-	  ;; search/replace unwanted keywords at the beginning:
-	  (goto-char (point-min))
-	  (while (search-forward "* NEXT Bookmark " nil t) (replace-match "* " nil t))
-	  (goto-char (point-min))
+        (outline-next-visible-heading 1)    ;; jumps to EOF if it is the last entry
+        (save-restriction
+          (narrow-to-region mybegin (point))  ;; ignore everything outside of region
+          ;; search/replace unwanted keywords at the beginning:
+          (goto-char (point-min))
+          (while (search-forward "* NEXT Bookmark " nil t) (replace-match "* " nil t))
+          (goto-char (point-min))
 ;;    (join-line -1) ;; join line because with capturing via NewsBlur app, the content starts in line 2
-;;	  (goto-char (point-min))
-	  (while (search-forward "* NEXT " nil t) (replace-match "* " nil t))
-	  (goto-char (point-min))
-	  (while (search-forward "* Bookmark " nil t) (replace-match "* " nil t))
-	  (goto-char (point-min))
-	  (while (search-forward "//m.heise.de" nil t) (replace-match "//heise.de" nil t));; remove mobile heise URL
-	  (goto-char (point-min))
-	  (while (search-forward "/from/atom10?wt_mc=rss.ho.beitrag.atom" nil t);; remove heise RSS tags
-	    (replace-match "" nil t)
-	    )
-	  (goto-char (point-min))
-	  (while (search-forward "?wt_mc=rss.ho.beitrag.atom" nil t);; remove heise RSS tags
-	    (replace-match "" nil t)
-	    )
-	  (goto-char (point-min))
-	  ;; insert second asterisk (modify to second level heading)
-	  (insert "*")
-	  ;; move time-stamp to properties-drawer:
-	  (search-forward-regexp "^\\[20")  ;; jump to second line (with time-stamp) via search
-	  (beginning-of-line)
-	  (insert ":PROPERTIES:\n:CREATED:  ")
-	  (end-of-line)
-	  (newline)
-	  (insert ":END:\n")
-	  ;; move region to end of notes.org
-	  (kill-region mybegin (point)) ;; kill region to kill-ring
-	  (switch-to-buffer "notes.org")
-	  (end-of-buffer)
-	  (newline)
-	  (yank)
-	  ;; add tags
-	  (outline-previous-visible-heading 1)  ;; jump to heading
-	  (org-set-tags-command)
-	  )
-	)
+;;        (goto-char (point-min))
+          (while (search-forward "* NEXT " nil t) (replace-match "* " nil t))
+          (goto-char (point-min))
+          (while (search-forward "* Bookmark " nil t) (replace-match "* " nil t))
+          (goto-char (point-min))
+          (while (search-forward "//m.heise.de" nil t) (replace-match "//heise.de" nil t));; remove mobile heise URL
+          (goto-char (point-min))
+          (while (search-forward "/from/atom10?wt_mc=rss.ho.beitrag.atom" nil t);; remove heise RSS tags
+            (replace-match "" nil t)
+            )
+          (goto-char (point-min))
+          (while (search-forward "?wt_mc=rss.ho.beitrag.atom" nil t);; remove heise RSS tags
+            (replace-match "" nil t)
+            )
+          (goto-char (point-min))
+          ;; insert second asterisk (modify to second level heading)
+          (insert "*")
+          ;; move time-stamp to properties-drawer:
+          (search-forward-regexp "^\\[20")  ;; jump to second line (with time-stamp) via search
+          (beginning-of-line)
+          (insert ":PROPERTIES:\n:CREATED:  ")
+          (end-of-line)
+          (newline)
+          (insert ":END:\n")
+          ;; move region to end of notes.org
+          (kill-region mybegin (point)) ;; kill region to kill-ring
+          (switch-to-buffer "notes.org")
+          (end-of-buffer)
+          (newline)
+          (yank)
+          ;; add tags
+          (outline-previous-visible-heading 1)  ;; jump to heading
+          (org-set-tags-command)
+          )
+        )
       )
     )
 
@@ -6290,26 +6290,26 @@ certain kind of data.
 
 #+BEGIN_SRC emacs-lisp
   (setq org-link-abbrev-alist
-	`(
-	  ("bib" . "~/archive/library/%s.bib")
-	  ("cite" . ,(concat "file:" my-org-files-path "references.org::/%s/"))
-					;	("mynotes" . "file:~/org/references.org::%s")
-					;	("papers" . "~/archive/library/%s.pdf")
-	  ("photo" . "file:~/people/all_photographs/%s")
-	  ("pdf" . "~/archive/library/%s.pdf")
-	  ("notes" . "~/archive/library/%s-notes.pdf")
-	  ("contact" . ,(concat my-org-files-path "contacts.org::/\*.*%s/"))
-;	  ("tsfile" . ,(concat my-org-files-path "memacs/files.org_archive::/\*.*%s/")) replaced by org-link-set-parameters() + my-handle-tsfile-link()
-	  ("ifile" . ,(concat my-org-files-path "memacs/ifiles.org::/\*.*%s/"))
-	  ;;("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
-	  ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
-	  ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
-	  ;;("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
-	  ;;("ipd" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
-	  ;;("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
-	  ;;("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
-	  ;;("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
-	  ))
+        `(
+          ("bib" . "~/archive/library/%s.bib")
+          ("cite" . ,(concat "file:" my-org-files-path "references.org::/%s/"))
+                                        ;       ("mynotes" . "file:~/org/references.org::%s")
+                                        ;       ("papers" . "~/archive/library/%s.pdf")
+          ("photo" . "file:~/people/all_photographs/%s")
+          ("pdf" . "~/archive/library/%s.pdf")
+          ("notes" . "~/archive/library/%s-notes.pdf")
+          ("contact" . ,(concat my-org-files-path "contacts.org::/\*.*%s/"))
+;         ("tsfile" . ,(concat my-org-files-path "memacs/files.org_archive::/\*.*%s/")) replaced by org-link-set-parameters() + my-handle-tsfile-link()
+          ("ifile" . ,(concat my-org-files-path "memacs/ifiles.org::/\*.*%s/"))
+          ;;("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
+          ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
+          ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
+          ;;("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
+          ;;("ipd" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
+          ;;("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
+          ;;("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
+          ;;("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
+          ))
 #+END_SRC
 
 Custom Link Completion
@@ -6367,13 +6367,13 @@ Helper function =string-replace (this withthat in)=
     (let (file link)
       (setq file (read-file-name "pdf: " "~/archive/library/"))
       (let ((pwd (file-name-as-directory (expand-file-name ".")))
-	    (pwd1 (file-name-as-directory (abbreviate-file-name
-					   (expand-file-name ".")))))
-	(setq file (string-replace "~/archive/library/" "" file))
-	(setq file (string-replace pwd "" (string-replace pwd1 "" file)))
-	(setq file (string-replace ".bib" "" file))
-	(setq file (string-replace ".pdf" "" file))
-	(setq link (concat "pdf:" file)))
+            (pwd1 (file-name-as-directory (abbreviate-file-name
+                                           (expand-file-name ".")))))
+        (setq file (string-replace "~/archive/library/" "" file))
+        (setq file (string-replace pwd "" (string-replace pwd1 "" file)))
+        (setq file (string-replace ".bib" "" file))
+        (setq file (string-replace ".pdf" "" file))
+        (setq link (concat "pdf:" file)))
       link))
 #+END_SRC
 
@@ -6383,13 +6383,13 @@ Helper function =string-replace (this withthat in)=
     (let (file link)
       (setq file (read-file-name "ref: " "~/archive/library/"))
       (let ((pwd (file-name-as-directory (expand-file-name ".")))
-	    (pwd1 (file-name-as-directory (abbreviate-file-name
-					   (expand-file-name ".")))))
-	(setq file (string-replace "~/archive/library/" "" file))
-	(setq file (string-replace pwd "" (string-replace pwd1 "" file)))
-	(setq file (string-replace ".bib" "" file))
-	(setq file (string-replace ".pdf" "" file))
-	(setq link (concat "ref:" file)))
+            (pwd1 (file-name-as-directory (abbreviate-file-name
+                                           (expand-file-name ".")))))
+        (setq file (string-replace "~/archive/library/" "" file))
+        (setq file (string-replace pwd "" (string-replace pwd1 "" file)))
+        (setq file (string-replace ".bib" "" file))
+        (setq file (string-replace ".pdf" "" file))
+        (setq link (concat "ref:" file)))
       link))
 #+END_SRC
 
@@ -6399,14 +6399,14 @@ Helper function =string-replace (this withthat in)=
     (let (file link)
       (setq file (read-file-name "photo: " "~/people/all_photographs/"))
       (let ((pwd (file-name-as-directory (expand-file-name ".")))
-	    (pwd1 (file-name-as-directory (abbreviate-file-name
-					   (expand-file-name ".")))))
-	(setq file (string-replace "~/people/all_photographs/" "" file))
-	(setq file (string-replace pwd "" (string-replace pwd1 "" file)))
-					;(setq file (string-replace ".jpg" "" file))
-					;(setq file (string-replace ".jpeg" "" file))
-					;(setq file (string-replace ".tiff" "" file))
-	(setq link (concat "photo:" file)))
+            (pwd1 (file-name-as-directory (abbreviate-file-name
+                                           (expand-file-name ".")))))
+        (setq file (string-replace "~/people/all_photographs/" "" file))
+        (setq file (string-replace pwd "" (string-replace pwd1 "" file)))
+                                        ;(setq file (string-replace ".jpg" "" file))
+                                        ;(setq file (string-replace ".jpeg" "" file))
+                                        ;(setq file (string-replace ".tiff" "" file))
+        (setq link (concat "photo:" file)))
       link))
 #+END_SRC
 
@@ -6478,9 +6478,9 @@ OLD code:
     (let ((queryresults (split-string (replace-regexp-in-string
                                        "\r?\n$" ""
                                        (shell-command-to-string
-					(concat "grep "
-						querystring
-						(concat memacs-root memacs-file-pattern))))
+                                        (concat "grep "
+                                                querystring
+                                                (concat memacs-root memacs-file-pattern))))
                                       "\n")))
 
       ;; doesn't work because queryresults is not a string:
@@ -6489,41 +6489,41 @@ OLD code:
       ;; check length of list (number of lines)
       (cond
        ((= 0 (length queryresults))
-	;; edge case: empty query result
-	(message "Sorry, empty querystring."))
+        ;; edge case: empty query result
+        (message "Sorry, empty querystring."))
 
 ;; I get «split-string: Wrong type argument: stringp, ("")»
        ((= 1 (length (split-string queryresults "\n")))
-	;; queryresults is unique
-	(with-temp-buffer
-	  (insert queryresults)
-	  (org-mode)
-	  (org-element-map (org-element-parse-buffer) 'link
-	    (lambda (ln)
-	      (when (string= (org-element-property :type ln) "file")
-		(org-element-property :path ln)
-		(message "%s" (concat "DEBUG: file -> " ln))
-		)))))
+        ;; queryresults is unique
+        (with-temp-buffer
+          (insert queryresults)
+          (org-mode)
+          (org-element-map (org-element-parse-buffer) 'link
+            (lambda (ln)
+              (when (string= (org-element-property :type ln) "file")
+                (org-element-property :path ln)
+                (message "%s" (concat "DEBUG: file -> " ln))
+                )))))
 
 ;; I get the «File: » prompt but no completion:
        (t
-	;; querystring results multiple matches
-	(org-open-file (completing-read
-			"File: "
-			(remove-if-not    ;remove nils from list
-			 'identity
-			 (loop for queryresult in queryresults
+        ;; querystring results multiple matches
+        (org-open-file (completing-read
+                        "File: "
+                        (remove-if-not    ;remove nils from list
+                         'identity
+                         (loop for queryresult in queryresults
                                collect
                                ;; get the filename the match is in. assumes no : in the file name
                                (let* ((f (car (split-string queryresult ":")))
                                       (basedir (file-name-directory f)))
-				 (with-temp-buffer
+                                 (with-temp-buffer
                                    (insert queryresult)
                                    (org-mode)
                                    (org-element-map (org-element-parse-buffer) 'link
                                      (lambda (ln)
                                        (when (string= (org-element-property :type ln) "file")
-					 (expand-file-name  (org-element-property :path ln) basedir))))))))))))))
+                                         (expand-file-name  (org-element-property :path ln) basedir))))))))))))))
 
 #+END_SRC
 
@@ -6594,8 +6594,8 @@ pdfs, etc.)
 Alternative approach for Windows:
 #+BEGIN_SRC emacs-lisp :tangle no
 (w32-shell-execute "open"
-			 "C:/Program Files (x86)/.../cygstart"
-			 (concat " \"" path-to-media "\""))
+                         "C:/Program Files (x86)/.../cygstart"
+                         (concat " \"" path-to-media "\""))
 #+END_SRC
 
 
@@ -6722,8 +6722,8 @@ files; on my other machines, start with my non-work-related files.
     "Skip entries that are tagged TAG"
     (let* ((entry-tags (org-get-tags-at (point))))
       (if (member tag entry-tags)
-	  (progn (outline-next-heading) (point))
-	nil)))
+          (progn (outline-next-heading) (point))
+        nil)))
 #+END_SRC
 
 =tag-without-done-or-canceled()=
@@ -6735,10 +6735,10 @@ files; on my other machines, start with my non-work-related files.
     "Show items with tag \"borrowed\" that are neither in \"DONE\" or \"CANCELED \" state."
     (let ((state (org-entry-get (point) "TODO")))
       (if (and (member "borrowed" (org-get-tags-at (point)))
-	       (not (string= state "DONE"))
-	       (not (string= state "CANCELED")))
-	  nil ; do not skip
-	(line-end-position)))) ; skip
+               (not (string= state "DONE"))
+               (not (string= state "CANCELED")))
+          nil ; do not skip
+        (line-end-position)))) ; skip
 #+END_SRC
 
 MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
@@ -6746,80 +6746,80 @@ MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
   (defun bh/is-project-p ()
     "Any task with a todo keyword subtask"
     (let ((has-subtask)
-	  (subtree-end (save-excursion (org-end-of-subtree t))))
+          (subtree-end (save-excursion (org-end-of-subtree t))))
       (save-excursion
-	(forward-line 1)
-	(while (and (not has-subtask)
-		    (< (point) subtree-end)
-		    (re-search-forward "^\*+ " subtree-end t))
-	  (when (member (org-get-todo-state) org-todo-keywords-1)
-	    (setq has-subtask t))))
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
       has-subtask))
 
   (defun bh/skip-non-stuck-projects ()
     "Skip trees that are not stuck projects"
     (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-	   (has-next (save-excursion
-		       (forward-line 1)
-		       (and (< (point) subtree-end)
-			    (re-search-forward "^\\*+ \\(NEXT\\|STARTED\\) " subtree-end t)))))
+           (has-next (save-excursion
+                       (forward-line 1)
+                       (and (< (point) subtree-end)
+                            (re-search-forward "^\\*+ \\(NEXT\\|STARTED\\) " subtree-end t)))))
       (if (and (bh/is-project-p) (not has-next))
-	  nil ; a stuck project, has subtasks but no next task
-	subtree-end)))
+          nil ; a stuck project, has subtasks but no next task
+        subtree-end)))
 
   (defun bh/skip-non-projects ()
     "Skip trees that are not projects"
     (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
       (if (bh/is-project-p)
-	  nil
-	subtree-end)))
+          nil
+        subtree-end)))
 
   (defun bh/skip-projects ()
     "Skip trees that are projects"
     (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
       (if (bh/is-project-p)
-	  subtree-end
-	nil)))
+          subtree-end
+        nil)))
 
   (defun bh/skip-non-archivable-tasks ()
     "Skip trees that are not available for archiving"
     (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-	   (daynr (string-to-int (format-time-string "%d" (current-time))))
-	   (a-month-ago (* 60 60 24 (+ daynr 1)))
-	   (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
-	   (this-month (format-time-string "%Y-%m-" (current-time)))
-	   (subtree-is-current (save-excursion
-				 (forward-line 1)
-				 (and (< (point) subtree-end)
-				      (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
+           (daynr (string-to-int (format-time-string "%d" (current-time))))
+           (a-month-ago (* 60 60 24 (+ daynr 1)))
+           (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
+           (this-month (format-time-string "%Y-%m-" (current-time)))
+           (subtree-is-current (save-excursion
+                                 (forward-line 1)
+                                 (and (< (point) subtree-end)
+                                      (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
       (if subtree-is-current
-	  subtree-end ; Has a date in this month or last month, skip it
-	;; Make sure the ARCHIVE property is set for this task
-	;; Create one at the parent task if necessary
-	(save-excursion
-	  (save-restriction
-	    (widen)
-	    (let ((archive-prop (org-entry-get nil "ARCHIVE" 'inherit))
-		  (parent-task))
-	      (org-up-heading-safe)
-	      (setq parent-task (nth 4 (org-heading-components)))
-	      (unless archive-prop
-		(setq archive-prop (org-entry-put nil "ARCHIVE" (concat "%s_archive::* " parent-task)))))))
-	nil)))
+          subtree-end ; Has a date in this month or last month, skip it
+        ;; Make sure the ARCHIVE property is set for this task
+        ;; Create one at the parent task if necessary
+        (save-excursion
+          (save-restriction
+            (widen)
+            (let ((archive-prop (org-entry-get nil "ARCHIVE" 'inherit))
+                  (parent-task))
+              (org-up-heading-safe)
+              (setq parent-task (nth 4 (org-heading-components)))
+              (unless archive-prop
+                (setq archive-prop (org-entry-put nil "ARCHIVE" (concat "%s_archive::* " parent-task)))))))
+        nil)))
 
   (defmacro bh/agenda-sort-test (fn a b)
     "Test for agenda sort"
     `(cond
       ;; if both match leave them unsorted
       ((and (apply ,fn (list ,a))
-	    (apply ,fn (list ,b)))
+            (apply ,fn (list ,b)))
        (setq result nil))
       ;; if a matches put a first
       ((apply ,fn (list ,a))
        ;; if b also matches leave unsorted
        (if (apply ,fn (list ,b))
-	   (setq result nil)
-	 (setq result -1)))
+           (setq result nil)
+         (setq result -1)))
       ;; otherwise if b matches put b first
       ((apply ,fn (list ,b))
        (setq result 1))
@@ -6831,19 +6831,19 @@ MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
       ((apply ,fn (list ,a))
        (setq num-a (string-to-number (match-string 1 ,a)))
        (if (apply ,fn (list ,b))
-	   (progn
-	     (setq num-b (string-to-number (match-string 1 ,b)))
-	     (setq result (if (apply ,compfn (list num-a num-b))
-			      -1
-			    1)))
-	 (setq result -1)))
+           (progn
+             (setq num-b (string-to-number (match-string 1 ,b)))
+             (setq result (if (apply ,compfn (list num-a num-b))
+                              -1
+                            1)))
+         (setq result -1)))
       ((apply ,fn (list ,b))
        (setq result 1))
       (t nil)))
 
   (defun bh/is-not-scheduled-or-deadline (date-str)
     (and (not (bh/is-deadline date-str))
-	 (not (bh/is-scheduled date-str))))
+         (not (bh/is-scheduled date-str))))
 
   (defun bh/is-due-deadline (date-str)
     (string-match "Deadline:" date-str))
@@ -6856,12 +6856,12 @@ MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
 
   (defun bh/is-deadline (date-str)
     (or (bh/is-due-deadline date-str)
-	(bh/is-late-deadline date-str)
-	(bh/is-pending-deadline date-str)))
+        (bh/is-late-deadline date-str)
+        (bh/is-pending-deadline date-str)))
 
   (defun bh/is-scheduled (date-str)
     (or (bh/is-scheduled-today date-str)
-	(bh/is-scheduled-late date-str)))
+        (bh/is-scheduled-late date-str)))
 
   (defun bh/is-scheduled-today (date-str)
     (string-match "Scheduled:" date-str))
@@ -6913,12 +6913,12 @@ Removes things tagged with "lp" or "reward" when typing "/ RET" in agenda
   (defun bh/org-auto-exclude-function-private (tag)
     "Automatic task exclusion in the agenda with / RET"
     (and (cond
-	  ((string= tag "lp") t)
-	  ((string= tag "reward") t)
-	  ((string= tag "test") t)
-	  ((string= tag "2read") t)
-	  )
-	 (concat "-" tag)))
+          ((string= tag "lp") t)
+          ((string= tag "reward") t)
+          ((string= tag "test") t)
+          ((string= tag "2read") t)
+          )
+         (concat "-" tag)))
 #+END_SRC
 
 For business, I use a different setup:
@@ -6926,14 +6926,14 @@ For business, I use a different setup:
   (defun bh/org-auto-exclude-function-infonova (tag)
     "Automatic task exclusion in the agenda with / RET"
     (and (cond
-	  ((string= tag "lp") t)
-	  ((string= tag "reward") t)
-	  ((string= tag "test") t)
-	  ((string= tag "@BWG") t)
-	  ((string= tag "blog") t)
-	  ((string= tag "2read") t)
-	  )
-	 (concat "-" tag)))
+          ((string= tag "lp") t)
+          ((string= tag "reward") t)
+          ((string= tag "test") t)
+          ((string= tag "@BWG") t)
+          ((string= tag "blog") t)
+          ((string= tag "2read") t)
+          )
+         (concat "-" tag)))
 
   (if (my-system-type-is-windows)
       (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function-infonova)
@@ -7203,23 +7203,23 @@ only see important business stuff.
 
                 ;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
                 ;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ((org-agenda-ndays 31)
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	   (org-agenda-time-grid nil)
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	   (org-agenda-entry-types '(:timestamp :sexp))
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	   (org-agenda-skip-function
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	    '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]")))
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ;; (
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ;;  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	  ;;  )
-                ;; disabled 2015-02-15 - replaced by no TODO events ;; 	  )))
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;    ((org-agenda-ndays 31)
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;     (org-agenda-time-grid nil)
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;     (org-agenda-entry-types '(:timestamp :sexp))
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;     (org-agenda-skip-function
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;      '(org-agenda-skip-entry-if 'notregexp "\\=.*\\[#A\\]")))
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;    ;; (
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;    ;;  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;    ;;  )
+                ;; disabled 2015-02-15 - replaced by no TODO events ;;    )))
 
                 ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; ("1" "1 month"
                 ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;  ((agenda "1 month"
-                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	  ((org-agenda-ndays 31)
-                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	   (org-agenda-time-grid nil)
-                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	   (org-agenda-entry-types '(:timestamp :sexp))
-                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	   )
-                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;; 	  )))
+                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;           ((org-agenda-ndays 31)
+                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;            (org-agenda-time-grid nil)
+                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;            (org-agenda-entry-types '(:timestamp :sexp))
+                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;            )
+                ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;           )))
 
                 ("r" "reward tasks" (
                                      (tags-todo "reward/!STARTED"
@@ -7259,9 +7259,9 @@ only see important business stuff.
                                      ))
 
                 ;;disabled;              ("R" "grab reward" tags-todo "reward/!TODO|SOMEDAY"
-                ;;disabled;	       (
-                ;;disabled;		(org-agenda-overriding-header "rewards: TODO or SOMEDAY")
-                ;;disabled;		))
+                ;;disabled;            (
+                ;;disabled;             (org-agenda-overriding-header "rewards: TODO or SOMEDAY")
+                ;;disabled;             ))
 
                 ("B" "borrowed"
                 ((org-ql-block '(and (tags "borrowed")
@@ -7338,67 +7338,67 @@ only see important business stuff.
                 ;; disabled 2015-02-15 - don't use it any more ;;  ((org-agenda-sorting-strategy '(priority-down))))
 
                 ;; disabled 2015-02-15 - don't know what's for ;; ("o" "overview Agenda" (
-                ;; disabled 2015-02-15 - don't know what's for ;; 			(agenda ""
-                ;; disabled 2015-02-15 - don't know what's for ;; 				nil )
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled by nil above;			((org-agenda-skip-function '(my-skip-tag "reward"))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled by nil above;			 (org-agenda-overriding-header "Agenda without rewards: ")))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			(tags "+TODO=\"DONE\"+CLOSED>=\"<today>\""
-                ;; disabled 2015-02-15 - don't know what's for ;; 			      (
-                ;; disabled 2015-02-15 - don't know what's for ;; 			       (org-agenda-overriding-header "DONE today")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			       ))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                (tags "+reward"
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                           (
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;			    (org-agenda-overriding-header "Rewards")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                            ;(org-agenda-skip-function 'bh/skip-non-stuck-projects))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                            ;(org-agenda-todo-ignore-scheduled 'future)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;                            ;(org-agenda-todo-ignore-deadlines 'future)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;			   )
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;diabled;			   )
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;too slow - dont need;                (tags-todo "-CANCELLED/!"
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;too slow - dont need;                           ((org-agenda-overriding-header "Stuck Projects")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;too slow - dont need;                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                (tags-todo "-CANCELLED+WAITING/!"
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-agenda-skip-function 'bh/skip-stuck-projects)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-tags-match-list-sublevels nil)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-agenda-todo-ignore-scheduled 'future)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;                            (org-agenda-todo-ignore-deadlines 'future)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;slow;			    ))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                (tags "REFILE"
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                      ((org-agenda-overriding-header "Tasks to Refile")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                       (org-tags-match-list-sublevels nil)))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                (tags "-REFILE/"
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                      ((org-agenda-overriding-header "Tasks to Archive")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                       (org-tags-match-list-sublevels nil)))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                (tags-todo "-HOLD-CANCELLED/!"
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                           ((org-agenda-overriding-header "Projects")
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                            (org-agenda-skip-function 'bh/skip-non-projects)
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                            (org-agenda-sorting-strategy
-                ;; disabled 2015-02-15 - don't know what's for ;; 			;;                             '(category-keep))))
-                ;; disabled 2015-02-15 - don't know what's for ;; 			)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       (agenda ""
+                ;; disabled 2015-02-15 - don't know what's for ;;                               nil )
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled by nil above;                 ((org-agenda-skip-function '(my-skip-tag "reward"))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled by nil above;                  (org-agenda-overriding-header "Agenda without rewards: ")))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       (tags "+TODO=\"DONE\"+CLOSED>=\"<today>\""
+                ;; disabled 2015-02-15 - don't know what's for ;;                             (
+                ;; disabled 2015-02-15 - don't know what's for ;;                              (org-agenda-overriding-header "DONE today")
+                ;; disabled 2015-02-15 - don't know what's for ;;                              ))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                (tags "+reward"
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                           (
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                          (org-agenda-overriding-header "Rewards")
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                            ;(org-agenda-skip-function 'bh/skip-non-stuck-projects))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                            ;(org-agenda-todo-ignore-scheduled 'future)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                            ;(org-agenda-todo-ignore-deadlines 'future)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                         )
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;diabled;                         )
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;too slow - dont need;                (tags-todo "-CANCELLED/!"
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;too slow - dont need;                           ((org-agenda-overriding-header "Stuck Projects")
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;too slow - dont need;                            (org-agenda-skip-function 'bh/skip-non-stuck-projects)))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                (tags-todo "-CANCELLED+WAITING/!"
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                           ((org-agenda-overriding-header "Waiting and Postponed Tasks")
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                            (org-agenda-skip-function 'bh/skip-stuck-projects)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                            (org-tags-match-list-sublevels nil)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                            (org-agenda-todo-ignore-scheduled 'future)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                            (org-agenda-todo-ignore-deadlines 'future)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;slow;                     ))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                (tags "REFILE"
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                      ((org-agenda-overriding-header "Tasks to Refile")
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                       (org-tags-match-list-sublevels nil)))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                (tags "-REFILE/"
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                      ((org-agenda-overriding-header "Tasks to Archive")
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                       (org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                       (org-tags-match-list-sublevels nil)))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                (tags-todo "-HOLD-CANCELLED/!"
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                           ((org-agenda-overriding-header "Projects")
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                            (org-agenda-skip-function 'bh/skip-non-projects)
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                            (org-agenda-sorting-strategy
+                ;; disabled 2015-02-15 - don't know what's for ;;                       ;;                             '(category-keep))))
+                ;; disabled 2015-02-15 - don't know what's for ;;                       )
                 ;; disabled 2015-02-15 - don't know what's for ;;  nil)
 
-                ;;disabled;;	      ("x" "Borrowed"
-                ;;disabled;;	       ((agenda ""
-                ;;disabled;;			((org-agenda-skip-function 'tag-without-done-or-canceled)
-                ;;disabled;;			 (org-agenda-overriding-header "Fun: ")))))
+                ;;disabled;;          ("x" "Borrowed"
+                ;;disabled;;           ((agenda ""
+                ;;disabled;;                    ((org-agenda-skip-function 'tag-without-done-or-canceled)
+                ;;disabled;;                     (org-agenda-overriding-header "Fun: ")))))
 
                 ;;disabled 2014-08-17;; ("X" "calfw" open-calfw-agenda-org)
 
-                ;;2012-12-10 deactivated;	      ("c" . "custom searches") ; description for "c" prefix
+                ;;2012-12-10 deactivated;             ("c" . "custom searches") ; description for "c" prefix
                 ;;2012-12-10 deactivated;              ("cr" "rewards" agenda "+reward"
-                ;;2012-12-10 deactivated;	       (
-                ;;2012-12-10 deactivated;		(org-agenda-overriding-header "rewards")
-                ;;2012-12-10 deactivated;		(org-agenda-time-grid nil)
-                ;;2012-12-10 deactivated;		(org-agenda-entry-types '(:deadline))
-                ;;2012-12-10 deactivated;	       ))
+                ;;2012-12-10 deactivated;              (
+                ;;2012-12-10 deactivated;               (org-agenda-overriding-header "rewards")
+                ;;2012-12-10 deactivated;               (org-agenda-time-grid nil)
+                ;;2012-12-10 deactivated;               (org-agenda-entry-types '(:deadline))
+                ;;2012-12-10 deactivated;              ))
                 ;;2012-12-10 deactivated;              ("cr" "rewards" agenda "+reward"
-                ;;2012-12-10 deactivated;	       (
-                ;;2012-12-10 deactivated;		(org-agenda-overriding-header "rewards")
-                ;;2012-12-10 deactivated;		(org-agenda-time-grid nil)
-                ;;2012-12-10 deactivated;		(org-agenda-entry-types '(:deadline))
-                ;;2012-12-10 deactivated;	       ))
+                ;;2012-12-10 deactivated;              (
+                ;;2012-12-10 deactivated;               (org-agenda-overriding-header "rewards")
+                ;;2012-12-10 deactivated;               (org-agenda-time-grid nil)
+                ;;2012-12-10 deactivated;               (org-agenda-entry-types '(:deadline))
+                ;;2012-12-10 deactivated;              ))
                 ;;2012-12-10 deactivated;              ("ct" "@TUG" tags-todo "+@TUG"
                 ;;2012-12-10 deactivated;               ((org-agenda-overriding-header "TUG Tasks")))
                 ;;2012-12-10 deactivated;              ("ca" "@ALW" tags-todo "+@ALW"
@@ -7567,10 +7567,10 @@ Show all agenda dates - even if they are empty
 Sorting order for tasks on the agenda
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-sorting-strategy
-	(quote ((agenda habit-down time-up user-defined-up priority-down category-keep)
-		(todo priority-down category-keep)
-		(tags priority-down category-keep)
-		(search category-keep))))
+        (quote ((agenda habit-down time-up user-defined-up priority-down category-keep)
+                (todo priority-down category-keep)
+                (tags priority-down category-keep)
+                (search category-keep))))
 #+END_SRC
 
 Start the weekly agenda today
@@ -7601,9 +7601,9 @@ Display tags farther right
 #+BEGIN_SRC emacs-lisp
   ;;(setq org-agenda-tags-column -102)
   (setq org-tags-column -101); for powerplantwin 23" TFT turned 90
-					; degrees; should *not* differ between
-					; systems! Otherwise Org-files gets
-					; re-formatted after switching
+                                        ; degrees; should *not* differ between
+                                        ; systems! Otherwise Org-files gets
+                                        ; re-formatted after switching
                                         ; system
   ;;(when (my-system-type-is-windows)
   ;;    ;;(setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
@@ -7665,16 +7665,16 @@ and with a bleeding heart.
   (setq org-agenda-category-icon-alist nil)
   ;(when (my-system-type-is-windows)
     (add-to-list 'org-agenda-category-icon-alist
-		 '(".*" '(space . (:width (16))))
-		 )
+                 '(".*" '(space . (:width (16))))
+                 )
     (add-to-list 'org-agenda-category-icon-alist
             `("rise" ,(concat my-user-emacs-directory "bin/images/RISE_icon_16x16_dark.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;		  '("r6" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
-;;		  )
+;;                '("r6" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
+;;                )
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;		  '("infonova" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
-;;		  )
+;;                '("infonova" "~/.emacs.d/bin/images/R6-logo_18x12.jpg" nil nil :ascent center)
+;;                )
 ;;    (add-to-list 'org-agenda-category-icon-alist
 ;;            `("detego" ,(concat my-user-emacs-directory "bin/images/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;;    (add-to-list 'org-agenda-category-icon-alist
@@ -7685,37 +7685,37 @@ and with a bleeding heart.
 ;;            `("ISAE3402" ,(concat my-user-emacs-directory "bin/images/detego-inwarehouse-logo-D_only_16x16.png") nil nil :ascent center))
 ;; OLD version without my-user-emacs-directory; with help of: https://github.com/novoid/dot-emacs/issues/2
 ;;OLD:    (add-to-list 'org-agenda-category-icon-alist
-;;OLD:		  '("ciso" "~/.emacs.d/bin/images/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
-;;OLD:		  )
+;;OLD:            '("ciso" "~/.emacs.d/bin/images/detego-inwarehouse-logo-D_only_16x16.png" nil nil :ascent center)
+;;OLD:            )
     ;;(add-to-list 'org-agenda-category-icon-alist
-    ;;		 '("misc" '(space . (:width (18))))
-    ;;		 )
+    ;;           '("misc" '(space . (:width (18))))
+    ;;           )
   ;  )
 
   (when (and (not (my-system-type-is-windows)) (not (my-system-is-karl-voit-at)))
     (add-to-list 'org-agenda-category-icon-alist
-		 '(".*" '(space . (:width (16))))
-		 )
+                 '(".*" '(space . (:width (16))))
+                 )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("contacts" "~/.emacs.d/bin/images/user-identity.png" nil nil :ascent center)
-		     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
-		  )
+                 '("contacts" "~/.emacs.d/bin/images/user-identity.png" nil nil :ascent center)
+                     ;; /usr/share/icons/gnome/16x16/emotes/face-smile.png
+                  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("public_voit" "~/.emacs.d/bin/images/application-rss+xml.png" nil nil :ascent center)
+                 '("public_voit" "~/.emacs.d/bin/images/application-rss+xml.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/mimetypes/application-rss+xml.png
-		  )
+                  )
 ;;    (add-to-list 'org-agenda-category-icon-alist
-;;		 '("misc" "~/.emacs.d/bin/images/emblem-new.png" nil nil :ascent center)
+;;               '("misc" "~/.emacs.d/bin/images/emblem-new.png" nil nil :ascent center)
 ;;                 ;; /usr/share/icons/oxygen/16x16/emblems/emblem-new.png
-;;		  )
+;;                )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("hardware" "~/.emacs.d/bin/images/camera-photo.png" nil nil :ascent center)
+                 '("hardware" "~/.emacs.d/bin/images/camera-photo.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/devices/camera-photo.png
-		  )
+                  )
     (add-to-list 'org-agenda-category-icon-alist
-		 '("bwg" "~/.emacs.d/bin/images/go-home.png" nil nil :ascent center)
+                 '("bwg" "~/.emacs.d/bin/images/go-home.png" nil nil :ascent center)
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
-		  )
+                  )
    )
 #+END_SRC
 
@@ -7809,6 +7809,7 @@ I aliased it within =~/.zshrc.local= to =memacs=
     (setq max-specpdl-size 10000)
     (setq max-lisp-eval-depth 50000)
     (org-agenda-list nil nil 60)
+    ;(org-agenda-list nil nil 7)
     (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
   ;;  (org-agenda-write "~/org/agenda-export-raw2.ics")
@@ -7818,21 +7819,21 @@ I aliased it within =~/.zshrc.local= to =memacs=
   ;;  (setq icspath (concat my-user-emacs-directory "var/export/"))
   ;;  (setq icspath "~/org/")
   ;;  (shell-command-to-string (concat
-  ;;      		      scriptpath "postprocess_Org-mode_iCal_export.py "
-  ;;      		      "-i " icspath "agenda-export-raw2.ics "
-  ;;      		      "-o " icspath "agenda-export-postprocessed2.ics "
-  ;;      		      "--overwrite "
-  ;;      		      "--remove-summary-timestamp"
-  ;;      		      )
-  ;;      		     )
+  ;;                          scriptpath "postprocess_Org-mode_iCal_export.py "
+  ;;                          "-i " icspath "agenda-export-raw2.ics "
+  ;;                          "-o " icspath "agenda-export-postprocessed2.ics "
+  ;;                          "--overwrite "
+  ;;                          "--remove-summary-timestamp"
+  ;;                          )
+  ;;                         )
   ;;  (shell-command-to-string (concat
-  ;;      		      scriptpath "postprocess_Org-mode_iCal_export.py "
-  ;;      		      "-i " icspath "agenda-export-raw2.ics "
-  ;;      		      "-o " icspath "agenda-export-freebusy2.ics "
-  ;;      		      "--overwrite "
-  ;;      		      "--obfuscate"
-  ;;      		      )
-  ;;      		     )
+  ;;                          scriptpath "postprocess_Org-mode_iCal_export.py "
+  ;;                          "-i " icspath "agenda-export-raw2.ics "
+  ;;                          "-o " icspath "agenda-export-freebusy2.ics "
+  ;;                          "--overwrite "
+  ;;                          "--obfuscate"
+  ;;                          )
+  ;;                         )
   ;;  (message "after shell-command-to-string")
   ;;  (if (my-system-type-is-gnu)
   ;;      (shell-command-to-string "/home/vk/bin/vk-cronjob-gary-do-unison-sync-unattended-share-all_if_host_is_reachable.sh")
@@ -7840,6 +7841,9 @@ I aliased it within =~/.zshrc.local= to =memacs=
   ;;    )
     )
 #+END_SRC
+
+#+RESULTS:
+: my-export-agenda
 
 *** DISABLED my-org-agenda-to-appt
 
@@ -7852,7 +7856,7 @@ Get appointments for today
     (interactive)
     (setq appt-time-msg-list nil)
     (let ((org-deadline-warning-days 0))    ;; will be automatic in org 5.23
-	(org-agenda-to-appt)))
+        (org-agenda-to-appt)))
   ;; Run once, activate and schedule refresh
   (my-org-agenda-to-appt)
   (appt-activate t)
@@ -7867,9 +7871,9 @@ Get appointments for today
   (setq appt-disp-window-function (function appt-disp-window))
   (defun appt-disp-window (min-to-app new-time msg)
     (save-window-excursion
-	(shell-command
-	 (concat "/usr/bin/zenity --info --title='Appointment' --text='" msg "' &") nil nil)
-	)
+        (shell-command
+         (concat "/usr/bin/zenity --info --title='Appointment' --text='" msg "' &") nil nil)
+        )
     )
   )
 #+END_SRC
@@ -7887,7 +7891,7 @@ workaround before I customized my agenda export to HTML.
     (message "Generating agenda ...")
     (org-agenda nil "n") ; generates agenda "n" (one month without todos)
     (if (my-buffer-exists "*Org Agenda*")
-	(switch-to-buffer "*Org Agenda*")
+        (switch-to-buffer "*Org Agenda*")
       (org-agenda-list)
       )
     (message "Waiting for Screenshot ...")
@@ -7987,10 +7991,10 @@ customizing the agenda export of =C-x C-w=
 - http://orgmode.org/manual/Exporting-Agenda-Views.html
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-exporter-settings
-	'((ps-number-of-columns 2)
-	  (ps-landscape-mode t)
-	  ;;disabled;                  (org-agenda-add-entry-text-maxlines 5)
-	  (htmlize-output-type 'css)))
+        '((ps-number-of-columns 2)
+          (ps-landscape-mode t)
+          ;;disabled;                  (org-agenda-add-entry-text-maxlines 5)
+          (htmlize-output-type 'css)))
 #+END_SRC
 
 *** my-org-obfuscate-agenda-item
@@ -8063,21 +8067,21 @@ Import iCal to Org-mode
   (setq holiday-austria-holidays '((holiday-fixed  1  1 "Neujahr (frei)")
                                      (holiday-fixed  1  6 "Heilige Drei Könige (frei)")
                                      (holiday-easter-etc 1 "Ostermontag (frei)")
-  				     (holiday-easter-etc -46 "Aschermittwoch")
-  				     (holiday-easter-etc -2 "Karfreitag")
-  				     (holiday-fixed  5  1 "Österreichischer Staatsfeiertag (frei)")
-  				     (holiday-easter-etc 39 "Christi Himmelfahrt (frei)")
-  				     (holiday-easter-etc 50 "Pfingstmontag (frei)")
-  				     (holiday-easter-etc 60 "Fronleichnam (frei)")
-  				     (holiday-float 5 0 2 "Muttertag")
-  				     (holiday-float 6 0 2 "Vatertag")
-  				     (holiday-fixed  8 15 "Mariä Himmelfahrt (frei)")
-  				     (holiday-fixed 10 26 "Nationalfeiertag (frei)")
-  				     (holiday-fixed 11  1 "Allerheiligen (frei)")
-  				     (holiday-fixed 12  8 "Maria Empfängnis (frei)")
-  				     (holiday-fixed 12 24 "Heiliger Abend (nicht frei)")
-  				     (holiday-fixed 12 25 "Erster Weihnachtstag (frei)")
-  				     (holiday-fixed 12 26 "Zweiter Weihnachtstag (frei)")))
+                                     (holiday-easter-etc -46 "Aschermittwoch")
+                                     (holiday-easter-etc -2 "Karfreitag")
+                                     (holiday-fixed  5  1 "Österreichischer Staatsfeiertag (frei)")
+                                     (holiday-easter-etc 39 "Christi Himmelfahrt (frei)")
+                                     (holiday-easter-etc 50 "Pfingstmontag (frei)")
+                                     (holiday-easter-etc 60 "Fronleichnam (frei)")
+                                     (holiday-float 5 0 2 "Muttertag")
+                                     (holiday-float 6 0 2 "Vatertag")
+                                     (holiday-fixed  8 15 "Mariä Himmelfahrt (frei)")
+                                     (holiday-fixed 10 26 "Nationalfeiertag (frei)")
+                                     (holiday-fixed 11  1 "Allerheiligen (frei)")
+                                     (holiday-fixed 12  8 "Maria Empfängnis (frei)")
+                                     (holiday-fixed 12 24 "Heiliger Abend (nicht frei)")
+                                     (holiday-fixed 12 25 "Erster Weihnachtstag (frei)")
+                                     (holiday-fixed 12 26 "Zweiter Weihnachtstag (frei)")))
     ;;(setq holiday-other-holidays '((holiday-fixed 10  3 "Tag der Deutschen Einheit")))
     (setq holiday-local-holidays holiday-austria-holidays)
     (setq calendar-holidays (append holiday-local-holidays holiday-other-holidays))
@@ -8318,11 +8322,11 @@ Guess the master file for FILENAME from currently open files according to their 
 - disabled 2015-03-22 because it did not help
 #+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-mode-hook
-	    (lambda ()
+            (lambda ()
             (setq TeX-master (guess-TeX-master (buffer-file-name)))
-	      (message (concat "set master file to: " buffer-file-name))
-	      )
-	    )
+              (message (concat "set master file to: " buffer-file-name))
+              )
+            )
 #+END_SRC
 
 Export subtree (by default) instead of whole buffer:
@@ -8916,31 +8920,31 @@ of the blog article and shows it in the browser.
 #+BEGIN_SRC emacs-lisp
   (if (my-system-type-is-gnu)
       (defun my-lazyblorg-test()
-	"Saves current blog entry to file and invoke lazyblorg process with it"
-	(interactive)
-	(save-excursion
-	  (search-backward ":blog:");; search begin of current (previous) blog entry
-	  (beginning-of-line nil)
-	  (set-mark-command nil);; set mark
-	  (org-cycle);; close org-mode heading and sub-headings
-	  (next-line);; goto next org-mode heading (this should be next line after blog entry)
-	  (beginning-of-line nil)
-	  (let ((p (point));; copy region
-		(m (mark)))
-	    (if (< p m)
-		(kill-ring-save p m)
-	      (kill-ring-save m p)))
-	  (find-file "/tmp/lazyblorg-preview.org");; fixed temporary file (will be overwritten)
-	  (erase-buffer);; I told you!
-	  (yank);; paste region from above
-	  (save-buffer);; save to disk
-	  (kill-buffer "lazyblorg-preview.org");; destroy last evidence
-	  (previous-line);;
-	  (org-cycle);; close org-mode heading and sub-headings
-	  ;; invoke lazyblorg:
-	  (shell-command-to-string "/home/vk/src/lazyblorg/preview_blogentry.sh");; invoke shell script
-	  )
-	)
+        "Saves current blog entry to file and invoke lazyblorg process with it"
+        (interactive)
+        (save-excursion
+          (search-backward ":blog:");; search begin of current (previous) blog entry
+          (beginning-of-line nil)
+          (set-mark-command nil);; set mark
+          (org-cycle);; close org-mode heading and sub-headings
+          (next-line);; goto next org-mode heading (this should be next line after blog entry)
+          (beginning-of-line nil)
+          (let ((p (point));; copy region
+                (m (mark)))
+            (if (< p m)
+                (kill-ring-save p m)
+              (kill-ring-save m p)))
+          (find-file "/tmp/lazyblorg-preview.org");; fixed temporary file (will be overwritten)
+          (erase-buffer);; I told you!
+          (yank);; paste region from above
+          (save-buffer);; save to disk
+          (kill-buffer "lazyblorg-preview.org");; destroy last evidence
+          (previous-line);;
+          (org-cycle);; close org-mode heading and sub-headings
+          ;; invoke lazyblorg:
+          (shell-command-to-string "/home/vk/src/lazyblorg/preview_blogentry.sh");; invoke shell script
+          )
+        )
     )
 #+END_SRC
 
@@ -8972,19 +8976,19 @@ Gets "public voit"-URL from clipboard and jumps to its Org-mode heading:
           ;; This is a check string: if the URL in the clipboard
           ;; doesn't start with this, an error message is shown
           (domain "karl-voit.at")
-  	)
+        )
       ;; Check if URL string is from my domain (all other strings do
       ;; not make any sense here)
       (if (string-match (upcase domain) (upcase url))
-	  ;; Retrieving content by URL into new buffer asynchronously
-	  (url-retrieve url
+          ;; Retrieving content by URL into new buffer asynchronously
+          (url-retrieve url
                         ;; call this lambda function when URL content is retrieved
-			(lambda (status)
-			   ;; Extrating and preparing the ID
-			   (let* (
+                        (lambda (status)
+                           ;; Extrating and preparing the ID
+                           (let* (
                                   ;; Limit the ID search to the top 1000 characters of the buffer
-				  (pageheader (buffer-substring 1 1000))
-				  ;; Start index of the id
+                                  (pageheader (buffer-substring 1 1000))
+                                  ;; Start index of the id
                                   (start (string-match "<meta name=\"orgmode-id\" content=\"" pageheader))
                                   ;; End index of the id
                                   (end (string-match "\" />" pageheader start))
@@ -8996,15 +9000,15 @@ Gets "public voit"-URL from clipboard and jumps to its Org-mode heading:
                                                     (substring pageheader (+ start chars-to-skip) end)
                                                   nil))
                                   )
-			     (message (concat "Looking for id:" lazyblorg-id " ..."))
-			     (org-open-link-from-string (concat "id:" lazyblorg-id))
-			     )
-			   )
-			)
-  	(message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't contain \"" domain "\". Aborting."))
+                             (message (concat "Looking for id:" lazyblorg-id " ..."))
+                             (org-open-link-from-string (concat "id:" lazyblorg-id))
+                             )
+                           )
+                        )
+        (message (concat "Sorry: the URL \"" (substring url 0 (length domain)) "...\" doesn't contain \"" domain "\". Aborting."))
         ;;(message (concat "domain: " domain))
         ;;(message (concat "url:    " url))
-  	)
+        )
       )
     )
 #+END_SRC
@@ -9598,28 +9602,28 @@ Inserting citations when using and when defining them:
   (defun org-mode-reftex-setup ()
     (load-library "reftex")
     (and (buffer-file-name) (file-exists-p (buffer-file-name))
-	 (progn
+         (progn
            ;;enable auto-revert-mode to update reftex when bibtex file changes on disk
-	   (global-auto-revert-mode t)
-	   (reftex-parse-all)
+           (global-auto-revert-mode t)
+           (reftex-parse-all)
            ;;add a custom reftex cite format to insert links
-	   (reftex-set-cite-format
-	    '((?b . "[[bib:%l][%l.bib]]")
-	      (?c . "[[cite:%l][%l]]")
-	      (?p . "[[pdf:%l][%l.pdf]]")
-	      (?a . "[[notes:%l][%l-notes.pdf]]")
-	      (?s . "[[pdf:%l-self][%l-self.pdf]]")
-	      (?t . "%t")
-	      (?h . (concat "** %l - %t\n:PROPERTIES:\n:CREATED: "
-			    "<" (substring (format-time-string (org-time-stamp-format t t)) 1 -1) ">"
-			    "\n:ID: %l\n:END:\n[[bib:%l][%l.bib]]\n[[pdf:%l][%l.pdf]]\n\n*** Abstract\n\n#+BEGIN_QUOTE\n#+END_QUOTE\n\n"))
-	      (?n . (concat "*** PDF Annotations: [[notes:%l][%l-notes.pdf]]\n:PROPERTIES:\n:CREATED: "
-			    "<" (substring (format-time-string (org-time-stamp-format t t)) 1 -1) ">"
-			    "\n:ID: %l-notes\n:END:\n\n"
-			    "\#+begin_src sh :results output :eval no-export\n"
-			    "${HOME}/bin/vkextract_annotations_to_orgmode_snippet.sh %l\n"
-			    "#+end_src"))
-	      ))))
+           (reftex-set-cite-format
+            '((?b . "[[bib:%l][%l.bib]]")
+              (?c . "[[cite:%l][%l]]")
+              (?p . "[[pdf:%l][%l.pdf]]")
+              (?a . "[[notes:%l][%l-notes.pdf]]")
+              (?s . "[[pdf:%l-self][%l-self.pdf]]")
+              (?t . "%t")
+              (?h . (concat "** %l - %t\n:PROPERTIES:\n:CREATED: "
+                            "<" (substring (format-time-string (org-time-stamp-format t t)) 1 -1) ">"
+                            "\n:ID: %l\n:END:\n[[bib:%l][%l.bib]]\n[[pdf:%l][%l.pdf]]\n\n*** Abstract\n\n#+BEGIN_QUOTE\n#+END_QUOTE\n\n"))
+              (?n . (concat "*** PDF Annotations: [[notes:%l][%l-notes.pdf]]\n:PROPERTIES:\n:CREATED: "
+                            "<" (substring (format-time-string (org-time-stamp-format t t)) 1 -1) ">"
+                            "\n:ID: %l-notes\n:END:\n\n"
+                            "\#+begin_src sh :results output :eval no-export\n"
+                            "${HOME}/bin/vkextract_annotations_to_orgmode_snippet.sh %l\n"
+                            "#+end_src"))
+              ))))
 #+END_SRC
 
 Binding the keyboard shortcuts:
@@ -9650,7 +9654,7 @@ disabled 2015-05-14: see id:2015-05-14-disable-orgmode-reftex-autoload
 (add-hook 'org-mode-hook
           (lambda ()
             (if (member "CHECK_NEEDED" org-todo-keywords-1)
-		  (org-mode-reftex-setup))))
+                  (org-mode-reftex-setup))))
 #+END_SRC
 
 =org-mode-reftex-search ()=
@@ -9740,9 +9744,9 @@ Append the Org-mode documentation from the git repository to the info-paths:
 Bind a keyboard shortcut to open the Org manual:
 #+BEGIN_SRC emacs-lisp
 (bind-key (kbd "o") (lambda()
-			       (interactive)
+                               (interactive)
                                (info "(org)")
-			       )
+                               )
   my-map
   )
 #+END_SRC
@@ -10467,7 +10471,7 @@ enough to use it instead of the Twitter webpage.
          ":direct_messages"
          ":search/tugraz/"
          ":search/tagstore/"
-	))
+        ))
  ;; some key bindings
  (add-hook 'twittering-mode-hook
            (lambda ()
@@ -10554,7 +10558,7 @@ ediff from command line usage: =emacs -diff file1 file2=
 (when (my-eval-if-binary-or-warn "diff")
   (defun command-line-diff (switch)
     (let ((file1 (pop command-line-args-left))
-  	(file2 (pop command-line-args-left)))
+        (file2 (pop command-line-args-left)))
       ;;    (ediff file1 file2)))
       (ediff-merge-files file1 file2)))
 
@@ -10610,10 +10614,10 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
 
  (dolist (hook '(confluence-mode-hook))
    (add-hook hook (lambda ()
-       	     (flyspell-mode 1)
-       	     (ispell-change-dictionary "british")
-       	     (flyspell-buffer)
-       	     ))
+             (flyspell-mode 1)
+             (ispell-change-dictionary "british")
+             (flyspell-buffer)
+             ))
    )
 
  (defun vk-open-as-confluence-page ()
@@ -10629,9 +10633,9 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
      (backward-char)
      (setq end-pos (point))
      (setq myname (buffer-substring start-pos end-pos))
-       				;(message "Confluence page name: [%s]" myname)
+                                ;(message "Confluence page name: [%s]" myname)
      (confluence-get-page myname "IR6")
-       				;(confluence-get-page myname)
+                                ;(confluence-get-page myname)
      )
    )
 
@@ -10698,10 +10702,10 @@ when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 (add-hook 'mail-mode-hook
    (lambda ()
      (font-lock-add-keywords nil
-       		      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
-       			 (0 'mail-multiply-quoted-text-face))
-       			("^[ \t]*>[ \t]*>.*$"
-       			 (0 'mail-double-quoted-text-face))))))
+                      '(("^[ \t]*>[ \t]*>[ \t]*>.*$"
+                         (0 'mail-multiply-quoted-text-face))
+                        ("^[ \t]*>[ \t]*>.*$"
+                         (0 'mail-double-quoted-text-face))))))
 
 )
 #+END_SRC
@@ -10798,20 +10802,20 @@ Conditions when loading:
     :variable hidden-mode-line-mode
     :group 'editing-basics
     (if hidden-mode-line-mode
-	(setq hide-mode-line mode-line-format
-	      mode-line-format nil)
+        (setq hide-mode-line mode-line-format
+              mode-line-format nil)
       (setq mode-line-format hide-mode-line
-	    hide-mode-line nil))
+            hide-mode-line nil))
     (force-mode-line-update)
     ;; Apparently force-mode-line-update is not always enough to
     ;; redisplay the mode-line
     (redraw-display)
     (when (and (called-interactively-p 'interactive)
-	       hidden-mode-line-mode)
+               hidden-mode-line-mode)
       (run-with-idle-timer
        0 nil 'message
        (concat "Hidden Mode Line Mode enabled.  "
-	       "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
+               "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
 
   ;; A small minor mode to use a big fringe
   (defvar bzg-big-fringe-mode nil)
@@ -10822,11 +10826,11 @@ Conditions when loading:
     :variable bzg-big-fringe-mode
     :group 'editing-basics
     (if (not bzg-big-fringe-mode)
-	(set-fringe-style nil)
+        (set-fringe-style nil)
       (set-fringe-mode
        (/ (- (frame-pixel-width)
-	     (* 100 (frame-char-width)))
-	  3)
+             (* 100 (frame-char-width)))
+          3)
        )
       ))
 
@@ -10835,107 +10839,107 @@ Conditions when loading:
   (defun mode-line-in-header ()
     (interactive)
     (if (not header-line-format)
-	(setq header-line-format mode-line-format
-	      mode-line-format nil)
+        (setq header-line-format mode-line-format
+              mode-line-format nil)
       (setq mode-line-format header-line-format
-	    header-line-format nil))
+            header-line-format nil))
     (set-window-buffer nil (current-buffer)))
 
   (defun my-toggle-naked-emacs ()
     "Toggle fullscreen/naked Emacs and normal Emacs"
     (interactive)
     (cond (my-toggle-naked-emacs-status
-	   ;; make it naked!
+           ;; make it naked!
 
-	   (setq my-toggle-naked-emacs-status nil)
-	   ;; Prevent the cursor from blinking
-	   (blink-cursor-mode 0)
-	   ;; Don't let Emacs hurt your ears
-	   (setq visible-bell t)
+           (setq my-toggle-naked-emacs-status nil)
+           ;; Prevent the cursor from blinking
+           (blink-cursor-mode 0)
+           ;; Don't let Emacs hurt your ears
+           (setq visible-bell t)
 
-	   ;; This is bound to f11 in Emacs 24.4
-	   (toggle-frame-fullscreen)
-	   ;; ;; Who use the bar to scroll?
-	   ;; (scroll-bar-mode 0)
+           ;; This is bound to f11 in Emacs 24.4
+           (toggle-frame-fullscreen)
+           ;; ;; Who use the bar to scroll?
+           ;; (scroll-bar-mode 0)
 
-	   (menu-bar-mode 0)
+           (menu-bar-mode 0)
 
-	   ;; You can also set the initial frame parameters
-	   ;; (setq initial-frame-alist
-	   ;;       '((menu-bar-lines . 0)
-	   ;;         (tool-bar-lines . 0)))
+           ;; You can also set the initial frame parameters
+           ;; (setq initial-frame-alist
+           ;;       '((menu-bar-lines . 0)
+           ;;         (tool-bar-lines . 0)))
 
-	   ;; Activate hidden-mode-line-mode
-	   (hidden-mode-line-mode 1)
+           ;; Activate hidden-mode-line-mode
+           (hidden-mode-line-mode 1)
 
-	   ;; If you want to hide the mode-line in all new buffers
-	   ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+           ;; If you want to hide the mode-line in all new buffers
+           ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
 
-	   ;; Alternatively, you can paint your mode-line in White but then
-	   ;; you'll have to manually paint it in black again
-	   ;; (custom-set-faces
-	   ;;  '(mode-line-highlight ((t nil)))
-	   ;;  '(mode-line ((t (:foreground "white" :background "white"))))
-	   ;;  '(mode-line-inactive ((t (:background "white" :foreground "white")))))
+           ;; Alternatively, you can paint your mode-line in White but then
+           ;; you'll have to manually paint it in black again
+           ;; (custom-set-faces
+           ;;  '(mode-line-highlight ((t nil)))
+           ;;  '(mode-line ((t (:foreground "white" :background "white"))))
+           ;;  '(mode-line-inactive ((t (:background "white" :foreground "white")))))
 
-	   ;; reset fringe with:
-	   ;; (set-fringe-mode nil)
+           ;; reset fringe with:
+           ;; (set-fringe-mode nil)
 
-	   ;; Now activate this global minor mode
-	   (bzg-big-fringe-mode 1)
+           ;; Now activate this global minor mode
+           (bzg-big-fringe-mode 1)
 
-	   ;; To activate the fringe by default and deactivate it when windows
-	   ;; are split vertically, uncomment this:
-	   ;; (add-hook 'window-configuration-change-hook
-	   ;;           (lambda ()
-	   ;;             (if (delq nil
-	   ;;                       (let ((fw (frame-width)))
-	   ;;                         (mapcar (lambda(w) (< (window-width w) fw))
-	   ;;                                 (window-list))))
-	   ;;                 (bzg-big-fringe-mode 0)
-	   ;;               (bzg-big-fringe-mode 1))))
+           ;; To activate the fringe by default and deactivate it when windows
+           ;; are split vertically, uncomment this:
+           ;; (add-hook 'window-configuration-change-hook
+           ;;           (lambda ()
+           ;;             (if (delq nil
+           ;;                       (let ((fw (frame-width)))
+           ;;                         (mapcar (lambda(w) (< (window-width w) fw))
+           ;;                                 (window-list))))
+           ;;                 (bzg-big-fringe-mode 0)
+           ;;               (bzg-big-fringe-mode 1))))
 
-	   ;; Use a minimal cursor
-	   ;; (setq cursor-type 'hbar)
+           ;; Use a minimal cursor
+           ;; (setq cursor-type 'hbar)
 
-	   ;; ;; Get rid of the indicators in the fringe
-	   ;; (mapcar (lambda(fb) (set-fringe-bitmap-face fb 'org-hide))
-	   ;;         fringe-bitmaps)
-	   ;;
-	   ;; ;; Set the color of the fringe
-	   ;; (custom-set-faces
-	   ;;  '(fringe ((t (:background "white")))))
-	   ;;
-	   ;; (custom-set-faces
-	   ;;   '(default ((t (:background "black" :foreground "grey"))))
-	   ;;   '(fringe ((t (:background "black")))))
+           ;; ;; Get rid of the indicators in the fringe
+           ;; (mapcar (lambda(fb) (set-fringe-bitmap-face fb 'org-hide))
+           ;;         fringe-bitmaps)
+           ;;
+           ;; ;; Set the color of the fringe
+           ;; (custom-set-faces
+           ;;  '(fringe ((t (:background "white")))))
+           ;;
+           ;; (custom-set-faces
+           ;;   '(default ((t (:background "black" :foreground "grey"))))
+           ;;   '(fringe ((t (:background "black")))))
 
-	   ;;(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
-	   (bind-key "h" 'mode-line-in-header my-map)
+           ;;(global-set-key (kbd "C-s-SPC") 'mode-line-in-header)
+           (bind-key "h" 'mode-line-in-header my-map)
 
-	   (message "Enjoy your concentration!")
+           (message "Enjoy your concentration!")
 
-	   )
-	  (t
-	   ;; normal mode
-	   (setq my-toggle-naked-emacs-status t)
+           )
+          (t
+           ;; normal mode
+           (setq my-toggle-naked-emacs-status t)
 
-	   (blink-cursor-mode t)
-	   (setq visible-bell nil)
-	   (toggle-frame-fullscreen)
-	   ;(scroll-bar-mode 1)
-	   ;;(menu-bar-mode 1)
-	   (hidden-mode-line-mode nil)
+           (blink-cursor-mode t)
+           (setq visible-bell nil)
+           (toggle-frame-fullscreen)
+           ;(scroll-bar-mode 1)
+           ;;(menu-bar-mode 1)
+           (hidden-mode-line-mode nil)
 
-	   ;; If you want to hide the mode-line in all new buffers
-	   ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
+           ;; If you want to hide the mode-line in all new buffers
+           ;; (add-hook 'after-change-major-mode-hook 'hidden-mode-line-mode)
 
-	   (bzg-big-fringe-mode nil)
-	   (set-fringe-mode nil)
+           (bzg-big-fringe-mode nil)
+           (set-fringe-mode nil)
 
-	   (message "See everything.")
-	   )
-	  )
+           (message "See everything.")
+           )
+          )
     )
 #+END_SRC
 
@@ -13197,7 +13201,7 @@ Not org related but might be candidates as well:
   _T_agtrees recursive  _F_ilter recursive    _t_ime2name        +  mkdir             M-v      dired-ranger-paste
   ^────────^────────────^──────^──────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
   _a_bsolute link       _m_emacs tsfile link  _D_ate2name.el     D  delete marked
-  _A_bsolute basename   ^^                    tk hide marked       C-c C-o  open externally
+  _A_bsolute basename   ^^                    ^^                 tk hide marked       C-c C-o  open externally
   ^^                    ^^                    ^^                 U  unmark all        C-o      open in new frame
   ^View    ^            ^Edit^                ^Order^
   ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename
