@@ -12127,6 +12127,50 @@ Test of my alert function:
 
 #+RESULTS:
 
+** gif-screencast
+:PROPERTIES:
+:CREATED:  [2020-01-23 Thu 12:43]
+:END:
+
+| 2020-01-23 | added to config after mentioned issue got resolved |
+
+From: https://gitlab.com/ambrevar/emacs-gif-screencast
+
+This package enables you to do screencasts that result in [[https://en.wikipedia.org/wiki/GIF#Animated_GIF][animated GIF
+images]] (no sound). However, it takes only one image per screen content
+change and is therefore much more storage space efficient compared to
+other animated GIFs.
+
+Requires external command line tools:
+- scrot :: for creating the screenshots
+- convert :: for post-processing the images
+- gifsicle :: for optimizing resulting GIF
+
+On Debian-based systems, they can be installed via:
+: sudo apt install scrot gifsicle imagemagick
+
+To avoid crashes of the underlying =convert= job when doing
+high-resolution screencasts (as described [[https://gitlab.com/ambrevar/emacs-gif-screencast/issues/19][in this issue]]), you have to
+increase the disk resource value:
+
+In =/etc/ImageMagick-6/policy.xml= increase the value in the line
+: <policy domain="resource" name="disk" value="1GiB"/>
+from =1GiB= to =10GiB=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package gif-screencast
+   :if (my-system-type-is-gnu)
+   :ensure t
+)
+#+END_SRC
+
+- Screencast process:
+  - =M-x gif-screencast=
+  - <do your stuff>
+  - =M-x git-screencast-stop=
+  - in your =$HOME= you will find a file like
+    =output-2020-01-23-12:37:14.gif= if everything went well.
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
