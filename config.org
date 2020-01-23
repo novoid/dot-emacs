@@ -844,7 +844,7 @@ because with them, I lose some generic approach:
 (defun my-system-is-rise ()
   "Return true if the system we are running on is floyd"
   (or
-    (string-equal system-name "LAPTOP-SO79O8O3")
+    (string-equal system-name "rise")
     )
   )
 
@@ -3658,9 +3658,9 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
      (notmuch-poll)
      (notmuch-refresh-this-buffer))
 
-   (when (not (my-system-is-rise))
+;   (when (not (my-system-is-rise))
      (define-key notmuch-hello-mode-map "g" 'my-notmuch-sync-and-update-index-and-buffer)
-   )
+;   )
 
 )
 #+END_SRC
