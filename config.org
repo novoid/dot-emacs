@@ -13433,6 +13433,7 @@ FIXXME: add more features:
   )
 
 (define-key global-map [(shift f1)] 'hydra-buffers/body)
+(define-key my-map (kbd "C-c C-,") 'hydra-buffers/body) ;; to get it on a more prominent binding (as well) because I use it quite often!
 #+END_SRC
 
 #+RESULTS:
