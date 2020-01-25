@@ -34,6 +34,62 @@ Some minor tasks I plan to do with my =config.org=:
   | 2020-01-15 | disabled because issue Y          |
   | 2020-01-19 | enabled again after fixing with Z |
 
+* What Solution I Am Using for Which I Consider My Main Use-Cases
+
+Corresponding to my general blog article [[https://karl-voit.at/apps-I-am-using/][What App am I Using for What
+and How?]] I maintain this brief overview of my most important workflows
+for Emacs and what package solution I am using for it. If you want to
+learn more about my workflows, I recommend reading and following my
+[[https://karl-voit.at/2019/09/25/using-orgmode/][Blog Series: Using Org Mode Features (UOMF)]].
+
+If you want to read how my ~init.el~ is auto-generated from this Org
+mode file, read [[http://karl-voit.at/2017/06/03/emacs-org][this article]].
+
+I do not maintain links to the sections below since this would be a
+very fragile task anyway considering the way GitHub links work for
+now. Therefore: if you are interested in details on a certain
+workflow, please do search for corresponding keywords. There are
+seldom multiple search hits except for separate key binding
+definitions or hydras.
+
+| *Workflow*                          | *Solution*                                         | *Notes*                   |
+|-------------------------------------+----------------------------------------------------+---------------------------|
+| Installing software packages        | ~use-package~ with packages and git repositories   |                           |
+| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature               |
+| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                           |
+| Passwords                           | ~org-crypt~ on Org mode headings                   |                           |
+| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ |                           |
+| Versioning files                    | ~magit~                                            |                           |
+| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                           |
+| Coding: Folding/unfolding           | ~yafolding~                                        |                           |
+| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          |                           |
+| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more screen space     |
+| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                           |
+| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~                        |                           |
+| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                           |
+| Switching buffers                   | ~ibuffer~                                          |                           |
+| Desktop notifications               | ~alert~                                            |                           |
+| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                           |
+| Coding python                       | ~elpy~, ~flycheck~                                 |                           |
+| Snippet management                  | ~yankpad~ with ~yasnippet~                         |                           |
+| Spell checking                      | ~flyspell~ with ~aspell~                           |                           |
+| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                           |
+| Formatting headings                 | ~my-title-capitalization()~                        |                           |
+| File management                     | ~dired~ with misc extensions                       | I'm still getting used to |
+| Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | based on frecency (sic!)  |
+| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to |
+| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to |
+| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                           |
+| Emails: reading                     | I'd love to use ~notmuch~ but: [[https://karl-voit.at/2020/01/13/thunderbird-notmuch/][I can't]]             |                           |
+
+What I'm not using at the moment:
+- projectile or other source code project management tools
+- vim bindings (evil, ...)
+- configuration frameworks
+
+You might want to take a look at the next section where I list my most
+important generic hydras in contrast to the ~F1~-mapped mode hydras.
+
 * Function keys
 
 Here are my function-key-mappings that are included in most hydra help screens:
