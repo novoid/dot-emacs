@@ -7342,6 +7342,7 @@ only see important business stuff.
                 ;;2019-12-17 replaced by org-ql-block ;;   ))
 
                 ;; examples: https://github.com/alphapapa/org-ql/blob/master/examples.org#stuck-projects-block-agenda
+                ;; 2020-01-23: not doing what it is supposed to show: only shows one heading from one org mode file: id:2020-01-23-Security-Policies
                 ("x" "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled"
                 ((org-ql-block '(and (tags "project")
                               (not (done))
@@ -7349,6 +7350,8 @@ only see important business stuff.
                               (not (descendants (not (done))))
                               (not (descendants (scheduled))))
                         ((org-ql-block-header "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled")))))
+
+                ;; 2020-01-23: not doing what it is supposed to show at all
                 ("1" "Stuck: open todos with unscheduled open sub-tasks"
                 ((org-ql-block '(and
                               (not (done))
@@ -7356,6 +7359,8 @@ only see important business stuff.
                               (descendants (not (done)))
                               (descendants (not (scheduled))))
                         ((org-ql-block-header "Stuck: open todos with unscheduled open sub-tasks")))))
+
+                ;; 2020-01-23: "with scheduled sub-tasks" does not work -> lists open todos but not all - can't tell what is shown
                 ("2" "Stuck: scheduled todos with scheduled sub-tasks"
                 ((org-ql-block '(and
                               (not (done))
