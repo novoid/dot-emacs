@@ -4115,7 +4115,9 @@ Loading contributed packages:
 ;;disabled 2019-06-26;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ob-restclient.el/")))
 ;;disabled 2019-06-26;; )
 
-  ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
+  (when (my-system-is-rise)
+     (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
+  )
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
   (autoload 'org-checklist "org-checklist.el")
 
