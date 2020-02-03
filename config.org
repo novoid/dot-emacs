@@ -2042,7 +2042,7 @@ copy/paste to web forms or such where you need one paragraph per line.
              (progn (setq this-command nil)
                     (point-max))
            fill-column)))
-    (call-interactively 'fill-paragraph)))
+    (call-interactively 'fill-paragraph nil (vector nil t))))
 
 (global-set-key [remap fill-paragraph]
                 'my-fill-or-unfill)
