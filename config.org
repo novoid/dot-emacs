@@ -13948,6 +13948,10 @@ approximately 25 seconds as of 2019-04-17.
 
   (my-log-misc "Emacs is started")
 
+  (when (or (my-system-is-rise) (my-system-is-sherri))
+     (my-hsplit-last-buffer)
+  )
+
   ;(sleep-for 2)
   (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
