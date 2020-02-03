@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2020-01-13 11:58:20 vk>
+;; Time-stamp:    <2020-01-31 23:21:56 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -142,11 +142,10 @@ Note the weekly scope of the command's precision.")
      (:name "today¬me" :query "date:today and not from:karl.voit"))))
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
- '(org-contacts-files (concat my-org-files-path "contacts.org") t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(package-selected-packages
    (quote
-    (pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-ql org-pdfview org-bullets nyan-mode mode-icons minimap magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode)))
+    (gif-screencast pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-ql org-pdfview org-bullets nyan-mode mode-icons minimap magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode)))
  '(safe-local-variable-values
    (quote
     ((eval ispell-change-dictionary "german8")

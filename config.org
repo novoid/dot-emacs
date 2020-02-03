@@ -9208,10 +9208,9 @@ Set org-contacts defaults that differ from standard
 #+BEGIN_SRC emacs-lisp
   (setq org-contacts-address-property "CITY")
   (setq org-contacts-birthday-property "BORN")
-  (setq org-contacts-files (concat my-org-files-path "contacts.org"))
+  (setq org-contacts-files (list (concat my-org-files-path "contacts.org")))
   (setq org-contacts-icon-property "PHOTOGRAPH")
   (custom-set-variables
-   '(org-contacts-files (concat my-org-files-path "contacts.org"))
    '(org-contacts-address-property "CITY")
    '(org-contacts-birthday-property "BORN")
    '(org-contacts-icon-property "PHOTOGRAPH")
@@ -9219,6 +9218,16 @@ Set org-contacts defaults that differ from standard
 #+END_SRC
 
 Take a look at =my-org-region-to-property()= as well.
+
+Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]] (a fork of
+[[https://github.com/tmalsburg/helm-org-contacts][tmalsburg/helm-org-contacts]]) to quickly link contacts.
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org-contacts
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/helm-org-contacts/")))
+   :after org
+)
+#+END_SRC
 
 ** babel - working with source code
 
@@ -12978,7 +12987,7 @@ Not org related but might be candidates as well:
   ^^                               _T_ags include inherited         _b_usiness shared
   ^^                               _1_ split block (M-RET)          _B_usiness personal
   ^^                               add _n_ote to logbook            ^^
-  ^^                               ^^                               ^^
+  ^^                               _c_ontact link                   ^^
   ^^                               mark as _P_roject                ^^
   ^^                               generate & copy _i_d             ^^
   ^^                               _t_ag headline according to words^^
@@ -13039,6 +13048,7 @@ Not org related but might be candidates as well:
   ("S" spray-mode nil)
   ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
   ("n" org-add-note nil)
+  ("c" helm-org-contacts nil)
   ("i" my-id-get-or-generate nil)
 
 ;;  ("t" my-dired-tagtrees nil)
@@ -13971,7 +13981,6 @@ not I should keep this here. Well, it does not hurt either.
  ;; If there is more than one, they won't work right.
  '(org-contacts-address-property "CITY")
  '(org-contacts-birthday-property "BORN")
- `(org-contacts-files ,(concat my-org-files-path "contacts.org"))
  '(org-contacts-icon-property "PHOTOGRAPH")
  '(safe-local-variable-values
    (quote
