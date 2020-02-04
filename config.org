@@ -9541,7 +9541,10 @@ http://orgmode.org/worg/org-tutorials/encrypting-files.html
 
 disabling auto-save for sensitive files
 http://anirudhs.chaosnet.org/blog/2005.01.21.html
-#+BEGIN_SRC emacs-lisp
+
+DISABLED 2020-02-04 because of constand data loss when Emacs crashes.
+
+#+BEGIN_SRC emacs-lisp :tangle no
     (define-minor-mode my-sensitive-mode
       "For sensitive files like password lists.
 It disables backup creation and auto saving.
@@ -9589,7 +9592,8 @@ To turn it off only locally, you can insert this:
 -*- buffer-auto-save-file-name: nil; -*-
 #+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp
+DISABLED 2020-02-04 because of constand data loss when Emacs crashes.
+#+BEGIN_SRC emacs-lisp :tangle no
  (setq auto-save-default nil)
 #+END_SRC
 
@@ -10843,7 +10847,9 @@ when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 )
 #+END_SRC
 
-** DISABLED Periodically auto-save buffers
+** Periodically auto-save buffers
+
+  | 2020-02-04 | re-activated after data loss when XOrg crashes on t490 |
 
 Automatically save buffers more often within certain modes:
 - http://www.emacswiki.org/emacs/AutoSave
@@ -10851,14 +10857,17 @@ Automatically save buffers more often within certain modes:
   - ... installed 2014-03-05 via Marmalade
 
 #+BEGIN_SRC emacs-lisp
-(use-package real-auto-save)
-(add-hook 'org-mode-hook 'turn-on-real-auto-save)
-;; Auto save interval is 10 seconds by default. You can change it:
-(when (my-system-type-is-windows)
-  (setq real-auto-save-interval 10)
-)
-(when (my-system-type-is-gnu)
-  (setq real-auto-save-interval 30)
+(use-package real-auto-save
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'real-auto-save-mode)
+
+  ;; Auto save interval is 10 seconds by default. You can change it:
+  (setq real-auto-save-interval 600)
+  (when (my-system-is-rise)
+    (setq real-auto-save-interval 30)
+  )
 )
 #+END_SRC
 
