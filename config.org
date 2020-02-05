@@ -10848,7 +10848,7 @@ when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 )
 #+END_SRC
 
-** Periodically auto-save buffers
+** real-auto-save: Periodically auto-save buffers
 
   | 2020-02-04 | re-activated after data loss when XOrg crashes on t490 |
 
@@ -10865,9 +10865,9 @@ Automatically save buffers more often within certain modes:
   (add-hook 'org-mode-hook 'real-auto-save-mode)
 
   ;; Auto save interval is 10 seconds by default. You can change it:
-  (setq real-auto-save-interval 600)
+  (setq real-auto-save-interval 3600) ;; hourly
   (when (my-system-is-rise)
-    (setq real-auto-save-interval 30)
+    (setq real-auto-save-interval 300);; each few minutes due to XOrg instability issues on the new t490 + Xununtu 1910
   )
 )
 #+END_SRC
