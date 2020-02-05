@@ -7319,7 +7319,7 @@ only see important business stuff.
                           ((org-agenda-span 31)
                            (org-agenda-time-grid nil)
                           )))
-                 nil (,(concat my-org-files-path "agenda_details.html")))
+                 nil (,(concat my-org-files-path "agenda_details_raw.html")))
 
                 ;; disabled 2015-02-15 - replaced by no TODO events ;; ("p" "events Prio [#A]"
                 ;; disabled 2015-02-15 - replaced by no TODO events ;;  ((agenda "+PRIORITY=\"A\""
