@@ -2350,7 +2350,7 @@ organization with many tasks and their dependencies).
   :demand t
   :mode ("/\\.emacs\\.d/etc/yasnippet/snippets/" . snippet-mode)
   :diminish yas-minor-mode
-  :defer 90
+  ;;:defer 90
   :config
   (yas-load-directory (concat my-user-emacs-directory "etc/yasnippet/snippets/"))
   (yas-global-mode 1)
@@ -2384,7 +2384,7 @@ within Org-mode only is defined in my yankpad file.
 #+BEGIN_SRC emacs-lisp
 (use-package yankpad
   :ensure t
-  :defer 110
+  ;;:defer 110
   :init
   (setq yankpad-file (concat my-org-files-path "yankpad.org"))
   :bind (:map my-map ("SPC" . yankpad-insert))
