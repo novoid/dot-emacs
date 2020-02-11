@@ -12819,11 +12819,44 @@ functionality to generate latin bullshit:
 I found this beauty [[https://github.com/alphapapa/unpackaged.el#obfuscate-buffer-text-with-lorem-ipsum-words][within alphapapa's diamonds on GitHub]]:
 
 #+BEGIN_SRC emacs-lisp
+(defcustom unpackaged/lorem-ipsum-overlay-exclude nil
+  "List of regexps to exclude from `my-lorem-ipsum-overlay'."
+  :type '(repeat regexp))
+
+(setq unpackaged/lorem-ipsum-overlay-exclude 
+  `(
+   "NEXT" "TODO" "STARTED" "WAITING" "DONE" "SOMEDAY" "CANCELED"
+   "Today"
+   "Important" "Started" "reward" "Scheduled:" 
+   "Other"
+   ;;,(rx "Other" space "items")                     ;; "Other items"   NOT working yet
+   ;;,(rx "Sched\\." (one-or-more digit) "x:")    ;; "Sched.10x:"    NOT working yet
+   ;;"Sched\\.[0-9]+:"    ;; NOT working
+   "WAITING" "items"          ;; "WAITING items"         NOT working yet
+   "Priority"                 ;; "Priority <= B items"   NOT working yet
+   "misc" "projects" "issues" "hardware"
+   "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"
+   "January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "November" "December"
+   )
+)
+
 ;;;###autoload
 (defun my-lorem-ipsum-overlay ()
   "Overlay all text in current buffer with \"lorem ipsum\" text.
 When called again, remove overlays.  Useful for taking
-screenshots without revealing buffer contents."
+screenshots without revealing buffer contents.
+Each piece of non-whitespace text in the buffer is compared with
+regexps in `unpackaged/lorem-ipsum-overlay-exclude', and ones
+that match are not overlaid.  Note that the regexps are compared
+against the entire non-whitespace token, up-to and including the
+preceding whitespace, but only the alphabetic part of the token
+is overlaid.  For example, in an Org buffer, a line that starts
+with:
+  #+TITLE: unpackaged.el
+could be matched against the exclude regexp (in `rx' syntax):
+  (rx (or bol bos blank) \"#+\" (1+ alnum) \":\" (or eol eos blank))
+And the line would be overlaid like:
+  #+TITLE: parturient.et"
   (interactive)
   (require 'lorem-ipsum)
   (let ((ovs (overlays-in (point-min) (point-max))))
@@ -12838,10 +12871,10 @@ screenshots without revealing buffer contents."
                                     (-flatten it) (apply #'concat it)
                                     (split-string it (rx (or space punct)) 'omit-nulls)))
             (case-fold-search nil))
-        (cl-labels ((overlay-match ()
-                                   (let* ((beg (match-beginning 0))
-                                          (end (match-end 0))
-                                          (replacement-word (lorem-word (match-string 0)))
+        (cl-labels ((overlay-match (group)
+                                   (let* ((beg (match-beginning group))
+                                          (end (match-end group))
+                                          (replacement-word (lorem-word (match-string group)))
                                           (ov (make-overlay beg end)))
                                      (when replacement-word
                                        (overlay-put ov :lorem-ipsum-overlay t)
@@ -12868,9 +12901,20 @@ screenshots without revealing buffer contents."
                                            do (cl-decf length (length word)))))
           (save-excursion
             (goto-char (point-min))
-            (while (re-search-forward (rx (1+ alpha)) nil t)
-              (overlay-match))))))))
+            (while (re-search-forward (rx (group (1+ (or bol bos blank (not alpha)))
+                                                 (0+ (not (any alpha blank)))
+                                                 (group (1+ alpha))
+                                                 (0+ (not (any alpha blank)))))
+                                      nil t)
+              (unless (cl-member (match-string 0) unpackaged/lorem-ipsum-overlay-exclude
+                                 :test (lambda (string regexp)
+                                         (string-match-p regexp string)))
+                (overlay-match 2))
+              (goto-char (match-end 2)))))))))
 #+END_SRC
+
+#+RESULTS:
+: my-lorem-ipsum-overlay
 
 Note: I filed a [[https://github.com/alphapapa/unpackaged.el/issues/13][feature request on ignoring some keywords from replacement]].
 
