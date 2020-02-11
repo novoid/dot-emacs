@@ -12318,6 +12318,45 @@ from =1GiB= to =10GiB=.
   - in your =$HOME= you will find a file like
     =output-2020-01-23-12:37:14.gif= if everything went well.
 
+** vimgolf
+:PROPERTIES:
+:CREATED:  [2020-02-11 Tue 10:27]
+:END:
+
+  | 2020-02-11 | found via [[https://sachachua.com/blog/2020/02/2020-02-10-emacs-news/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+sachac+%28sachachua%27s+blog+%28excluding+tidbits%29%29][emacs news]] and set up to test |
+
+- [[https://github.com/timvisher/vimgolf.el][GitHub page]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package vimgolf
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
+*** Snippets from the README
+
+1. Find the challenge you'd like to play on [[https://www.vimgolf.com/][VimGolf]].
+
+2. =M-x vimgolf CHALLENGE-ID RET=
+
+   Point will be in the window containing the starting text and you'll
+   have the goal text on a second window. Edit the starting text until
+   it matches the ending text and then finish with =C-c C-v C=.
+
+---------------
+
+| Command              | Default Binding        | Description                                                          |
+|----------------------+------------------------+----------------------------------------------------------------------|
+| =vimgolf=            | =M-x vimgolf=          | Input a challenge ID and play!                                       |
+| =vimgolf-browse=     | =M-x vimgolf-browse=   | Open an interactive buffer to browse challenge titles                |
+| =vimgolf-submit=     | =C-c C-v C=            | Finish and score the challenge                                       |
+| =vimgolf-revert=     | =C-c C-v r=            | Revert to the beginning of the challenge and clear your keystrokes   |
+| =vimgolf-diff=       | =C-c C-v d=            | Open an ediff session for the challenge                              |
+| =vimgolf-pause=      | =C-c C-v p=            | Pause keystroke recording                                            |
+| =vimgolf-continue=   | =C-c C-v c=            | Start keystroke recording where you left off                         |
+| =vimgolf-quit=       | =C-c C-v q=            | Stop the challenge                                                   |
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
