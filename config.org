@@ -4086,27 +4086,6 @@ assign file extensions to Org-mode:
 (setq org-babel-safe-header-args nil)
 #+END_SRC
 
-Dependencies between todos:
-#+BEGIN_SRC emacs-lisp
-;;2019-11-13: disabled to test org-edna ;; (use-package org-depend
-;;2019-11-13: disabled to test org-edna ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
-;;2019-11-13: disabled to test org-edna ;; )
-
-(use-package org-depend
-  :if (not noninteractive)  ;; I do have issues with org-depend
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
-)
-
-;; (use-package org-edna
-;;   ;; 2019-11-13: I'm testing a fork: https://github.com/akirak/org-edna via https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/
-;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-edna/")))
-;;   :config
-;;   (require 'org-edna)
-;;   (org-edna-load)
-;; )
-
-#+END_SRC
-
 Loading contributed packages:
 #+BEGIN_SRC emacs-lisp
 (use-package org-checklist
@@ -4171,6 +4150,45 @@ search or =id=-links:
 (require 'org-favtable)
 (setq org-favtable-id "my-favtable")
 (global-set-key (kbd "C-+") 'org-favtable)
+#+END_SRC
+
+** Dependencies between todos
+:PROPERTIES:
+:CREATED:  [2020-02-11 Tue 14:00]
+:END:
+
+  |      2010? | initial setup of =org-depend=                                        |
+  | 2019-11-13 | temporary testing phase of =org-edna= instead of =org-depend=        |
+  |    2020-01 | issue with =org-depend= and batch-generation of ICS export of agenda |
+
+One of my initial reasons to try Org mode was [[https://karl-voit.at/2016/12/18/org-depend/][the ability to define
+dependencies between tasks]].
+
+[[https://karl-voit.at/2019/11/16/UOMF-Linking-Headings/][This article]] also shows some handy functions related to this topic.
+
+The default method is using =org-depend=. It has a very simple syntax
+based on the =:TRIGGER:= and =:BLOCKER:= properties.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-depend
+;  :if (not noninteractive)  ;; I do have issues with org-depend
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+)
+
+#+END_SRC
+
+2019-11-13: I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]]
+
+Enabled only for testing purposes (when =org-depend= is disabled):
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-edna
+  ;; 
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-edna/")))
+  :config
+  (require 'org-edna)
+  (org-edna-load)
+)
 #+END_SRC
 
 ** General Org-mode settings
