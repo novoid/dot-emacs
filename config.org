@@ -12918,6 +12918,28 @@ And the line would be overlaid like:
 
 Note: I filed a [[https://github.com/alphapapa/unpackaged.el/issues/13][feature request on ignoring some keywords from replacement]].
 
+** my-insert-char
+:PROPERTIES:
+:CREATED:  [2020-02-12 Wed 14:25]
+:END:
+
+  | 2020-02-12 | found and setup this nugget via [[https://mastodon.social/@jeeger/103645084161888349][this toot]] and [[https://mastodon.social/@jeeger/103645362515054820][that toot]] |
+
+[[https://mastodon.social/@jeeger/103645362515054820][This toot]] shows a nice method to enter Unicode characters system-wide:
+
+1. define =my-insert-char= below
+2. manually test in the command line using:
+   : emacsclient -c -e '(my-insert-char)'
+3. map to a system-wise keyboard shortcut and use it to put arbitrary Unicode characters in the system clipboard
+
+#+BEGIN_SRC emacs-lisp
+(defun my-insert-char ()
+  (interactive)
+  (with-temp-buffer
+    (call-interactively 'insert-char)
+    (kill-ring-save (point-min) (point-max))))
+#+END_SRC
+
 * hydra
 
 [[https://github.com/abo-abo/hydra][Hydra]] is a method to customize personal and visual menus to summarize
