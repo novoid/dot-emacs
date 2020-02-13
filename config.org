@@ -9331,6 +9331,25 @@ Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]
 )
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(defun my-helm-org-contacts-refresh-cache ()
+  "Wrapper for helm-org-contacts-cache that adds time measurement and logging."
+  (interactive "P")
+  (setq my-helm-org-contacts-refresh-cache-start-time (current-time))
+
+  (save-some-buffers t) ;; get latest contact changes
+  (helm-org-contacts-refresh-cache)
+
+  (setq current-timestamp
+    (concat
+      (format-time-string "%Y-%m-%dT%T")
+      ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+      (format-time-string "%z"))))
+  (my-flash (format-message "helm-org-contacts-cache took %.2fs"            (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
+  (my-log-misc (format-message "helm-org-contacts-refresh-cache took %.2fs" (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
+)
+#+END_SRC
+
 ** babel - working with source code
 
 Activate Babel languages:
