@@ -14277,8 +14277,13 @@ loading my configuration (famous last words):
 ;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
 (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
-(my-log-misc
-  (format-message "Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
+(if (noninteractive)
+  (my-log-misc
+    (format-message "batch Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
+  )
+  (my-log-misc
+    (format-message "interactive Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
+  )
 )
 #+END_SRC
 
