@@ -5801,6 +5801,34 @@ selected instead of creating a new buffer."
 
 (advice-add 'org-tree-to-indirect-buffer :override 'my-org-tree-to-indirect-buffer)
 #+END_SRC
+
+*** my-refile-recache
+:PROPERTIES:
+:CREATED:  [2020-02-12 Wed 18:03]
+:END:
+
+  | 2020-02-12 | written by myself to clear and re-fill the refile cache |
+
+#+BEGIN_SRC emacs-lisp
+(defun my-refile-recache ()
+  "Clears and re-populates the org-refile-cache"
+  (interactive)
+  (setq my-refile-recache-start-time (current-time))
+
+  (save-some-buffers t) ;; get latest refile targets
+  (org-refile-cache-clear) ;; Clear the target cache. Caching of refile targets can be turned on by setting org-refile-use-cache. To make the command see new possible targets, you have to clear the cache with this command.
+  (setq org-refile-target-table (org-refile-get-targets))
+
+  (setq current-timestamp
+    (concat
+      (format-time-string "%Y-%m-%dT%T")
+      ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+      (format-time-string "%z"))))
+  (my-flash (format-message "Refile re-cache took %.2fs"                 (float-time (time-subtract (current-time) my-refile-recache-start-time))))
+  (my-log-misc (format-message "my-refile-recache-start-time took %.2fs" (float-time (time-subtract (current-time) my-refile-recache-start-time))))
+)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
