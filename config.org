@@ -5760,6 +5760,47 @@ History of this function: id:2019-11-14-Org-Project-Management-Workflow
 History of this function:
 id:2019-11-14-Org-Project-Management-Workflow
 
+*** my-org-tree-to-indirect-buffer
+:PROPERTIES:
+:CREATED:  [2019-10-02 Wed 17:04]
+:END:
+
+This beautiful piece of code was done by [[https://www.reddit.com/user/github-alphapapa][alphapapa]] and published on
+[[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/f26qpzr/][reddit]]. Its purpose is to provide more than one indirect buffer when
+using =org-tree-to-indirect-buffer()= (via ~C-c C-x b~). Further more,
+it has a different way of naming these buffers.
+
+Using an advice, the original function gets overwritten.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-tree-to-indirect-buffer (&optional arg)
+  "Create indirect buffer and narrow it to current subtree.
+The buffer is named after the subtree heading, with the filename
+appended.  If a buffer by that name already exists, it is
+selected instead of creating a new buffer."
+  (interactive "P")
+  (let* ((new-buffer-p)
+         (pos (point))
+         (buffer-name (let* ((heading (org-get-heading t t))
+                             (level (org-outline-level))
+                             (face (intern (concat "outline-" (number-to-string level))))
+                             (heading-string (propertize (org-link-display-format heading)
+                                                         'face face)))
+                        (concat heading-string "::" (buffer-name))))
+         (new-buffer (or (get-buffer buffer-name)
+                         (prog1 (condition-case nil
+                                    (make-indirect-buffer (current-buffer) buffer-name 'clone)
+                                  (error (make-indirect-buffer (current-buffer) buffer-name)))
+                           (setq new-buffer-p t)))))
+    (switch-to-buffer new-buffer)
+    (when new-buffer-p
+      ;; I don't understand why setting the point again is necessary, but it is.
+      (goto-char pos)
+      (rename-buffer buffer-name)
+      (org-narrow-to-subtree))))
+
+(advice-add 'org-tree-to-indirect-buffer :override 'my-org-tree-to-indirect-buffer)
+#+END_SRC
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -9226,48 +9267,6 @@ lines:
 
 #+BEGIN_SRC emacs-lisp
 (bind-key "H" #'helm-org-agenda-files-headings my-map)
-#+END_SRC
-
-** my-org-tree-to-indirect-buffer
-:PROPERTIES:
-:CREATED:  [2019-10-02 Wed 17:04]
-:END:
-
-This beautiful piece of code was done by [[https://www.reddit.com/user/github-alphapapa][alphapapa]] and published on
-[[https://www.reddit.com/r/orgmode/comments/dbsngi/finally_solving_the_lack_of_a_treeview_navigation/f26qpzr/][reddit]]. Its purpose is to provide more than one indirect buffer when
-using =org-tree-to-indirect-buffer()= (via ~C-c C-x b~). Further more,
-it has a different way of naming these buffers.
-
-Using an advice, the original function gets overwritten.
-
-#+BEGIN_SRC emacs-lisp
-(defun my-org-tree-to-indirect-buffer (&optional arg)
-  "Create indirect buffer and narrow it to current subtree.
-The buffer is named after the subtree heading, with the filename
-appended.  If a buffer by that name already exists, it is
-selected instead of creating a new buffer."
-  (interactive "P")
-  (let* ((new-buffer-p)
-         (pos (point))
-         (buffer-name (let* ((heading (org-get-heading t t))
-                             (level (org-outline-level))
-                             (face (intern (concat "outline-" (number-to-string level))))
-                             (heading-string (propertize (org-link-display-format heading)
-                                                         'face face)))
-                        (concat heading-string "::" (buffer-name))))
-         (new-buffer (or (get-buffer buffer-name)
-                         (prog1 (condition-case nil
-                                    (make-indirect-buffer (current-buffer) buffer-name 'clone)
-                                  (error (make-indirect-buffer (current-buffer) buffer-name)))
-                           (setq new-buffer-p t)))))
-    (switch-to-buffer new-buffer)
-    (when new-buffer-p
-      ;; I don't understand why setting the point again is necessary, but it is.
-      (goto-char pos)
-      (rename-buffer buffer-name)
-      (org-narrow-to-subtree))))
-
-(advice-add 'org-tree-to-indirect-buffer :override 'my-org-tree-to-indirect-buffer)
 #+END_SRC
 
 ** Contact management
