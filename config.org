@@ -85,7 +85,7 @@ What I'm not using at the moment:
 - projectile or other source code project management tools
 - vim bindings (evil, ...)
 - configuration frameworks
-- reading and managing emails: I'd love to use ~notmuch~ but [[https://karl-voit.at/2020/01/13/thunderbird-notmuch/][I can't]]  
+- reading and managing emails: I'd love to use ~notmuch~ but [[https://karl-voit.at/2020/01/13/thunderbird-notmuch/][I can't]]
 
 You might want to take a look at the next section where I list my most
 important generic hydras in contrast to the ~F1~-mapped mode hydras.
@@ -4183,7 +4183,7 @@ Enabled only for testing purposes (when =org-depend= is disabled):
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-edna
-  ;; 
+  ;;
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-edna/")))
   :config
   (require 'org-edna)
@@ -12889,11 +12889,11 @@ I found this beauty [[https://github.com/alphapapa/unpackaged.el#obfuscate-buffe
   "List of regexps to exclude from `my-lorem-ipsum-overlay'."
   :type '(repeat regexp))
 
-(setq unpackaged/lorem-ipsum-overlay-exclude 
+(setq unpackaged/lorem-ipsum-overlay-exclude
   `(
    "NEXT" "TODO" "STARTED" "WAITING" "DONE" "SOMEDAY" "CANCELED"
    "Today"
-   "Important" "Started" "reward" "Scheduled:" 
+   "Important" "Started" "reward" "Scheduled:"
    "Other"
    ;;,(rx "Other" space "items")                     ;; "Other items"   NOT working yet
    ;;,(rx "Sched\\." (one-or-more digit) "x:")    ;; "Sched.10x:"    NOT working yet
