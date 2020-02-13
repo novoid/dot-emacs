@@ -12936,7 +12936,8 @@ Note: I filed a [[https://github.com/alphapapa/unpackaged.el/issues/13][feature 
 (defun my-insert-char ()
   (interactive)
   (with-temp-buffer
-    (call-interactively 'insert-char)
+    ;; (call-interactively 'insert-char) ;; classic method
+    (call-interactively 'counsel-unicode-char) ;; improved usability
     (kill-ring-save (point-min) (point-max))))
 #+END_SRC
 
