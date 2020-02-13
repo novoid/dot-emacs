@@ -10054,6 +10054,26 @@ Dependency = org-ql
 )
 #+END_SRC
 
+** my-recache-all
+:PROPERTIES:
+:CREATED:  [2020-02-12 Wed 18:04]
+:END:
+
+  | 2020-02-12 | written by me |
+
+I tend to manually invoke this for executing all re-caching functions
+at once before leaving the computer for a longer period of time.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-recache-all ()
+  "Calls misc re-cache functions to refresh caches and make new content accessible. This might take long."
+  (interactive)
+
+  (my-helm-org-contacts-refresh-cache)
+  (my-refile-recache)
+)
+#+END_SRC
+
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
