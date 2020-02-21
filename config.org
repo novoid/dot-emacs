@@ -10590,6 +10590,17 @@ Support for opening last known pdf position in pdf-view-mode provided by pdf-too
 )
 #+END_SRC
 
+* Tramp
+:PROPERTIES:
+:CREATED:  [2020-02-13 Thu 11:26]
+:END:
+
+  | 2020-02-13 | added for testing |
+
+#+BEGIN_SRC emacs-lisp
+(customize-set-variable 'tramp-default-user "vk")
+#+END_SRC
+
 * Misc modes/packages
 
 Misc sources for packages:
