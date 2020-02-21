@@ -9702,6 +9702,7 @@ binding brings me the most current captured items into my =inbox.org=:
     (interactive "P")
     (org-mobile-pull)
     (find-file (concat my-org-files-path "inbox.org"))
+    (delete-trailing-whitespace)
     )
 #+END_SRC
 
