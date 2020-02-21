@@ -5824,8 +5824,8 @@ selected instead of creating a new buffer."
       (format-time-string "%Y-%m-%dT%T")
       ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z"))))
-  (my-flash (format-message "Refile re-cache took %.2fs"                 (float-time (time-subtract (current-time) my-refile-recache-start-time))))
   (my-log-misc (format-message "my-refile-recache-start-time took %.2fs" (float-time (time-subtract (current-time) my-refile-recache-start-time))))
+  (my-flash (format-message "Refile re-cache took %.2fs"                 (float-time (time-subtract (current-time) my-refile-recache-start-time))))
 )
 #+END_SRC
 
@@ -9345,8 +9345,8 @@ Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]
       (format-time-string "%Y-%m-%dT%T")
       ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z"))))
-  (my-flash (format-message "helm-org-contacts-cache took %.2fs"            (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
   (my-log-misc (format-message "helm-org-contacts-refresh-cache took %.2fs" (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
+  (my-flash (format-message "helm-org-contacts-cache took %.2fs"            (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
 )
 #+END_SRC
 
