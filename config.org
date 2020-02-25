@@ -10076,6 +10076,7 @@ at once before leaving the computer for a longer period of time.
   (interactive)
 
   (my-helm-org-contacts-refresh-cache)
+  (my-flash "continuing with \"my-refile-recache\" ...")
   (my-refile-recache)
 )
 #+END_SRC
