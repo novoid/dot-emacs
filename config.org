@@ -8374,7 +8374,7 @@ http://comments.gmane.org/gmane.emacs.orgmode/36415
 (setq org-icalendar-honor-noexport-tag t)
 #+END_SRC
 
-*** Add tags to iCal-export
+*** iCal-export
 
 http://comments.gmane.org/gmane.emacs.orgmode/19148
 #+BEGIN_SRC emacs-lisp
@@ -8382,7 +8382,7 @@ http://comments.gmane.org/gmane.emacs.orgmode/19148
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :tangle no
-'(org-icalendar-include-body 1000)
+'(org-icalendar-include-body 42) ;; 2020-02-24: reduced from 1000 to 42 (recommended by Bastien)
 '(org-icalendar-include-sexps nil)
 '(org-icalendar-include-todo nil)
 '(org-icalendar-store-UID t)
@@ -8391,6 +8391,11 @@ http://comments.gmane.org/gmane.emacs.orgmode/19148
 '(org-icalendar-use-plain-timestamp nil)
 '(org-icalendar-use-scheduled (quote (event-if-not-todo event-if-todo)))
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-before-write-hook nil);; 2020-02-24: recommended by Bastien
+#+END_SRC
+
 ** Tables
 
 #+BEGIN_SRC emacs-lisp
