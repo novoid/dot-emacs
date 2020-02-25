@@ -14305,17 +14305,26 @@ approximately 25 seconds as of 2019-04-17.
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
   (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
 
-  (if (file-exists-p (concat no-littering-var-directory "faststart"))
+  (setq faststart-indicator-file (concat no-littering-var-directory "faststart"))
+  (setq recache-indicator-file (concat no-littering-var-directory "recache"))
+
+  (if (file-exists-p faststart-indicator-file)
     (progn
-      (message "Faststart activated → omitting some autostart things") ;; see explanation above
       (my-log-misc "Faststart activated → omitting some autostart things")
+      (message "Faststart activated → omitting some autostart things") ;; see explanation above
+      (delete-file faststart-indicator-file)
     )
     (progn
        (message "Creating agenda …")
        ;;(my-log-misc "Creating agenda …")
        (my-org-agenda)
        (message "my-org-startup-visibility …")
-       (my-org-startup-visibility))
+       (my-org-startup-visibility)
+       (when (file-exists-p recache-indicator-file)
+          (my-recache-all)
+          ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
+       )
+       )
       )
 )
 #+END_SRC
