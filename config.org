@@ -3674,7 +3674,7 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
          smtpmail-smtp-server  my-business-mail-server
          smtpmail-stream-type  'starttls
          smtpmail-smtp-service 587
-         mail-host-address "karl.voit.rise-world.com")
+         mail-host-address my-business-mail-host-address)
 
    ;; Somehow, this variable gets overwritten by something to 'message-send-mail-with-outlook
    ;; and therefore it's been set in "custom variables" as well.
@@ -6516,8 +6516,12 @@ certain kind of data.
           ;;("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
           ;;("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
           ;;("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
+          ("EPA" . ,(concat my-business-jira-server "/EPA-%s"))
           ))
 #+END_SRC
+
+#+RESULTS:
+: ((bib . ~/archive/library/%s.bib) (cite . file:~/org/references.org::/%s/) (photo . file:~/people/all_photographs/%s) (pdf . ~/archive/library/%s.pdf) (notes . ~/archive/library/%s-notes.pdf) (contact . ~/org/contacts.org::/*.*%s/) (ifile . ~/org/memacs/ifiles.org::/*.*%s/) (postings2002 . file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s) (postings2001 . file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s) (EPA . https://jira.gemkon.risedev.at/browse/EPA-%s))
 
 Custom Link Completion
 - http://draketo.de/light/english/free-software/custom-link-completion-org-mode-25-lines-emacs
