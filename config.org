@@ -14313,7 +14313,6 @@ approximately 25 seconds as of 2019-04-17.
     (progn
       (my-log-misc "Faststart activated → omitting some autostart things")
       (message "Faststart activated → omitting some autostart things") ;; see explanation above
-      (delete-file faststart-indicator-file)
     )
     (progn
        (message "Creating agenda …")
@@ -14321,14 +14320,14 @@ approximately 25 seconds as of 2019-04-17.
        (my-org-agenda)
        (message "my-org-startup-visibility …")
        (my-org-startup-visibility)
-       (when (file-exists-p recache-indicator-file)
-          (my-recache-all)
-          ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
-       )
        )
       )
 )
 #+END_SRC
+
+Note: Removing =faststart-indicator-file= or running =my-recache-all=
+is done later-on. This is to make sure that Emacs bootup statistics stay
+comparable.
 
 * custom variables
 
@@ -14378,6 +14377,19 @@ loading my configuration (famous last words):
 ;    (format-message "interactive Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
 ;  )
 ;)
+
+  (if (file-exists-p faststart-indicator-file)
+    (progn
+      (delete-file faststart-indicator-file)
+    )
+    (progn
+       (when (file-exists-p recache-indicator-file)
+          (my-recache-all)
+          ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
+       )
+       )
+      )
+
 #+END_SRC
 
 * Current key mappings (sorted)
