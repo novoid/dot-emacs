@@ -13819,7 +13819,8 @@ FIXXME: add more features:
   ^↦^ previous window config        _9_ switch to window config 9     prefix l  last window
   _r_ename current window config
   _c_reate new window config
-  _C_lose current window config     ^^                      ▄
+  _C_lose current window config     ^^
+  new _f_rame                       ^^                      ▄
   ^^            ▄                   C-x 2  split _v_ertical ▄      ^^  C-x 0  _d_elete this
        _t_oggle ▄ ←→▐▐              ^^                             ^^  C-x 1  _k_eep this, delete others
        ^^             ▄             C-x 3  split _h_orizontal ▐▐   ^^         _o_ther window
@@ -13851,6 +13852,7 @@ FIXXME: add more features:
     ("v" my-vsplit-last-buffer nil :color blue)
     ("h" my-hsplit-last-buffer nil :color blue)
     ("o" other-window nil :color red)
+    ("f" new-frame nil :color red)
 
     ("t" my-toggle-vertical-horizontal-split nil :color blue)
     ("s" my-toggle-split-and-single-window nil :color blue)
