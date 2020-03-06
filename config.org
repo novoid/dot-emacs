@@ -14295,6 +14295,8 @@ approximately 25 seconds as of 2019-04-17.
 
 #+BEGIN_SRC emacs-lisp
 (message "→★ finished loading config.org (w/o autostart) in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
+(setq faststart-indicator-file (concat no-littering-var-directory "faststart"))
+(setq recache-indicator-file (concat no-littering-var-directory "recache"))
 
 ;; omit some things when running in batch-mode:
 (when (not noninteractive)
@@ -14311,9 +14313,6 @@ approximately 25 seconds as of 2019-04-17.
   (setq my-org-agenda-tags-column (- (- (window-total-width) 3)))
   (message (concat "Setting agenda tags column to " (number-to-string my-org-agenda-tags-column)))
   (setq org-agenda-tags-column my-org-agenda-tags-column) ;; total width minus 3
-
-  (setq faststart-indicator-file (concat no-littering-var-directory "faststart"))
-  (setq recache-indicator-file (concat no-littering-var-directory "recache"))
 
   (if (file-exists-p faststart-indicator-file)
     (progn
