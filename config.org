@@ -5750,7 +5750,7 @@ History of this function: id:2019-11-14-Org-Project-Management-Workflow
                    )
                  )
         )
-        (kill-new (org-id-get));; put ID in kill-ring
+        (kill-new (concat "id:" (org-id-get)));; put ID in kill-ring
         (org-id-get);; retrieve the current ID in any case as return value
 )
 
