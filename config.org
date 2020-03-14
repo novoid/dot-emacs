@@ -13936,6 +13936,35 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
 
   (global-set-key [f5] 'hydra-spelling/body)
 #+END_SRC
+
+** hydra-markdown → F1
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-markdown (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^─────────────────────^^──────────────────^^────────────────
+  _b_old                 _c_omment           ^^
+  _i_talics              ^^                  ^^
+  ^^                     ^^                  ^^
+  ^^                     ^^                  ^^
+  ")
+  ("q" nil "quit")
+  ("b" markdown-insert-bold nil)
+  ("i" markdown-insert-italics nil)
+
+  ("c" (lambda ()
+                (interactive)
+                (insert "[//]: # ()")) nil)
+
+)
+
+(define-key markdown-mode-map [f1] 'hydra-markdown/body)
+#+END_SRC
+
+#+RESULTS:
+: hydra-markdown/body
+
 ** END of hydra
 :PROPERTIES:
 :CREATED:  [2018-09-02 Sun 11:36]
