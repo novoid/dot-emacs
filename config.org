@@ -4101,6 +4101,16 @@ Loading contributed packages:
 
   (when (my-system-is-rise)
      (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
+
+     ;; https://www.reddit.com/r/emacs/comments/fk5z1b/how_to_remove_foo_barfoo_bar_links_via/fkrbc0e/
+     ;; Do not handle radio links (and generate broken page links):
+     (defun export-radio-links-as-plain-text (link desc info)
+       (when (string= "radio" (org-element-property :type link))
+         desc))
+
+     (advice-add #'org-confluence-link :before-until
+                 #'export-radio-links-as-plain-text)
+
   )
   ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
   (autoload 'org-checklist "org-checklist.el")
