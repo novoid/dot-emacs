@@ -6527,6 +6527,9 @@ certain kind of data.
           ;;("tfs" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
           ;;("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
           ("EPA" . ,(concat my-business-jira-server "/EPA-%s"))
+          ("EPAAFO" . ,(concat my-business-jira-server "/EPAAFO-%s"))
+          ("JAFO" . ,(concat my-business-jira-server "/EPAAFO-2671?jql=project%20%3D%20EPAAFO%20AND%20Afo-ID%20~%20%22%s%22"))
+          ("BMTSK" . ,(concat "file:" my-business-bmtsk-path "/"))
           ))
 #+END_SRC
 
