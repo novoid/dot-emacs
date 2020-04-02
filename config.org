@@ -12476,6 +12476,31 @@ from =1GiB= to =10GiB=.
 | =vimgolf-continue=   | =C-c C-v c=            | Start keystroke recording where you left off                         |
 | =vimgolf-quit=       | =C-c C-v q=            | Stop the challenge                                                   |
 
+** ace-window
+:PROPERTIES:
+:CREATED:  [2020-04-02 Thu 19:50]
+:END:
+
+After watching [[https://www.youtube.com/watch?v=nKCKuRuvAOw&feature=youtu.be][Sacha Chua's video on ace-window]], I decided to give it a try.
+
+It's a better way of jumping and managing multiple windows.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  ;;:defer 110
+  :config (setq aw-keys '(?f ?j ?a ?l))
+  :bind ("C-x o" . ace-window)
+)
+#+END_SRC
+
+Now, I may switch to a different window py invoking =C-x o= and the
+letter that got shown in the top left edge of the window.
+
+Using the prefix version =C-u C-c o= I may swap the current window
+with another one. A second prefix will delete the target window: =C-u
+C-u C-x o=.
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
