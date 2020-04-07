@@ -6528,7 +6528,7 @@ certain kind of data.
           ;;("TFS" . "http://grzd-tfs02:8080/tfs/DefaultCollection/Detego/_workitems?id=%s")
           ("EPA" . ,(concat my-business-jira-server "/EPA-%s"))
           ("EPAAFO" . ,(concat my-business-jira-server "/EPAAFO-%s"))
-          ("JAFO" . ,(concat my-business-jira-server "/EPAAFO-2671?jql=project%20%3D%20EPAAFO%20AND%20Afo-ID%20~%20%22%s%22"))
+          ("JAFO" . ,(concat my-business-jira-server "/EPAAFO-0?jql=project%20%3D%20EPAAFO%20AND%20Afo-ID%20~%20%22%s%22"))
           ("BMTSK" . ,(concat "file:" my-business-bmtsk-path "/"))
           ))
 #+END_SRC
@@ -12106,6 +12106,9 @@ simplified regular expressions instead of the standard Emacs RegEx.
 Example: in dired, you can mark using =%m= followed by =.*(jpg|png)=
 instead of using the pattern =.*\(jpg\|png\)=.
 
+CAUTION: this changes regex in general from vanilla Emacs regex to
+PCRE regex!
+
 #+BEGIN_SRC emacs-lisp
 (use-package pcre2el
 :ensure t
@@ -13845,9 +13848,6 @@ Not org related but might be candidates as well:
 #+RESULTS:
 
 ** hydra-buffers → Shift F1   my-map ,
-:PROPERTIES:
-:CREATED:  [2018-07-16 Mon 13:54]
-:END:
 
 This hydra offers buffer management functionalty.
 
