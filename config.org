@@ -12560,27 +12560,26 @@ of lines of the current buffer.
 Read http://karl-voit.at/2016/04/09/chosing-emacs-search-method/ for the whole story.
 
 #+BEGIN_SRC emacs-lisp
-(defun my-search-method-according-to-numlines ()
+(defun my-search-method-according-to-numlines (&optional arg)
+  "Choses search method according to buffer size: small → counsel-grep; huge → swiper-isearch; With C-u it's isearch-forward in any case."
   (interactive)
-  (if (and (buffer-file-name)
-           (not (my-system-type-is-windows))
-           (not (ignore-errors
-                  (file-remote-p (buffer-file-name))))
-           (if (eq major-mode 'org-mode)
-               (> (buffer-size) 60000)
-             (> (buffer-size) 300000)))
-      (progn
-        (save-buffer)
-        (counsel-grep))
-    (if (my-system-type-is-windows)
-        (isearch-forward)
-      ;; 2019-12-07: old command before upgrading everything and replacing with swiper-isearch;; (swiper--ivy (swiper--candidates))
-      (swiper-isearch)
-      )
-    ))
+  (cond ((or (equal current-prefix-arg '(4)) (my-system-type-is-windows));; Windows OR universal argument → isearch-forward
+             (isearch-forward))
+        (t
+            (if (and (buffer-file-name)
+                     (not (ignore-errors (file-remote-p (buffer-file-name))))
+                     (if (eq major-mode 'org-mode)
+                         (> (buffer-size) 60000);; for Org mode buffers, the max size for counsel-grep is 60,000 characters
+                       (> (buffer-size) 300000)));; for non-Org mode buffers, the max size for counsel-grep is 60,000 characters
+                (progn
+                  (save-buffer)
+                  (counsel-grep))
+              (swiper-isearch) ;; 2019-12-07: old command before upgrading everything and replacing with swiper-isearch;; (swiper--ivy (swiper--candidates))
+             ))
+))
 
 (global-set-key "\C-s" 'my-search-method-according-to-numlines)
-;;(global-set-key "\C-s" 'isearch-forward)
+;;(global-set-key "\C-S" 'isearch-forward)
 #+END_SRC
 
 PREVIOUS (simple) approach:
