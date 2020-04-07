@@ -96,11 +96,11 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧   Windows                    ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
+"⇧   Windows   Git              ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
 "                                                                                                       (propertize
 "    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
 "                                                                                                        'face '(:foreground "green"))
-"    Hydra     ← change →   ★   ┃  spell  (←) error →  fix  ┃  Git     Menu     maximize  naked
+"    Hydra     ← change →   ★   ┃  spell  (←) error →  fix  ┃  Search  Menu     maximize  naked
 
 "))
 #+END_SRC
@@ -9310,6 +9310,27 @@ Used by: org-ql
 )
 #+END_SRC
 
+** helm-org-rifle
+:PROPERTIES:
+:CREATED:  [2020-04-07 Tue 17:21]
+:END:
+
+  | 2020-04-07 | setup for testing |
+
+[[https://github.com/alphapapa/org-rifle][org-rifle]] is a swiss army knife for searching within Org mode files.
+So far, I was using mostly sparse trees,
+=my-search-method-according-to-numlines()= (=isearch-forward= and
+=swiper-isearch=) and =org-occur=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org-rifle
+  :ensure t
+  :defer 110
+  :after org
+;  :bind (:map my-map ("SPC" . yankpad-insert))
+)
+#+END_SRC
+
 ** helm-org-agenda-files-headings: grep within headings → my-map H
 
 This is a neat and fast way of looking for string only within heading
@@ -13619,7 +13640,7 @@ Not org related but might be candidates as well:
 #+RESULTS:
 : hydra-notmuch-show-mode/body
 
-** hydra-git → F9
+** hydra-git → Shift F2
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-git (:color blue)
@@ -13650,7 +13671,8 @@ Not org related but might be candidates as well:
 )
 
 (with-eval-after-load 'magit
-  (global-set-key [f9] 'hydra-git/body)
+  (define-key global-map [(shift f2)] 'hydra-git/body)
+  ;;(global-set-key [f9] 'hydra-git/body)
 )
 #+END_SRC
 
@@ -14002,6 +14024,42 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
 
 #+RESULTS:
 : hydra-markdown/body
+
+** hydra-search → F9
+
+#+BEGIN_QUOTE
+- =helm-org-rifle= :: Show results from all open Org buffers
+- =helm-org-rifle-agenda-files= :: Show results from Org agenda files
+- =helm-org-rifle-current-buffer= :: Show results from current buffer
+- =helm-org-rifle-directories= :: Show results from selected directories; with prefix, recursively
+- =helm-org-rifle-files= :: Show results from selected files
+- =helm-org-rifle-org-directory= :: Show results from Org files in org-directory
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-search (:color blue)
+    (concat my-f-key-settings
+  "
+  ^^Rifle                ^^                  ^^                     Ex.:    #A NEXT :foo:bar: !unwanted
+  ^^─────────────────────^^──────────────────^^────────────────
+  rifle _c_urrent buffer ^^                  ^^
+  rifle _o_pen buffers   ^^                  ^^
+  rifle _a_genda files   ^^                  ^^
+  ^^                     ^^                  ^^
+  ^^                     ^^                  ^^
+  ")
+  ("q" nil "quit")
+
+  ("c" helm-org-rifle-current-buffer nil)
+  ("o" helm-org-rifle nil)
+  ("a" helm-org-rifle-agenda-files nil)
+
+)
+
+(with-eval-after-load 'magit
+  (global-set-key [f9] 'hydra-search/body)
+)
+#+END_SRC
 
 ** END of hydra
 :PROPERTIES:
