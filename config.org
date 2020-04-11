@@ -3651,6 +3651,33 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
   universal prefix
 - [ ] FIXXME: do for time2name as well
 
+** DISABLED dired-show-readme
+:PROPERTIES:
+:CREATED:  [2020-04-11 Sat 10:43]
+:END:
+
+  | 2020-04-11 | installed for testing purposes                          |
+  | 2020-04-11 | disabled because it did not work on my README.org files |
+
+From [[https://www.reddit.com/r/emacs/comments/fyfpad/diredshowreadme_show_readme_in_dired_like_github/][this reddit thread]] I found [[https://gitlab.com/kisaragi-hiu/dired-show-readme][dired-show-readme]] which displays
+README files of various formats (using pandoc conversion) within the
+directory they are located.
+
+Although I don't need this particular function, I set it up to test
+it.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-show-readme
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-show-readme/")))
+  ;:defer 110
+  :after dired
+  :config
+  (setq dired-show-readme-position "bottom")
+  ;; (setq dired-show-readme-pandoc-executable "/usr/bin/pandoc");; on sherri, this is the default
+  (add-hook 'dired-mode-hook 'dired-show-readme-mode)
+)
+#+END_SRC
+
 * Email
 :PROPERTIES:
 :CREATED:  [2019-12-19 Thu 14:37]
