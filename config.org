@@ -3601,6 +3601,24 @@ running in background. This is how it's done.
 )
 #+END_SRC
 
+** orly
+:PROPERTIES:
+:CREATED:  [2020-04-13 Mon 16:44]
+:END:
+
+  | 2020-04-13 | setup for testing |
+
+This package got recommended for a specific [[https://github.com/abo-abo/oremacs/issues/27][issue I faced using interactive Python scripts]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package orly
+  ;;:if (my-system-type-is-gnu)
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/orly/")))
+  ;;:defer 110
+  :after org
+)
+#+END_SRC
+
 ** filetags.el → F1
 :PROPERTIES:
 :CREATED:  [2018-07-04 Wed 15:43]
