@@ -3688,7 +3688,7 @@ it.
 (use-package dired-show-readme
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-show-readme/")))
   ;:defer 110
-  :after dired
+  ;:after dired
   :config
   (setq dired-show-readme-position "bottom")
   ;; (setq dired-show-readme-pandoc-executable "/usr/bin/pandoc");; on sherri, this is the default
@@ -4207,7 +4207,7 @@ search or =id=-links:
 (global-set-key (kbd "C-+") 'org-favtable)
 #+END_SRC
 
-** Dependencies between todos
+** DISABLED Dependencies between todos
 :PROPERTIES:
 :CREATED:  [2020-02-11 Tue 14:00]
 :END:
