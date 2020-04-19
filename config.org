@@ -3202,6 +3202,34 @@ search):
 (define-key dired-mode-map (kbd "C-s") 'dired-isearch-filenames)
 #+END_SRC
 
+** looking for: filetags, date2name, appendfilename
+:PROPERTIES:
+:CREATED:  [2020-04-19 Sun 15:35]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+(setq my-filetags-file (my-binary-found "filetags"))
+(when (and (not my-filetags-file) (my-system-type-is-gnu))
+    (progn (message ("using manual src path for \"filetags\""))
+           (setq my-filetags-file (my-binary-found "/home/vk/src/filetags/filetags/__init__.py"))
+    )
+)
+
+(setq my-date2name-file (my-binary-found "date2name"))
+(when (and (not my-date2name-file) (my-system-type-is-gnu))
+    (progn (message ("using manual src path for \"date2name\""))
+           (setq my-date2name-file (my-binary-found "/home/vk/src/date2name/date2name/__init__.py"))
+    )
+)
+
+(setq my-appendfilename-file (my-binary-found "appendfilename"))
+(when (and (not my-appendfilename-file) (my-system-type-is-gnu))
+    (progn (message ("using manual src path for \"appendfilename\""))
+           (setq my-appendfilename-file (my-binary-found "/home/vk/src/appendfilename/appendfilename/__init__.py"))
+    )
+)
+#+END_SRC
+
 ** my-dired-filetags → M-t
 :PROPERTIES:
 :CREATED:  [2018-06-29 Fri 21:35]
@@ -3232,19 +3260,15 @@ search):
     (when (my-system-type-is-gnu)
       ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
       ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
-      (dired-do-shell-command "xfce4-terminal --disable-server --geometry=100x20+330+5 --hide-menubar -x /home/vk/bin/filetags --interactive *" nil marked-files)
-      ;;not working because of symlink?:      (dired-do-shell-command "~/bin/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
-      ;;works: (dired-do-shell-command "~/src/misc/vk-filetag-interactive-adding-wrapper-with-xfce4-terminal.sh *" nil marked-files)
-      )
+        (dired-do-shell-command (concat "xfce4-terminal --disable-server --geometry=100x20+330+5 --hide-menubar -x " my-filetags-file " --interactive *") nil marked-files)
     )
+
   (revert-buffer nil t t) ;; refresh listing of files
   )
+)
 
 (define-key dired-mode-map (kbd "M-t") 'my-dired-filetags)
 #+END_SRC
-
-#+RESULTS:
-: my-dired-filetags
 
 ** my-dired-appendfilename → M-a
 :PROPERTIES:
@@ -3262,7 +3286,7 @@ search):
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
         ;; --disable-server → provides a blocking terminal window (instead of a non-blocking one which swallows the revert-buffer afterward)
-        (dired-do-shell-command "xfce4-terminal --disable-server --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/appendfilename/appendfilename/__init__.py *" nil marked-files)
+            (dired-do-shell-command (concat "xfce4-terminal --disable-server --geometry=90x5+330+5 --hide-menubar -x " my-appendfilename-file " *") nil marked-files)
         )
       )
     (revert-buffer nil t t)
@@ -3286,7 +3310,7 @@ search):
         )
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --filter *" nil marked-files)
+        (dired-do-shell-command (concat "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x " my-filetags-file " --filter *") nil marked-files)
         )
       )
     )
@@ -3307,7 +3331,7 @@ search):
         )
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --filter --recursive *" nil marked-files)
+        (dired-do-shell-command (concat "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x " my-filetags-file " --filter --recursive *") nil marked-files)
         )
       )
     )
@@ -3328,14 +3352,11 @@ search):
         )
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --tagtrees --tagtrees-handle-no-tag no-tags *" nil marked-files)
+        (dired-do-shell-command (concat "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x " my-filetags-file " --tagtrees --tagtrees-handle-no-tag no-tags *") nil marked-files)
         )
       )
     )
 #+END_SRC
-
-#+RESULTS:
-: my-dired-tagtrees
 
 ** my-dired-tagtrees-recursive → F1
 :PROPERTIES:
@@ -3352,14 +3373,11 @@ search):
         )
       (when (my-system-type-is-gnu)
         ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        (dired-do-shell-command "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x /home/vk/src/filetags/filetags/__init__.py --tagtrees --recursive --tagtrees-handle-no-tag no-tags *" nil marked-files)
+        (dired-do-shell-command (concat "xfce4-terminal --geometry=90x5+330+5 --hide-menubar -x " my-filetags-file " --tagtrees --recursive --tagtrees-handle-no-tag no-tags *") nil marked-files)
         )
       )
     )
 #+END_SRC
-
-#+RESULTS:
-: my-dired-tagtrees-recursive
 
 ** my-dired-date2name → F1
 :PROPERTIES:
@@ -3371,13 +3389,7 @@ search):
     "Run \"time2name\" on current or marked files"
     (interactive)
     (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
-      (when (my-system-type-is-windows)
-        (dired-do-shell-command "date2name *" nil marked-files)
-        )
-      (when (my-system-type-is-gnu)
-        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        (dired-do-shell-command "/home/vk/src/date2name/date2name/__init__.py *" nil marked-files)
-        )
+        (dired-do-shell-command (concat my-date2name-file " *") nil marked-files)
       )
     (revert-buffer nil t t) ;; refresh listing of files
     )
@@ -3393,14 +3405,8 @@ search):
     "Run \"date2name --withtime\" on current or marked files"
     (interactive)
     (let* ((marked-files (f-uniquify (dired-get-marked-files)))) ;; apply to single file or marked files
-      (when (my-system-type-is-windows)
-        (dired-do-shell-command "date2name --withtime *" nil marked-files)
-        )
-      (when (my-system-type-is-gnu)
-        ;; FIXXME: maybe add check for binary: (when (my-eval-if-binary-or-warn "xfce4-terminal")
-        (dired-do-shell-command "/home/vk/src/date2name/date2name/__init__.py --withtime *" nil marked-files)
-        )
-      )
+      (dired-do-shell-command (concat my-date2name-file " --withtime *") nil marked-files)
+    )
     (revert-buffer nil t t) ;; refresh listing of files
     )
 #+END_SRC
@@ -4229,7 +4235,6 @@ based on the =:TRIGGER:= and =:BLOCKER:= properties.
 ;  :if (not noninteractive)  ;; I do have issues with org-depend
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
-
 #+END_SRC
 
 2019-11-13: I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]]
