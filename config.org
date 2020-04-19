@@ -235,6 +235,8 @@ installs its local copies of the packages:
                          ("melpa" . "https://melpa.org/packages/")))
 #+END_SRC
 
+- 2020-04-16: [[https://blog.abrochard.com/melpa-stats.html][Some statistics about MELPA]]
+
 *** Elpy
 
 Add [[https://github.com/jorgenschaefer/elpy][elpy repository]]:
