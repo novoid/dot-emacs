@@ -6584,7 +6584,6 @@ certain kind of data.
                                         ;       ("mynotes" . "file:~/org/references.org::%s")
                                         ;       ("papers" . "~/archive/library/%s.pdf")
           ("photo" . "file:~/people/all_photographs/%s")
-          ("pdf" . "~/archive/library/%s.pdf")
           ("notes" . "~/archive/library/%s-notes.pdf")
           ("contact" . ,(concat my-org-files-path "contacts.org::/\*.*%s/"))
 ;         ("tsfile" . ,(concat my-org-files-path "memacs/files.org_archive::/\*.*%s/")) replaced by org-link-set-parameters() + my-handle-tsfile-link()
@@ -6604,8 +6603,12 @@ certain kind of data.
           ))
 #+END_SRC
 
-#+RESULTS:
-: ((bib . ~/archive/library/%s.bib) (cite . file:~/org/references.org::/%s/) (photo . file:~/people/all_photographs/%s) (pdf . ~/archive/library/%s.pdf) (notes . ~/archive/library/%s-notes.pdf) (contact . ~/org/contacts.org::/*.*%s/) (ifile . ~/org/memacs/ifiles.org::/*.*%s/) (postings2002 . file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s) (postings2001 . file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s) (EPA . https://jira.gemkon.risedev.at/browse/EPA-%s))
+I've got the PDF files of my archive only on these hosts:
+#+BEGIN_SRC emacs-lisp
+(when (or (my-system-is-sherri) (my-system-is-floyd))
+    (add-to-list 'org-link-abbrev-alist '("pdf" . "~/archive/library/%s.pdf"))
+)
+#+END_SRC
 
 Custom Link Completion
 - http://draketo.de/light/english/free-software/custom-link-completion-org-mode-25-lines-emacs
