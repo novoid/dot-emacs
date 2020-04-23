@@ -11047,8 +11047,9 @@ when (or (my-system-is-powerplantlinux) (my-system-type-is-windows))
 
 Automatically save buffers more often within certain modes:
 - http://www.emacswiki.org/emacs/AutoSave
-- http://www.litchie.net/programs/real-auto-save.html
+- +http://www.litchie.net/programs/real-auto-save.html+ [2020-04-15 Wed 16:37] broken link
   - ... installed 2014-03-05 via Marmalade
+- https://github.com/ChillarAnand/real-auto-save
 
 #+BEGIN_SRC emacs-lisp
 (use-package real-auto-save
@@ -11057,11 +11058,15 @@ Automatically save buffers more often within certain modes:
   :config
   (add-hook 'org-mode-hook 'real-auto-save-mode)
 
+  (setq real-auto-save-use-idle-timer t);; use *idle* timer instead
+
   ;; Auto save interval is 10 seconds by default. You can change it:
   (setq real-auto-save-interval 3600) ;; hourly
   (when (my-system-is-rise)
-    (setq real-auto-save-interval 300);; each few minutes due to XOrg instability issues on the new t490 + Xununtu 1910
+    ;;(setq real-auto-save-interval 300);; each few minutes due to XOrg instability issues on the new t490 + Xununtu 1910
+    (setq real-auto-save-interval 60);; after one minute idle, save on the t490 + Xununtu 1910 due to XOrg instability issues
   )
+  (real-auto-save-activate-advice) ;; supperss confirmation for Makefiles
 )
 #+END_SRC
 
