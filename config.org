@@ -5893,6 +5893,23 @@ selected instead of creating a new buffer."
 )
 #+END_SRC
 
+*** my-delete-next-collapsed-property-drawer
+:PROPERTIES:
+:CREATED:  [2020-04-23 Thu 12:01]
+:END:
+
+ | 2020-04-23 | Added to clean up misc Org files |
+
+#+BEGIN_SRC emacs-lisp
+(defun my-delete-next-collapsed-property-drawer()
+   "isearch-forward → \":PROPERTIES:\" → remove line (with collapsed drawer)"
+    (search-forward ":PROPERTIES:")
+    (beginning-of-line)
+    (org-kill-line)
+    (org-kill-line)
+)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
