@@ -59,7 +59,8 @@ definitions or hydras.
 | Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                 |
 | Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space |
 | Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                  |
-| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~                        |                                  |
+| Filter Org files                    | sparse trees                                       |                                  |
+| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                  |
 | Switching buffers                   | ~ibuffer~                                          |                                  |
 | Desktop notifications               | ~alert~                                            |                                  |
 | Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                  |
@@ -75,7 +76,7 @@ definitions or hydras.
 | Spell checking                      | ~flyspell~ with ~aspell~                           |                                  |
 | Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                  |
 | Formatting headings                 | ~my-title-capitalization()~                        |                                  |
-| File management                     | ~dired~ with misc extensions                       | I'm still getting used to        |
+| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to        |
 | Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | top featurel; based on [[https://en.wikipedia.org/wiki/Frecency][frecency]]  |
 | PDF reading                         | ~pdf-tools~                                        | I'm still getting used to        |
 | PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to        |
