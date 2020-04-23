@@ -14083,7 +14083,9 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   (global-set-key [f5] 'hydra-spelling/body)
 #+END_SRC
 
-** hydra-markdown → F1
+** DISABLED hydra-markdown → F1
+
+  | 2020-04-19 | Disabled because I got =(void-variable markdown-mode-map)= and could not fix it now |
 
 #+BEGIN_SRC emacs-lisp
 (defhydra hydra-markdown (:color blue)
