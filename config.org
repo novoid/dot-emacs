@@ -14601,7 +14601,7 @@ loading my configuration (famous last words):
       (delete-file faststart-indicator-file)
     )
     (progn
-       (when (file-exists-p recache-indicator-file)
+       (when (and (file-exists-p recache-indicator-file) (not noninteractive))
           (my-recache-all)
           ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
        )
