@@ -10193,6 +10193,98 @@ at once before leaving the computer for a longer period of time.
 )
 #+END_SRC
 
+** Performance Optimizations
+:PROPERTIES:
+:CREATED:  [2020-05-04 Mon 15:01]
+:END:
+
+In 2020-05-04, [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/][that reddit discussion]] pointed me to [[https://www.mail-archive.com/emacs-orgmode@gnu.org/msg127740.html][this Org ML thread]]
+where the following adaptations were published to compensate the
+performance degradation due to [[https://karl-voit.at/2020/05/03/current-org-files][large Org mode files I do have]]:
+
+#+BEGIN_SRC emacs-lisp
+;; Unfortunately isearch, sets inhibit-point-motion-hooks and we
+;; cannot even use cursor-sensor-functions as a workaround
+;; I used a less ideas approach with advice to isearch-search-string as
+;; a workaround 
+
+(defun org-find-text-property-region (pos prop)
+  "Find a region containing PROP text property around point POS."
+  (require 'org-macs) ;; org-with-point-at
+  (org-with-point-at pos
+    (let* ((beg (and (get-text-property pos prop) pos))
+           (end beg))
+      (when beg
+        (setq beg (or (previous-single-property-change pos prop)
+                      beg))
+        (setq end (or (next-single-property-change pos prop)
+                      end))
+        (unless (equal beg end)
+          (cons beg end))))))
+
+;; :FIXME: re-hide properties when point moves away
+(define-advice isearch-search-string (:after (&rest _) put-overlay)
+  "Reveal hidden text at point."
+  (when-let ((region (org-find-text-property-region (point) 'invisible)))
+    (with-silent-modifications
+      (put-text-property (car region) (cdr region) 'org-invisible 
+(get-text-property (point) 'invisible)))
+      (remove-text-properties (car region) (cdr region) '(invisible nil))))
+
+;; this seems to be unstable, but I cannot figure out why
+(defun org-restore-invisibility-specs (&rest _)
+  ""
+   (let ((pos (point-min)))
+     (while (< (setq pos (next-single-property-change pos 'org-invisible nil 
+(point-max))) (point-max))
+       (when-let ((region (org-find-text-property-region pos 'org-invisible)))
+           (with-silent-modifications
+             (put-text-property (car region) (cdr region) 'invisible 
+(get-text-property pos 'org-invisible))
+             (remove-text-properties (car region) (cdr region) '(org-invisible 
+nil)))))))
+
+(add-hook 'post-command-hook #'org-restore-invisibility-specs)
+
+(defun org-flag-region (from to flag spec)
+  "Hide or show lines from FROM to TO, according to FLAG.
+SPEC is the invisibility spec, as a symbol."
+  (pcase spec
+    ('outline
+     (remove-overlays from to 'invisible spec)
+     ;; Use `front-advance' since text right before to the beginning of
+     ;; the overlay belongs to the visible line than to the contents.
+     (when flag
+       (let ((o (make-overlay from to nil 'front-advance)))
+         (overlay-put o 'evaporate t)
+         (overlay-put o 'invisible spec)
+         (overlay-put o 'isearch-open-invisible #'delete-overlay))))
+    (_
+     (with-silent-modifications
+       (remove-text-properties from to '(invisible nil))
+       (when flag
+         (put-text-property from to 'invisible spec)
+         )))))
+
+;; This normally deletes invisible text property. We do not want this now.
+(defun org-unfontify-region (beg end &optional _maybe_loudly)
+  "Remove fontification and activation overlays from links."
+  (font-lock-default-unfontify-region beg end)
+  (let* ((buffer-undo-list t)
+         (inhibit-read-only t) (inhibit-point-motion-hooks t)
+         (inhibit-modification-hooks t)
+         deactivate-mark buffer-file-name buffer-file-truename)
+    (decompose-region beg end)
+    (remove-text-properties beg end
+                            '(mouse-face t keymap t org-linked-text t
+                                         ;; Do not remove invisible during 
+fontification                                         
+                                         ;; invisible t
+                                         intangible t
+                                         org-emphasis t))
+    (org-remove-font-lock-display-properties beg end)))
+#+END_SRC
+
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
