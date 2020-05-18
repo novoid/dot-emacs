@@ -5910,6 +5910,35 @@ selected instead of creating a new buffer."
 )
 #+END_SRC
 
+*** my-org-retrieve-url-from-point → C-c o
+
+| 2020-05-18 | added|
+
+I wanted a function that does not open an web URL within Org mode (via
+=C-c C-o=) but rather copies its URL to the system clipboard for
+non-Emacs apps to paste.
+
+Lucky me, I found the ready-to-use solution [[https://emacs.stackexchange.com/a/3990][on this page]] which I bind to previously unused =C-c o=:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-retrieve-url-from-point ()
+  (interactive)
+  (let* ((link-info (assoc :link (org-context)))
+         (text (when link-info
+                 ;; org-context seems to return nil if the current element
+                 ;; starts at buffer-start or ends at buffer-end
+                 (buffer-substring-no-properties (or (cadr link-info) (point-min))
+                                                 (or (caddr link-info) (point-max))))))
+    (if (not text)
+        (error "Not in org link")
+      (add-text-properties 0 (length text) '(yank-handler (my-yank-org-link)) text)
+      (kill-new text))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c o") 'my-org-retrieve-url-from-point)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
