@@ -12747,6 +12747,25 @@ Using the prefix version =C-u C-c o= I may swap the current window
 with another one. A second prefix will delete the target window: =C-u
 C-u C-x o=.
 
+** explain-pause-mode
+
+  | 2020-05-19 | [[https://github.com/lastquestion/explain-pause-mode][cloned from GitHub]] and start testing |
+
+Emacs minor mode that watches for long pauses and reports them. 
+
+I learned about this mode on [[https://www.reddit.com/r/emacs/comments/gmh8bs/beta_testers_ann_lets_make_emacs_better/][on reddit]] where the developer was asking
+for testers. Since I do suffer from various performance bottlenecks, I
+decided to test this package myself.
+
+#+BEGIN_SRC emacs-lisp
+(use-package explain-pause-mode
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/explain-pause-mode/")))
+  ;;:defer 110
+  :config
+  (explain-pause-mode t)
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
