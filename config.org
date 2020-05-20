@@ -13322,12 +13322,48 @@ Note: I filed a [[https://github.com/alphapapa/unpackaged.el/issues/13][feature 
    : emacsclient -c -e '(my-insert-char)'
 3. map to a system-wise keyboard shortcut and use it to put arbitrary Unicode characters in the system clipboard
 
+I [[https://karl-voit.at/2020/02/12/my-insert-character/][blogged about this]].
+
+----------------
+
+Helper function to modify the behavior of =counsel-unicode-char= to
+match the one of =insert-char= taken from [[https://www.reddit.com/r/emacs/comments/f2ut1v/searching_and_typing_unicode_characters_like/][this reddit thread]]:
+
+#+BEGIN_SRC emacs-lisp
+(defun counsel-unicode-char-to-kill (&optional count)
+  "Insert COUNT copies of a Unicode character to kill ring.
+  COUNT defaults to 1."
+   (interactive "p")
+   (setq ivy-completion-beg (point))
+   (setq ivy-completion-end (point))
+   (ivy-read "Unicode name: " counsel--unicode-table
+             :history 'counsel-unicode-char-history
+             :action (lambda (name)
+                       (with-ivy-window
+                         (kill-new (make-string count (get-text-property 0 'code name)))
+                         ))
+             :caller 'counsel-unicode-char-to-kill))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (defun my-insert-char ()
   (interactive)
   (with-temp-buffer
-    ;; (call-interactively 'insert-char) ;; classic method
-    (call-interactively 'counsel-unicode-char) ;; improved usability
+    (call-interactively 'insert-char) ;; classic method
+    ;; (call-interactively 'counsel-unicode-char) ;; improved usability but inserts characters differently
+    ;; (call-interactively 'counsel-unicode-char-to-kill)
+    (kill-ring-save (point-min) (point-max))))
+
+(defun my-insert-char-counsel ()
+  (interactive)
+  (with-temp-buffer
+    (call-interactively 'counsel-unicode-char) ;; improved usability but inserts characters differently
+    (kill-ring-save (point-min) (point-max))))
+
+(defun my-insert-char-counsel-to-kill ()
+  (interactive)
+  (with-temp-buffer
+    (call-interactively 'counsel-unicode-char-to-kill)
     (kill-ring-save (point-min) (point-max))))
 #+END_SRC
 
@@ -13980,6 +14016,7 @@ Not org related but might be candidates as well:
   _(_ toggle details    ^^                    ^^
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
+
   ("t" my-dired-tagtrees nil)
   ("T" my-dired-tagtrees-recursive nil)
 
