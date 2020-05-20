@@ -13703,92 +13703,95 @@ Not org related but might be candidates as well:
 - [ ] https://github.com/abo-abo/hydra/wiki/Org-agenda
 
 #+BEGIN_SRC emacs-lisp
-(defhydra hydra-org (:color blue)
-  (concat my-f-key-settings
-  "
-  ^^Go to                          ^^Inserting                      ^^Crypto
-  ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
-  _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _p_ersonal credentials
-  ^^                               _T_ags include inherited         _b_usiness shared
-  ^^                               _1_ split block (M-RET)          _B_usiness personal
-  ^^                               add _n_ote to logbook            ^^
-  ^^                               _c_ontact link                   ^^
-  ^^                               mark as _P_roject                ^^
-  ^^                               generate & copy _i_d             ^^
-  ^^                               _t_ag headline according to words^^
-  ^^                               ^^                               ^^
-  ^^Filter                         ^^Export                         ^^MISC
-  ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
-  filter open todos by _t_ags      _R_eddit/Wiki.js (region)        _s_ynonym
-  _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word
-  _3_ org-tags-sparse-tree         ^^                               _S_pray (speed reading)
-  _f_ocus agenda (prio A; sched .) ^^                               _w_eather Graz
-  _F_ocus disabled for agenda      ^^                               ^^
-  ")
+  (defhydra hydra-org (:color blue)
+    (concat my-f-key-settings
+    "
+    ^^Go to                          ^^Inserting                      ^^Properties
+    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
+    _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _o_rdered dependency
+    _p_ersonal credentials           _T_ags include inherited         _N_oblocking (this is never blocked)
+    _b_usiness personal              _1_ split block (M-RET)          ^^
+    ^^                               add _n_ote to logbook            ^^
+    ^^                               _c_ontact link                   ^^
+    ^^                               mark as _P_roject                ^^
+    ^^                               generate & copy _i_d             ^^
+    ^^                               _t_ag headline according to words^^
+    ^^                               ^^                               ^^
+    ^^Filter                         ^^Export                         ^^MISC
+    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
+    filter open todos by _t_ags      _R_eddit/Wiki.js (region)        _s_ynonym
+    _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word
+    _3_ org-tags-sparse-tree         ^^                               _S_pray (speed reading)
+    _f_ocus agenda (prio A; sched .) ^^                               _w_eather Graz
+    _F_ocus disabled for agenda      ^^                               ^^
+    ")
 
-  ("f" (lambda ()
-          (interactive)
-          (org-agenda-filter-apply '("+.*\\[#A\\].*") 'regexp)
-  ) nil)
-  ("F" (lambda ()
-          (interactive)
-          (org-agenda-filter-show-all-re)
-  ) nil)
+    ("f" (lambda ()
+            (interactive)
+            (org-agenda-filter-apply '("+.*\\[#A\\].*") 'regexp)
+    ) nil)
+    ("F" (lambda ()
+            (interactive)
+            (org-agenda-filter-show-all-re)
+    ) nil)
 
-  ("p" (lambda ()
-          (interactive)
-          (switch-to-buffer "notes.org")
-          (org-id-goto "browser-restart")
-          (org-decrypt-entry)
-  ) nil)
+    ("p" (lambda ()
+            (interactive)
+            (switch-to-buffer "notes.org")
+            (org-id-goto "browser-restart")
+            (org-decrypt-entry)
+    ) nil)
 
-  ("P" my-mark-as-project nil)
+    ("P" my-mark-as-project nil)
 
-  ("b" (lambda ()
-          (interactive)
-          (switch-to-buffer "rise.org")
-          (org-id-goto "rise-shared-credentials")
-          (org-decrypt-entry)
-  ) nil)
-  ("B" (lambda ()
-          (interactive)
-          (switch-to-buffer "rise.org")
-          (org-id-goto "rise-personal-credentials")
-          (org-decrypt-entry)
-  ) nil)
+    ;; 2020-05-20: we do not share credentials in this company *g*
+    ;; ("B" (lambda ()
+    ;;         (interactive)
+    ;;         (switch-to-buffer "rise.org")
+    ;;         (org-id-goto "rise-shared-credentials")
+    ;;         (org-decrypt-entry)
+    ;; ) nil)
 
-  ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
-  ("u" my-insert-orgmode-url-from-clipboard nil)
-  ("T" my-set-tags-including-inherited nil)
-  ("t" my-org-tag-alist nil)
-  ("1" my-org-split-block nil)
+    ("b" (lambda ()
+            (interactive)
+            (switch-to-buffer "rise.org")
+            (org-id-goto "rise-personal-credentials")
+            (org-decrypt-entry)
+    ) nil)
 
-  ("t" my-sparse-tree-with-tag-filter nil)
-  ("2" org-tags-view nil)
-  ("3" org-tags-sparse-tree nil)
+    ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
+    ("u" my-insert-orgmode-url-from-clipboard nil)
+    ("T" my-set-tags-including-inherited nil)
+    ("t" my-org-tag-alist nil)
+    ("1" my-org-split-block nil)
 
-  ("R" my-reddit-export-via-pandoc nil)
-  ("s" my-synonym-current-word nil)
-  ("d" define-word-at-point nil)
-  ("S" spray-mode nil)
-  ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
-  ("n" org-add-note nil)
-  ("c" helm-org-contacts nil)
-  ("i" my-id-get-or-generate nil)
+    ("t" my-sparse-tree-with-tag-filter nil)
+    ("2" org-tags-view nil)
+    ("3" org-tags-sparse-tree nil)
 
-;;  ("t" my-dired-tagtrees nil)
-;;  ("T" my-dired-tagtrees-recursive nil)
+    ("R" my-reddit-export-via-pandoc nil)
+    ("s" my-synonym-current-word nil)
+    ("d" define-word-at-point nil)
+    ("S" spray-mode nil)
+    ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
+    ("n" org-add-note nil)
+    ("c" helm-org-contacts nil)
+    ("i" my-id-get-or-generate nil)
 
-  ("q" nil "quit")
+  ;;  ("t" my-dired-tagtrees nil)
+  ;;  ("T" my-dired-tagtrees-recursive nil)
 
-)
+    ("N" (lambda () (interactive) (org-set-property "NOBLOCKING" "t")) nil)
+    ("o" (lambda () (interactive) (org-set-property "ORDERED" "t")) nil)
 
-(define-key org-mode-map [f1] 'hydra-org/body)
-(define-key org-agenda-mode-map [f1] 'hydra-org/body)
+
+    ("q" nil "quit")
+
+  )
+
+  (define-key org-mode-map [f1] 'hydra-org/body)
+  (define-key org-agenda-mode-map [f1] 'hydra-org/body)
 #+END_SRC
-
-#+RESULTS:
-: hydra-org/body
 
 ** hydra-python → F1
 :PROPERTIES:
