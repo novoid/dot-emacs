@@ -3457,6 +3457,8 @@ Version 2016-10-15"
   (define-key dired-mode-map (kbd "C-c C-o") 'my-dired-open-in-external-app)
 #+END_SRC
 
+Alternative: =openwith= from [[https://github.com/jpkotta/openwith/tree/1dc89670822966fab6e656f6519fdd7f01e8301a][this GitHub page]] mentioned by [[https://cestlaz.github.io/post/using-emacs-71-openwith/][Using Emacs 71 Openwith]].
+
 ** my-dired-open-in-file-manager → F1
 :PROPERTIES:
 :CREATED:  [2018-07-01 Sun 10:29]
@@ -3891,7 +3893,7 @@ General LaTeX settings:
 
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill) ;; word-wrap in TeX files
 
-(setq TeX-auto-save t)
+(setq TeX-auto-save nil);; avoid auto directories; read https://emacs.stackexchange.com/questions/32760/how-to-get-rid-of-the-auto-folder-with-el-files
 (setq TeX-parse-self t)
 
 ;(setq-default TeX-master nil);; 2015-03-22 deactivated because it doesn't seem to have any influence: id:2013-12-31-org-master-file
@@ -4218,13 +4220,12 @@ search or =id=-links:
 #+END_SRC
 
 ** DISABLED Dependencies between todos
-:PROPERTIES:
-:CREATED:  [2020-02-11 Tue 14:00]
-:END:
 
-  |      2010? | initial setup of =org-depend=                                        |
-  | 2019-11-13 | temporary testing phase of =org-edna= instead of =org-depend=        |
-  |    2020-01 | issue with =org-depend= and batch-generation of ICS export of agenda |
+  |      2010? | initial setup of =org-depend=                                              |
+  | 2019-11-13 | temporary testing phase of =org-edna= instead of =org-depend=              |
+  |    2020-01 | issue with =org-depend= and batch-generation of ICS export of agenda       |
+  | 2020-05-13 | re-enabling after org upgrade: test again                                  |
+  | 2020-05-18 | disabled again: =Variable binding depth exceeds max-specpdl-size= persists |
 
 One of my initial reasons to try Org mode was [[https://karl-voit.at/2016/12/18/org-depend/][the ability to define
 dependencies between tasks]].
@@ -4432,24 +4433,6 @@ http://yasnippet.googlecode.com/svn/trunk/doc/index.html
   (setq yas-indent-line 'fixed) ;; fixes Org-mode issue with yasnippets: https://github.com/capitaomorte/yasnippet/issues/362
 #+END_SRC
 
-: From: Bastien <bzg@altern.org>
-: Newsgroups: gmane.emacs.orgmode
-: Subject: Re: scale inline images in orgmode
-: Date: Thu, 30 Aug 2012 15:52:59 +0200
-: Message-ID: <87a9xcsczo.fsf@altern.org>
-:
-: You can now (from git master) use `org-image-actual-width'.
-: (setq org-image-actual-width 300)
-:   => always resize inline images to 300 pixels
-: (setq org-image-actual-width '(400))
-:   => if there is a #+ATTR.*: width="200", resize to 200,
-:      otherwise resize to 400
-: (setq org-image-actual-width nil)
-:   => if there is a #+ATTR.*: width="200", resize to 200,
-:      otherwise don't resize
-: (setq org-image-actual-width t)
-:   => Never resize and use original width (the default)
-
 [[https://www.reddit.com/r/emacs/comments/9y1swq/orgbullets_on_windows_workaround_that/][org-bullets on Windows: workaround that significantly improves speed]]
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
@@ -4649,6 +4632,24 @@ See: id:2016-08-19-unicode-enlarges-line-height
 #+BEGIN_SRC emacs-lisp
 (setq org-ellipsis "•")
 #+END_SRC
+
+: From: Bastien <bzg@altern.org>
+: Newsgroups: gmane.emacs.orgmode
+: Subject: Re: scale inline images in orgmode
+: Date: Thu, 30 Aug 2012 15:52:59 +0200
+: Message-ID: <87a9xcsczo.fsf@altern.org>
+:
+: You can now (from git master) use `org-image-actual-width'.
+: (setq org-image-actual-width 300)
+:   => always resize inline images to 300 pixels
+: (setq org-image-actual-width '(400))
+:   => if there is a #+ATTR.*: width="200", resize to 200,
+:      otherwise resize to 400
+: (setq org-image-actual-width nil)
+:   => if there is a #+ATTR.*: width="200", resize to 200,
+:      otherwise don't resize
+: (setq org-image-actual-width t)
+:   => Never resize and use original width (the default)
 
 Set the width of inline images:
 #+BEGIN_SRC emacs-lisp
@@ -8538,17 +8539,36 @@ material from the first table.»
 (my-load-local-el "contrib/orgaggregate/org-insert-dblock.el")
 #+END_SRC
 
-*** org-table-sticky-header-mode
+*** Sticky header lines
+
+  | 2020-02-06 | moved from =org-table-sticky-header= to =org-table-header-line-mode= |
 
 A minor mode to show the sticky header for org-mode tables.
 - https://github.com/cute-jumper/org-table-sticky-header
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-table-sticky-header
   :ensure t
   :config
   (add-hook 'org-mode-hook 'org-table-sticky-header-mode)
   )
 #+END_SRC
+
+FIXXME 2020-02-01: According to [[https://mastodon.etalab.gouv.fr/@bzg/103578639383778830][this toot]], this should be replaced by
+standard feature =M-x org-table-electric-header-mode=. Will have to
+check after I got this Org version. [[https://www.reddit.com/r/emacs/comments/ex4f1n/new_org_feature_makes_table_headers_always_visible/fg65alm/][Already renamed, it's now
+`org-table-header-line-mode`.]]
+
+FIXXME 2020-02-06: this does not seem to be in my code so far. I keep
+it until it "appears". It is reported to be part of Org v9.4.
+
+2020-05-16: It's now part of Org mode maint git branch. Beginning to test this feature ...
+
+#+BEGIN_SRC emacs-lisp
+(setq org-table-header-line-mode t)
+(setq org-table-sticky-header-mode t)
+#+END_SRC
+
+see internal note id:2020-02-09-Upgrade-org-mode-for-org-table-header-line-mode
 
 *** patching orgtbl-ascii-draw to accept references for min/max values
 :PROPERTIES:
@@ -9480,7 +9500,7 @@ Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]
 #+BEGIN_SRC emacs-lisp
 (defun my-helm-org-contacts-refresh-cache ()
   "Wrapper for helm-org-contacts-cache that adds time measurement and logging."
-  (interactive "P")
+  (interactive)
   (setq my-helm-org-contacts-refresh-cache-start-time (current-time))
 
   (save-some-buffers t) ;; get latest contact changes
@@ -11198,17 +11218,18 @@ Automatically save buffers more often within certain modes:
   :ensure t
   :after org
   :config
-  (add-hook 'org-mode-hook 'real-auto-save-mode)
 
-  (setq real-auto-save-use-idle-timer t);; use *idle* timer instead
+  (setq real-auto-save-use-idle-timer t);; t → use *idle* timer instead; nil → use fixed timer
 
   ;; Auto save interval is 10 seconds by default. You can change it:
   (setq real-auto-save-interval 3600) ;; hourly
   (when (my-system-is-rise)
-    ;;(setq real-auto-save-interval 300);; each few minutes due to XOrg instability issues on the new t490 + Xununtu 1910
     (setq real-auto-save-interval 60);; after one minute idle, save on the t490 + Xununtu 1910 due to XOrg instability issues
   )
-  (real-auto-save-activate-advice) ;; supperss confirmation for Makefiles
+  ;;(setq real-auto-save-use-idle-timer t);; FIXXME: testing https://github.com/ChillarAnand/real-auto-save/issues/43
+  ;;(setq real-auto-save-interval 15) ;; FIXXME: testing https://github.com/ChillarAnand/real-auto-save/issues/43
+  ;;(real-auto-save-activate-advice) ;; suppress confirmation for Makefiles
+  (add-hook 'org-mode-hook 'real-auto-save-mode)
 )
 #+END_SRC
 
@@ -11791,9 +11812,10 @@ via: http://ikiwiki.info/tips/Emacs_and_markdown/
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t
-  :if (my-system-is-rise)
-  :defer 110
+  ;:if (my-system-is-rise)
+  ;;:defer 110
   :mode ("\\.md\\'" . markdown-mode)
+  :mode ("\\.mkdn\\'" . markdown-mode)
 )
 #+END_SRC
 
@@ -14701,33 +14723,33 @@ This is the end of the Elisp blocks to be tangled. Finishing up
 loading my configuration (famous last words):
 
 #+BEGIN_SRC emacs-lisp
-(my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
-(my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
+  (my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
+  (my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
 
-(message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
-;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
-(message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
+  (message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
+  ;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
+  (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
 
-;(if (and ((not (my-system-is-sherri)) (noninteractive)))
-;  (my-log-misc
-;    (format-message "batch Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
-;  )
-;  (my-log-misc
-;    (format-message "interactive Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
-;  )
-;)
-
-  (if (file-exists-p faststart-indicator-file)
-    (progn
-      (delete-file faststart-indicator-file)
+  (when (not noninteractive)
+    (my-log-misc
+      (format-message "interactive Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
     )
-    (progn
-       (when (and (file-exists-p recache-indicator-file) (not noninteractive))
-          (my-recache-all)
-          ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
-       )
-       )
+    ;;(my-log-misc
+    ;;  (format-message "batch Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
+    ;;)
+  )
+
+    (if (file-exists-p faststart-indicator-file)
+      (progn
+        (delete-file faststart-indicator-file)
       )
+      (progn
+         (when (and (file-exists-p recache-indicator-file) (not noninteractive))
+            (my-recache-all)
+            ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
+         )
+         )
+        )
 
 #+END_SRC
 
@@ -15121,6 +15143,13 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 #+end_example
 
 * Local Variables
-# Local Variables:
-# mode: auto-fill
-# End:
+
+# from: (org-expiry-deinsinuate)
+;; Local Variables:
+;; eval: (make-local-variable 'org-insert-heading-hook)
+;; eval: (remove-hook 'org-insert-heading-hook 'org-expiry-insert-created t)
+;; eval: (make-local-variable 'org-after-todo-state-change-hook)
+;; eval: (remove-hook 'org-after-todo-state-change-hook 'org-expiry-insert-created t)
+;; eval: (make-local-variable 'org-after-tags-change-hook)
+;; eval: (remove-hook 'org-after-tags-change-hook 'org-expiry-insert-created t)
+;; End:
