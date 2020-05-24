@@ -6948,6 +6948,9 @@ https://github.com/novoid/Memacs/ With Memacs, I get email, text
 messages, phone calls, downloaded files, visited web pages, Git
 commits, photos, and so forth on my agenda. This is /really/ cool.
 
+[[https://irreal.org/blog/?p=8879][Irreal wrote a blog article]] about [[https://www.youtube.com/watch?v=mPETdGjW_-A&feature=emb_logo][a nice Agenda demo]]. I'm using almost
+all features explained (except column mode, effort, clocking).
+
 *** Agenda files
 
 I maintain two categories of agenda files: work and non-work files which are
