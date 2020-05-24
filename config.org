@@ -12747,9 +12747,10 @@ Using the prefix version =C-u C-c o= I may swap the current window
 with another one. A second prefix will delete the target window: =C-u
 C-u C-x o=.
 
-** explain-pause-mode
+** DISABLED explain-pause-mode
 
-  | 2020-05-19 | [[https://github.com/lastquestion/explain-pause-mode][cloned from GitHub]] and start testing |
+  | 2020-05-19 | [[https://github.com/lastquestion/explain-pause-mode][cloned from GitHub]] and start testing     |
+  | 2020-05-23 | disabled because it spams my mini-buffer |
 
 Emacs minor mode that watches for long pauses and reports them. 
 
