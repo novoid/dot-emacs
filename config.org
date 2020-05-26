@@ -12770,6 +12770,17 @@ decided to test this package myself.
 )
 #+END_SRC
 
+** Emacs Slime Volleyball
+
+| 2020-05-26 | setup this little game after finding it via Emacs News on [[https://github.com/fitzsim/slime-volleyball][GitHub]] |
+
+#+BEGIN_SRC emacs-lisp
+(use-package slime-volleyball
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/slime-volleyball/")))
+  :config (require 'slime-volleyball)
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
