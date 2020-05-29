@@ -581,6 +581,23 @@ My setup is using John Wiegley's [[https://github.com/jwiegley/use-package][use-
 startup of external libraries. This has many advantages: flexibility,
 startup performance, readability.
 
+Bootstrap =use-package= is stolen from [[https://gitlab.com/emacsomancer/collaborative-writing-environment-emacs/-/blob/master/init.org][this file]]:
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(use-package use-package
+   :ensure t
+   :pin MELPA
+   :config
+   (require 'use-package))
+#+END_SRC
+
 ** Examples
 
 Here are some examples for future reference:
