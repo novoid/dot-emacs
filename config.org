@@ -60,6 +60,7 @@ definitions or hydras.
 | Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space |
 | Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                  |
 | Filter Org files                    | sparse trees                                       |                                  |
+| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                  |
 | Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                  |
 | Switching buffers                   | ~ibuffer~                                          |                                  |
 | Desktop notifications               | ~alert~                                            |                                  |
