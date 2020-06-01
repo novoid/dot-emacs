@@ -560,7 +560,7 @@ up/down (horizontal split). ([[https://stackoverflow.com/questions/7997590/how-t
 Note: this might be no good idea when you are not working with
 single/maximized windows like I prefer for now.
 
-The values of the thresholds on sherri (30", landscape) before I
+The values of the thresholds on sting (30", landscape) before I
 started overwriting them here:
 : split-width-threshold  ;; Its value is 9999; Original value was 160
 : split-height-threshold ;; Its value is 80
@@ -593,7 +593,7 @@ Bootstrap =use-package= is stolen from [[https://gitlab.com/emacsomancer/collabo
 
 (use-package use-package
    :ensure t
-   :pin MELPA
+   ;;:pin MELPA
    :config
    (require 'use-package))
 #+END_SRC
@@ -892,21 +892,21 @@ Here are host-specific functions which I should *not* use if possible
 because with them, I lose some generic approach:
 
 #+BEGIN_SRC emacs-lisp
-(defun my-system-is-floyd-or-sherri ()
-  "Return true if the system we are running on is floyd or sherri"
+(defun my-system-is-floyd-or-sting ()
+  "Return true if the system we are running on is floyd or sting"
   (or
     (string-equal system-name "floyd")
     (string-equal system-name "floyd.lan")
-    (string-equal system-name "sherri")
-    (string-equal system-name "sherri.lan")
+    (string-equal system-name "sting")
+    (string-equal system-name "sting.lan")
     )
   )
 
-(defun my-system-is-sherri ()
-  "Return true if the system we are running on is sherri"
+(defun my-system-is-sting ()
+  "Return true if the system we are running on is sting"
   (or
-    (string-equal system-name "sherri")
-    (string-equal system-name "sherri.lan")
+    (string-equal system-name "sting")
+    (string-equal system-name "sting.lan")
     )
   )
 
@@ -1364,7 +1364,7 @@ Example usages:
 
 This heading ist just for collecting example outputs:
 
-sherri output:
+sting output:
 #+BEGIN_EXAMPLE
 pdflatexTeX binary: /usr/bin/pdflatex
 python binary: /usr/bin/python
@@ -1658,7 +1658,7 @@ Host-specific font sizes:
 ;;  (set-face-attribute 'default (selected-frame) :height 105);; until 2019-12-23
   (set-face-attribute 'default (selected-frame) :height 100)
   )
-(when (my-system-is-sherri)
+(when (my-system-is-sting)
   ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
   ;;(set-face-attribute 'default (selected-frame) :height 105) ;; before 2019-10-24: I want to try smaller font
   ;;(set-face-attribute 'default (selected-frame) :height 102) ;; before 2019-12-04: even smaller on reduced resolution
@@ -3721,7 +3721,7 @@ it.
   ;:after dired
   :config
   (setq dired-show-readme-position "bottom")
-  ;; (setq dired-show-readme-pandoc-executable "/usr/bin/pandoc");; on sherri, this is the default
+  ;; (setq dired-show-readme-pandoc-executable "/usr/bin/pandoc");; on sting, this is the default
   (add-hook 'dired-mode-hook 'dired-show-readme-mode)
 )
 #+END_SRC
@@ -6325,7 +6325,7 @@ My general templates:
 Hardware templates:
 #+BEGIN_SRC emacs-lisp
           ("h" "hardware")
-          ("hs" "sherri" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
+          ("hs" "sting" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
            ,my-capture-template-next :empty-lines 2)
           ("hf" "floyd" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "lenovo Thinkpad X260 (<2016-03-22 Tue>, 899€, u:book)" "shorts")
            ,my-capture-template-next :empty-lines 2)
@@ -6653,7 +6653,7 @@ certain kind of data.
 
 I've got the PDF files of my archive only on these hosts:
 #+BEGIN_SRC emacs-lisp
-(when (or (my-system-is-sherri) (my-system-is-floyd))
+(when (or (my-system-is-sting) (my-system-is-floyd))
     (add-to-list 'org-link-abbrev-alist '("pdf" . "~/archive/library/%s.pdf"))
 )
 #+END_SRC
@@ -7963,8 +7963,8 @@ Display tags farther right
   ;;    ;;(setq org-agenda-tags-column -103);; for 23" TFT turned 90 degrees
   ;;      (setq org-agenda-tags-column -117);; for 24" TFT turned 90 degrees
   ;;      )
-  ;;(when (my-system-is-sherri)
-  ;;    (setq org-agenda-tags-column -117);; -117 for 23" TFT sherri, rotated 90°
+  ;;(when (my-system-is-sting)
+  ;;    (setq org-agenda-tags-column -117);; -117 for 23" TFT sting, rotated 90°
   ;;    )
   (setq org-agenda-tags-column (- (- (window-total-width) 3))) ;; total width minus 3
 #+END_SRC
@@ -8241,7 +8241,7 @@ workaround before I customized my agenda export to HTML.
 #+BEGIN_SRC emacs-lisp
 (defun my-export-month-agenda-to-png-via-screenshot()
   (interactive)
-  (when (my-system-is-sherri)
+  (when (my-system-is-sting)
     (message "Generating agenda ...")
     (org-agenda nil "n") ; generates agenda "n" (one month without todos)
     (if (my-buffer-exists "*Org Agenda*")
@@ -8254,7 +8254,7 @@ workaround before I customized my agenda export to HTML.
     (message "Say cheese ...")
 
     (setq myoutput
-          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sherri/agenda.png"))
+          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sting/agenda.png"))
     (message (concat "Screenshot done (" myoutput ")"))
     )
   )
@@ -11994,7 +11994,7 @@ unchained from constraints of backward compatibility.
   :defer 120
   :init
   (setq wttrin-default-cities '("graz" "ebreichsdorf" "st.poelten" "schladming" "malia"))
-  (cond ((my-system-is-sherri)
+  (cond ((my-system-is-sting)
          ;; 2017-12-23 outdated: (bind-key "w" '(lambda () (interactive) (wttrin-query "graz") (toggle-truncate-lines)) my-map)
          (bind-key "w" (lambda () (interactive) (wttrin-query "graz")) my-map)
          )
@@ -12188,7 +12188,7 @@ or =customize `scss-sass-command'= to point to your sass executable.
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "sass")
   (use-package scss-mode
-    ;;:if (my-system-is-floyd-or-sherri)
+    ;;:if (my-system-is-floyd-or-sting)
     :ensure t
     :defer 110
     :config
@@ -14753,7 +14753,7 @@ approximately 25 seconds as of 2019-04-17.
 
   (my-log-misc "interactive Emacs is started")
 
-  (when (or (my-system-is-rise) (my-system-is-sherri))
+  (when (or (my-system-is-rise) (my-system-is-sting))
      (my-hsplit-last-buffer)
   )
 
@@ -15132,8 +15132,8 @@ sed ':a;N;$!ba;s/\n/|\n/g'
 |----------------+------------+-----------|
 config.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
 main_before_moving_to_config.org.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
-main_sherri_before_configorg.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
-main_sherri_before_configorg_ORIG.el:  (define-key my-map ~P~ | ~pylookup-lookup~ |
+main_sting_before_configorg.el:  (define-key my-map ~P~ | ~pylookup-lookup~ | |
+main_sting_before_configorg_ORIG.el:  (define-key my-map ~P~ | ~pylookup-lookup~ |
 
 ** Mapping from my-map within use-package
 
