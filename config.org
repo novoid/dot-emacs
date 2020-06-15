@@ -6509,6 +6509,19 @@ Allow refile to create parent tasks with confirmation:
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 #+END_SRC
 
+Refiling to a specific heading stolen from [[https://mollermara.com/blog/Fast-refiling-in-org-mode-with-hydras/][this page]]:
+#+BEGIN_SRC emacs-lisp
+(defun my-org-refile (file headline &optional arg)
+  (let ((pos (save-excursion
+               (find-file file)
+               (org-find-exact-headline-in-buffer headline))))
+    (org-refile arg nil (list headline file nil pos)))
+  (switch-to-buffer (current-buffer)))
+
+;; example:
+;; (my-org-refile "misc.org" "Off-site-backup")
+#+END_SRC
+
 ** Attaching
 :PROPERTIES:
 :CREATED:  [2019-12-08 Sun 18:49]
