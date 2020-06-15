@@ -7004,6 +7004,12 @@ Definition of work files:
        )))
 #+END_SRC
 
+The following file is only accessible on my work computer:
+#+BEGIN_SRC emacs-lisp
+(when (my-system-is-rise)
+  (add-to-list 'my-work-agenda-files my-business-siko-notes))
+#+END_SRC
+
 Definitions of non-work files:
 #+BEGIN_SRC emacs-lisp
   (setq my-nonwork-agenda-files (append ` (
