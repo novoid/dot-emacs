@@ -5746,6 +5746,8 @@ found in the combined lists of:
 :CREATED:  [2019-11-14 Thu 23:38]
 :END:
 
+- 2020-06-05: alternative method by https://blog.phundrak.com/better-custom-ids-orgmode/
+
 #+BEGIN_SRC emacs-lisp
   (defun my-generate-sanitized-alnum-dash-string(str)
   "Returns a string which contains only a-zA-Z0-9 with single dashes
@@ -6660,6 +6662,7 @@ certain kind of data.
           ("EPA" . ,(concat my-business-jira-server "/EPA-%s"))
           ("EPAAFO" . ,(concat my-business-jira-server "/EPAAFO-%s"))
           ("JAFO" . ,(concat my-business-jira-server "/EPAAFO-0?jql=project%20%3D%20EPAAFO%20AND%20Afo-ID%20~%20%22%s%22"))
+          ("DAKEPA" . ,(concat my-business-jira-b-server "%s"))
           ("BMTSK" . ,(concat "file:" my-business-bmtsk-path "/"))
           ))
 #+END_SRC
