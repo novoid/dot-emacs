@@ -13616,6 +13616,10 @@ Example 11 from hydra-examples.el
 
 ** hydra-search → F9
 
+As soon as I was able to test [[https://github.com/alphapapa/org-rifle][org-rifle]], it has replaced many search
+workflows I was using before. Its speed combined with the result
+visualization is brilliant.
+
 #+BEGIN_QUOTE
 - =helm-org-rifle= :: Show results from all open Org buffers
 - =helm-org-rifle-agenda-files= :: Show results from Org agenda files
