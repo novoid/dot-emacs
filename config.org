@@ -3023,6 +3023,7 @@ via [[https://github.com/rupa/z][z]]. You might also look into =GoTo= (on steroi
    :config
    (require 'dired-recent)
    (dired-recent-mode 1)
+   (setq dired-recent-max-directories nil) ;; nil means to remember all
 )
 #+END_SRC
 
@@ -9461,9 +9462,8 @@ I prefer the language German in my letters:
 #+END_SRC
 
 ** helm-org
-:PROPERTIES:
-:CREATED:  [2019-12-17 Tue 12:17]
-:END:
+
+  | 2019-12-17 | initial setup |
 
 Completion package for Org mode: https://github.com/emacs-helm/helm-org
 
@@ -9879,23 +9879,20 @@ END of org-crypt setup
     )
 #+END_SRC
 
-** Org-Mobile
+** Mobile capture
 
-http://orgmode.org/org.html#MobileOrg
+- http://orgmode.org/org.html#MobileOrg
+- https://github.com/matburt/mobileorg-android
+  - "Active development of MobileOrg has stopped."
+  - → I moved from MobileOrg to Orgzly also for mobile capture, keeping the capture workflow from MobileOrg:
+    - new headings get captured in =mobileorg.org= and =my-mobile-org-import()= moves those new items into my =inbox.org=.
+    - This should prevent overwriting data due to race conditions because of [[https://github.com/orgzly/orgzly-android/issues/8][infrequent sync of Orgzly]]
 
 General OrgMobile setup:
 #+BEGIN_SRC emacs-lisp
-  (cond ((my-system-type-is-windows)
-         (setq org-directory "~/org")
-         (setq org-mobile-directory (concat my-org-files-path "mobile-org/"))
-         (setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
-         )
-        (t
-         (setq org-directory "~/org")
-         (setq org-mobile-directory (concat my-org-files-path "mobile-org/"))
-         (setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
-         )
-        )
+(setq org-directory "~/org")
+(setq org-mobile-directory my-org-files-path)
+(setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
 #+END_SRC
 
 Do not generate IDs for all headings: http://orgmode.org/manual/Pushing-to-MobileOrg.html
@@ -10229,9 +10226,8 @@ had to disable it]]. Maybe I'd give it another try in a couple of months
 or so.
 
 ** org-ql
-:PROPERTIES:
-:CREATED:  [2019-12-17 Tue 12:13]
-:END:
+
+  | 2019-12-17 | initial setup |
 
 A powerful query language for Org mode: https://github.com/alphapapa/org-ql
 
@@ -10248,7 +10244,7 @@ A powerful query language for Org mode: https://github.com/alphapapa/org-ql
 :CREATED:  [2019-10-02 Wed 13:46]
 :END:
 
-2019-12-17 DISABLED: I don't need it at the moment
+  | 2019-12-17 | DISABLED: I don't need it at the moment |
 
 For testing =org-sidebar-tree= from https://github.com/alphapapa/org-sidebar
 
