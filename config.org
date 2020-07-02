@@ -10413,6 +10413,8 @@ interface of Magit.
   ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
   :config ;; executed after loading package
 
+  (setq magit-diff-refine-hunk 'all) ;; enable in-line diff highlighting
+
   ;; full screen magit-status
   ;; http://whattheemacsd.com//setup-magit.el-01.html
   (defadvice magit-status (around magit-fullscreen activate)
