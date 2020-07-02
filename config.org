@@ -98,11 +98,11 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧   Windows   Git              ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
-"                                                                                                       (propertize
-"    F1        F2      F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
-"                                                                                                        'face '(:foreground "green"))
-"    Hydra     ← change →   ★   ┃  spell  (←) error →  fix  ┃  Search  Menu     maximize  naked
+"⇧             Git   ←change→ ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
+"                                                                                                     (propertize
+"    F1        F2    F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
+"                                                                                                      'face '(:foreground "green"))
+"    Hydra  Windows        ★  ┃  spell  (←) error →  fix  ┃  Search  Menu     maximize  naked
 
 "))
 #+END_SRC
@@ -12264,7 +12264,7 @@ https://github.com/rolandwalker/unicode-fonts
 )
 #+END_SRC
 
-** goto-chg - visit places of previous changes in current buffer → F2|F3
+** goto-chg - visit places of previous changes in current buffer → S-F3|F4
 
 - http://www.emacswiki.org/emacs/download/goto-chg.el
   - Goto the point of the most recent edit in the buffer.
@@ -12278,8 +12278,8 @@ https://github.com/rolandwalker/unicode-fonts
 (use-package goto-chg
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
    :config
-   (global-set-key [f2] 'goto-last-change)
-   (global-set-key [f3] 'goto-last-change-reverse)
+   (global-set-key [(shift f3)] 'goto-last-change)
+   (global-set-key [(shift f4)] 'goto-last-change-reverse)
 )
 
 ;(require 'goto-chg)
@@ -14222,7 +14222,7 @@ Not org related but might be candidates as well:
 
 #+RESULTS:
 
-** hydra-buffers → Shift F1   my-map ,
+** hydra-buffers → F2  +  my-map ,
 
 This hydra offers buffer management functionalty.
 
@@ -14300,7 +14300,7 @@ FIXXME: add more features:
     ("q" nil "quit")
   )
 
-(define-key global-map [(shift f1)] 'hydra-buffers/body)
+(define-key global-map [f2] 'hydra-buffers/body)
 (define-key my-map (kbd "C-c C-,") 'hydra-buffers/body) ;; to get it on a more prominent binding (as well) because I use it quite often!
 #+END_SRC
 
