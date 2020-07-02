@@ -26,6 +26,9 @@ personal Org-mode files.
 
 * Some tasks I plan to do with my =config.org=:
 
+- [ ] FIXXME: think of merging the default dir =.emacs.d/quelpa/= with =.emacs.d/contrib/=
+- [ ] FIXXME: migrate existing GitHub projects to quelpa
+
 - [ ] FIXXME: check why Python "auto-complete mode" is disabled in my config
 - [ ] FIXXME: check why Python > Ropemacs (for refactoring) is disabled in my config
 - [ ] FIXXME: add a table to each package with its history in my config:
