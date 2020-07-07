@@ -4309,8 +4309,11 @@ Might cause performance issues; http://orgmode.org/manual/Clean-view.html
     - http://nflath.com/2010/03/org-mode-2/
     - http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
 - 2020-07-07: I switched to show any scheduled task, independent of blocking. Because:
-  - When I forget to schedule an unresolved sub-task, the parent task which is scheduled gets hidden. → Don't want that.
-  - Parent tasks that do contain tasks beneath should be marked as projects and should be finished with its last task that closes the project.
+  1. When I forget to schedule an unresolved sub-task, the parent task which is scheduled gets hidden. → Don't want that.
+  2. Parent tasks that do contain tasks beneath should be marked as projects and should be finished with its last task that closes the project.
+  3. I plan to switch from =org-depend= to =org-edna= and a set of yet to be written functions to make planning easier:
+     - Define dependencies via helm (or simple: add next task below this one)
+     - Use of relative SCHEDULED date-stamps: e.g., when X is DONE, mark X+1 as TODO and add a relative SCHEDULED for +1d.
 
 #+BEGIN_SRC emacs-lisp
   ;;disabled;(setq org-agenda-dim-blocked-tasks t)
