@@ -4304,6 +4304,19 @@ Might cause performance issues; http://orgmode.org/manual/Clean-view.html
                                            (plain-list-item . nil))))
 #+END_SRC
 
+- http://orgmode.org/org.html - show blocked tasks in agenda in gray color
+  - OR: hide blocked tasks completely:
+    - http://nflath.com/2010/03/org-mode-2/
+    - http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
+- 2020-07-07: I switched to show any scheduled task, independent of blocking. Because:
+  - When I forget to schedule an unresolved sub-task, the parent task which is scheduled gets hidden. → Don't want that.
+  - Parent tasks that do contain tasks beneath should be marked as projects and should be finished with its last task that closes the project.
+
+#+BEGIN_SRC emacs-lisp
+  ;;disabled;(setq org-agenda-dim-blocked-tasks t)
+  ;;disabled 2020-07-07;; (setq org-agenda-dim-blocked-tasks 'invisible)
+  (setq org-agenda-dim-blocked-tasks nil);; show blocked tasks
+#+END_SRC
 
 Logging into drawers: (also do read [[https://yiufung.net/post/org-mode-hidden-gems-pt4/][this blog article]])
 
@@ -4596,15 +4609,6 @@ the reason caused by overwriting this setting here.
 Omit the headline-asterisks except the last one:
 #+BEGIN_SRC emacs-lisp
   (setq org-hide-leading-stars t)
-#+END_SRC
-
-http://orgmode.org/org.html - show blocked tasks in agenda in gray color
-- OR: hide blocked tasks completely:
-  - http://nflath.com/2010/03/org-mode-2/
-  - http://stackoverflow.com/questions/15750480/org-mode-agenda-blocks-not-obeying-settings
-#+BEGIN_SRC emacs-lisp
-  ;;disabled;(setq org-agenda-dim-blocked-tasks t)
-  (setq org-agenda-dim-blocked-tasks 'invisible)
 #+END_SRC
 
 syntax highlighting in source code:
