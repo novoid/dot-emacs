@@ -4546,6 +4546,10 @@ standard value for it of 15, I had to extend it to 20 for now:
 (setq org-inlinetask-min-level 20)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(setq org-id-link-to-org-use-id 'use-existing)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
@@ -7035,6 +7039,9 @@ Alternative approach for Windows:
 
 To my surprise, =C-c s=, the default prefix of this package, was not
 defined in my setup yet. So I re-use it here.
+
+Make sure that =org-id-link-to-org-use-id= is not =nil= when you want
+to link using existing IDs instead of fragile links.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-links
