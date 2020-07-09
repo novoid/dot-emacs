@@ -4241,34 +4241,39 @@ search or =id=-links:
 (global-set-key (kbd "C-+") 'org-favtable)
 #+END_SRC
 
-** DISABLED Dependencies between todos
+** Dependencies between todos
 
   |      2010? | initial setup of =org-depend=                                              |
   | 2019-11-13 | temporary testing phase of =org-edna= instead of =org-depend=              |
   |    2020-01 | issue with =org-depend= and batch-generation of ICS export of agenda       |
   | 2020-05-13 | re-enabling after org upgrade: test again                                  |
   | 2020-05-18 | disabled again: =Variable binding depth exceeds max-specpdl-size= persists |
+  | 2020-07-09 | enabled org-edna for testing                                               |
 
 One of my initial reasons to try Org mode was [[https://karl-voit.at/2016/12/18/org-depend/][the ability to define
 dependencies between tasks]].
 
 [[https://karl-voit.at/2019/11/16/UOMF-Linking-Headings/][This article]] also shows some handy functions related to this topic.
 
+*** DISABLED org-depend
+
 The default method is using =org-depend=. It has a very simple syntax
 based on the =:TRIGGER:= and =:BLOCKER:= properties.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-depend
 ;  :if (not noninteractive)  ;; I do have issues with org-depend
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
 )
 #+END_SRC
 
-2019-11-13: I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]]
+*** org-edna
+
+  | 2019-11-13 | I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]] |
 
 Enabled only for testing purposes (when =org-depend= is disabled):
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
 (use-package org-edna
   ;;
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-edna/")))
@@ -4277,6 +4282,21 @@ Enabled only for testing purposes (when =org-depend= is disabled):
   (org-edna-load)
 )
 #+END_SRC
+
+=org-edna= has a syntax that is more complex when compared to
+=org-depend=. However, =org-edna= also features much more
+possibilities. My main driver to switch from =org=depend= to
+=org-edna= are relative SCHEDULED dates. This way, a follow-up task
+could be scheduled for, e.g., three days after the previous task was
+finished, whenever that happens.
+
+My plan as of 2020-07-09 is that the more complex syntax does come
+with no manual effort since I'd like to define dependencies via Elisp
+functions instead of manually typing =:TRIGGER:= properties which I've
+done so far. For that purpose, [[https://github.com/toshism/org-super-links][org-super-links]] is a very hot
+candicate.
+
+Internal project link: id:2019-11-14-Org-Project-Management-Workflow
 
 ** General Org-mode settings
 
