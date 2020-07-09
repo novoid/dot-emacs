@@ -575,7 +575,7 @@ started overwriting them here:
 )
 #+END_SRC
 
-* use-package
+* use-package and quelpa
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:09]
 :END:
@@ -599,6 +599,28 @@ Bootstrap =use-package= is stolen from [[https://gitlab.com/emacsomancer/collabo
    ;;:pin MELPA
    :config
    (require 'use-package))
+#+END_SRC
+
+Until 2020-06-30, I only used =use-package= and manually cloned git
+repositories I included with hard-coded path. The latter were seldomly
+updated (if ever). With [[https://github.com/quelpa/quelpa][quelpa]], there seems to be a much better way.
+
+#+BEGIN_SRC emacs-lisp
+(use-package quelpa
+  :ensure t
+  :config
+  (setq quelpa-upgrade-interval 7);; upgrade all packages once a week according to https://github.com/quelpa/quelpa
+  (add-hook #'after-init-hook #'quelpa-upgrade-all-maybe)
+)
+#+END_SRC
+
+The =quelpa-use-package= package offers a more or less transparent
+bridge between sites like GitHub and the =use-package= features.
+
+#+BEGIN_SRC emacs-lisp
+(use-package quelpa-use-package
+  :ensure t
+)
 #+END_SRC
 
 ** Examples
@@ -7002,6 +7024,32 @@ Alternative approach for Windows:
   (org-add-link-type "open" 'my-open-ext)
 #+END_SRC
 
+*** org-super-links
+:BACKLINKS:
+[2020-07-02 Thu 09:51] <- [[file:~/org/test.org::*sdjfklsd jfklsdfjksdl][sdjfklsd jfklsdfjksdl]]
+:END:
+
+  | 2020-06-30 | initial setup for testing |
+
+[[https://www.reddit.com/r/emacs/comments/hg2m5s/zettelkastenorgroamorgbrain_is_crap/fwe8afj/][This reddit comment]] brought me this nice package: https://github.com/toshism/org-super-links
+
+To my surprise, =C-c s=, the default prefix of this package, was not
+defined in my setup yet. So I re-use it here.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-super-links
+  :quelpa (org-super-links :repo "toshism/org-super-links" :fetcher github :commit "develop")
+  :after helm-org
+  :bind (("C-c s s" . sl-link)
+	 ("C-c s l" . sl-store-link)
+	 ("C-c s C-l" . sl-insert-link)             ;; inserts links to heading title (not property ID)
+	 ("C-c s d" . sl-quick-insert-drawer-link)
+	 ("C-c s i" . sl-quick-insert-inline-link))
+  :config
+  (setq sl-related-into-drawer t
+  	sl-link-prefix 'sl-link-prefix-timestamp))
+#+END_SRC
+
 ** Agenda
 
 Org-mode is my digital everything. And therefore, Org is also my
@@ -10257,6 +10305,11 @@ or so.
   | 2019-12-17 | initial setup |
 
 A powerful query language for Org mode: https://github.com/alphapapa/org-ql
+
+Make sure that you install =org-ql= after you have installed
+=helm-org=. Otherwise, it may be the case that you don't get
+=helm-org-ql= as [[https://github.com/toshism/org-super-links/issues/19#issuecomment-655608839][this comment suggests]] and [[https://github.com/alphapapa/org-ql][the README of org-ql
+clearly states]].
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-ql
