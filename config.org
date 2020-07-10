@@ -7054,7 +7054,13 @@ to link using existing IDs instead of fragile links.
 	 ("C-c s i" . sl-quick-insert-inline-link))
   :config
   (setq sl-related-into-drawer t
-  	sl-link-prefix 'sl-link-prefix-timestamp))
+  	sl-link-prefix 'sl-link-prefix-timestamp)
+
+  ;; use my custom function to generate ID properties accordin to https://karl-voit.at/2019/11/16/UOMF-Linking-Headings/
+  (add-hook 'sl-pre-link-hook 'my-id-get-or-generate)
+  (add-hook 'sl-pre-backlink-hook 'my-id-get-or-generate)
+
+)
 #+END_SRC
 
 ** Agenda
