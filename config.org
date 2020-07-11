@@ -8823,8 +8823,24 @@ Guess the master file for FILENAME from currently open files according to their 
 
 Export subtree (by default) instead of whole buffer:
 http://orgmode.org/manual/The-Export-Dispatcher.html
+
 #+BEGIN_SRC emacs-lisp
 (setq org-export-initial-scope 'subtree)
+#+END_SRC
+
+With a densly interconnected Org knowledge-base (e.g., see
+=org-super-links=) and a "few but large Org mode files" in combination
+with "I'm using export methods on sub-heading levels mostly", you end
+up with errors that are caused by links that link stuff which is
+outside of the sub-heading hierarchy which should be currently
+exported.
+
+Therefore, you'll need this setting for preventing those errors.
+Please be aware that you won't get notified when links that should be
+part of the export result get broken because of a typo or similar.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-broken-links t)
 #+END_SRC
 
 *** DISABLED using alternative LaTeX exporter
