@@ -15,6 +15,7 @@ bin
 server
 .places
 faststart_*
+recache_*.sh
 transient/
 test.*
 tmp.*
@@ -23,3 +24,4 @@ private.el
 quelpa
 .stfolder
 .stignore*
+abbrev_defs
