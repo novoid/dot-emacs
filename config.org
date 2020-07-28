@@ -197,6 +197,12 @@ re-opening the file: (2018-07-26 disabled because it is not always a good thing 
 (load-file (concat my-user-emacs-directory "private.el"))
 #+END_SRC
 
+Tip via [[https://irreal.org/blog/?p=9027][irreal]]. I share the same rationale: I never answer anything different to "y". So I disabled it:
+
+#+BEGIN_SRC emacs-lisp
+(setq confirm-kill-processes nil)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
