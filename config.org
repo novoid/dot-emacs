@@ -3885,8 +3885,12 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
        (concat "thunderlink://messageid=" message-id)
        )))
   ;; on message://aoeu link, this will call handler with //aoeu
-  (org-link-set-parameters "messageid" :follow #'org-message-thunderlink-open))
+  (org-link-set-parameters "messageid" :follow #'org-message-thunderlink-open
+                                       :face '(:foreground "LightYellow3" :underline t))
+  )
 #+END_SRC
+
+- test link for testing color: [[messageid:this-is-a-test@example.com][2020-07-27T15:57:45.000Z First Last: Subject]]
 
 Installation:
 1. install "Thunderlink" add-on in Thunderbird
@@ -6893,7 +6897,9 @@ Setting link parameters:
 (org-link-set-parameters
  "tsfile"
  :follow (lambda (path) (my-handle-tsfile-link path))
- :help-echo "Opens the linked file with your default application")
+ :help-echo "Opens the linked file with your default application"
+ :face '(:foreground "DarkSeaGreen" :underline t)
+)
 #+END_SRC
 
 OLD code:
@@ -6952,7 +6958,7 @@ OLD code:
 
 #+END_SRC
 
-*** DISABLED color links
+*** DISABLED links color (OLD)
 
 Don't know why I disabled this:
 
@@ -6999,6 +7005,48 @@ Don't know why I disabled this:
                          :complete 'color-comp
                          :export 'color-link-export)
 #+END_SRC
+
+*** links color
+
+- I got the idea from: https://www.reddit.com/r/emacs/comments/hywxef/visually_differentiate_between_links_to_files_and/
+- possible values for faces: https://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
+- Emacs colors: http://www.raebear.net/computers/emacs-colors/
+
+#+BEGIN_SRC emacs-lisp
+(org-link-set-parameters "file" :face '(:foreground "DarkSeaGreen" :underline t))
+;; defined elsewhere;; (org-link-set-parameters "tsfile" :face '(:foreground "DarkSeaGreen" :underline t))
+(org-link-set-parameters "pdf" :face '(:foreground "DarkSeaGreen" :underline t))
+
+(org-link-set-parameters "http" :face '(:foreground "DeepSkyBlue" :underline t))
+(org-link-set-parameters "https" :face '(:foreground "DeepSkyBlue" :underline t))
+
+(org-link-set-parameters "id" :face '(:foreground "snow3" :underline t))
+(org-link-set-parameters "contact" :face '(:foreground "snow3" :underline t))
+
+(org-link-set-parameters "EPA" :face '(:foreground "wheat2" :underline t))
+(org-link-set-parameters "EPAAFO" :face '(:foreground "wheat2" :underline t))
+(org-link-set-parameters "JAFO" :face '(:foreground "wheat2" :underline t))
+(org-link-set-parameters "DAKEPA" :face '(:foreground "wheat2" :underline t))
+(org-link-set-parameters "BMTSK" :face '(:foreground "wheat2" :underline t))
+
+#+END_SRC
+
+- test links
+  - file: [[file:foo/bar.txt]] [[file:foo/bar.txt][description]]
+  - tsfile: [[tsfile:foo/bar.txt]] [[tsfile:foo/bar.txt][description]]
+  - pdf: pdf:foo.pdf [[pdf:foo.pdf][description]]
+
+  - http: http://Karl-Voit.at [[http://Karl-Voit.at][description]]
+  - https: https://Karl-Voit.at [[https://Karl-Voit.at][description]]
+
+  - id: id:foo-bar [[id:foo-bar][description]]
+  - contact: [[contact:example]] [[contact:example][description]]
+
+  - EPA: [[EPA:1234]] [[EPA:1234][description]]
+  - EPAAFO: [[EPAAFO:1234]] [[EPAAFO:1234][description]]
+  - JAFO: [[JAFO:1234]] [[JAFO:1234][description]]
+  - DAKEPA: [[DAKEPA:1234]] [[DAKEPA:1234][description]]
+  - BMTSK: [[BMTSK:1234]] [[BMTSK:1234][description]]
 
 *** Open in external app
 :PROPERTIES:
