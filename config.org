@@ -5124,7 +5124,7 @@ The replacement table is taken from [[http://ergoemacs.org/emacs/elisp_replace_h
           (result (straight-string title)))
       ;; Applying every element of the replace-table.
       (dolist (x replace-table)
-        (setq result (replace-regexp-in-string (car x) (cdr x) result)))
+        (setq result (replace-regexp-in-string (car x) (cdr x) result t t)))
       ;; Cutting off the title according to its maximum length.
       (when (> (length result) max-length)
         (setq result (concat (substring result 0 max-length) "…")))
