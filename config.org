@@ -4835,79 +4835,6 @@ fix broken mapping (because of prelude and so on).
 
 ** My general Org helper functions
 
-*** my-url-linkify() → my-map u
-
-Replaces URL with Org-mode link including description
-- see id:2014-03-09-inbox-to-bookmarks
-- 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
-- see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
-
-#+BEGIN_SRC emacs-lisp
-  (defun my-www-get-page-title (url)
-    "retrieve title of web page.
-from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
-    (let ((title))
-      (with-current-buffer (url-retrieve-synchronously url)
-        (goto-char (point-min))
-        (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
-        (setq title (match-string 1))
-        (goto-char (point-min))
-        (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
-        (string-replace "&nbsp;" " "
-                        ;;(decode-coding-string title (intern (match-string 1)))
-                        ;; following line fixes charset issues from
-                        ;; previous line:
-                        (decode-coding-string title 'utf-8)
-                        ))
-      )
-    )
-
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (defun my-url-linkify ()
-    "Make URL at cursor point into an Org-mode link.
-If there's a text selection, use the text selection as input.
-
-Example: http://example.com/xyz.htm
-becomes
-\[\[http://example.com/xyz.htm\]\[Source example.com\]\]
-
-Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
-    (interactive)
-    (let (resultLinkStr bds p1 p2 domainName)
-      ;; get the boundary of URL or text selection
-      (if (region-active-p)
-          (setq bds (cons (region-beginning) (region-end)) )
-        (setq bds (bounds-of-thing-at-point 'url))
-        )
-      ;; set URL
-      (setq p1 (car bds))
-      (setq p2 (cdr bds))
-      (let (
-            (url (buffer-substring-no-properties p1 p2))
-            )
-        ;; retrieve title
-        (let ((title (replace-regexp-in-string "\n" " • " (my-www-get-page-title url))))
-          (message (concat "title is: " title))
-          ;;(setq url (replace-regexp-in-string "&" "&amp;" url))
-          (let ((resultLinkStr (concat "[[" url "][" title "]]")))
-            ;; delete url and insert the link
-            (delete-region p1 p2)
-            (insert resultLinkStr)
-            )
-          )
-        )
-      )
-    )
-
-#+END_SRC
-
-Bind the key:
-#+BEGIN_SRC emacs-lisp
-  (bind-key "u" 'my-url-linkify my-map)
-#+END_SRC
-
 *** my-org-startup-visibility()
 :PROPERTIES:
 :CREATED:  [2017-06-23 Fri 22:22]
@@ -5259,6 +5186,79 @@ The replacement table is taken from [[http://ergoemacs.org/emacs/elisp_replace_h
 bind to my-map U
 #+BEGIN_SRC emacs-lisp
   (bind-key "U" 'my-insert-orgmode-url-from-clipboard my-map)
+#+END_SRC
+
+*** my-url-linkify() → my-map u
+
+Replaces URL with Org-mode link including description
+- see id:2014-03-09-inbox-to-bookmarks
+- 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
+- see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-www-get-page-title (url)
+    "retrieve title of web page.
+from: http://www.opensubscriber.com/message/help-gnu-emacs@gnu.org/14332449.html"
+    (let ((title))
+      (with-current-buffer (url-retrieve-synchronously url)
+        (goto-char (point-min))
+        (re-search-forward "<title>\\([^<]*\\)</title>" nil t 1)
+        (setq title (match-string 1))
+        (goto-char (point-min))
+        (re-search-forward "charset=\\([-0-9a-zA-Z]*\\)" nil t 1)
+        (string-replace "&nbsp;" " "
+                        ;;(decode-coding-string title (intern (match-string 1)))
+                        ;; following line fixes charset issues from
+                        ;; previous line:
+                        (decode-coding-string title 'utf-8)
+                        ))
+      )
+    )
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-url-linkify ()
+    "Make URL at cursor point into an Org-mode link.
+If there's a text selection, use the text selection as input.
+
+Example: http://example.com/xyz.htm
+becomes
+\[\[http://example.com/xyz.htm\]\[Source example.com\]\]
+
+Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
+    (interactive)
+    (let (resultLinkStr bds p1 p2 domainName)
+      ;; get the boundary of URL or text selection
+      (if (region-active-p)
+          (setq bds (cons (region-beginning) (region-end)) )
+        (setq bds (bounds-of-thing-at-point 'url))
+        )
+      ;; set URL
+      (setq p1 (car bds))
+      (setq p2 (cdr bds))
+      (let (
+            (url (buffer-substring-no-properties p1 p2))
+            )
+        ;; retrieve title
+        (let ((title (my-cliplink-format-and-trim-title (replace-regexp-in-string "\n" " • " (my-www-get-page-title url)))))
+          ;;(message (concat "title is: " title))
+          ;;(setq url (replace-regexp-in-string "&" "&amp;" url))
+          (let ((resultLinkStr (concat "[[" url "][" title "]]")))
+            ;; delete url and insert the link
+            (delete-region p1 p2)
+            (insert resultLinkStr)
+            )
+          )
+        )
+      )
+    )
+
+#+END_SRC
+
+Bind the key:
+#+BEGIN_SRC emacs-lisp
+  (bind-key "u" 'my-url-linkify my-map)
 #+END_SRC
 
 *** my-org-region-to-property() → my-map p
