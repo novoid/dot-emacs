@@ -7083,9 +7083,6 @@ Alternative approach for Windows:
 #+END_SRC
 
 *** org-super-links
-:BACKLINKS:
-[2020-07-02 Thu 09:51] <- [[file:~/org/test.org::*sdjfklsd jfklsdfjksdl][sdjfklsd jfklsdfjksdl]]
-:END:
 
   | 2020-06-30 | initial setup for testing |
 
@@ -10462,7 +10459,7 @@ performance degradation due to [[https://karl-voit.at/2020/05/03/current-org-fil
 ;; Unfortunately isearch, sets inhibit-point-motion-hooks and we
 ;; cannot even use cursor-sensor-functions as a workaround
 ;; I used a less ideas approach with advice to isearch-search-string as
-;; a workaround 
+;; a workaround
 
 (defun org-find-text-property-region (pos prop)
   "Find a region containing PROP text property around point POS."
@@ -10483,7 +10480,7 @@ performance degradation due to [[https://karl-voit.at/2020/05/03/current-org-fil
   "Reveal hidden text at point."
   (when-let ((region (org-find-text-property-region (point) 'invisible)))
     (with-silent-modifications
-      (put-text-property (car region) (cdr region) 'org-invisible 
+      (put-text-property (car region) (cdr region) 'org-invisible
 (get-text-property (point) 'invisible)))
       (remove-text-properties (car region) (cdr region) '(invisible nil))))
 
@@ -10491,13 +10488,13 @@ performance degradation due to [[https://karl-voit.at/2020/05/03/current-org-fil
 (defun org-restore-invisibility-specs (&rest _)
   ""
    (let ((pos (point-min)))
-     (while (< (setq pos (next-single-property-change pos 'org-invisible nil 
+     (while (< (setq pos (next-single-property-change pos 'org-invisible nil
 (point-max))) (point-max))
        (when-let ((region (org-find-text-property-region pos 'org-invisible)))
            (with-silent-modifications
-             (put-text-property (car region) (cdr region) 'invisible 
+             (put-text-property (car region) (cdr region) 'invisible
 (get-text-property pos 'org-invisible))
-             (remove-text-properties (car region) (cdr region) '(org-invisible 
+             (remove-text-properties (car region) (cdr region) '(org-invisible
 nil)))))))
 
 (add-hook 'post-command-hook #'org-restore-invisibility-specs)
@@ -10533,8 +10530,8 @@ SPEC is the invisibility spec, as a symbol."
     (decompose-region beg end)
     (remove-text-properties beg end
                             '(mouse-face t keymap t org-linked-text t
-                                         ;; Do not remove invisible during 
-fontification                                         
+                                         ;; Do not remove invisible during
+fontification
                                          ;; invisible t
                                          intangible t
                                          org-emphasis t))
@@ -12961,7 +12958,7 @@ C-u C-x o=.
   | 2020-05-19 | [[https://github.com/lastquestion/explain-pause-mode][cloned from GitHub]] and start testing     |
   | 2020-05-23 | disabled because it spams my mini-buffer |
 
-Emacs minor mode that watches for long pauses and reports them. 
+Emacs minor mode that watches for long pauses and reports them.
 
 I learned about this mode on [[https://www.reddit.com/r/emacs/comments/gmh8bs/beta_testers_ann_lets_make_emacs_better/][on reddit]] where the developer was asking
 for testers. Since I do suffer from various performance bottlenecks, I
