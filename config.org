@@ -7223,6 +7223,13 @@ clearly states]].
 )
 #+END_SRC
 
+FIXXME: Workaround in order to make =helm-org-ql= available according to https://github.com/alphapapa/org-ql/issues/129#issuecomment-667310696:
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-ql)
+(require 'helm-org-ql)
+#+END_SRC
+
 ** Agenda
 
 Org-mode is my digital everything. And therefore, Org is also my
