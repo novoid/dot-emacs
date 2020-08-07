@@ -7113,8 +7113,46 @@ to link using existing IDs instead of fragile links.
   (add-hook 'sl-pre-link-hook 'my-id-get-or-generate)
   (add-hook 'sl-pre-backlink-hook 'my-id-get-or-generate)
 
+  ;; Formats link descriptions as suggested on: https://github.com/toshism/org-super-links#limit-length-of-link-description
+  ;; development: id:2020-08-05-implement-filter-function
+  (defun my-org-super-links-filter-description (link desc)
+      ;; replace double bracket links with their description
+      (replace-regexp-in-string org-link-bracket-re "\\2"
+          ;; removes: <2020-08-04 Tue>--<2020-08-04 Tue 23:37>  (2nd time/date-stamp is optional; including inactive variants)
+          (replace-regexp-in-string org-element--timestamp-regexp ""
+                ;; removes priority indicators such as [#A]
+  	      (replace-regexp-in-string org-priority-regexp ""
+                    ;; removes staistic cookies with absolute numbers such as [2/5]
+         	          (replace-regexp-in-string " ?\\[[0-9]+/[0-9]\\]" ""
+                            ;; removes staistic cookies with percentages such as [33%]
+           	          (replace-regexp-in-string " ?\\[[0-9]+%\\]" "" desc)
+  			      ))))
+  )
+  (setq sl-default-description-formatter 'my-org-super-links-filter-description)
 )
 #+END_SRC
+
+Testing =my-org-super-links-filter-description=:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(mapcar (lambda (s)
+   (my-org-super-links-filter-description "foo bar" s))
+'("<2020-08-04 Tue> [1/2] [66%] [#A] an example heading"
+  "[2020-08-04 Tue] [1/2] [66%] [#A] an example heading"
+  "<2020-08-04 Tue 23:07> [1/2] [66%] [#A] an example heading"
+  "<2020-08-04 Tue 23:07>-<2020-08-04 Tue> [66%] [#A] an example heading"
+  "<2020-08-04 Tue 23:07>-<2020-08-04 Tue> [2/3] [#A] an example heading"
+  "<2020-08-04 Tue 23:07>--<2020-08-04 Tue> [2/3] [#A] an example heading"
+  "[2020-08-04 Tue 23:07]--[2020-08-04 Tue] [2/3] [#A] an example heading"
+  "[#A] [2020-08-04 Tue 23:07]-<2020-08-04 Tue> [2/3] an example heading"
+  "<2020-08-05 Wed 19:09>--<2020-08-05 Wed> fixxme: dashes"
+  "<2020-08-05 Wed 19:09>-<2020-08-05 Wed> fixxme: dash"
+)
+)
+#+END_SRC
+
+#+RESULTS:
+| an example heading | an example heading | an example heading | an example heading | an example heading | an example heading | an example heading | - an example heading | -- fixxme: dashes | - fixxme: dash |
 
 ** Searching, querying
 
