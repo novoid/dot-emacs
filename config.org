@@ -11319,6 +11319,17 @@ FIXXME: Compare to
 https://github.com/alphapapa/unpackaged.el#smerge-mode smerge-mode
 with its hydra from alphapapa.
 
+----------
+
+Here are some settings from [[https://github.com/sebasmonia/dotfiles/blob/e316a469a0977ac430e196d6e5ff34941a4cca18/.emacs/init.el#L240][this configuration]] mentioned in [[https://www.reddit.com/r/emacs/comments/i4txt3/meldlike_diff_in_emacs/][that reddit thread]]: *not tested yet*
+
+#+BEGIN_SRC emacs-lisp
+(setq ediff-forward-word-function 'forward-char) ;; from https://emacs.stackexchange.com/a/9411/17066
+(setq ediff-highlight-all-diffs t)
+(setq ediff-keep-variants nil)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+END_SRC
+
 ** Counting words → M-=
 
 Counting lines, words, characters.
