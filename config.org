@@ -138,7 +138,7 @@ set start of week to Monday (not sunday) http://sunsite.univie.ac.at/textbooks/e
 
 omit usage of TAB for =C-x r o=: indent-tabs-mode
 #+BEGIN_SRC emacs-lisp
-(setq-default indent-tabs-mode t)
+(setq-default indent-tabs-mode nil)
 #+END_SRC
 
 append and update time-stamps for =Time-stamp: <>= in headers:
