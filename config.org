@@ -7011,6 +7011,7 @@ Don't know why I disabled this:
 
 - I got the idea from: https://www.reddit.com/r/emacs/comments/hywxef/visually_differentiate_between_links_to_files_and/
 - possible values for faces: https://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
+  - and =add-face-text-property=: https://www.gnu.org/software/emacs/manual/html_node/elisp/Faces.html#Faces
 - Emacs colors: http://www.raebear.net/computers/emacs-colors/
 
 #+BEGIN_SRC emacs-lisp
