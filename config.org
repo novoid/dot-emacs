@@ -7610,29 +7610,30 @@ Definition of =my-super-agenda-groups=, my central configuration of super-agenda
                  :time-grid t  ; Items that appear on the time grid
                  )
           (:name "DEADLINES" :deadline t :order 1)
-          (:name "Important" :priority "A" :order 2)
+          (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
+          (:name "Important" :priority "A" :order 4)
           (:priority<= "B"
                        ;; Show this section after "Today" and "Important", because
                        ;; their order is unspecified, defaulting to 0. Sections
                        ;; are displayed lowest-number-first.
-                       :order 2)
+                       :order 6)
   ;        (:name "Habits" :habit t :order 3)
-          (:name "Shopping" :tag "Besorgung" :order 4)
+          (:name "Shopping" :tag "Besorgung" :order 8)
                  ;; Boolean AND group matches items that match all subgroups
                  ;;  :and (:tag "shopping" :tag "@town")
                  ;; Multiple args given in list with implicit OR
                  ;;  :tag ("food" "dinner"))
                  ;;  :habit t
                  ;;  :tag "personal")
-          (:name "Started" :todo "STARTED" :order 6)
+          (:name "Started" :todo "STARTED" :order 10)
           ;;(:name "Space-related (non-moon-or-planet-related)"
           ;;       ;; Regexps match case-insensitively on the entire entry
           ;;       :and (:regexp ("space" "NASA")
           ;;                     ;; Boolean NOT also has implicit OR between selectors
           ;;                     :not (:regexp "moon" :tag "planet")))
-          (:name "BWG" :tag "@BWG" :order 7)
-          (:todo "WAITING" :order 9)  ; Set order of this section
-          (:name "read" :tag "2read" :order 15)
+          (:name "BWG" :tag "@BWG" :order 16)
+          (:todo "WAITING" :order 18)  ; Set order of this section
+          (:name "read" :tag "2read" :order 22)
           ;; Groups supply their own section names when none are given
           (:todo ("SOMEDAY" "WATCHING")
                  ;; Show this group at the end of the agenda (since it has the
@@ -7917,30 +7918,32 @@ only see important business stuff.
 
                 ;; examples: https://github.com/alphapapa/org-ql/blob/master/examples.org#stuck-projects-block-agenda
                 ;; 2020-01-23: not doing what it is supposed to show: only shows one heading from one org mode file: id:2020-01-23-Security-Policies
-                ("x" "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled"
+                ("1" "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled"
                 ((org-ql-block '(and (tags "project")
                               (not (done))
                               (not (todo "SOMEDAY"))
-                              (not (descendants (not (done))))
+                              (not (descendants (todo "NEXT")))
+                              ;;(not (descendants (not (done))))
                               (not (descendants (scheduled))))
                         ((org-ql-block-header "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled")))))
 
                 ;; 2020-01-23: not doing what it is supposed to show at all
-                ("1" "Stuck: open todos with unscheduled open sub-tasks"
+                ("2" "Stuck: open todos with unscheduled open sub-tasks"
                 ((org-ql-block '(and
                               (not (done))
+                              (or (todo "NEXT") (todo "STARTED") (todo "WAITING"))
                               ; (todo "NEXT STARTED WAITING");; no result instead of "just get rid of SOMEDAY"
                               (descendants (not (done)))
                               (descendants (not (scheduled))))
                         ((org-ql-block-header "Stuck: open todos with unscheduled open sub-tasks")))))
 
                 ;; 2020-01-23: "with scheduled sub-tasks" does not work -> lists open todos but not all - can't tell what is shown
-                ("2" "Stuck: scheduled todos with scheduled sub-tasks"
+                ("3" "Stuck: scheduled todos with scheduled sub-tasks (FIXXME: also DONE subtasks match)"
                 ((org-ql-block '(and
                               (not (done))
                               (scheduled)
                               (not (descendants (not (done))))
-                              (not (descendants (scheduled))))
+                              (descendants (scheduled))) ;; 2020-08-06: even tasks that are DONE are matching
                               ;;(descendants (and (scheduled) (not (done))))
                         ((org-ql-block-header "Stuck todos: scheduled open todos with scheduled sub-tasks")))))
 
