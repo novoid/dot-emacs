@@ -408,6 +408,9 @@ http://www.gnu.org/software/emacs/manual/html_node/elisp/Minibuffer-History.html
 (setq history-delete-duplicates t)
 #+END_SRC
 
+This is also necessary to avoid duplicate entries when searching with
+=helm= on Emacs 27 as [[https://github.com/emacs-helm/helm/issues/2291][shown here]].
+
 ** Pasting with the mouse without moving the point
 
 «middle-clicking pastes at the current location instead of moving it»
@@ -7028,6 +7031,7 @@ Don't know why I disabled this:
 - possible values for faces: https://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
   - and =add-face-text-property=: https://www.gnu.org/software/emacs/manual/html_node/elisp/Faces.html#Faces
 - Emacs colors: http://www.raebear.net/computers/emacs-colors/
+- If you are interested in taking this any further: https://github.com/stardiviner/org-link-beautify
 
 #+BEGIN_SRC emacs-lisp
 (org-link-set-parameters "file" :face '(:foreground "DarkSeaGreen" :underline t))
