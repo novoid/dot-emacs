@@ -9486,7 +9486,7 @@ https://github.com/yjwen/org-reveal
 
   ;;(setq org-reveal-root "file:///d:/reveal.js")
   (cond ((my-system-type-is-gnu)
-         (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+         (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
          (setq org-reveal-extra-css "file:///home/vk/.emacs.d/bin/reveal_theme_night_local.css"))
         ((string-equal system-name "GRZN17009")
          (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/bin/reveal.js/")
