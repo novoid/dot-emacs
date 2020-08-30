@@ -7131,6 +7131,9 @@ to link using existing IDs instead of fragile links.
   			      ))))
   )
   (setq sl-default-description-formatter 'my-org-super-links-filter-description)
+  (setq sl-backlink-into-drawer "LINKS"
+        sl-related-into-drawer "LINKS") ;; according to https://github.com/toshism/org-super-links/issues/33#issuecomment-678815869
+
 )
 #+END_SRC
 
