@@ -6196,6 +6196,7 @@ http://orgmode.org/org.html#Setting-tags
                               ("MIT" . ?m)
                               ("lp" . ?l)
                               ("reward" . ?r)
+                              ("focus" . ?f)
                               (:endgroup)
                               )))
 #+END_SRC
