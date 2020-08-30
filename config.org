@@ -5736,7 +5736,8 @@ a bit more):
 (1) the tag :project:
 (2) has property COOKIE_DATA set to \"todo recursive\"
 (3) has any TODO keyword and
-(4) a leading progress indicator"
+(4) a leading progress indicator
+(5) expand a yankpad/yasnippet element which is inserted at the top of the body of the heading"
     (interactive)
     (org-toggle-tag "project" 'on)
     (org-set-property "COOKIE_DATA" "todo recursive")
@@ -5762,17 +5763,29 @@ a bit more):
            (insert "[/] ")
            )
        )
+     (search-forward "
+
+");; goto the first paragraph of the body
+     (insert "pchecklist
+
+");; insert snippet name for yankpad project management checklist snippet
+     (search-backward "list")
+     (org-end-of-line);; goto back to the snippet name
+     (yankpad-expand);; expand snippet
 )
 #+END_SRC
-
-#+RESULTS:
-: my-mark-as-project
 
 Personal notes from the implementation task: id:2019-11-08-my-mark-as-project
 
 I found following interesting elisp sources for implementing this function:
 - get heading parsed: http://ergoemacs.org/emacs/elisp_parse_org_mode.html
 - insert text: http://ergoemacs.org/emacs/elisp_examples.html
+
+---------------
+
+You also might be interested to read [[https://karl-voit.at/2020/08/14/project-mgt-draft][A Draft Workflow for Advanced
+Project Management Using Org Mode and Org Edna]] where this is a part of
+the proposed project management workflow.
 
 *** my-org-auto-tag
 :PROPERTIES:
