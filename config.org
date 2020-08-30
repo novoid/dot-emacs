@@ -1671,7 +1671,7 @@ My favorite light themes: leuven, whiteboard, solarized-light,
   )
 #+END_SRC
 
-Host-specific font sizes:
+Host-specific font sizes: values are in 1/10pt → 100 are 10pt
 
 #+BEGIN_SRC emacs-lisp
 ;;(when (my-system-type-is-gnu)
@@ -1686,8 +1686,9 @@ Host-specific font sizes:
   (set-face-attribute 'default (selected-frame) :height 110);; 2017-09-06 detego
   )
 (when (my-system-is-floyd)
-;;  (set-face-attribute 'default (selected-frame) :height 105);; until 2019-12-23
-  (set-face-attribute 'default (selected-frame) :height 100)
+  ;; (set-face-attribute 'default (selected-frame) :height 100) ;; 2020-08-20: switched back to 105
+  ;; (set-face-attribute 'default (selected-frame) :height 105);; until 2019-12-23 -> not working
+  (set-face-attribute 'default nil :height 105);; 2020-08-22 new command from https://stackoverflow.com/questions/294664/how-to-set-the-font-size-in-emacs
   )
 (when (my-system-is-sting)
   ;;(set-face-attribute 'default (selected-frame) :height 110) ;; before 2018-02-24 (a bit large)
