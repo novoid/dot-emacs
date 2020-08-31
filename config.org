@@ -203,6 +203,14 @@ Tip via [[https://irreal.org/blog/?p=9027][irreal]]. I share the same rationale:
 (setq confirm-kill-processes nil)
 #+END_SRC
 
+Moves the mouse cursor out of the way when the text cursor seems to crash: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Mouse-Avoidance.html][documentation]].
+
+Possible values: banish, exile, jump, animate, proteus
+
+#+BEGIN_SRC emacs-lisp
+(setq mouse-avoidance-mode "animate")
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
