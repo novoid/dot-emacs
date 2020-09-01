@@ -8513,6 +8513,89 @@ I aliased it within =~/.zshrc.local= to =memacs=
 #+RESULTS:
 : my-export-agenda
 
+*** desktop notifications
+
+ | 2020-08-20 | initial setup |
+
+[[https://acidwords.com/posts/2017-02-16-displaying-org-mode-appointments-in-calendar.html][This article]] explains the basic mechanism. Also helpful: [[https://orgmode.org/list/13222.1201471868@gamaville.dokosmarshall.org/][this]] and
+[[https://orgmode.org/worg/org-hacks.html#org-agenda-appt-zenity][that]].
+
+The creation of the =~/diary= file with =%%(org-diary)= as content:
+#+BEGIN_SRC emacs-lisp
+(write-region "%%(org-diary)" nil (substitute-in-file-name "~/diary") nil)
+#+END_SRC
+
+Setup of the notification mechanism such that Org mode appointments
+cause desktop notifications via =notify-send=:
+
+#+BEGIN_SRC emacs-lisp
+  (require 'appt)    ;; activate appointment notification
+  (appt-activate t)  ;; activate appointment notification
+  (setq org-agenda-include-diary t)         ;; push Org agenda items to diary
+  (setq calendar-mark-diary-entries-flag t) ;; mark dates with diary entries, in the calendar window
+  (setq appt-time-msg-list nil)             ;; clear list of appointments for today.
+  (setq appt-message-warning-time 10        ;; warn 10 min in advance
+        appt-display-interval 10            ;; repeat notification this amount of minutes; must not be 0 (arith-error)
+        appt-display-diary nil              ;; do not display diary when (appt-activate) is called
+        appt-display-mode-line t            ;; show in the modeline
+        appt-display-format 'window         ;; display notification in window
+        appt-disp-window-function 'my-appt-disp-window ;; use this function for appointment notifications
+        calendar-mark-diary-entries-flag t) ;; mark diary entries in calendar
+
+    (defun my-appt-disp-window (min-to-app new-time msg)
+      "My function to display appt notifications: I prefer notify-send as I'm using GNU/Linux on all of my current hosts."
+      (save-window-excursion
+        (shell-command
+         (concat my-user-emacs-directory "bin/desktop-notification.sh " msg)
+           nil nil)));; date-string must not contain spaces (don't know why)
+;; original w/o wrapper        (shell-command
+;; original w/o wrapper         (concat
+;; original w/o wrapper          "notify-send --urgency=critical \"Org `date +%Y-%m-%dT%H.%M`\" \"" msg "\"") nil nil)));; date-string must not contain spaces (don't know why)
+
+    ;; add agenda→diary mechanism to the agenda hook
+    (add-hook 'org-finalize-agenda-hook
+      (lambda ()
+        (setq appt-time-msg-list nil) ;; clear list of appointments for today.
+        (org-agenda-to-appt)          ;; copy all agenda schedule to appointments
+        (appt-activate 1)))           ;; active appt (appointment notification)
+
+    ;; add agenda→diary mechanism to the org-super-agenda hook
+    (add-hook 'org-super-agenda-mode-hook
+      (lambda ()
+        (setq appt-time-msg-list nil) ;; clear list of appointments for today.
+        (org-agenda-to-appt)          ;; copy all agenda schedule to appointments
+        (appt-activate 1)))           ;; active appt (appointment notification)
+
+#+END_SRC
+
+Unfortunately, I don't get notifications in locked desktop state with
+the default setup: [[https://www.reddit.com/r/emacs/comments/ihhylo/no_desktop_notifications_of_org_agenda_items/][see this reddit thread]]. Therefore, I had to set up
+a wrapper shell script and use this within =my-appt-disp-window=:
+[[file:/home/vk/.emacs.d/bin/desktop-notification.sh]]
+#+BEGIN_SRC sh
+#!/bin/bash
+message="${1}"
+timestamp="$(date +%Y-%m-%dT%H:%M:%S+02:00)"
+notify-send --urgency=critical "Org `date +%Y-%m-%dT%H.%M`" "${message}"
+#end
+#+END_SRC
+
+Following thing could also be handy: add the tag =rem30= for 30min
+pre-warning time instead of the default one. From the manual:
+
+#+BEGIN_VERSE
+Regexp matching a string giving the warning time for an appointment.
+The first subexpression matches the time in minutes (an integer).
+This overrides the default ‘appt-message-warning-time’.
+#+END_VERSE
+
+This *does not work* yet according to my tests on id:2020-09-01-setup-desktop-notifications:
+
+#+BEGIN_SRC emacs-lisp
+;;(setq appt-warning-time-regexp "warntime \\([0-9]+\\)");; original
+(setq appt-warning-time-regexp ":rem\\([0-9]+\\):");; to be used, e.g., as tags: =:rem3:= → 3 minutes
+#+END_SRC
+
 *** DISABLED my-org-agenda-to-appt
 
 For org appointment reminders
