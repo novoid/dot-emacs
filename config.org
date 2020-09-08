@@ -8545,9 +8545,19 @@ cause desktop notifications via =notify-send=:
     (defun my-appt-disp-window (min-to-app new-time msg)
       "My function to display appt notifications: I prefer notify-send as I'm using GNU/Linux on all of my current hosts."
       (save-window-excursion
-        (shell-command
-         (concat my-user-emacs-directory "bin/desktop-notification.sh " msg)
-           nil nil)));; date-string must not contain spaces (don't know why)
+        (let ((msg (replace-regexp-in-string ":[a-zA-Z0-9:]*:$" ""  ;; remove tags
+                   (replace-regexp-in-string "/" "·"                ;; get rid of slashes
+                   (replace-regexp-in-string "\\[" ""               ;; get rid of opening brackets
+                   (replace-regexp-in-string "\\]" ""               ;; get rid of closing brackets
+                   (replace-regexp-in-string "https://" ""          ;; get rid of URL protocol
+                   (replace-regexp-in-string "\\(\\[\\[\\)\\(.*?\\)\\]\\]" "\\2"  ;; replace links with their description
+                   (replace-regexp-in-string "\\(\\[\\[.*\\]\\[\\)\\(.*?\\)\\]\\]" "\\2"  ;; replace links with their description
+                   msg))))))))) ;; elisp org mode heading title sanitization
+          (progn
+          (message msg)
+          (shell-command
+           (concat my-user-emacs-directory "bin/desktop-notification.sh '" msg "'")
+             nil nil)))));; date-string must not contain spaces (don't know why)
 ;; original w/o wrapper        (shell-command
 ;; original w/o wrapper         (concat
 ;; original w/o wrapper          "notify-send --urgency=critical \"Org `date +%Y-%m-%dT%H.%M`\" \"" msg "\"") nil nil)));; date-string must not contain spaces (don't know why)
