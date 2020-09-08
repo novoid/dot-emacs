@@ -4572,6 +4572,12 @@ standard value for it of 15, I had to extend it to 20 for now:
 (setq org-id-link-to-org-use-id 'use-existing)
 #+END_SRC
 
+Using that setting, =_= and =^= are interpreted literally. Except for
+cases like =_{3}= which makes 3 a subscript:
+#+BEGIN_SRC emacs-lisp
+(setq org-use-sub-superscripts "{}")
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
