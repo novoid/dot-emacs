@@ -208,7 +208,7 @@ Moves the mouse cursor out of the way when the text cursor seems to crash: [[htt
 Possible values: banish, exile, jump, animate, proteus
 
 #+BEGIN_SRC emacs-lisp
-(setq mouse-avoidance-mode "animate")
+(when (display-mouse-p) (setq mouse-avoidance-mode "animate"))
 #+END_SRC
 
 ** DISABLED Guru mode
