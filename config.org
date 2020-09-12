@@ -8551,7 +8551,7 @@ cause desktop notifications via =notify-send=:
     (defun my-appt-disp-window (min-to-app new-time msg)
       "My function to display appt notifications: I prefer notify-send as I'm using GNU/Linux on all of my current hosts."
       (save-window-excursion
-        (let ((msg (replace-regexp-in-string ":[a-zA-Z0-9:]*:$" ""  ;; remove tags
+        (let ((msg (replace-regexp-in-string ":[a-zA-Z0-9@_:]*:$" ""  ;; remove tags
                    (replace-regexp-in-string "/" "·"                ;; get rid of slashes
                    (replace-regexp-in-string "\\[" ""               ;; get rid of opening brackets
                    (replace-regexp-in-string "\\]" ""               ;; get rid of closing brackets
