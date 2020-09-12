@@ -6415,7 +6415,7 @@ My general templates:
           ("e" "Event" entry (file+headline ,(concat my-org-files-path "misc.org") "Events")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("b" "Bookmark" entry (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
-           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
+           "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("p" "public voit" entry (file+headline ,(concat my-org-files-path "public_voit.org") "Unfinished (non-series, non-persistent)")
            "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 2)
           ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
