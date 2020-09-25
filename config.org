@@ -7190,6 +7190,67 @@ Testing =my-org-super-links-filter-description=:
 #+RESULTS:
 | an example heading | an example heading | an example heading | an example heading | an example heading | an example heading | an example heading | - an example heading | -- fixxme: dashes | - fixxme: dash |
 
+*** org-linker and org-linker-edna
+
+  | 2020-09-25 | initial setup for testing |
+
+I asked the author of [[https://github.com/toshism/org-super-links][org-super-links]] with [[https://github.com/toshism/org-super-links/issues/21][this feature request]] to
+extend org-super-links such that it can be used to define dependencies
+for [[https://www.nongnu.org/org-edna-el/][org-edna]]. He denied for org-usper-links but implemented it as
+extra packages: 
+
+1. extract heading selection interface stuff: [[https://github.com/toshism/org-linker][org-linker]]
+2. org-edna interface that uses it: [[https://github.com/toshism/org-linker-edna][org-linker-edna]]
+
+This is looking great from intial testing. I need to test it even
+further in my daily life to come to a conclusion.
+
+My optimistic first approach was (again) with QUELPA:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package org-linker
+  :quelpa (org-linker :repo "toshism/org-linker" :fetcher github)
+)
+#+END_SRC
+
+However, I still get errors using QUELPA:
+#+BEGIN_EXAMPLE
+Debugger entered--Lisp error: (error "Package ‘helm-org-ql-0’ is unavailable")
+  signal(error ("Package ‘helm-org-ql-0’ is unavailable"))
+  error("Package `%s-%s' is unavailable" helm-org-ql "0")
+  package-compute-transaction(nil ((org (0)) (helm-org-ql (0))))
+  package-install-from-buffer()
+  package-install-file("/home/vk/.emacs.d/quelpa/packages/org-linker-20200829.2118.el")
+  quelpa-package-install-file("/home/vk/.emacs.d/quelpa/packages/org-linker-20200829.2118.el")
+  quelpa-package-install((org-linker :repo "toshism/org-linker" :fetcher github))
+  apply(quelpa-package-install (org-linker :repo "toshism/org-linker" :fetcher github) nil)
+  quelpa((org-linker :repo "toshism/org-linker" :fetcher github))
+  apply(quelpa (org-linker :repo "toshism/org-linker" :fetcher github))
+  (if (and quelpa-use-package-inhibit-loading-quelpa (package-installed-p (quote org-linker))) nil (apply (quote quelpa) (quote ((org-linker :repo "toshism/org-linker" :fetcher github)))))
+  (progn (if (and quelpa-use-package-inhibit-loading-quelpa (package-installed-p (quote org-linker))) nil (apply (quote quelpa) (quote ((org-linker :repo "toshism/org-linker" :fetcher github))))) (defvar use-package--warning297 (function (lambda (keyword err) (let ((msg (format "%s/%s: %s" ... keyword ...))) (display-warning (quote use-package) msg :error))))) (condition-case err (if (not (require (quote org-linker) nil t)) (display-warning (quote use-package) (format "Cannot load %s" (quote org-linker)) :error)) ((debug error) (funcall use-package--warning297 :catch err))))
+  eval((progn (if (and quelpa-use-package-inhibit-loading-quelpa (package-installed-p (quote org-linker))) nil (apply (quote quelpa) (quote ((org-linker :repo "toshism/org-linker" :fetcher github))))) (defvar use-package--warning297 (function (lambda (keyword err) (let ((msg ...)) (display-warning (quote use-package) msg :error))))) (condition-case err (if (not (require (quote org-linker) nil t)) (display-warning (quote use-package) (format "Cannot load %s" (quote org-linker)) :error)) ((debug error) (funcall use-package--warning297 :catch err)))) nil)
+  elisp--eval-last-sexp(nil)
+  eval-last-sexp(nil)
+  funcall-interactively(eval-last-sexp nil)
+  call-interactively(eval-last-sexp nil nil)
+  command-execute(eval-last-sexp)
+#+END_EXAMPLE
+
+Maybe I'm to stupid to use QUELPA. :-( I had to manually clone it and install via:
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-linker
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-linker/")))
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-linker-edna
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-linker-edna/")))
+  :bind (("C-c s e" . org-linker-edna))
+)
+#+END_SRC
+
 ** Searching, querying
 
 *** helm-org
