@@ -4313,14 +4313,13 @@ based on the =:TRIGGER:= and =:BLOCKER:= properties.
 
 *** org-edna
 
-  | 2019-11-13 | I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]] |
+  | 2019-11-13 | I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]]            |
+  | 2020-09-10 | [[https://github.com/akirak/org-edna/issues/1][This fork is discontinued]] → switched to original org-edna v1.1.2 [[id:2020-09-19-switch-from-https-github-dot-com-akirak-org-edna-to-original-edna][with issues]] |
 
 Enabled only for testing purposes (when =org-depend= is disabled):
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-edna
-  ;;
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-edna/")))
   :config
   (require 'org-edna)
   (org-edna-load)
