@@ -14048,19 +14048,23 @@ visualization is brilliant.
 (defhydra hydra-search (:color blue)
     (concat my-f-key-settings
   "
-  ^^Rifle                ^^                  ^^                     Ex.:    #A NEXT :foo:bar: !unwanted
-  ^^─────────────────────^^──────────────────^^────────────────
-  rifle _c_urrent buffer ^^                  ^^
-  rifle _o_pen buffers   ^^                  ^^
-  rifle _a_genda files   ^^                  ^^
-  ^^                     ^^                  ^^
-  ^^                     ^^                  ^^
+  ^^Rifle                   ^^Profiler          ^^                     Ex.:    #A NEXT :foo:bar: !unwanted
+  ^^────────────────────────^^──────────────────^^────────────────
+  rifle _c_urrent buffer    _p_rofile CPU       ^^
+  rifle _o_pen buffers      _r_eport            ^^
+  rifle _a_genda files      profiler sto_P_     ^^
+  ^^                        ^^                  ^^
+  ^^                        ^^                  ^^
   ")
   ("q" nil "quit")
 
   ("c" helm-org-rifle-current-buffer nil)
   ("o" helm-org-rifle nil)
   ("a" helm-org-rifle-agenda-files nil)
+
+  ("p" (lambda () (interactive) (profiler-start 'cpu)) nil)
+  ("r" profiler-report nil)
+  ("P" profiler-stop nil)
 
 )
 
