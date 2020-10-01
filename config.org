@@ -4315,8 +4315,10 @@ based on the =:TRIGGER:= and =:BLOCKER:= properties.
 
   | 2019-11-13 | I'm testing a fork: https://github.com/akirak/org-edna via [[https://www.reddit.com/r/orgmode/comments/d4zlov/making_orgedna_easier_to_use/][reddit]]            |
   | 2020-09-10 | [[https://github.com/akirak/org-edna/issues/1][This fork is discontinued]] → switched to original org-edna v1.1.2 [[id:2020-09-19-switch-from-https-github-dot-com-akirak-org-edna-to-original-edna][with issues]] |
+  | 2020-10-01 | I migrated all my Org files from org-depend to org-edna using [[https://github.com/novoid/orgdepend_to_orgedna][this]]           |
 
-Enabled only for testing purposes (when =org-depend= is disabled):
+Enable only when =org-depend= is disabled because both use same
+properties and report format errors when other format is detected.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-edna
@@ -4333,11 +4335,10 @@ possibilities. My main driver to switch from =org=depend= to
 could be scheduled for, e.g., three days after the previous task was
 finished, whenever that happens.
 
-My plan as of 2020-07-09 is that the more complex syntax does come
-with no manual effort since I'd like to define dependencies via Elisp
-functions instead of manually typing =:TRIGGER:= properties which I've
-done so far. For that purpose, [[https://github.com/toshism/org-super-links][org-super-links]] is a very hot
-candicate.
+The more complex syntax does come with no manual effort since I'd like
+to define dependencies via Elisp functions instead of manually typing
+=:TRIGGER:= properties which I've done so far. For that purpose,
+[[https://github.com/toshism/org-linker-edna][org-linker-edna]] is a very nice help.
 
 Internal project link: id:2019-11-14-Org-Project-Management-Workflow
 
@@ -7185,9 +7186,6 @@ Testing =my-org-super-links-filter-description=:
 )
 )
 #+END_SRC
-
-#+RESULTS:
-| an example heading | an example heading | an example heading | an example heading | an example heading | an example heading | an example heading | - an example heading | -- fixxme: dashes | - fixxme: dash |
 
 *** org-linker and org-linker-edna
 
