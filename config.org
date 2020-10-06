@@ -7245,6 +7245,8 @@ Maybe I'm to stupid to use QUELPA. :-( I had to manually clone it and install vi
 (use-package org-linker-edna
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-linker-edna/")))
   :bind (("C-c s e" . org-linker-edna))
+  :config
+    (setq link-id-function 'my-id-get-or-generate) ;; use my ID generation function instead of UUIDs: https://github.com/toshism/org-linker-edna/issues/3#issuecomment-703815638
 )
 #+END_SRC
 
