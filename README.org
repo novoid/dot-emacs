@@ -121,73 +121,71 @@ echo "------------------------------------------------------"
 ls -1 contrib | grep -v 2del | grep -v tar
 #+END_SRC
 
-#+RESULTS:
-#+begin_example
-Last update of this list: Do 15 Okt 2020 13:07:24 CEST
-------------------------------------------------------
-auto-dictionary-mode
-browse-kill-ring.el
-command-log-mode
-cygwin-mount.el
-date2name.el
-define-word
-dired-details.el
-dired-hacks
-dired-plus
-dired-recent.el
-dired-show-readme
-edit-server.el
-elpygen
-emacs-emojify
-emacs-git-gutter
-emacs-which-key
-ews-orgmode
-explain-pause-mode
-eyebrowse
-filetags.el
-goto-chg.el
-helm-org-contacts
-hideshow-orgmode
-macrostep
-message-outlook.el
-move-text
-no-littering
-ob-restclient.el
-orgaggregate
-org.el
-org-fancy-priorities
-org-import-calendar.el
-org-linker
-org-linker-edna
-org-mind-map
-org-mind-map_OLD
-org-mode
-org-notmuch.el
-org-protocol-capture-html
-org-super-agenda
-org-wunderlist
-orly
-outlookedit.el
-outshine
-ov
-ox-clip
-ox-pandoc
-ox-rst
-ox-slack
-pdf-mode
-pdf-view-restore
-plantuml-mode
-pylookup
-raml-mode
-s.el
-setup-cygwin.el
-slime-volleyball
-sphinx-doc.el
-sunrise-commander
-synonyms
-vcard-mode
-wc.el
-#+end_example
+: Last update of this list: Do 15 Okt 2020 13:07:24 CEST
+: ------------------------------------------------------
+: auto-dictionary-mode
+: browse-kill-ring.el
+: command-log-mode
+: cygwin-mount.el
+: date2name.el
+: define-word
+: dired-details.el
+: dired-hacks
+: dired-plus
+: dired-recent.el
+: dired-show-readme
+: edit-server.el
+: elpygen
+: emacs-emojify
+: emacs-git-gutter
+: emacs-which-key
+: ews-orgmode
+: explain-pause-mode
+: eyebrowse
+: filetags.el
+: goto-chg.el
+: helm-org-contacts
+: hideshow-orgmode
+: macrostep
+: message-outlook.el
+: move-text
+: no-littering
+: ob-restclient.el
+: orgaggregate
+: org.el
+: org-fancy-priorities
+: org-import-calendar.el
+: org-linker
+: org-linker-edna
+: org-mind-map
+: org-mind-map_OLD
+: org-mode
+: org-notmuch.el
+: org-protocol-capture-html
+: org-super-agenda
+: org-wunderlist
+: orly
+: outlookedit.el
+: outshine
+: ov
+: ox-clip
+: ox-pandoc
+: ox-rst
+: ox-slack
+: pdf-mode
+: pdf-view-restore
+: plantuml-mode
+: pylookup
+: raml-mode
+: s.el
+: setup-cygwin.el
+: slime-volleyball
+: sphinx-doc.el
+: sunrise-commander
+: synonyms
+: vcard-mode
+: wc.el
+
 
 Some of those packages were added only for testing purpose. Most of
 them are added to my configuration permanently.
