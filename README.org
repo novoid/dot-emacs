@@ -115,15 +115,15 @@ necessary for my configuration. Most important here are the
 directories ~elpa~ and ~contrib~. The latter one holds a number of
 external packages:
 
-#+BEGIN_SRC sh :results output :wrap src text
+#+BEGIN_SRC sh :results output :wrap example
 echo "Last update of this list: $(date)"
 echo "------------------------------------------------------"
 ls -1 contrib | grep -v 2del | grep -v tar
 #+END_SRC
 
 #+RESULTS:
-#+begin_src text
-Last update of this list: Do 15 Okt 2020 11:09:55 CEST
+#+begin_example
+Last update of this list: Do 15 Okt 2020 13:07:24 CEST
 ------------------------------------------------------
 auto-dictionary-mode
 browse-kill-ring.el
@@ -187,7 +187,7 @@ sunrise-commander
 synonyms
 vcard-mode
 wc.el
-#+end_src
+#+end_example
 
 Some of those packages were added only for testing purpose. Most of
 them are added to my configuration permanently.
