@@ -1,9 +1,6 @@
-* My GNU/Emacs configuration folder
+* My GNU Emacs Configuration
 
 ** What To Expect
-:PROPERTIES:
-:CREATED:  [2018-08-29 Wed 08:37]
-:END:
 
 I am using:
 - Org mode (my main Emacs focus)
@@ -15,22 +12,32 @@ I am using:
 - File Management: dired
 - Typesetting: LaTeX (not active any more)
 
-As of 2018-08-29, I am using three different hosts with Emacs:
+As of 2020-10-15, I am using following hosts with Emacs:
 
-| Operating System             | Emacs version                                                                       |
-|------------------------------+-------------------------------------------------------------------------------------|
-| Debian GNU/Linux 9 (stretch) | Emacs 25.1.1                                                                        |
-| Xubuntu GNU/Linux 17.04 LTS  | GNU Emacs 27.0.50 (build 2, x86_64-pc-linux-gnu, GTK+ Version 3.18.9) of 2018-08-24 |
-| Windows 10                   | GNU Emacs 26.0.90 (build 1, x86_64-w64-mingw32) of 2017-11-30                       |
+| Operating System             | Emacs version     |
+|------------------------------+-------------------|
+| Debian GNU/Linux 10 (buster) | GNU Emacs 27.0.50 |
+| Xubuntu GNU/Linux 20.04 LTS  | GNU Emacs 26.3    |
+| Xubuntu GNU/Linux 20.04 LTS  | GNU Emacs 28.0.50 |
 
 All are running the same configuration. Some settings are only used on
 specific platforms though.
 
 I once was using OS X on my personal computer but this is history.
 Thankfully. Corresponding OS X specific settings are for archiving
-purposes.
+purposes. 
 
-** General Structure
+With my current employer, I'm able to use GNU/Linux also for business.
+Therefore, I don't have to use Windows at the moment. Thankfully.
+Corresponding OS X specific settings are for archiving purposes.
+
+** Best Navigation Experience
+
+For navigating through my =config.org= file, please do open it in
+Emacs so that you are able to collapse and expand its Org mode
+headings.
+
+** Literate Configuration: My Tangling Approach
 
 As of 2017-05, I moved my Emacs configuration format from [[http://orgmode.org/manual/Orgstruct-mode.html][OrgStruct
 mode]] to Org-mode babel + tangle. Originally, I found this process on
@@ -44,7 +51,16 @@ Now, my Emacs configuration is in a file named =config.org=. My
 Elisp blocks into the =config.el=. This generated file is interpreted
 by my GNU/Emacs on startup.
 
-Please do read [[http://karl-voit.at/2017/06/03/emacs-org][my blog article on how this Emacs configuration works]].
+Please do read [[http://karl-voit.at/2017/06/03/emacs-org][my blog article on how tangling of this Emacs
+configuration works]].
+
+Despite the size of my configuration, *tangling takes only a fraction
+of a second* and *automatically happens on two occasions*:
+
+1. When I manually save the =config.org= file.
+2. When Emacs starts and notices that =config.org= is newer than =config.el=.
+
+This way, there is *no unnecessary tangling process*.
 
 I also added some output functionality to the tangling method. This
 results in helpful lines in =*Messages*= like:
@@ -74,43 +90,15 @@ config • Themes …
 [...]
 #+END_EXAMPLE
 
-** Stuff Which Is Not Contained in the Git Repository
-
-Please take a look at my ~.gitignore~ file that contains some things I
-did *not* add to this git repository for a variety of reasons but are
-necessary for my configuration. Most important here is the directory
-~contrib~ which holds a number of external packages:
-
-- Currently (2017-05-26), this directory holds:
-  - cygwin-mount.el
-  - ews-orgmode/
-  - goto-chg.el
-  - message-outlook.el
-  - move-text/
-  - ob-restclient.el/
-  - orgaggregate/
-  - org.el
-  - [[https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el][org-import-calendar.el]]
-  - [[http://Orgmode.org][org-mode]]/
-  - org-protocol-capture-html/
-  - outlookedit.el
-  - outshine/
-  - pdf-mode/
-  - [[http://taesoo.org/proj/pylookup.html][pylookup]]/
-  - raml-mode/
-  - setup-cygwin.el
-  - sunrise-commander/
-  - vcard-mode/
-  - [[http://www.emacswiki.org/emacs/wc.el][wc.el]]
-
 ** In Case You Want to Use My Configuration
 
-In short: don't.
+In short: *don't*.
 
-Not because I don't like you to have my configuration. It is not easy
-to accomplish because I left out some parts like the ~contrib~
-directory as explained above. Some of my settings are host-specific
-and/or depend on path variables or external tools.
+Not because I don't like you to have my configuration. The reason is
+furthermore that it is not easy to accomplish the setup process. This
+is because I left out some parts like the ~contrib~ directory as
+explained above. Some of my settings are host-specific and/or depend
+on path variables or external tools.
 
 You should only adopt Elisp code you need and understand to avoid
 [[https://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs Bankruptcy]].
@@ -119,72 +107,96 @@ Therefore: please feel free to look up certain tricks and functions
 and add it to your configuration. But don't use my repository as is
 and expect it to run on your host.
 
-** Best Navigation Experience
+** Stuff Which Is Not Contained in the Git Repository
 
-For navigating through my =config.org= file, please do open it in
-Emacs so that you are able to collapse and expand headings.
+Please take a look at my ~.gitignore~ file that contains some things I
+did *not* add to this git repository for a variety of reasons but are
+necessary for my configuration. Most important here is the directory
+~contrib~ which holds a number of external packages:
 
-** Migration to Emacs 24
-
-As with 2014-01-19, I totally migrated to GNU/Emacs 24 on all of my
-systems.
-
-I therefore migrated my config to use the package management provided
-by Emacs 24. As a result, there are much less entries in the folder
-"contrib" and there is a new folder called "elpa". I did not include
-elpa-packages in this git repository.
-
-On 2016-04-24, I had following packages installed via elpa:
-
-#+BEGIN_SRC sh :exports results :results output
-ls -1 $HOME/.emacs.d/elpa | egrep -v '(archives|gnupg|.txt)'
+#+BEGIN_SRC sh :results output
+echo "Last update of this list: $(date)"
+echo "------------------------------------------------------"
+ls -1 contrib | grep -v 2del | grep -v tar
 #+END_SRC
 
+#+RESULTS:
 #+begin_example
-anzu-20160404.2218
-async-20160223.146
-avy-20160402.1049
-avy-menu-20160126.425
-bind-key-20160227.48
-char-menu-20160203.2215
-company-20160325.1650
-counsel-20160411.713
-dash-20160306.1222
-diminish-20151215.915
-edit-at-point-20150716.624
-elpy-20160131.118
-eno-20160110.234
-find-file-in-project-20160404.2330
-git-commit-20160412.130
-helm-20160413.2223
-helm-core-20160415.2250
-highlight-indentation-20150307.208
-highlight-symbol-20160102.1209
-ht-20150830.1115
-magit-20160412.128
-magit-popup-20160408.156
-markdown-mode-20160409.650
-neotree-20160306.730
-nyan-mode-20151017.2235
-org-30000101
-org-bullets-20140918.1137
-ox-pandoc-20151222.1553
-ox-reveal-20160224.1819
-popup-20160409.2133
-pyvenv-20160108.28
-restclient-20160407.146
-rich-minority-20151201.400
-smart-mode-line-20160306.1103
-smeargle-20151013.2242
-spray-20160304.1420
-swiper-20160412.130
-synonyms-20160328.654
-undo-tree-20140509.522
-use-package-20160403.1129
-with-editor-20160408.201
-yafolding-20141202.2056
-yasnippet-20160410.833
+Last update of this list: Do 15 Okt 2020 10:43:08 CEST
+------------------------------------------------------
+auto-dictionary-mode
+browse-kill-ring.el
+command-log-mode
+cygwin-mount.el
+date2name.el
+define-word
+dired-details.el
+dired-hacks
+dired-plus
+dired-recent.el
+dired-show-readme
+edit-server.el
+elpygen
+emacs-emojify
+emacs-git-gutter
+emacs-which-key
+ews-orgmode
+explain-pause-mode
+eyebrowse
+filetags.el
+goto-chg.el
+helm-org-contacts
+hideshow-orgmode
+macrostep
+message-outlook.el
+move-text
+no-littering
+ob-restclient.el
+orgaggregate
+org.el
+org-fancy-priorities
+org-import-calendar.el
+org-linker
+org-linker-edna
+org-mind-map
+org-mind-map_OLD
+org-mode
+org-notmuch.el
+org-protocol-capture-html
+org-super-agenda
+org-wunderlist
+orly
+outlookedit.el
+outshine
+ov
+ox-clip
+ox-pandoc
+ox-rst
+ox-slack
+pdf-mode
+pdf-view-restore
+plantuml-mode
+pylookup
+raml-mode
+s.el
+setup-cygwin.el
+slime-volleyball
+sphinx-doc.el
+sunrise-commander
+synonyms
+vcard-mode
+wc.el
 #+end_example
+
+Some of those packages were added only for testing purpose. Most of
+them are added to my configuration permanently.
+
+** Comments on ELPA, prelude, org-30000101
+
+After migrating most of the package management to =use-package=, there
+are much less entries in the folder =contrib= and there is a new
+folder called =elpa=. Of course, I did not include elpa-packages in
+this git repository.
 
 I also tested [[https://github.com/bbatsov/prelude][Emacs prelude]] for a couple of days. However, I was not
 very happy about it due to performance issues, unwanted behavior, and
@@ -194,7 +206,6 @@ Please note that ~org-30000101~ is a [[http://article.gmane.org/gmane.emacs.orgm
 pseudo-package]] to prevent the installation of Org-mode via package
 manager. I am using the Org Maint version from git directly (within my
 ~contrib~ directory).
-
 
 ** Useful References
 
