@@ -13234,6 +13234,27 @@ decided to test this package myself.
 )
 #+END_SRC
 
+** spatial-navigate
+
+This package enables a nice type of navgating through a document. It's
+rather hard to explain - just try it out yourself or [[https://gitlab.com/ideasman42/emacs-spatial-navigate][read the
+readme-file]].
+
+I love it for navigating Python code, skipping paragraphs, and so forth.
+
+#+BEGIN_SRC emacs-lisp
+(use-package spatial-navigate
+  :ensure t
+  ;; :bind (:map my-map ("SPC" . yankpad-insert))
+  :config
+  (global-set-key (kbd "<C-up>") 'spatial-navigate-backward-vertical-bar)
+  (global-set-key (kbd "<C-down>") 'spatial-navigate-forward-vertical-bar)
+  ;; I prefer the usual jump to word navigation for horizontal movements:
+  ;;(global-set-key (kbd "<C-left>") 'spatial-navigate-backward-horizontal-bar)
+  ;;(global-set-key (kbd "<C-right>") 'spatial-navigate-forward-horizontal-bar)
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
