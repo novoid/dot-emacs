@@ -111,18 +111,19 @@ and expect it to run on your host.
 
 Please take a look at my ~.gitignore~ file that contains some things I
 did *not* add to this git repository for a variety of reasons but are
-necessary for my configuration. Most important here is the directory
-~contrib~ which holds a number of external packages:
+necessary for my configuration. Most important here are the
+directories ~elpa~ and ~contrib~. The latter one holds a number of
+external packages:
 
-#+BEGIN_SRC sh :results output
+#+BEGIN_SRC sh :results output :wrap src text
 echo "Last update of this list: $(date)"
 echo "------------------------------------------------------"
 ls -1 contrib | grep -v 2del | grep -v tar
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
-Last update of this list: Do 15 Okt 2020 10:43:08 CEST
+#+begin_src text
+Last update of this list: Do 15 Okt 2020 11:09:55 CEST
 ------------------------------------------------------
 auto-dictionary-mode
 browse-kill-ring.el
@@ -186,7 +187,7 @@ sunrise-commander
 synonyms
 vcard-mode
 wc.el
-#+end_example
+#+end_src
 
 Some of those packages were added only for testing purpose. Most of
 them are added to my configuration permanently.
