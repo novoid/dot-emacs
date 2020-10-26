@@ -14081,13 +14081,14 @@ visualization is brilliant.
   rifle _c_urrent buffer    _p_rofile CPU       ^^
   rifle _o_pen buffers      _r_eport            ^^
   rifle _a_genda files      profiler sto_P_     ^^
-  ^^                        ^^                  ^^
+  rifle whole _O_rg dir     ^^                  ^^
   ^^                        ^^                  ^^
   ")
   ("q" nil "quit")
 
   ("c" helm-org-rifle-current-buffer nil)
   ("o" helm-org-rifle nil)
+  ("O" helm-org-rifle-org-directory nil)
   ("a" helm-org-rifle-agenda-files nil)
 
   ("p" (lambda () (interactive) (profiler-start 'cpu)) nil)
