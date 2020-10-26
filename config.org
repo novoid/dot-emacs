@@ -14216,7 +14216,7 @@ Not org related but might be candidates as well:
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
     _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _o_rdered dependency
     _p_ersonal credentials           _T_ags include inherited         _N_oblocking (this is never blocked)
-    _b_usiness personal              _1_ split block (M-RET)          org-linker-_e_dna
+    _b_usiness credentials           _1_ split block (M-RET)          org-linker-_e_dna
     ^^                               add _n_ote to logbook            ^^
     ^^                               _c_ontact link                   ^^
     ^^                               mark as _P_roject                ^^
