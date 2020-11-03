@@ -8785,7 +8785,7 @@ TODOs, called “habits”.»
 
 - position the habit graph on the agenda to the right of the default
 #+BEGIN_SRC emacs-lisp
-  (setq org-habit-graph-column 50)
+  (setq org-habit-graph-column 100)
 #+END_SRC
 
 *** my-reset-org-with-visibility-and-super-agenda() - reset some Org-mode stuff and reset startup visibility
