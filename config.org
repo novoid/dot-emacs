@@ -6778,7 +6778,9 @@ certain kind of data.
           ("EPA" . ,(concat my-business-jira-server "/EPA-%s"))
           ("EPAAFO" . ,(concat my-business-jira-server "/EPAAFO-%s"))
           ("JAFO" . ,(concat my-business-jira-server "/EPAAFO-0?jql=project%20%3D%20EPAAFO%20AND%20Afo-ID%20~%20%22%s%22"))
-          ("DAKEPA" . ,(concat my-business-jira-b-server "%s"))
+          ("EPARISE" . ,(concat my-business-sa-server "%s"))
+          ("DAKEPA" . ,(concat my-business-jira-b-server "DAKEPA-%s"))
+          ("EPABETR" . ,(concat my-business-jira-b-server "EPABETR-%s"))
           ("BMTSK" . ,(concat "file:" my-business-bmtsk-path "/"))
           ))
 #+END_SRC
@@ -7395,8 +7397,8 @@ Definitions of non-work files:
               ,(concat my-org-files-path "contacts.org")
               ;;,(concat my-org-files-path "foodandbeverages.org")
               ,(concat my-org-files-path "hardware.org")
-              ,(concat my-org-files-path "fhsp.org")
               ,(concat my-org-files-path "tugraz.org")
+              ,(concat my-org-files-path "fhsp.org")
               ,(concat my-org-files-path "notes.org")
               ,(concat my-org-files-path "public_voit.org")
               ,(concat my-org-files-path "errors.org")
@@ -8592,9 +8594,6 @@ I aliased it within =~/.zshrc.local= to =memacs=
   ;;    )
     )
 #+END_SRC
-
-#+RESULTS:
-: my-export-agenda
 
 *** desktop notifications
 
