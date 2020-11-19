@@ -4583,6 +4583,11 @@ cases like =_{3}= which makes 3 a subscript:
 (setq org-use-sub-superscripts "{}")
 #+END_SRC
 
+Reverting a changed behavior in indentation ([[https://code.orgmode.org/bzg/org-mode/src/master/etc/ORG-NEWS#L323][explanation and fix]]):
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
+#+end_src
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
