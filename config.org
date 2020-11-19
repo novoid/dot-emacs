@@ -13219,6 +13219,20 @@ Using the prefix version =C-u C-c o= I may swap the current window
 with another one. A second prefix will delete the target window: =C-u
 C-u C-x o=.
 
+
+** Pulse: Highlight lines on misc occasions
+
+This is a tip I got from [[https://karthinks.com/software/batteries-included-with-emacs/][that blog article]]:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-pulse-line (&rest _)
+      "Pulse the current line."
+      (pulse-momentary-highlight-one-line (point)))
+
+(dolist (command '(recenter-top-bottom other-window ace-window my-scroll-down-half my-scroll-up-half))
+  (advice-add command :after #'my-pulse-line))
+#+END_SRC
+
 ** DISABLED explain-pause-mode
 
   | 2020-05-19 | [[https://github.com/lastquestion/explain-pause-mode][cloned from GitHub]] and start testing     |
