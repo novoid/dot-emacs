@@ -211,6 +211,11 @@ Possible values: banish, exile, jump, animate, proteus
 (when (display-mouse-p) (setq mouse-avoidance-mode "animate"))
 #+END_SRC
 
+A tip from [[https://karthinks.com/software/batteries-included-with-emacs/][this wonderful blog article:]] map scroll-lock mode to the corresponding scroll-lock key:
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
