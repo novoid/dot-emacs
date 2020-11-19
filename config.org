@@ -13264,7 +13264,10 @@ decided to test this package myself.
 )
 #+END_SRC
 
-** spatial-navigate
+** DISABLED spatial-navigate
+
+ | 2020-10-0x | stumbled over it and it seems to be a nice general navigation feature                                                                                                              |
+ | 2020-10-26 | disabled because of "((use-package "Cannot load spatial-navigate" :error nil) (use-package "Failed to install spatial-navigate: Package ‘emacs-26.2’ is unavailable" :error nil))" |
 
 This package enables a nice type of navgating through a document. It's
 rather hard to explain - just try it out yourself or [[https://gitlab.com/ideasman42/emacs-spatial-navigate][read the
