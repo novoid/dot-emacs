@@ -7318,6 +7318,22 @@ lines:
 (bind-key "H" #'helm-org-agenda-files-headings my-map)
 #+END_SRC
 
+
+*** peg
+
+  | 2020-12-07 | switched to a manually downloaded version |
+
+[[http://elpa.gnu.org/packages/peg.html][peg]] is required by org-ql (and was installed via ELPA as dependency)
+but the most recent version I got via =list-package= was
+=20150708.641= which caused issues. So I had to set it up via manual
+download:
+
+#+BEGIN_SRC emacs-lisp
+(use-package peg
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/peg/")))
+)
+#+END_SRC
+
 *** org-ql
 
   | 2019-12-17 | initial setup |
