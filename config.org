@@ -10717,10 +10717,13 @@ at once before leaving the computer for a longer period of time.
 )
 #+END_SRC
 
-** Performance Optimizations
+** DISABLED Performance Optimizations
 :PROPERTIES:
 :CREATED:  [2020-05-04 Mon 15:01]
 :END:
+
+ | 2020-05-04 | added to my config                                                          |
+ | 2020-12-06 | disabled to avoid interference with [[https://www.reddit.com/r/orgmode/comments/k6f5fx/ann_experimental_orgmode_branch_improving/][experimental org branch for performance]] |
 
 In 2020-05-04, [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/][that reddit discussion]] pointed me to [[https://www.mail-archive.com/emacs-orgmode@gnu.org/msg127740.html][this Org ML thread]]
 where the following adaptations were published to compensate the
