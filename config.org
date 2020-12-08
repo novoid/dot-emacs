@@ -6827,6 +6827,32 @@ broken very easily]].
 )
 #+END_SRC
 
+*** gemSpec links
+
+| 2020-12-08 | created |
+
+This is business-related:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-gemSpec_DS_Anbieter (afo)
+  (start-process "" nil "okular" my-gemSpec_DS_Anbieter-pdf "--find" afo)
+   "")
+(defun my-gemSpec_Net (afo)
+  (start-process "" nil "okular" my-gemSpec_Net-pdf "--find" afo)
+   "")
+(defun my-gemSpec_PKI (afo)
+  (start-process "" nil "okular" my-gemSpec_PKI-pdf "--find" afo)
+   "")
+(defun my-gemSpec_IDP_Dienst (afo)
+  (start-process "" nil "okular" my-gemSpec_IDP_Dienst-pdf "--find" afo)
+   "")
+
+(add-to-list 'org-link-abbrev-alist '("gemSpec_DS_Anbieter" . "%(my-gemSpec_DS_Anbieter)"))
+(add-to-list 'org-link-abbrev-alist '("gemSpec_Net" . "%(my-gemSpec_Net)"))
+(add-to-list 'org-link-abbrev-alist '("gemSpec_PKI" . "%(my-gemSpec_PKI)"))
+(add-to-list 'org-link-abbrev-alist '("gemSpec_IDP_Dienst" . "%(my-gemSpec_IDP_Dienst)"))
+#+END_SRC
+
 *** Reference management: link handling functions
 
 Helper function =string-replace (this withthat in)=
