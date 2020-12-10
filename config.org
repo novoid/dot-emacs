@@ -13335,6 +13335,36 @@ I love it for navigating Python code, skipping paragraphs, and so forth.
 )
 #+END_SRC
 
+** bug-hunter → bisecting Emacs config issues
+
+| 2020-12-10 | initial setup |
+
+Found via tip from [[https://github.com/yantar92/org/issues/1#issuecomment-739522083][this issue comment]].
+
+process for my situation:
+1. copy config.el to testconfig.el
+2. insert snippet below at the top of testconfig.el
+   - this is part of my init.el which is ignored when using other file than init.el
+3. save all buffers
+4. start bisecting via =M-x bug-hunter-file=, select file and then =i=nteractive
+
+#+begin_src emacs-lisp :tangle no
+(package-initialize)
+(defvar my-init-el-start-time (current-time) "Time when init.el was started")
+(setq my-user-emacs-directory "~/.emacs.d/")
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
+(require 'org)
+#+end_src
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package bug-hunter
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
