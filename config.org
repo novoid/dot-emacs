@@ -115,7 +115,7 @@ Here are my function-key-mappings that are included in most hydra help screens:
 
 #+BEGIN_SRC emacs-lisp
 (setq my-f-key-settings (concat
-"⇧             Git   ←change→ ┃  yp-exp yp-map            ┃  Bright  minimap  Beginner
+"⇧             Git   ←change→ ┃  yp-exp yp-map            ┃  Project minimap  Beginner  Bright
 "                                                                                                     (propertize
 "    F1        F2    F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
 "                                                                                                      'face '(:foreground "green"))
@@ -13379,6 +13379,17 @@ process for my situation:
 )
 #+END_SRC
 
+** projectile
+
+| 2020-12-10 | initial setup |
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
@@ -13589,7 +13600,7 @@ one in order to get a decent result for a projector or similar.
         )
   )
 
-(global-set-key [(shift f9)] 'my-toggle-dark-bright-theme)
+(global-set-key [(shift f12)] 'my-toggle-dark-bright-theme)
 #+END_SRC
 
 ** my-toggle-split-and-single-window() - Toggle between split windows and a single window
@@ -14215,6 +14226,62 @@ visualization is brilliant.
 )
 
 (global-set-key [f9] 'hydra-search/body)
+#+END_SRC
+
+** hydra-projectile → S-F9
+
+| 2020-12-10 | initial setup; stolen [[https://github.com/abo-abo/hydra/wiki/Projectile][from here]] |
+
+#+BEGIN_SRC emacs-lisp
+(defhydra hydra-projectile-other-window (:color teal)
+  "projectile-other-window"
+  ("f"  projectile-find-file-other-window        "file")
+  ("g"  projectile-find-file-dwim-other-window   "file dwim")
+  ("d"  projectile-find-dir-other-window         "dir")
+  ("b"  projectile-switch-to-buffer-other-window "buffer")
+  ("q"  nil                                      "cancel" :color blue))
+
+(defhydra hydra-projectile (:color teal
+                            :hint nil)
+    (concat my-f-key-settings
+  "
+     PROJECTILE: %(projectile-project-root)
+
+     Find File            Search/Tags          Buffers                Cache
+------------------------------------------------------------------------------------------
+_s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
+ _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
+ _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
+  _r_: recent file                                               ^^^^_z_: cache current
+  _d_: dir
+
+")
+  ("a"   projectile-ag)
+  ("b"   projectile-switch-to-buffer)
+  ("c"   projectile-invalidate-cache)
+  ("d"   projectile-find-dir)
+  ("s-f" projectile-find-file)
+  ("ff"  projectile-find-file-dwim)
+  ("fd"  projectile-find-file-in-directory)
+  ("g"   ggtags-update-tags)
+  ("s-g" ggtags-update-tags)
+  ("i"   projectile-ibuffer)
+  ("K"   projectile-kill-buffers)
+  ("s-k" projectile-kill-buffers)
+  ("m"   projectile-multi-occur)
+  ("o"   projectile-multi-occur)
+  ("s-p" projectile-switch-project "switch project")
+  ("p"   projectile-switch-project)
+  ("s"   projectile-switch-project)
+  ("r"   projectile-recentf)
+  ("x"   projectile-remove-known-project)
+  ("X"   projectile-cleanup-known-projects)
+  ("z"   projectile-cache-current-file)
+  ("`"   hydra-projectile-other-window/body "other window")
+  ("q"   nil "cancel" :color blue))
+
+(global-set-key [(shift f9)] 'hydra-projectile/body)
+
 #+END_SRC
 
 ** hydra-nxml → F1
