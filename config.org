@@ -95,6 +95,20 @@ What I'm not using at the moment:
 You might want to take a look at the next section where I list my most
 important generic hydras in contrast to the ~F1~-mapped mode hydras.
 
+* bug-hunter
+
+#+BEGIN_SRC emacs-lisp
+;; remove comment characters when using but-hunter to bi-sect this file:
+; -------------------------------------------------------------------------------------------
+; (package-initialize)
+; (defvar my-init-el-start-time (current-time) "Time when init.el was started")
+; (setq my-user-emacs-directory "~/.emacs.d/")
+; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
+; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
+; (require 'org)
+; -------------------------------------------------------------------------------------------
+#+END_SRC
+
 * Function keys
 
 Here are my function-key-mappings that are included in most hydra help screens:
