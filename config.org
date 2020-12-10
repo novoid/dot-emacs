@@ -481,6 +481,8 @@ saving large files. 22% on http://paste.grml.org/hidden/27a87675/
 
 Details: id:2016-03-27-maximize-window-init.el
 
+[2020-12-10 Thu] Good read: [[https://emacsredux.com/blog/2020/12/04/maximize-the-emacs-frame-on-startup/][Maximize the Emacs Frame on Startup | Emacs Redux]]
+
 #+BEGIN_SRC emacs-lisp
 (toggle-frame-maximized)
 #+END_SRC
@@ -6769,6 +6771,8 @@ Preserve the hierarchy when archiving: [[https://fuco1.github.io/2017-04-20-Arch
 I love customized links. I created a bunch of them in order to link
 certain kind of data.
 
+Please note that =my-business-...= variables are not available to you for privacy reasons.
+
 #+BEGIN_SRC emacs-lisp
   (setq org-link-abbrev-alist
         `(
@@ -6780,10 +6784,10 @@ certain kind of data.
           ("notes" . "~/archive/library/%s-notes.pdf")
           ("contact" . ,(concat my-org-files-path "contacts.org::/\*.*%s/"))
 ;         ("tsfile" . ,(concat my-org-files-path "memacs/files.org_archive::/\*.*%s/")) replaced by org-link-set-parameters() + my-handle-tsfile-link()
-          ("ifile" . ,(concat my-org-files-path "memacs/ifiles.org::/\*.*%s/"))
+          ;; 2020-12-10 old: ("ifile" . ,(concat my-org-files-path "memacs/ifiles.org::/\*.*%s/"))
           ;;("mbox2001" . "file:~/archive/events_memories/backup_2002-06-23/2002-06-23/home/vk/Emails_from_approx_2000-07-01_to_2002-06-24.mbox::/\%s/")
-          ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
-          ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
+          ;; 2020-12-10 old: ("postings2002" . "file:~/archive/usenet/memacs-archive/2002-03-13_to_2002-06-23_postings_Karl_Voit_usenet::%s")
+          ;; 2020-12-10 old: ("postings2001" . "file:~/archive/usenet/memacs-archive/2000-07-06_to_2002-01-28_postings_Karl_Voit_usenet::%s")
           ;;("bank" . "file:~/institutions/easybank/Memacs-easybank-summary.csv::%s")
           ;;("ipd" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
           ;;("IPD" . "https://r6portal-defects.infonova.com/browse/IPD-%s")
@@ -6796,6 +6800,8 @@ certain kind of data.
           ("DAKEPA" . ,(concat my-business-jira-b-server "DAKEPA-%s"))
           ("EPABETR" . ,(concat my-business-jira-b-server "EPABETR-%s"))
           ("BMTSK" . ,(concat "file:" my-business-bmtsk-path "/"))
+          ("IAFO" . ,(concat my-business-jira2-server "/GEMIDPANF-200?jql=project%20%3D%20GEMIDPANF%20AND%20Afo-ID%20~%20%22%s%22"))
+          ("GEMIDPANF" . ,(concat my-business-jira2-server "/GEMIDPANF-%s"))
           ))
 #+END_SRC
 
@@ -13458,7 +13464,8 @@ PREVIOUS (simple) approach:
     )
   )
 ;;fancy search:  (global-set-key "\C-s" 'swiper)
-;;normal search: (global-set-key "\C-s" 'isearch-forward)
+;;normal search: 
+(global-set-key "\C-S" 'isearch-forward)
 #+END_SRC
 
 On 2017-06-17, I stubled over an even more sophisticated setup for
