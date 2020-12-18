@@ -6773,6 +6773,8 @@ certain kind of data.
 
 Please note that =my-business-...= variables are not available to you for privacy reasons.
 
+Do *not* use =org-link-abbrev-alist= for defining links that are handled via functions. Use =org-link-set-parameters= instead.
+
 #+BEGIN_SRC emacs-lisp
   (setq org-link-abbrev-alist
         `(
@@ -6854,6 +6856,9 @@ broken very easily]].
 This is business-related:
 
 #+BEGIN_SRC emacs-lisp
+(defun my-gemAnbT_IDP-Dienst_ATV (afo)
+  (start-process "" nil "okular" my-gemAnbT_IDP-Dienst_ATV-pdf "--find" afo)
+   "")
 (defun my-gemSpec_DS_Anbieter (afo)
   (start-process "" nil "okular" my-gemSpec_DS_Anbieter-pdf "--find" afo)
    "")
@@ -6866,11 +6871,28 @@ This is business-related:
 (defun my-gemSpec_IDP_Dienst (afo)
   (start-process "" nil "okular" my-gemSpec_IDP_Dienst-pdf "--find" afo)
    "")
+(defun my-gemLB_FD_IDP (afo)
+  (start-process "" nil "okular" my-gemLB_FD_IDP-pdf "--find" afo)
+   "")
 
-(add-to-list 'org-link-abbrev-alist '("gemSpec_DS_Anbieter" . "%(my-gemSpec_DS_Anbieter)"))
-(add-to-list 'org-link-abbrev-alist '("gemSpec_Net" . "%(my-gemSpec_Net)"))
-(add-to-list 'org-link-abbrev-alist '("gemSpec_PKI" . "%(my-gemSpec_PKI)"))
-(add-to-list 'org-link-abbrev-alist '("gemSpec_IDP_Dienst" . "%(my-gemSpec_IDP_Dienst)"))
+(org-link-set-parameters "gemAnbT_IDP-Dienst_ATV"
+                         :follow #'my-gemAnbT_IDP-Dienst_ATV)
+(org-link-set-parameters "gemSpec_DS_Anbieter"
+                         :follow #'my-gemSpec_DS_Anbieter)
+(org-link-set-parameters "gemSpec_Net"
+                         :follow #'my-gemSpec_Net)
+(org-link-set-parameters "gemSpec_PKI"
+                         :follow #'my-gemSpec_PKI)
+(org-link-set-parameters "gemSpec_IDP_Dienst"
+                         :follow #'my-gemSpec_IDP_Dienst)
+(org-link-set-parameters "gemLB_FD_IDP"
+                         :follow #'my-gemLB_FD_IDP)
+
+;; do NOT use this for links handled by functions! This results in links "opened" on things like line modification, redrawing of screen, ...
+;; NOT: (add-to-list 'org-link-abbrev-alist '("gemSpec_DS_Anbieter" . "%(my-gemSpec_DS_Anbieter)"))
+;; NOT: (add-to-list 'org-link-abbrev-alist '("gemSpec_Net" . "%(my-gemSpec_Net)"))
+;; NOT: (add-to-list 'org-link-abbrev-alist '("gemSpec_PKI" . "%(my-gemSpec_PKI)"))
+;; NOT: (add-to-list 'org-link-abbrev-alist '("gemSpec_IDP_Dienst" . "%(my-gemSpec_IDP_Dienst)"))
 #+END_SRC
 
 *** Reference management: link handling functions
@@ -7112,22 +7134,30 @@ Don't know why I disabled this:
 - If you are interested in taking this any further: https://github.com/stardiviner/org-link-beautify
 
 #+BEGIN_SRC emacs-lisp
-(org-link-set-parameters "file" :face '(:foreground "DarkSeaGreen" :underline t))
-;; defined elsewhere;; (org-link-set-parameters "tsfile" :face '(:foreground "DarkSeaGreen" :underline t))
-(org-link-set-parameters "pdf" :face '(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "file" :face '(:foreground "DarkSeaGreen" :underline t))
+  ;; defined elsewhere;; (org-link-set-parameters "tsfile" :face '(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "pdf" :face '(:foreground "DarkSeaGreen" :underline t))
 
-(org-link-set-parameters "http" :face '(:foreground "DeepSkyBlue" :underline t))
-(org-link-set-parameters "https" :face '(:foreground "DeepSkyBlue" :underline t))
+  (org-link-set-parameters "http" :face '(:foreground "DeepSkyBlue" :underline t))
+  (org-link-set-parameters "https" :face '(:foreground "DeepSkyBlue" :underline t))
 
-(org-link-set-parameters "id" :face '(:foreground "snow3" :underline t))
-(org-link-set-parameters "contact" :face '(:foreground "snow3" :underline t))
+  (org-link-set-parameters "id" :face '(:foreground "snow3" :underline t))
+  (org-link-set-parameters "contact" :face '(:foreground "snow3" :underline t))
 
-(org-link-set-parameters "EPA" :face '(:foreground "wheat2" :underline t))
-(org-link-set-parameters "EPAAFO" :face '(:foreground "wheat2" :underline t))
-(org-link-set-parameters "JAFO" :face '(:foreground "wheat2" :underline t))
-(org-link-set-parameters "DAKEPA" :face '(:foreground "wheat2" :underline t))
-(org-link-set-parameters "BMTSK" :face '(:foreground "wheat2" :underline t))
+  (org-link-set-parameters "EPA" :face '(:foreground "wheat2" :underline t))
+  (org-link-set-parameters "EPAAFO" :face '(:foreground "wheat2" :underline t))
+  (org-link-set-parameters "JAFO" :face '(:foreground "wheat2" :underline t))
+  (org-link-set-parameters "DAKEPA" :face '(:foreground "wheat2" :underline t))
+  (org-link-set-parameters "BMTSK" :face '(:foreground "wheat2" :underline t))
 
+  (org-link-set-parameters "gemSpec_DS_Anbieter"
+                           :face '(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "gemSpec_Net"
+                           :face '(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "gemSpec_PKI"
+                           :face '(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "gemSpec_IDP_Dienst"
+                           :face '(:foreground "DarkSeaGreen" :underline t))
 #+END_SRC
 
 - test links
