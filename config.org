@@ -14434,24 +14434,24 @@ Not org related but might be candidates as well:
   (defhydra hydra-org (:color blue)
     (concat my-f-key-settings
     "
-    ^^Go to                          ^^Inserting                      ^^Properties
-    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
-    _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link       _o_rdered dependency
-    _p_ersonal credentials           _T_ags include inherited         _N_oblocking (this is never blocked)
-    _b_usiness credentials           _1_ split block (M-RET)          org-linker-_e_dna
-    ^^                               add _n_ote to logbook            ^^
-    ^^                               _c_ontact link                   ^^
-    ^^                               mark as _P_roject                ^^
-    ^^                               generate & copy _i_d             ^^
-    ^^                               _t_ag headline according to words^^
-    ^^                               ^^                               ^^
+    ^^Go to                          ^^Inserting                        ^^Org-timer              ^^Properties
+    ^────────^───────────────────────^──────^───────────────────────────^^───────────────────────^─────────^───────────────
+    _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link         Start  C-c C-x _0_       _o_rdered dependency
+    _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)
+    _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna
+    ^^                               add _n_ote to logbook              Stop   C-c C-x ___       ^^
+    ^^                               _c_ontact link                                              ^^
+    ^^                               mark as _P_roject                                           ^^
+    ^^                               generate & copy _i_d                                        ^^
+    ^^                               _t_ag headline according to words                           ^^
+    ^^                               ^^                                                          ^^
     ^^Filter                         ^^Export                         ^^MISC
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
     filter open todos by _t_ags      _R_eddit/Wiki.js (region)        _s_ynonym
     _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word
     _3_ org-tags-sparse-tree         ^^                               _S_pray (speed reading)
     _f_ocus agenda (prio A; sched .) ^^                               _w_eather Graz
-    _F_ocus disabled for agenda      ^^                               ^^
+    _F_ocus disabled for agenda      ^^                               _!_ save-buffers-kill-terminal
     ")
 
     ("f" (lambda ()
@@ -14506,6 +14506,13 @@ Not org related but might be candidates as well:
     ("c" helm-org-contacts nil)
     ("i" my-id-get-or-generate nil)
     ("e" org-linker-edna nil)
+
+    ("0" org-timer-start nil)
+    ("." org-timer nil)
+    ("," org-timer-pause-or-continue nil)
+    ("_" org-timer-stop nil)
+
+    ("!" save-buffers-kill-terminal nil)
 
   ;;  ("t" my-dired-tagtrees nil)
   ;;  ("T" my-dired-tagtrees-recursive nil)
@@ -15085,6 +15092,19 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
 * Key bindings
 
 In this heading, I do define many key bindings.
+
+** Unset binding for =C-x C-c= (save-buffers-kill-terminal)
+
+| 2020-12-18 | initial setup |
+
+I sometimes confise the order of =C-c C-x= (prefix for various
+commands) with =C-x C-c= which closes my Emacs session and all of its
+buffers. So I decided to remove this mapping and quit emacs via =M-x
+save-buffers-kill-terminal= or a hydra.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-c") nil)
+#+END_SRC
 
 ** my-map, the ressurection → C-c C-,
 
