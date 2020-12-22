@@ -6874,6 +6874,9 @@ This is business-related:
 (defun my-gemLB_FD_IDP (afo)
   (start-process "" nil "okular" my-gemLB_FD_IDP-pdf "--find" afo)
    "")
+(defun my-gemRL_Betr_TI (afo)
+  (start-process "" nil "okular" my-gemRL_Betr_TI-pdf "--find" afo)
+   "")
 
 (org-link-set-parameters "gemAnbT_IDP-Dienst_ATV"
                          :follow #'my-gemAnbT_IDP-Dienst_ATV)
@@ -6887,6 +6890,8 @@ This is business-related:
                          :follow #'my-gemSpec_IDP_Dienst)
 (org-link-set-parameters "gemLB_FD_IDP"
                          :follow #'my-gemLB_FD_IDP)
+(org-link-set-parameters "gemRL_Betr_TI"
+                         :follow #'my-gemRL_Betr_TI)
 
 ;; do NOT use this for links handled by functions! This results in links "opened" on things like line modification, redrawing of screen, ...
 ;; NOT: (add-to-list 'org-link-abbrev-alist '("gemSpec_DS_Anbieter" . "%(my-gemSpec_DS_Anbieter)"))
