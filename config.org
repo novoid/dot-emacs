@@ -6094,6 +6094,33 @@ Lucky me, I found the ready-to-use solution [[https://emacs.stackexchange.com/a/
 (global-set-key (kbd "C-c o") 'my-org-retrieve-url-from-point)
 #+END_SRC
 
+*** my-webarchive-tsfile
+
+  | 2020-12-28 | initial version (see [[id:2020-12-28-implement-Elisp-tsfile-picker-for-last-10-webarchive][this internal id]]) |
+
+This is basically a file-picker for a specific directory that holds
+HTML files of all of my visited web pages I archive via [[https://github.com/gildas-lormeau/SingleFileZ][SingleFileZ]].
+The function then inserts a "tsfile:" link. Look for other occurances
+of "tsfile" in this file for further explanation on "tsfile" or read
+[[https://github.com/novoid/lazyblorg/wiki/Images#embedding-tsfile-image-files][this]].
+
+#+BEGIN_SRC emacs-lisp
+    (defun my-webarchive-tsfile ()
+      "Asks for a file name within the webarchive dir and returns a tsfile-link of the basename"
+      (interactive)
+      (setq my-webarchive-dir (cond ((my-system-is-sting) "/home/vk/archive/backup/sting/webarchive")
+                                  ((my-system-is-rise) "/home/vk/Downloads/webarchive")
+                                  (t "/home/vk/Downloads/")
+                                  ))
+      (setq myfile
+            (helm-basename
+             (helm-comp-read "Which webarchive file:" (f-files my-webarchive-dir)
+                             )))
+      (insert (concat "[[tsfile:" myfile "][" myfile "]]"))
+      )
+
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -14449,13 +14476,14 @@ Not org related but might be candidates as well:
     ^^                               mark as _P_roject                                           ^^
     ^^                               generate & copy _i_d                                        ^^
     ^^                               _t_ag headline according to words                           ^^
+    ^^                               _w_ebarchive tsfile                                         ^^
     ^^                               ^^                                                          ^^
     ^^Filter                         ^^Export                         ^^MISC
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
     filter open todos by _t_ags      _R_eddit/Wiki.js (region)        _s_ynonym
     _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word
     _3_ org-tags-sparse-tree         ^^                               _S_pray (speed reading)
-    _f_ocus agenda (prio A; sched .) ^^                               _w_eather Graz
+    _f_ocus agenda (prio A; sched .) ^^                               _W_eather Graz
     _F_ocus disabled for agenda      ^^                               _!_ save-buffers-kill-terminal
     ")
 
@@ -14476,6 +14504,8 @@ Not org related but might be candidates as well:
     ) nil)
 
     ("P" my-mark-as-project nil)
+
+    ("w" my-webarchive-tsfile nil)
 
     ;; 2020-05-20: we do not share credentials in this company *g*
     ;; ("B" (lambda ()
@@ -14506,7 +14536,7 @@ Not org related but might be candidates as well:
     ("s" my-synonym-current-word nil)
     ("d" define-word-at-point nil)
     ("S" spray-mode nil)
-    ("w" (lambda () (interactive) (wttrin-query "graz")) nil)
+    ("W" (lambda () (interactive) (wttrin-query "graz")) nil)
     ("n" org-add-note nil)
     ("c" helm-org-contacts nil)
     ("i" my-id-get-or-generate nil)
