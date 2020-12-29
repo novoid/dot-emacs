@@ -6104,20 +6104,44 @@ The function then inserts a "tsfile:" link. Look for other occurances
 of "tsfile" in this file for further explanation on "tsfile" or read
 [[https://github.com/novoid/lazyblorg/wiki/Images#embedding-tsfile-image-files][this]].
 
+I added a cache for the list of files to minimize unnecessary
+re-reading of the (long) directory. This cache gets invalidated and
+updated when one of the following conditions occur:
+
+1. there was no previous invocation
+2. the last function invocation (not cache update!) is older than 90 seconds
+3. FUTURE IDEA: the universal argument is given
+   - not implemented yet because I call this function from the org
+     hydra only which would require a second hydra entry for the call
+     with the universal argument.
+
 #+BEGIN_SRC emacs-lisp
-    (defun my-webarchive-tsfile ()
-      "Asks for a file name within the webarchive dir and returns a tsfile-link of the basename"
-      (interactive)
-      (setq my-webarchive-dir (cond ((my-system-is-sting) "/home/vk/archive/backup/sting/webarchive")
-                                  ((my-system-is-rise) "/home/vk/Downloads/webarchive")
-                                  (t "/home/vk/Downloads/")
-                                  ))
-      (setq myfile
-            (helm-basename
-             (helm-comp-read "Which webarchive file:" (f-files my-webarchive-dir)
-                             )))
-      (insert (concat "[[tsfile:" myfile "][" myfile "]]"))
+  (defun my-webarchive-tsfile ()
+    "Asks for a file name within the webarchive dir and returns a tsfile-link of the basename"
+    (interactive)
+    ;; different hosts do have the dir at different locations:
+    (setq my-webarchive-dir (cond ((my-system-is-sting) "/home/vk/archive/backup/sting/webarchive")
+                                ((my-system-is-rise) "/home/vk/Downloads/webarchive")
+                                (t "/home/vk/Downloads/")
+                                ))
+    ;; check if updating the filename cache is necessary:
+    (when (or 
+           (not (boundp 'my-webarchive-tsfile-file-list))
+           (not (boundp 'my-webarchive-tsfile-last-invocation-time))
+           (eq my-webarchive-tsfile-file-list nil)
+           (< 90.0 (float-time (time-since my-webarchive-tsfile-last-invocation-time)))
+           )
+      (progn
+        (message (concat "Re-reading the list of files from " my-webarchive-dir))
+        (setq my-webarchive-tsfile-file-list (f-files my-webarchive-dir)))
       )
+    ;; ask the user for a file:
+    (setq myfile (helm-basename (helm-comp-read "Which webarchive file:" my-webarchive-tsfile-file-list)))
+    ;; save the current time in order to compare it next invocation:
+    (setq my-webarchive-tsfile-last-invocation-time (current-time))
+    ;; insert the custom link to the current position:
+    (insert (concat "[[tsfile:" myfile "][" myfile "]]"))
+    )
 
 #+END_SRC
 
