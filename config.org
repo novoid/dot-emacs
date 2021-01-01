@@ -9206,10 +9206,11 @@ material from the first table.»
 *** Sticky header lines
 
   | 2020-02-06 | moved from =org-table-sticky-header= to =org-table-header-line-mode= |
+  | 2021-01-01 | moved back to =org-table-sticky-header= because I can't make it work |
 
 A minor mode to show the sticky header for org-mode tables.
 - https://github.com/cute-jumper/org-table-sticky-header
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
 (use-package org-table-sticky-header
   :ensure t
   :config
@@ -9217,17 +9218,23 @@ A minor mode to show the sticky header for org-mode tables.
   )
 #+END_SRC
 
-FIXXME 2020-02-01: According to [[https://mastodon.etalab.gouv.fr/@bzg/103578639383778830][this toot]], this should be replaced by
+2020-02-01: According to [[https://mastodon.etalab.gouv.fr/@bzg/103578639383778830][this toot]], this should be replaced by
 standard feature =M-x org-table-electric-header-mode=. Will have to
 check after I got this Org version. [[https://www.reddit.com/r/emacs/comments/ex4f1n/new_org_feature_makes_table_headers_always_visible/fg65alm/][Already renamed, it's now
 `org-table-header-line-mode`.]]
 
-FIXXME 2020-02-06: this does not seem to be in my code so far. I keep
+2020-02-06: this does not seem to be in my code so far. I keep
 it until it "appears". It is reported to be part of Org v9.4.
 
 2020-05-16: It's now part of Org mode maint git branch. Beginning to test this feature ...
 
-#+BEGIN_SRC emacs-lisp
+2021-01-01: I don't know why but this did never work.
+=org-table-header-line-mode= was somehow =nil= all the time. When
+enabled manually, sticky headers were not working as well. Maybe it
+would have required a restart. Anyhow, since =org-table-sticky-header=
+worked flowelessly for years, I go back for now.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (setq org-table-header-line-mode t)
 (setq org-table-sticky-header-mode t)
 #+END_SRC
