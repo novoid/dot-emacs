@@ -14652,7 +14652,7 @@ Not org related but might be candidates as well:
 
 ** hydra-notmuch → F1
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
 (defhydra hydra-notmuch (:color blue)
     (concat my-f-key-settings
   "
@@ -14675,9 +14675,6 @@ Not org related but might be candidates as well:
     (define-key notmuch-hello-mode-map [f1] 'hydra-notmuch/body)
 )
 #+END_SRC
-
-#+RESULTS:
-: hydra-notmuch/body
 
 ** hydra-notmuch-message-mode → F1
 
@@ -15497,7 +15494,7 @@ line, sentence, sexp or defun into the marked region:
 :CREATED:  [2019-12-21 Sat 13:16]
 :END:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
 (when (my-system-type-is-gnu)
   (bind-key "n" 'my-notmuch my-map)
 )
