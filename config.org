@@ -230,6 +230,11 @@ A tip from [[https://karthinks.com/software/batteries-included-with-emacs/][this
 (global-set-key (kbd "<Scroll_Lock>") 'scroll-lock-mode)
 #+END_SRC
 
+To avoid "Error saving to X clipboard manager." as well as endless loop on exiting (see [[https://emacs.stackexchange.com/questions/34488/saving-clipboard-takes-forever-on-quit][this]]):
+#+BEGIN_SRC emacs-lisp
+(setq x-select-enable-clipboard-manager nil)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
@@ -7523,7 +7528,7 @@ defined for Windows and non-windows separately (path format differs).
 Using =my-toggle-agenda-files()= I can toggle between host-specific
 default agenda and all agenda files.
 
-Definition of work files:
+Definition of work files: (only used in cron-job shell script)
 #+BEGIN_SRC emacs-lisp
   (setq my-work-agenda-files (append `(
   ;; 2019-06-26: backtick above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
@@ -7543,7 +7548,7 @@ The following file is only accessible on my work computer:
   (add-to-list 'my-work-agenda-files my-business-siko-notes))
 #+END_SRC
 
-Definitions of non-work files:
+Definitions of non-work files: (only used in cron-job shell script)
 #+BEGIN_SRC emacs-lisp
   (setq my-nonwork-agenda-files (append ` (
               ,(concat my-org-files-path "misc.org")
@@ -7572,12 +7577,27 @@ Definitions of non-work files:
            )))
 #+END_SRC
 
+2021-01-03: Instead of my previous complex org-agenda setup with work
+and non-work agenda files and the ability to toggle them, I moved to a
+simplified setup. Reason: I don't use the toggle-feature and I want to
+be able to refresh the super-agenda (which was not possible in my
+complex setup: refreshed agenda was not org-super-agenda but normal
+agenda).
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
+#+END_SRC
+
+OLD:
+
 =my-toggle-agenda-files()= toggles between work/everything and nonwork/everything:
 
 Default agenda files: on my business host, start with the work-related
 files; on my other machines, start with my non-work-related files.
 
-*** my-toggle-agenda-files() → my-map A
+*** DISABLED my-toggle-agenda-files() → my-map A
+
+| 2021-01-03 | disabled: I want to test and switch to standard org-super-agenda setup |
 
 #+BEGIN_SRC emacs-lisp
   (defun my-toggle-agenda-files ()
@@ -7860,7 +7880,9 @@ For business, I use a different setup:
   )
 #+END_SRC
 
-*** my-super-agenda()
+*** DISABLED my-super-agenda()
+
+| 2021-01-03 | disabled: I want to test and switch to standard org-super-agenda setup |
 
 [[https://github.com/alphapapa/org-super-agenda][Supercharge your Org daily/weekly agenda by grouping items]]
 
@@ -8034,10 +8056,187 @@ down below.
     )
 #+END_SRC
 
-*** my-super-agenda-business()
+*** super-agenda()
+
+| 2021-01-03 | new, standard org-super-agenda setup instead of old, complex setup |
+
+[[https://github.com/alphapapa/org-super-agenda][Supercharge your Org daily/weekly agenda by grouping items]]
+
+See also: id:2017-08-12-org-super-agenda
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-super-agenda
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-super-agenda/")))
+  :ensure t
+  ;; :hook (org-agenda-mode . org-super-agenda-mode)
+  :config
+    (org-super-agenda-mode)
+    (setq super-agenda-groups
+          '(;; Each group has an implicit boolean OR operator between its selectors.
+            (:name "Today"  ; Optionally specify section name
+                   :time-grid t  ; Items that appear on the time grid
+                   )
+            (:name "DEADLINES" :deadline t :order 1)
+            (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
+            (:name "Important" :priority "A" :order 4)
+            (:priority<= "B"
+                         ;; Show this section after "Today" and "Important", because
+                         ;; their order is unspecified, defaulting to 0. Sections
+                         ;; are displayed lowest-number-first.
+                         :order 6)
+    ;        (:name "Habits" :habit t :order 3)
+            (:name "Shopping" :tag "Besorgung" :order 8)
+                   ;; Boolean AND group matches items that match all subgroups
+                   ;;  :and (:tag "shopping" :tag "@town")
+                   ;; Multiple args given in list with implicit OR
+                   ;;  :tag ("food" "dinner"))
+                   ;;  :habit t
+                   ;;  :tag "personal")
+            (:name "Started" :todo "STARTED" :order 10)
+            ;;(:name "Space-related (non-moon-or-planet-related)"
+            ;;       ;; Regexps match case-insensitively on the entire entry
+            ;;       :and (:regexp ("space" "NASA")
+            ;;                     ;; Boolean NOT also has implicit OR between selectors
+            ;;                     :not (:regexp "moon" :tag "planet")))
+            (:name "BWG" :tag "@BWG" :order 16)
+            (:todo "WAITING" :order 18)  ; Set order of this section
+            (:name "read" :tag "2read" :order 22)
+            ;; Groups supply their own section names when none are given
+            (:todo ("SOMEDAY" "WATCHING")
+                   ;; Show this group at the end of the agenda (since it has the
+                   ;; highest number). If you specified this group last, items
+                   ;; with these todo keywords that e.g. have priority A would be
+                   ;; displayed in that group instead, because items are grouped
+                   ;; out in the order the groups are listed.
+                   :order 25)
+            (:name "reward"
+                   :tag ("reward" "lp")
+                   :order 100
+                   )
+
+            ;; After the last group, the agenda will display items that didn't
+            ;; match any of these groups, with the default order position of 99
+            ))
+
+);; end of org-super-agenda
+#+END_SRC
+
+Test version (not working yet):
+#+BEGIN_SRC emacs-lisp :tangle no
+  (setq my-super-agenda-groups
+        '(;; Each group has an implicit boolean OR operator between its selectors.
+          (:name "Today"  ; Optionally specify section name
+                 :time-grid t  ; Items that appear on the time grid
+                 )
+          (:name "r DEADLINES" :tag "rise" :deadline t :order 1)
+          (:name "r Focus" :and (:tag "focus" :tag "rise") :order 2 :face (:append t :weight bold))
+          (:name "r Important" :and (:tag "rise" :priority "A") :order 4)
+          (:priority<= "B"
+                       ;; Show this section after "Today" and "Important", because
+                       ;; their order is unspecified, defaulting to 0. Sections
+                       ;; are displayed lowest-number-first.
+                       :tag "rise" :order 6)
+          ;;(:name "r Shopping" :tag ("Besorgung" "rise") :order 8)
+                 ;; Boolean AND group matches items that match all subgroups
+                 ;;  :and (:tag "shopping" :tag "@town")
+                 ;; Multiple args given in list with implicit OR
+                 ;;  :tag ("food" "dinner"))
+                 ;;  :habit t
+                 ;;  :tag "personal")
+          (:name "r Started" :and (:tag "rise" :todo "STARTED") :order 10)
+          ;;(:name "Space-related (non-moon-or-planet-related)"
+          ;;       ;; Regexps match case-insensitively on the entire entry
+          ;;       :and (:regexp ("space" "NASA")
+          ;;                     ;; Boolean NOT also has implicit OR between selectors
+          ;;                     :not (:regexp "moon" :tag "planet")))
+          ;;(:name "BWG" :tag "@BWG" :order 16)
+          (:todo "r WAITING" :tag "rise" :order 18)  ; Set order of this section
+          ;;(:name "read" :tag "2read" :order 22)
+          ;; Groups supply their own section names when none are given
+          (:todo ("SOMEDAY" "WATCHING")
+                 ;; Show this group at the end of the agenda (since it has the
+                 ;; highest number). If you specified this group last, items
+                 ;; with these todo keywords that e.g. have priority A would be
+                 ;; displayed in that group instead, because items are grouped
+                 ;; out in the order the groups are listed.
+                 :tag "rise" :order 25)
+          (:name "r reward"
+                 :and (:tag "rise" :tag ("reward" "lp"))
+                 :order 30
+                 )
+
+          (:name "r Habits" :tag "rise" :habit t :order 33)
+        ;; ======= Private: =================================================
+
+            (:name "DEADLINES" :and (:not (:tag "rise") :deadline t) :order 50)
+            (:name "Focus" :and (:not (:tag "rise") :tag "focus") :order 52 :face (:append t :weight bold))
+            (:name "Important" :and (:not (:tag "rise") :priority "A") :order 54)
+            (:and (:priority<= "B"
+                         ;; Show this section after "Today" and "Important", because
+                         ;; their order is unspecified, defaulting to 0. Sections
+                         ;; are displayed lowest-number-first.
+                         :not (:tag "rise")) :order 56)
+            ;;(:name "Habits" :habit t :order 53)
+            (:name "Shopping" :and (:not (:tag "rise") :tag "Besorgung") :order 58)
+                   ;; Boolean AND group matches items that match all subgroups
+                   ;;  :and (:tag "shopping" :tag "@town")
+                   ;; Multiple args given in list with implicit OR
+                   ;;  :tag ("food" "dinner"))
+                   ;;  :habit t
+                   ;;  :tag "personal")
+            (:name "Started" :and (:not (:tag "rise") :todo "STARTED") :order 60)
+            ;;(:name "Space-related (non-moon-or-planet-related)"
+            ;;       ;; Regexps match case-insensitively on the entire entry
+            ;;       :and (:regexp ("space" "NASA")
+            ;;                     ;; Boolean NOT also has implicit OR between selectors
+            ;;                     :not (:regexp "moon" :tag "planet")))
+            (:name "BWG" :and (:not (:tag "rise") :tag "@BWG") :order 66)
+            (:and (:todo "WAITING" :not (:tag "rise")) :order 68)  ; Set order of this section
+            (:name "read" :and (:not (:tag "rise") :tag "2read") :order 72)
+            ;; Groups supply their own section names when none are given
+            (:and (:todo ("SOMEDAY" "WATCHING")
+                   ;; Show this group at the end of the agenda (since it has the
+                   ;; highest number). If you specified this group last, items
+                   ;; with these todo keywords that e.g. have priority A would be
+                   ;; displayed in that group instead, because items are grouped
+                   ;; out in the order the groups are listed.
+                   :not (:tag "rise")) :order 75)
+            (:name "reward"
+                   :and (:not (:tag "rise") :tag ("reward" "lp"))
+                   :order 80
+                   )
+
+          ;; After the last group, the agenda will display items that didn't
+          ;; match any of these groups, with the default order position of 99
+          )
+        )
+#+END_SRC
+
+=my-super-agenda()= is a function so that I am able to call the agenda
+interactively or within =my-org-agenda()= which is defined further
+down below.
+
+2021-01-03: disabled (not needed when simplified org-super-agenda is applied to any agenda)
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (defun my-super-agenda()
+    "generates my super-agenda"
+    (interactive)
+    (org-super-agenda-mode)
+    (let
+        ((org-super-agenda-groups super-agenda-groups))
+      (org-agenda nil "a")
+      )
+    )
+#+END_SRC
+
+*** DISABLED my-super-agenda-business()
 :PROPERTIES:
 :CREATED:  [2018-07-06 Fri 18:05]
 :END:
+
+| 2021-01-03 | disabled: I want to test and switch to standard org-super-agenda setup |
 
 Same as =my-super-agenda= but with much stricter filters so that I
 only see important business stuff.
@@ -8757,32 +8956,19 @@ switch to open Agenda or open new one:
     (if (my-buffer-exists "*Org Agenda*")
         (switch-to-buffer "*Org Agenda*")
       (progn
-      (cond ((string-equal system-name "GRZN17009")
+        (my-super-agenda)
 
-        ;; on Windows, the business agenda is default and the normal agenda accessable via C-u prefix
-        (cond ((not arg) (my-super-agenda-business)) ;; without argument: super-agenda of business
-              (t (my-super-agenda));; with argument: super-agenda
-          ))
+        (setq current-timestamp
+              (concat
+               (format-time-string "%Y-%m-%dT%T")
+               ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+                (format-time-string "%z"))))
+        (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
+        (my-log-misc (format-message "my-org-agenda took %.2fs" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
 
-      (t
-        ;; on other systems, it's the other way round
-        (cond ((not arg) (my-super-agenda)) ;; without argument: my super-agenda
-              (t (message "Business agenda")
-                 (my-super-agenda-business));; with argument: super-agenda of business
-          )
-      ))
-
-     (setq current-timestamp
-       (concat
-         (format-time-string "%Y-%m-%dT%T")
-         ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
-         (format-time-string "%z"))))
-     (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
-     (my-log-misc (format-message "my-org-agenda took %.2fs" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
-
-     )
+        )
+      )
     )
-  )
 
   (bind-key "a" 'my-org-agenda my-map)
 #+END_SRC
