@@ -6823,6 +6823,98 @@ Preserve the hierarchy when archiving: [[https://fuco1.github.io/2017-04-20-Arch
               (org-paste-subtree level tree-text))))))))
 #+END_SRC
 
+** Searching, querying
+
+*** helm-org
+
+  | 2019-12-17 | initial setup |
+
+Completion package for Org mode: https://github.com/emacs-helm/helm-org
+
+Used by: org-ql
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org
+  ;;:defer 90
+  :ensure t
+  :config
+  (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
+  (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
+)
+#+END_SRC
+
+*** helm-org-rifle
+:PROPERTIES:
+:CREATED:  [2020-04-07 Tue 17:21]
+:END:
+
+  | 2020-04-07 | setup for testing |
+
+[[https://github.com/alphapapa/org-rifle][org-rifle]] is a swiss army knife for searching within Org mode files.
+So far, I was using mostly sparse trees,
+=my-search-method-according-to-numlines()= (=isearch-forward= and
+=swiper-isearch=) and =org-occur=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org-rifle
+  :ensure t
+  :defer 110
+  :after org
+;  :bind (:map my-map ("SPC" . yankpad-insert))
+)
+#+END_SRC
+
+*** helm-org-agenda-files-headings: grep within headings → my-map H
+
+This is a neat and fast way of looking for string only within heading
+lines:
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "H" #'helm-org-agenda-files-headings my-map)
+#+END_SRC
+
+
+*** peg
+
+  | 2020-12-07 | switched to a manually downloaded version |
+
+[[http://elpa.gnu.org/packages/peg.html][peg]] is required by org-ql (and was installed via ELPA as dependency)
+but the most recent version I got via =list-package= was
+=20150708.641= which caused issues. So I had to set it up via manual
+download:
+
+#+BEGIN_SRC emacs-lisp
+(use-package peg
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/peg/")))
+)
+#+END_SRC
+
+*** org-ql
+
+  | 2019-12-17 | initial setup |
+
+A powerful query language for Org mode: https://github.com/alphapapa/org-ql
+
+Make sure that you install =org-ql= after you have installed
+=helm-org=. Otherwise, it may be the case that you don't get
+=helm-org-ql= as [[https://github.com/toshism/org-super-links/issues/19#issuecomment-655608839][this comment suggests]] and [[https://github.com/alphapapa/org-ql][the README of org-ql
+clearly states]].
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ql
+  :ensure t
+  :config
+  (require 'org-ql-search) ;; workaround for https://github.com/alphapapa/org-ql/issues/53
+)
+#+END_SRC
+
+FIXXME: Workaround in order to make =helm-org-ql= available according to https://github.com/alphapapa/org-ql/issues/129#issuecomment-667310696:
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-ql)
+(require 'helm-org-ql)
+#+END_SRC
+
 ** Links
 
 I love customized links. I created a bunch of them in order to link
@@ -7404,98 +7496,6 @@ Maybe I'm to stupid to use QUELPA. :-( I had to manually clone it and install vi
   :config
     (setq link-id-function 'my-id-get-or-generate) ;; use my ID generation function instead of UUIDs: https://github.com/toshism/org-linker-edna/issues/3#issuecomment-703815638
 )
-#+END_SRC
-
-** Searching, querying
-
-*** helm-org
-
-  | 2019-12-17 | initial setup |
-
-Completion package for Org mode: https://github.com/emacs-helm/helm-org
-
-Used by: org-ql
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-org
-  ;;:defer 90
-  :ensure t
-  :config
-  (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
-  (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
-)
-#+END_SRC
-
-*** helm-org-rifle
-:PROPERTIES:
-:CREATED:  [2020-04-07 Tue 17:21]
-:END:
-
-  | 2020-04-07 | setup for testing |
-
-[[https://github.com/alphapapa/org-rifle][org-rifle]] is a swiss army knife for searching within Org mode files.
-So far, I was using mostly sparse trees,
-=my-search-method-according-to-numlines()= (=isearch-forward= and
-=swiper-isearch=) and =org-occur=.
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm-org-rifle
-  :ensure t
-  :defer 110
-  :after org
-;  :bind (:map my-map ("SPC" . yankpad-insert))
-)
-#+END_SRC
-
-*** helm-org-agenda-files-headings: grep within headings → my-map H
-
-This is a neat and fast way of looking for string only within heading
-lines:
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "H" #'helm-org-agenda-files-headings my-map)
-#+END_SRC
-
-
-*** peg
-
-  | 2020-12-07 | switched to a manually downloaded version |
-
-[[http://elpa.gnu.org/packages/peg.html][peg]] is required by org-ql (and was installed via ELPA as dependency)
-but the most recent version I got via =list-package= was
-=20150708.641= which caused issues. So I had to set it up via manual
-download:
-
-#+BEGIN_SRC emacs-lisp
-(use-package peg
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/peg/")))
-)
-#+END_SRC
-
-*** org-ql
-
-  | 2019-12-17 | initial setup |
-
-A powerful query language for Org mode: https://github.com/alphapapa/org-ql
-
-Make sure that you install =org-ql= after you have installed
-=helm-org=. Otherwise, it may be the case that you don't get
-=helm-org-ql= as [[https://github.com/toshism/org-super-links/issues/19#issuecomment-655608839][this comment suggests]] and [[https://github.com/alphapapa/org-ql][the README of org-ql
-clearly states]].
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-ql
-  :ensure t
-  :config
-  (require 'org-ql-search) ;; workaround for https://github.com/alphapapa/org-ql/issues/53
-)
-#+END_SRC
-
-FIXXME: Workaround in order to make =helm-org-ql= available according to https://github.com/alphapapa/org-ql/issues/129#issuecomment-667310696:
-
-#+BEGIN_SRC emacs-lisp
-(require 'org-ql)
-(require 'helm-org-ql)
 #+END_SRC
 
 ** Agenda
