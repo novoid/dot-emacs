@@ -255,22 +255,25 @@ submitted to it.
 installs its local copies of the packages:
 
 #+BEGIN_SRC emacs-lisp
-(setq package-user-dir (concat my-user-emacs-directory "elpa"))
-(require 'package)
-(package-initialize)
+    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; from https://irreal.org/blog/?p=8243
+    (setq package-user-dir (concat my-user-emacs-directory "elpa"))
+    (require 'package)
+    (package-initialize)
 
-;;2019-12-07;;  ;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
-;;2019-12-07;;  ;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
-;;2019-12-07;;  (add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
-;;2019-12-07;;  ;;unstable;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-;;2019-12-07;;
-;;2019-12-07;;  ;; 2017-03-26: from https://www.reddit.com/r/emacs/comments/61jsvy/melpa_stopped_working_over_https_for_me_any_ideas/
-;;2019-12-07;;  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-;;2019-12-07;;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+    ;;2019-12-07;;  ;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
+    ;;2019-12-07;;  ;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
+    ;;2019-12-07;;  (add-to-list 'package-archives '("melpa" . "http://stable.melpa.org/packages/"))
+    ;;2019-12-07;;  ;;unstable;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+    ;;2019-12-07;;
+    ;;2019-12-07;;  ;; 2017-03-26: from https://www.reddit.com/r/emacs/comments/61jsvy/melpa_stopped_working_over_https_for_me_any_ideas/
+    ;;2019-12-07;;  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+    ;;2019-12-07;;  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 
-;; 2019-12-07: severe issues with old package versions brings me to remove old config and start with this from docu:
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
+    ;; 2019-12-07: severe issues with old package versions brings me to remove old config and start with this from docu:
+    (setq package-archives '(
+                             ("melpa" . "https://melpa.org/packages/")
+                             ("gnu" . "https://elpa.gnu.org/packages/")
+                             ))
 #+END_SRC
 
 - 2020-04-16: [[https://blog.abrochard.com/melpa-stats.html][Some statistics about MELPA]]
@@ -7872,37 +7875,88 @@ Loading the code:
 
 Definition of =my-super-agenda-groups=, my central configuration of super-agenda:
 
+Original version (before testing the next one):
 #+BEGIN_SRC emacs-lisp
+    (setq my-super-agenda-groups
+          '(;; Each group has an implicit boolean OR operator between its selectors.
+            (:name "Today"  ; Optionally specify section name
+                   :time-grid t  ; Items that appear on the time grid
+                   )
+            (:name "DEADLINES" :deadline t :order 1)
+            (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
+            (:name "Important" :priority "A" :order 4)
+            (:priority<= "B"
+                         ;; Show this section after "Today" and "Important", because
+                         ;; their order is unspecified, defaulting to 0. Sections
+                         ;; are displayed lowest-number-first.
+                         :order 6)
+    ;        (:name "Habits" :habit t :order 3)
+            (:name "Shopping" :tag "Besorgung" :order 8)
+                   ;; Boolean AND group matches items that match all subgroups
+                   ;;  :and (:tag "shopping" :tag "@town")
+                   ;; Multiple args given in list with implicit OR
+                   ;;  :tag ("food" "dinner"))
+                   ;;  :habit t
+                   ;;  :tag "personal")
+            (:name "Started" :todo "STARTED" :order 10)
+            ;;(:name "Space-related (non-moon-or-planet-related)"
+            ;;       ;; Regexps match case-insensitively on the entire entry
+            ;;       :and (:regexp ("space" "NASA")
+            ;;                     ;; Boolean NOT also has implicit OR between selectors
+            ;;                     :not (:regexp "moon" :tag "planet")))
+            (:name "BWG" :tag "@BWG" :order 16)
+            (:todo "WAITING" :order 18)  ; Set order of this section
+            (:name "read" :tag "2read" :order 22)
+            ;; Groups supply their own section names when none are given
+            (:todo ("SOMEDAY" "WATCHING")
+                   ;; Show this group at the end of the agenda (since it has the
+                   ;; highest number). If you specified this group last, items
+                   ;; with these todo keywords that e.g. have priority A would be
+                   ;; displayed in that group instead, because items are grouped
+                   ;; out in the order the groups are listed.
+                   :order 25)
+            (:name "reward"
+                   :tag ("reward" "lp")
+                   :order 100
+                   )
+
+            ;; After the last group, the agenda will display items that didn't
+            ;; match any of these groups, with the default order position of 99
+            )
+          )
+#+END_SRC
+
+Test version (not working yet):
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq my-super-agenda-groups
         '(;; Each group has an implicit boolean OR operator between its selectors.
           (:name "Today"  ; Optionally specify section name
                  :time-grid t  ; Items that appear on the time grid
                  )
-          (:name "DEADLINES" :deadline t :order 1)
-          (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
-          (:name "Important" :priority "A" :order 4)
+          (:name "r DEADLINES" :tag "rise" :deadline t :order 1)
+          (:name "r Focus" :and (:tag "focus" :tag "rise") :order 2 :face (:append t :weight bold))
+          (:name "r Important" :and (:tag "rise" :priority "A") :order 4)
           (:priority<= "B"
                        ;; Show this section after "Today" and "Important", because
                        ;; their order is unspecified, defaulting to 0. Sections
                        ;; are displayed lowest-number-first.
-                       :order 6)
-  ;        (:name "Habits" :habit t :order 3)
-          (:name "Shopping" :tag "Besorgung" :order 8)
+                       :tag "rise" :order 6)
+          ;;(:name "r Shopping" :tag ("Besorgung" "rise") :order 8)
                  ;; Boolean AND group matches items that match all subgroups
                  ;;  :and (:tag "shopping" :tag "@town")
                  ;; Multiple args given in list with implicit OR
                  ;;  :tag ("food" "dinner"))
                  ;;  :habit t
                  ;;  :tag "personal")
-          (:name "Started" :todo "STARTED" :order 10)
+          (:name "r Started" :and (:tag "rise" :todo "STARTED") :order 10)
           ;;(:name "Space-related (non-moon-or-planet-related)"
           ;;       ;; Regexps match case-insensitively on the entire entry
           ;;       :and (:regexp ("space" "NASA")
           ;;                     ;; Boolean NOT also has implicit OR between selectors
           ;;                     :not (:regexp "moon" :tag "planet")))
-          (:name "BWG" :tag "@BWG" :order 16)
-          (:todo "WAITING" :order 18)  ; Set order of this section
-          (:name "read" :tag "2read" :order 22)
+          ;;(:name "BWG" :tag "@BWG" :order 16)
+          (:todo "r WAITING" :tag "rise" :order 18)  ; Set order of this section
+          ;;(:name "read" :tag "2read" :order 22)
           ;; Groups supply their own section names when none are given
           (:todo ("SOMEDAY" "WATCHING")
                  ;; Show this group at the end of the agenda (since it has the
@@ -7910,11 +7964,53 @@ Definition of =my-super-agenda-groups=, my central configuration of super-agenda
                  ;; with these todo keywords that e.g. have priority A would be
                  ;; displayed in that group instead, because items are grouped
                  ;; out in the order the groups are listed.
-                 :order 25)
-          (:name "reward"
-                 :tag ("reward" "lp")
-                 :order 100
+                 :tag "rise" :order 25)
+          (:name "r reward"
+                 :and (:tag "rise" :tag ("reward" "lp"))
+                 :order 30
                  )
+
+          (:name "r Habits" :tag "rise" :habit t :order 33)
+        ;; ======= Private: =================================================
+
+            (:name "DEADLINES" :and (:not (:tag "rise") :deadline t) :order 50)
+            (:name "Focus" :and (:not (:tag "rise") :tag "focus") :order 52 :face (:append t :weight bold))
+            (:name "Important" :and (:not (:tag "rise") :priority "A") :order 54)
+            (:and (:priority<= "B"
+                         ;; Show this section after "Today" and "Important", because
+                         ;; their order is unspecified, defaulting to 0. Sections
+                         ;; are displayed lowest-number-first.
+                         :not (:tag "rise")) :order 56)
+            ;;(:name "Habits" :habit t :order 53)
+            (:name "Shopping" :and (:not (:tag "rise") :tag "Besorgung") :order 58)
+                   ;; Boolean AND group matches items that match all subgroups
+                   ;;  :and (:tag "shopping" :tag "@town")
+                   ;; Multiple args given in list with implicit OR
+                   ;;  :tag ("food" "dinner"))
+                   ;;  :habit t
+                   ;;  :tag "personal")
+            (:name "Started" :and (:not (:tag "rise") :todo "STARTED") :order 60)
+            ;;(:name "Space-related (non-moon-or-planet-related)"
+            ;;       ;; Regexps match case-insensitively on the entire entry
+            ;;       :and (:regexp ("space" "NASA")
+            ;;                     ;; Boolean NOT also has implicit OR between selectors
+            ;;                     :not (:regexp "moon" :tag "planet")))
+            (:name "BWG" :and (:not (:tag "rise") :tag "@BWG") :order 66)
+            (:and (:todo "WAITING" :not (:tag "rise")) :order 68)  ; Set order of this section
+            (:name "read" :and (:not (:tag "rise") :tag "2read") :order 72)
+            ;; Groups supply their own section names when none are given
+            (:and (:todo ("SOMEDAY" "WATCHING")
+                   ;; Show this group at the end of the agenda (since it has the
+                   ;; highest number). If you specified this group last, items
+                   ;; with these todo keywords that e.g. have priority A would be
+                   ;; displayed in that group instead, because items are grouped
+                   ;; out in the order the groups are listed.
+                   :not (:tag "rise")) :order 75)
+            (:name "reward"
+                   :and (:not (:tag "rise") :tag ("reward" "lp"))
+                   :order 80
+                   )
+
 
           ;; After the last group, the agenda will display items that didn't
           ;; match any of these groups, with the default order position of 99
@@ -8184,6 +8280,22 @@ only see important business stuff.
                 ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-overriding-header "Besorgungen")
                 ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-skip-function 'tag-without-done-or-canceled)
                 ;;2019-12-17 replaced by org-ql-block ;;   ))
+
+                ;; 2020-10-26: open focus projects
+                ("p" "Nonbusiness: Open focus projects: open tasks tagged with \"project\" and \"focus\""
+                ((org-ql-block '(and (tags "project") (tags "focus")
+                                (not (category "rise"))
+                                (not (done))
+                                )
+                        ((org-ql-block-header "Open focus projects: open tasks tagged with \"project\" and \"focus\"")))))
+
+                ;; 2020-10-26: open focus projects business
+                ("P" "Business: Open focus projects: open tasks tagged with \"project\" and \"focus\""
+                ((org-ql-block '(and (tags "project") (tags "focus")
+                                (category "rise")
+                                (not (done))
+                                )
+                        ((org-ql-block-header "Open focus projects: open tasks tagged with \"project\" and \"focus\"")))))
 
                 ;; examples: https://github.com/alphapapa/org-ql/blob/master/examples.org#stuck-projects-block-agenda
                 ;; 2020-01-23: not doing what it is supposed to show: only shows one heading from one org mode file: id:2020-01-23-Security-Policies
