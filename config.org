@@ -15010,9 +15010,6 @@ Not org related but might be candidates as well:
 )
 #+END_SRC
 
-#+RESULTS:
-: hydra-notmuch-message-mode/body
-
 ** hydra-notmuch-show-mode → F1
 
 #+BEGIN_SRC emacs-lisp
@@ -15301,7 +15298,7 @@ FIXXME: add more features:
   ^^            ▄                   C-x 2  split _v_ertical ▄      ^^  C-x 0  _d_elete this
        _t_oggle ▄ ←→▐▐              ^^                             ^^  C-x 1  _k_eep this, delete others
        ^^             ▄             C-x 3  split _h_orizontal ▐▐   ^^         _o_ther window
-       _s_plit/single ▄ ←→ ▇                                       ^^    _=_  enlarge window
+       _s_plit/single ▄ ←→ ▇        s_w_ap ▇ ←→ ▇                  ^^    _=_  enlarge window
   ^^                                                               ^^    _-_  shrink window
   ────^^────────────────────────────────────────────────────────────
     ")
@@ -15333,6 +15330,8 @@ FIXXME: add more features:
 
     ("t" my-toggle-vertical-horizontal-split nil :color blue)
     ("s" my-toggle-split-and-single-window nil :color blue)
+
+    ("w" window-swap-states nil)
 
 ;;    ("-" shrink-window-horizontally nil :color red)
 ;;    ("=" enlarge-window-horizontally nil :color red)
