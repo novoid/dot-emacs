@@ -3907,6 +3907,109 @@ Provides Org mode links to notmuch emails: copy with =C-c l= (org-notmuch-store-
 )
 #+END_SRC
 
+Adding a key mapping for "d" to add "deleted" tag and remove "inbox" and "unread": [[https://notmuchmail.org/emacstips/#index5h2][Source]]
+#+BEGIN_SRC emacs-lisp
+    (define-key notmuch-search-mode-map "d"
+      (lambda ()
+        "mark message as deleted"
+        (interactive)
+        (notmuch-show-tag (list "+deleted" "-inbox" "-unread"))))
+
+    (define-key notmuch-show-mode-map "d"
+      (lambda ()
+        "mark message as deleted"
+        (interactive)
+        (notmuch-show-tag (list "+deleted" "-inbox" "-unread"))))
+
+    (define-key notmuch-tree-mode-map "d"
+      (lambda ()
+        "mark message as deleted"
+        (interactive)
+        (notmuch-show-tag (list "+deleted" "-inbox" "-unread"))))
+
+#+END_SRC
+
+Helper function to open any given message-id in Thunderbird:
+#+BEGIN_SRC emacs-lisp
+  ;; modify this for your system
+  (setq thunderbird-program "/usr/bin/thunderbird")
+
+  (defun my-open-message-id-in-thunderbird (message-id)
+  "open an email with a given message-ID in Thunderbird"
+  (interactive)
+  (start-process
+   (concat "thunderlink: " message-id)
+   nil
+   thunderbird-program
+   "-thunderlink"
+   (concat "thunderlink://messageid=" message-id)
+   )
+  )
+#+END_SRC
+
+Open the current email in Thunderbird:
+#+BEGIN_SRC emacs-lisp
+(define-key notmuch-search-mode-map "T"
+  (lambda ()
+    "open in Thunderbird"
+    (interactive)
+    ;; FIXXME: I can't find the appropriate method to get current message ID in search results:
+    (my-open-message-id-in-thunderbird (notmuch-show-get-message-ids-for-open-messages t))
+))
+
+(define-key notmuch-show-mode-map "T"
+  (lambda ()
+    "open in Thunderbird"
+    (interactive)
+    (my-open-message-id-in-thunderbird (notmuch-show-get-message-id t))
+))
+#+END_SRC
+
+As of 2021-01-07, I stop using notmuch (again) because of:
+- Thunderbird is good enough for now
+- I still need Thunderbird in parallel → I prefer to avoid the switching back and forth effort + additional Maildir data for notmuch
+- no appointment inviation handling on receiving
+- not being able to create standard appointment invitations
+- no HTML or rendering HTML content takes some time
+- notmuch does not offer an out-of-the-box possibility to delete emails: https://www.reddit.com/r/emacs/comments/6wqfp3/notmuch_delete_mail/
+  - [[https://web.archive.org/web/20190615040045/http://www.holgerschurig.de:80/en/notmuch-polling-with-mbsync/][workaround]] 
+
+FIXXME:
+https://www.reddit.com/r/emacs/comments/kqixcg/notmuch_how_to_get_messageid_open_current_email/
+#+BEGIN_QUOTE
+In search you are normally looking at threads, not individual
+messages—that's why you have notmuch-search-find-thread-id. But if you
+write a function that picks an appropriate ID from the result of
+notmuch-search-find-stable-query that should be the easiest way to go.
+#+END_QUOTE
+
+FIXXME:
+https://www.reddit.com/r/emacs/comments/kqixcg/notmuch_how_to_get_messageid_open_current_email/gi64fu2/?context=3
+#+BEGIN_QUOTE
+As /u/oritron explained, in default search view, you get results not
+in form of message ids, but in form on thread ids, even if there is a
+single message in that thread.
+
+However, if you use notmuch-tree (see M-x notmuch-tree), you will get
+message ids, because threads will be represented as a tree. To access
+message id for highlighted/selected mail, see
+notmuch-show-stash-message-id function.
+
+For or certain (Confluence notification) emails, rendering the HTML
+content takes 20-30 seconds, blocking my Emacs instance which is very
+upsetting at last to me
+
+My approach is to use lynx for rendering html, because it is really
+fast. If I need to look it further, I open that message part in
+browser (go with cursor to text/html box, hit . o and notmuch will ask
+you for viewer. Enter firefox or chromium... You can't beat html
+rendering with the real browser :D
+
+To set lynx as default html renderer use this:
+
+(setq mm-text-html-renderer 'lynx) or check other options.
+#+END_QUOTE
+
 ** Thunderbird
 
 I got this workflow from https://vxlabs.com/2019/04/20/link-thunderbird-emails-from-emacs-orgmode/
@@ -3917,8 +4020,6 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
 ;; with org-mac-link message:// links are handed over to the macOS system,
 ;; which has built-in handling. On Windows and Linux, we can use thunderlink!
 (when (not (string-equal system-type "darwin"))
-  ;; modify this for your system
-  (setq thunderbird-program "/usr/bin/thunderbird")
 
   (defun org-message-thunderlink-open (slash-message-id)
     "Handler for org-link-set-parameters that converts a standard message:// link into
@@ -3928,13 +4029,9 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
            (replace-regexp-in-string (rx bos (* ":"))
                                      ""
                                      slash-message-id)))
-      (start-process
-       (concat "thunderlink: " message-id)
-       nil
-       thunderbird-program
-       "-thunderlink"
-       (concat "thunderlink://messageid=" message-id)
-       )))
+      (my-open-message-id-in-thunderbird message-id)
+  ))
+
   ;; on message://aoeu link, this will call handler with //aoeu
   (org-link-set-parameters "messageid" :follow #'org-message-thunderlink-open
                                        :face '(:foreground "LightYellow3" :underline t))
