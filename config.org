@@ -14984,8 +14984,8 @@ Not org related but might be candidates as well:
   ^^Header                      ^^Footnotes               ^^Format
   ^^────────────────────────────^^────────────────────────^^────────────────
   change _s_ubject (C-c C-s f)  _a_dd          (C-c ! a)  _i_nsert quote (M-RET)
-  ^^                            _b_ack to text (C-c ! b)  ^^
-  ^^                            _g_oto FN      (C-c ! g)  ^^
+  ^^                            _b_ack to text (C-c ! b)  _S_ign
+  ^^                            _g_oto FN      (C-c ! g)  _E_ncrypt and sign
   ^^                            _d_elete       (C-c ! d)  ^^
   ^^                            _r_enumber     (C-c ! r)  ^^
   ^^                            ^^                        ^^
@@ -15000,6 +15000,9 @@ Not org related but might be candidates as well:
   ("g" footnote-goto-footnote      nil)
   ("d" footnote-delete-footnote    nil)
   ("r" footnote-renumber-footnotes nil)
+
+  ("S" mml-secure-sign-pgpmime nil)
+  ("E" mml-secure-encrypt-pgpmime nil)
 
 ;  ("p" flymake-goto-prev-error nil :color red)
 ;  ("<" highlight-symbol-prev nil)
