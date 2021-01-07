@@ -8219,7 +8219,7 @@ down below.
 
 2021-01-03: disabled (not needed when simplified org-super-agenda is applied to any agenda)
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (defun my-super-agenda()
     "generates my super-agenda"
     (interactive)
