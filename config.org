@@ -1627,6 +1627,8 @@ Flat mode-line styling:
 
 ** Themes
 
+| 2021-01-08 | I switch back to light theme for now |
+
 Since a couple of major versions, GNU/Emacs has a built-in theme
 manager. This is for dealing with the themes:
 
@@ -1642,7 +1644,7 @@ manager. This is for dealing with the themes:
 
 My favorite dark themes: wombat, misterioso, zenburn, material
 #+BEGIN_SRC emacs-lisp
-(load-theme 'wombat t) ;; dark theme
+;(load-theme 'wombat t) ;; dark theme
 ;;   (load-theme 'misterioso t)
 ;;   (load-theme 'zenburn t)
 ;;   (load-theme 'material t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
@@ -1651,7 +1653,7 @@ My favorite dark themes: wombat, misterioso, zenburn, material
 
 My favorite light themes: leuven, whiteboard, solarized-light,
 #+BEGIN_SRC emacs-lisp
-;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
+   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
 ;;   (load-theme 'whiteboard t)
 ;;   (load-theme 'solarized-light t)
 #+END_SRC
@@ -14082,8 +14084,8 @@ Some times, I do have to switch from my default dark theme to a bright
 one in order to get a decent result for a projector or similar.
 
 #+BEGIN_SRC emacs-lisp
-(defvar my-toggle-dark-bright-theme-status t
-  "Toggle between dark emacs theme and bright emacs theme; nil means dark theme, t means bright theme")
+(defvar my-toggle-dark-bright-theme-status nil
+  "Toggle between dark emacs theme and bright emacs theme; nil means initial switch to dark theme, t means initial switch to bright theme")
 
 (defun my-toggle-dark-bright-theme ()
   "Toggle between dark emacs theme and bright emacs theme"
