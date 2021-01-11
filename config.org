@@ -14078,32 +14078,34 @@ setup to look like a default Emacs.
 (global-set-key [(shift f11)] 'my-toggle-beginner-setup)
 #+END_SRC
 
-** my-toggle-dark-bright-theme() → S-F9
+** my-toggle-dark-bright-theme() → S-F12
 
 Some times, I do have to switch from my default dark theme to a bright
 one in order to get a decent result for a projector or similar.
 
 #+BEGIN_SRC emacs-lisp
-(defvar my-toggle-dark-bright-theme-status nil
-  "Toggle between dark emacs theme and bright emacs theme; nil means initial switch to dark theme, t means initial switch to bright theme")
+  (defvar my-toggle-dark-bright-theme-status nil
+    "Toggle between dark emacs theme and bright emacs theme; nil means initial switch to dark theme, t means initial switch to bright theme")
 
-(defun my-toggle-dark-bright-theme ()
-  "Toggle between dark emacs theme and bright emacs theme"
-  (interactive)
-  (cond (my-toggle-dark-bright-theme-status
-         (message "Loading bright theme")
-         (disable-theme 'wombat)
-         (setq my-toggle-dark-bright-theme-status nil)
-         )
-        (t
-         (message "Loading dark theme")
-         (load-theme 'wombat t) ;; dark theme
-         (setq my-toggle-dark-bright-theme-status t)
-         )
-        )
-  )
+  (defun my-toggle-dark-bright-theme ()
+    "Toggle between dark emacs theme and bright emacs theme"
+    (interactive)
+    (cond (my-toggle-dark-bright-theme-status
+           (message "Loading bright theme")
+           (disable-theme 'wombat)
+           (load-theme 'leuven t)
+           (setq my-toggle-dark-bright-theme-status nil)
+           )
+          (t
+           (message "Loading dark theme")
+           (disable-theme 'leuven)
+           (load-theme 'wombat t) ;; dark theme
+           (setq my-toggle-dark-bright-theme-status t)
+           )
+          )
+    )
 
-(global-set-key [(shift f12)] 'my-toggle-dark-bright-theme)
+  (global-set-key [(shift f12)] 'my-toggle-dark-bright-theme)
 #+END_SRC
 
 ** my-toggle-split-and-single-window() - Toggle between split windows and a single window
