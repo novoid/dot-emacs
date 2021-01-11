@@ -1688,8 +1688,8 @@ My favorite light themes: leuven, whiteboard, solarized-light,
 
 - 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
   - from http://emacs.stackexchange.com/questions/3112/how-to-reset-color-theme
-#+BEGIN_SRC emacs-lisp
-;;    (defadvice load-theme (before theme-dont-propagate activate) (mapcar #'disable-theme custom-enabled-themes))
+#+BEGIN_SRC emacs-lisp :tangle no
+    (defadvice load-theme (before theme-dont-propagate activate) (mapcar #'disable-theme custom-enabled-themes))
 #+END_SRC
 
 ** Only one window on startup
