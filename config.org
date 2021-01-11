@@ -4035,10 +4035,11 @@ Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
   ))
 
   ;; on message://aoeu link, this will call handler with //aoeu
-  (org-link-set-parameters "messageid" :follow #'org-message-thunderlink-open
-                                       :face '(:foreground "LightYellow3" :underline t))
+  (org-link-set-parameters "messageid" :follow #'org-message-thunderlink-open)
   )
 #+END_SRC
+
+Note that the link colors are set via =my-set-linkcolors=.
 
 - test link for testing color: [[messageid:this-is-a-test@example.com][2020-07-27T15:57:45.000Z First Last: Subject]]
 
@@ -7388,6 +7389,8 @@ Don't know why I disabled this:
 
 *** links color
 
+| 2021-01-11 | moved commands to =my-set-linkcolors= and defined 3 categories of colors |
+
 - I got the idea from: https://www.reddit.com/r/emacs/comments/hywxef/visually_differentiate_between_links_to_files_and/
 - possible values for faces: https://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
   - and =add-face-text-property=: https://www.gnu.org/software/emacs/manual/html_node/elisp/Faces.html#Faces
@@ -7395,30 +7398,51 @@ Don't know why I disabled this:
 - If you are interested in taking this any further: https://github.com/stardiviner/org-link-beautify
 
 #+BEGIN_SRC emacs-lisp
-  (org-link-set-parameters "file" :face '(:foreground "DarkSeaGreen" :underline t))
+(setq my-linkcolor-org "wheat3")
+(setq my-linkcolor-file "MediumSeaGreen")
+(setq my-linkcolor-web "DeepSkyBlue")
+
+(defun my-set-linkcolors ()
+  "Defines the colors of various link colors"
+  (interactive)
+
+  ;; Org links --------------------------------------------------------------------------
+
+  (org-link-set-parameters "id" :face '(:foreground my-linkcolor-org :underline t))
+  (org-link-set-parameters "contact" :face '(:foreground my-linkcolor-org :underline t))
+
+  ;; File links --------------------------------------------------------------------------
+
+  (org-link-set-parameters "file" :face '(:foreground my-linkcolor-file :underline t))
   ;; defined elsewhere;; (org-link-set-parameters "tsfile" :face '(:foreground "DarkSeaGreen" :underline t))
-  (org-link-set-parameters "pdf" :face '(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "pdf" :face '(:foreground my-linkcolor-file :underline t))
 
-  (org-link-set-parameters "http" :face '(:foreground "DeepSkyBlue" :underline t))
-  (org-link-set-parameters "https" :face '(:foreground "DeepSkyBlue" :underline t))
-
-  (org-link-set-parameters "id" :face '(:foreground "snow3" :underline t))
-  (org-link-set-parameters "contact" :face '(:foreground "snow3" :underline t))
-
-  (org-link-set-parameters "EPA" :face '(:foreground "wheat2" :underline t))
-  (org-link-set-parameters "EPAAFO" :face '(:foreground "wheat2" :underline t))
-  (org-link-set-parameters "JAFO" :face '(:foreground "wheat2" :underline t))
-  (org-link-set-parameters "DAKEPA" :face '(:foreground "wheat2" :underline t))
-  (org-link-set-parameters "BMTSK" :face '(:foreground "wheat2" :underline t))
+  (org-link-set-parameters "EPA" :face '(:foreground my-linkcolor-file :underline t))
+  (org-link-set-parameters "EPAAFO" :face '(:foreground my-linkcolor-file :underline t))
+  (org-link-set-parameters "JAFO" :face '(:foreground my-linkcolor-file :underline t))
+  (org-link-set-parameters "DAKEPA" :face '(:foreground my-linkcolor-file :underline t))
+  (org-link-set-parameters "BMTSK" :face '(:foreground my-linkcolor-file :underline t))
 
   (org-link-set-parameters "gemSpec_DS_Anbieter"
-                           :face '(:foreground "DarkSeaGreen" :underline t))
+                           :face '(:foreground my-linkcolor-file :underline t))
   (org-link-set-parameters "gemSpec_Net"
-                           :face '(:foreground "DarkSeaGreen" :underline t))
+                           :face '(:foreground my-linkcolor-file :underline t))
   (org-link-set-parameters "gemSpec_PKI"
-                           :face '(:foreground "DarkSeaGreen" :underline t))
+                           :face '(:foreground my-linkcolor-file :underline t))
   (org-link-set-parameters "gemSpec_IDP_Dienst"
-                           :face '(:foreground "DarkSeaGreen" :underline t))
+                           :face '(:foreground my-linkcolor-file :underline t))
+
+  (org-link-set-parameters "messageid" 
+                           :face '(:foreground my-linkcolor-file :underline t))
+
+  ;; Web links --------------------------------------------------------------------------
+
+  (org-link-set-parameters "http" :face '(:foreground my-linkcolor-web :underline t))
+  (org-link-set-parameters "https" :face '(:foreground my-linkcolor-web :underline t))
+
+)
+
+(my-set-linkcolors) ;; set colors when loading
 #+END_SRC
 
 - test links
@@ -7431,12 +7455,18 @@ Don't know why I disabled this:
 
   - id: id:foo-bar [[id:foo-bar][description]]
   - contact: [[contact:example]] [[contact:example][description]]
+  - message-id: [[messageid:foobar@example.com][Email link]]
 
   - EPA: [[EPA:1234]] [[EPA:1234][description]]
   - EPAAFO: [[EPAAFO:1234]] [[EPAAFO:1234][description]]
   - JAFO: [[JAFO:1234]] [[JAFO:1234][description]]
   - DAKEPA: [[DAKEPA:1234]] [[DAKEPA:1234][description]]
   - BMTSK: [[BMTSK:1234]] [[BMTSK:1234][description]]
+
+- as of [2021-01-11 Mon] (before unifying color concept):
+  - Org links had: snow3
+  - File links: DarkSeaGreen, wheat2
+  - Web links: DeepSkyBlue
 
 *** Open in external app
 :PROPERTIES:
