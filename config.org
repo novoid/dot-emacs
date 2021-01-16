@@ -7387,7 +7387,7 @@ Don't know why I disabled this:
                          :export 'color-link-export)
 #+END_SRC
 
-*** links color
+*** link colors
 
 | 2021-01-11 | moved commands to =my-set-linkcolors= and defined 3 categories of colors |
 
@@ -7408,37 +7408,77 @@ Don't know why I disabled this:
 
   ;; Org links --------------------------------------------------------------------------
 
-  (org-link-set-parameters "id" :face '(:foreground my-linkcolor-org :underline t))
-  (org-link-set-parameters "contact" :face '(:foreground my-linkcolor-org :underline t))
+  (org-link-set-parameters "id" :face `(:foreground ,my-linkcolor-org :underline t))
+  (org-link-set-parameters "contact" :face `(:foreground ,my-linkcolor-org :underline t))
 
   ;; File links --------------------------------------------------------------------------
 
-  (org-link-set-parameters "file" :face '(:foreground my-linkcolor-file :underline t))
-  ;; defined elsewhere;; (org-link-set-parameters "tsfile" :face '(:foreground "DarkSeaGreen" :underline t))
-  (org-link-set-parameters "pdf" :face '(:foreground my-linkcolor-file :underline t))
+  (org-link-set-parameters "file" :face `(:foreground ,my-linkcolor-file :underline t))
+  ;; defined elsewhere;; (org-link-set-parameters "tsfile" :face '`(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "pdf" :face `(:foreground ,my-linkcolor-file :underline t))
 
-  (org-link-set-parameters "EPA" :face '(:foreground my-linkcolor-file :underline t))
-  (org-link-set-parameters "EPAAFO" :face '(:foreground my-linkcolor-file :underline t))
-  (org-link-set-parameters "JAFO" :face '(:foreground my-linkcolor-file :underline t))
-  (org-link-set-parameters "DAKEPA" :face '(:foreground my-linkcolor-file :underline t))
-  (org-link-set-parameters "BMTSK" :face '(:foreground my-linkcolor-file :underline t))
+  (org-link-set-parameters "EPA" :face `(:foreground ,my-linkcolor-file :underline t))
+  (org-link-set-parameters "EPAAFO" :face `(:foreground ,my-linkcolor-file :underline t))
+  (org-link-set-parameters "JAFO" :face `(:foreground ,my-linkcolor-file :underline t))
+  (org-link-set-parameters "DAKEPA" :face `(:foreground ,my-linkcolor-file :underline t))
+  (org-link-set-parameters "BMTSK" :face `(:foreground ,my-linkcolor-file :underline t))
 
   (org-link-set-parameters "gemSpec_DS_Anbieter"
-                           :face '(:foreground my-linkcolor-file :underline t))
+                           :face `(:foreground ,my-linkcolor-file :underline t))
   (org-link-set-parameters "gemSpec_Net"
-                           :face '(:foreground my-linkcolor-file :underline t))
+                           :face `(:foreground ,my-linkcolor-file :underline t))
   (org-link-set-parameters "gemSpec_PKI"
-                           :face '(:foreground my-linkcolor-file :underline t))
+                           :face `(:foreground ,my-linkcolor-file :underline t))
   (org-link-set-parameters "gemSpec_IDP_Dienst"
-                           :face '(:foreground my-linkcolor-file :underline t))
+                           :face `(:foreground ,my-linkcolor-file :underline t))
 
   (org-link-set-parameters "messageid" 
-                           :face '(:foreground my-linkcolor-file :underline t))
+                           :face `(:foreground ,my-linkcolor-file :underline t))
 
   ;; Web links --------------------------------------------------------------------------
 
-  (org-link-set-parameters "http" :face '(:foreground my-linkcolor-web :underline t))
-  (org-link-set-parameters "https" :face '(:foreground my-linkcolor-web :underline t))
+  (org-link-set-parameters "http" :face `(:foreground ,my-linkcolor-web :underline t))
+  (org-link-set-parameters "https" :face `(:foreground ,my-linkcolor-web :underline t))
+
+)
+
+(defun my-set-linkcolors ()
+  "Defines the colors of various link colors"
+  (interactive)
+
+  ;; Org links --------------------------------------------------------------------------
+
+  (org-link-set-parameters "id" :face '(:foreground "wheat3" :underline t))
+  (org-link-set-parameters "contact" :face '(:foreground "wheat3" :underline t))
+
+  ;; File links --------------------------------------------------------------------------
+
+  (org-link-set-parameters "file" :face '(:foreground "MediumSeaGreen" :underline t))
+  ;; defined elsewhere;; (org-link-set-parameters "tsfile" :face ''(:foreground "DarkSeaGreen" :underline t))
+  (org-link-set-parameters "pdf" :face '(:foreground "MediumSeaGreen" :underline t))
+
+  (org-link-set-parameters "EPA" :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "EPAAFO" :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "JAFO" :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "DAKEPA" :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "BMTSK" :face '(:foreground "MediumSeaGreen" :underline t))
+
+  (org-link-set-parameters "gemSpec_DS_Anbieter"
+                           :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "gemSpec_Net"
+                           :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "gemSpec_PKI"
+                           :face '(:foreground "MediumSeaGreen" :underline t))
+  (org-link-set-parameters "gemSpec_IDP_Dienst"
+                           :face '(:foreground "MediumSeaGreen" :underline t))
+
+  (org-link-set-parameters "messageid" 
+                           :face '(:foreground "MediumSeaGreen" :underline t))
+
+  ;; Web links --------------------------------------------------------------------------
+
+  (org-link-set-parameters "http" :face '(:foreground "DeepSkyBlue" :underline t))
+  (org-link-set-parameters "https" :face '(:foreground "DeepSkyBlue" :underline t))
 
 )
 
