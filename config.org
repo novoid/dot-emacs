@@ -1627,7 +1627,7 @@ Flat mode-line styling:
 
 ** Themes
 
-| 2021-01-08 | I switch back to light theme for now |
+| 2021-01-08 | I switch back to light theme (leuven or default) for now |
 
 Since a couple of major versions, GNU/Emacs has a built-in theme
 manager. This is for dealing with the themes:
@@ -1653,37 +1653,9 @@ My favorite dark themes: wombat, misterioso, zenburn, material
 
 My favorite light themes: leuven, whiteboard, solarized-light,
 #+BEGIN_SRC emacs-lisp
-   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
+;;   (load-theme 'leuven t) ;; from http://www.reddit.com/r/emacs/comments/39dk64/escaping_from_org_mode/
 ;;   (load-theme 'whiteboard t)
 ;;   (load-theme 'solarized-light t)
-#+END_SRC
-
-- enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
-- issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
-- M-x describe-face  -> show definition
-- C-u C-x =          -> show all font information
-#+BEGIN_SRC emacs-lisp
-;  (face-spec-set 'org-block-begin-line
-;    '((t (:underline "#FFFFFF" :foreground "#404040" :background "#b3b3b3")))
-;    "Face used for the line delimiting the begin of source blocks.")
-
-  ;(defface org-block-begin-line
-  ;  '((t (:underline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
-  ;  "Face used for the line delimiting the begin of source blocks.")
-
-  (defface org-block
-    ;; defface org-block-background was removed from org:
-    ;; http://emacs.stackexchange.com/questions/14824/org-block-background-font-not-having-effect
-    ;; read also: https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
-    '((t (:background "#1a1a1a")))
-    "Face used for the source block background.")
-
-  ;(defface org-block-end-line
-  ;  '((t (:overline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
-  ;  "Face used for the line delimiting the end of source blocks.")
-
-  ;;test: (set-face-background 'org-block-background "#1a1a1a")
-
 #+END_SRC
 
 - 2017-03-29: DISABLE a theme: "M-x disable-theme" + theme
@@ -4944,6 +4916,34 @@ UTF-8 symbols were not in my current (Windows) font.
                 (push '("WAITING"  . ?…) prettify-symbols-alist)
                 (push '("CANCELLED"  . ?×) prettify-symbols-alist)
                 (push '("SOMEDAY"  . ??) prettify-symbols-alist)))
+#+END_SRC
+
+- enhanced highlighting of babel blocks: http://orgmode.org/worg/org-contrib/babel/examples/fontify-src-code-blocks.html
+- issues when trying to apply face instantly: https://www.reddit.com/r/emacs/comments/3ksen6/noob_question_how_to_make_changes_after/cv0cmko
+- M-x describe-face  -> show definition
+- C-u C-x =          -> show all font information
+#+BEGIN_SRC emacs-lisp
+;  (face-spec-set 'org-block-begin-line
+;    '((t (:underline "#FFFFFF" :foreground "#404040" :background "#b3b3b3")))
+;    "Face used for the line delimiting the begin of source blocks.")
+
+  ;(defface org-block-begin-line
+  ;  '((t (:underline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
+  ;  "Face used for the line delimiting the begin of source blocks.")
+
+  (defface org-block
+    ;; defface org-block-background was removed from org:
+    ;; http://emacs.stackexchange.com/questions/14824/org-block-background-font-not-having-effect
+    ;; read also: https://www.reddit.com/r/emacs/comments/415imd/prettier_orgmode_source_code_blocks/
+    '((t (:background "#1a1a1a")))
+    "Face used for the source block background.")
+
+  ;(defface org-block-end-line
+  ;  '((t (:overline "#FFFFFF" :foreground "#cccccc" :background "#4d4d4d")))
+  ;  "Face used for the line delimiting the end of source blocks.")
+
+  ;;test: (set-face-background 'org-block-background "#1a1a1a")
+
 #+END_SRC
 
 ** General key bindings
