@@ -6162,7 +6162,8 @@ selected instead of creating a new buffer."
       ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z"))))
   (my-log-misc (format-message "my-refile-recache-start-time took %.2fs" (float-time (time-subtract (current-time) my-refile-recache-start-time))))
-  (my-flash (format-message "Refile re-cache took %.2fs"                 (float-time (time-subtract (current-time) my-refile-recache-start-time))))
+  (when (> (string-to-number (emacs-uptime "%m")) 2) ;; only flash when not part of the boot process (= Emacs runs longer than 2 minutes)
+     (my-flash (format-message "Refile re-cache took %.2fs"                 (float-time (time-subtract (current-time) my-refile-recache-start-time)))))
 )
 #+END_SRC
 
@@ -9132,7 +9133,9 @@ switch to open Agenda or open new one:
                (format-time-string "%Y-%m-%dT%T")
                ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
                 (format-time-string "%z"))))
-        (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
+        (when (> (string-to-number (emacs-uptime "%m")) 2) ;; only flash when not part of the boot process (= Emacs runs longer than 2 minutes)
+           (my-flash (format-message "Agenda built.\n(took %.2fs)" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
+        )
         (my-log-misc (format-message "my-org-agenda took %.2fs" (float-time (time-subtract (current-time) my-org-agenda-start-time))))
 
         )
@@ -10617,7 +10620,8 @@ Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]
       ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z"))))
   (my-log-misc (format-message "helm-org-contacts-refresh-cache took %.2fs" (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
-  (my-flash (format-message "helm-org-contacts-cache took %.2fs"            (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time))))
+  (when (> (string-to-number (emacs-uptime "%m")) 2) ;; only flash when not part of the boot process (= Emacs runs longer than 2 minutes)
+    (my-flash (format-message "helm-org-contacts-cache took %.2fs"            (float-time (time-subtract (current-time) my-helm-org-contacts-refresh-cache-start-time)))))
 )
 #+END_SRC
 
@@ -11324,7 +11328,8 @@ at once before leaving the computer for a longer period of time.
   (interactive)
 
   (my-helm-org-contacts-refresh-cache)
-  (my-flash "continuing with \"my-refile-recache\" ...")
+  (when (> (string-to-number (emacs-uptime "%m")) 2) ;; only flash when not part of the boot process (= Emacs runs longer than 2 minutes)
+    (my-flash "continuing with \"my-refile-recache\" ..."))
   (my-refile-recache)
 )
 #+END_SRC
@@ -16006,6 +16011,7 @@ approximately 25 seconds as of 2019-04-17.
 
 ;; omit some things when running in batch-mode:
 (when (not noninteractive)
+  ;; when interactive:
 
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
 
@@ -16073,14 +16079,11 @@ This is the end of the Elisp blocks to be tangled. Finishing up
 loading my configuration (famous last words):
 
 #+BEGIN_SRC emacs-lisp
-  (my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
-  (my-flash (format-message "Emacs boot finished\n(took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time))))
-
-  (message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
-  ;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
-  (message "→★ finished loading config.org in %.2fs" (float-time (time-subtract (current-time) my-config-el-start-time)))
+  ;; ignoring recache process below in emacs startup time:
+  (setq my-config-el-loading-time (float-time (time-subtract (current-time) my-config-el-start-time)))
 
   (when (not noninteractive)
+    ;; when interactive:
     (my-log-misc
       (format-message "interactive Emacs boot finished (took %.2fs)" (float-time (time-subtract (current-time) my-config-el-start-time)))
     )
@@ -16089,18 +16092,24 @@ loading my configuration (famous last words):
     ;;)
   )
 
-    (if (file-exists-p faststart-indicator-file)
-      (progn
-        (delete-file faststart-indicator-file)
-      )
-      (progn
-         (when (and (file-exists-p recache-indicator-file) (not noninteractive))
-            (my-recache-all)
-            ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
-         )
-         )
-        )
+  (if (file-exists-p faststart-indicator-file)
+    (progn
+      (delete-file faststart-indicator-file)
+    )
+    (progn
+       (when (and (file-exists-p recache-indicator-file) (not noninteractive))
+          (my-recache-all)
+          ;;(delete-file recache-indicator-file) ;; don't delete, since some computers may use this for every startup
+       )
+     )
+  )
 
+  (my-flash (format-message "Not found here:\n%s" my-binary-not-found-list))
+  (my-flash (format-message "Emacs boot finished\n(took %.2fs)" my-config-el-loading-time))
+
+  (message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
+  ;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
+  (message "→★ finished loading config.org in %.2fs" my-config-el-loading-time)
 #+END_SRC
 
 * Current key mappings (sorted)
