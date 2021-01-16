@@ -14168,12 +14168,12 @@ one in order to get a decent result for a projector or similar.
     (cond (my-toggle-dark-bright-theme-status
            (message "Loading bright theme")
            (disable-theme 'wombat)
-           (load-theme 'leuven t)
+           ;;(load-theme 'leuven t)
            (setq my-toggle-dark-bright-theme-status nil)
            )
           (t
            (message "Loading dark theme")
-           (disable-theme 'leuven)
+           ;;(disable-theme 'leuven)
            (load-theme 'wombat t) ;; dark theme
            (setq my-toggle-dark-bright-theme-status t)
            )
