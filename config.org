@@ -3792,7 +3792,9 @@ it.
 :CREATED:  [2019-12-19 Thu 14:37]
 :END:
 
-** isync + notmuch
+** DISABLED isync + notmuch
+
+| 2021-02-13 | disabled since I can't use business email with Emacs |
 
 This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I use together with isync/mbsync/
 
@@ -3907,23 +3909,6 @@ Adding a key mapping for "d" to add "deleted" tag and remove "inbox" and "unread
 
 #+END_SRC
 
-Helper function to open any given message-id in Thunderbird:
-#+BEGIN_SRC emacs-lisp
-  ;; modify this for your system
-  (setq thunderbird-program "/usr/bin/thunderbird")
-
-  (defun my-open-message-id-in-thunderbird (message-id)
-  "open an email with a given message-ID in Thunderbird"
-  (interactive)
-  (start-process
-   (concat "thunderlink: " message-id)
-   nil
-   thunderbird-program
-   "-thunderlink"
-   (concat "thunderlink://messageid=" message-id)
-   )
-  )
-#+END_SRC
 
 Open the current email in Thunderbird:
 #+BEGIN_SRC emacs-lisp
@@ -3990,9 +3975,46 @@ To set lynx as default html renderer use this:
 
 ** Thunderbird
 
+| 2021-02-26 | With an unintended upgrade from Thunderbird 68 to 78, the original =thunderlink= is broken. |
+| 2021-02-28 | Setup of [[https://camiel.bouchier.be/en/cb_thunderlink][cb_thunderlink]] as a TB 78.x replacement                                            |
+
 I got this workflow from https://vxlabs.com/2019/04/20/link-thunderbird-emails-from-emacs-orgmode/
 
 Internal notes: id:2020-01-09-link-emails-from-to-Thunderbird-Org
+
+Helper function to open any given message-id in Thunderbird:
+#+BEGIN_SRC emacs-lisp
+  ;; modify this for your system
+  (setq thunderbird-program "/usr/bin/thunderbird")
+
+  (defun my-open-message-id-in-thunderbird (message-id)
+  "open an email with a given message-ID in Thunderbird"
+  (interactive)
+  (start-process
+   (concat "thunderlink: " message-id)
+   nil
+   thunderbird-program
+   "-thunderlink"
+   (concat "thunderlink://messageid=" message-id)
+   )
+  )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  ;; modify this for your system
+  (setq thunderlink-program "/home/vk/cb_thunderlink/cb_thunderlink")
+
+  (defun my-open-message-id-in-thunderbird (message-id)
+  "open an email with a given message-ID in Thunderbird"
+  (interactive)
+  (start-process
+   (concat "thunderlink: " message-id)
+   nil
+   thunderlink-program
+   (concat "thunderlink://messageid=" message-id)
+   )
+  )
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 ;; with org-mac-link message:// links are handed over to the macOS system,
@@ -15141,7 +15163,9 @@ Not org related but might be candidates as well:
 #+RESULTS:
 : hydra-python/body
 
-** hydra-notmuch → F1
+** DISABLED hydra-notmuch → F1
+
+| 2021-02-13 | disabled since I can't use business email with Emacs |
 
 #+BEGIN_SRC emacs-lisp :results none
 (defhydra hydra-notmuch (:color blue)
@@ -15167,7 +15191,9 @@ Not org related but might be candidates as well:
 )
 #+END_SRC
 
-** hydra-notmuch-message-mode → F1
+** DISABLED hydra-notmuch-message-mode → F1
+
+| 2021-02-13 | disabled since I can't use business email with Emacs |
 
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-gnu)
@@ -15206,7 +15232,9 @@ Not org related but might be candidates as well:
 )
 #+END_SRC
 
-** hydra-notmuch-show-mode → F1
+** DISABLED hydra-notmuch-show-mode → F1
+
+| 2021-02-13 | disabled since I can't use business email with Emacs |
 
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-gnu)
@@ -15984,10 +16012,12 @@ line, sentence, sexp or defun into the marked region:
 (bind-key "m d" #'mark-defun my-map)
 #+END_SRC
 
-** my-notmuch → my-map n
+** DISABLED my-notmuch → my-map n
 :PROPERTIES:
 :CREATED:  [2019-12-21 Sat 13:16]
 :END:
+
+| 2021-02-13 | disabled since I can't use business email with Emacs |
 
 #+BEGIN_SRC emacs-lisp :results none
 (when (my-system-type-is-gnu)
