@@ -7087,6 +7087,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("EPABETR" . ,(concat my-business-jira-b-server "EPABETR-%s"))
           ("BMTSK" . ,(concat "file:" my-business-bmtsk-path "/"))
           ("IAFO" . ,(concat my-business-jira2-server "/GEMIDPANF-200?jql=project%20%3D%20GEMIDPANF%20AND%20Afo-ID%20~%20%22%s%22"))
+          ("GEMIDP" . ,(concat my-business-jira2-server "/GEMIDP-%s"))
           ("GEMIDPANF" . ,(concat my-business-jira2-server "/GEMIDPANF-%s"))
           ))
 #+END_SRC
