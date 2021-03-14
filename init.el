@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2020-01-31 23:21:56 vk>
+;; Time-stamp:    <2021-03-14 14:24:55 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -23,20 +23,22 @@
 (package-initialize)
 
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
+(setq my-user-emacs-directory "~/.emacs.d/")
 
 ;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
-(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/lisp")
-(add-to-list 'load-path "~/.emacs.d/contrib/org-mode/contrib/lisp" t)
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
+;(setq load-path (delete "/usr/share/emacs/28.0.50/lisp/org" load-path));; disabling built-in org on floyd - didn't help
 (require 'org)
 
-;; user-emacs-directory on Windows is "c:/Users/karl.voit/AppData/Roaming/.emacs.d/" which I don't want to use
-(setq my-user-emacs-directory "~/.emacs.d/")
 
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
 ;; the criteria described below) to "config.el" which is loaded as Emacs configuration.
 ;; Inspired and copied from: http://www.holgerschurig.de/en/emacs-init-tangle/
+;; As of 2021-02-05, the Domain "holgerschurig.de" doesn't exist any more.
+;; Visit archived page on https://archive.org/search.php?query=http%3A%2F%2Fwww.holgerschurig.de%2Fen%2Femacs-init-tangle%2F
 ;; =======================================================================================
 
 
@@ -130,8 +132,7 @@ Note the weekly scope of the command's precision.")
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(notmuch-saved-searches
-   (quote
-    ((:name "inbox" :query "tag:inbox" :key "i")
+   '((:name "inbox" :query "tag:inbox" :key "i")
      (:name "unread" :query "tag:unread" :key "u")
      (:name "flagged" :query "tag:flagged" :key "f")
      (:name "sent" :query "tag:sent" :key "t")
@@ -139,19 +140,28 @@ Note the weekly scope of the command's precision.")
      (:name "all mail" :query "*" :key "a")
      (:name "Sent" :query "folder:archive")
      (:name "this_week" :query "date:\"this week\"")
-     (:name "today¬me" :query "date:today and not from:karl.voit"))))
+     (:name "today¬me" :query "date:today and not from:karl.voit")))
+ '(org-agenda-files
+   '("~/org/rise.org" "~/org/misc.org" "~/org/issues.org" "~/org/projects.org" "~/org/finanzen_behoerden_versicherungen.org" "~/org/bwg.org" "~/org/contacts.org" "~/org/hardware.org" "~/org/fhsp.org" "~/org/notes.org" "~/org/public_voit.org" "~/org/errors.org" "~/org/errors_public_voit.org" "~/org/memacs/error.org"))
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(package-selected-packages
-   (quote
-    (gif-screencast pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-ql org-pdfview org-bullets nyan-mode mode-icons minimap magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode)))
+   '(keycast projectile elisp-bug-hunter bug-hunter spatial-navigate org-edna org-ql org-super-links quelpa-use-package quelpa orly helm-org-rifle ace-window vimgolf lorem-ipsum gif-screencast pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-pdfview org-bullets nyan-mode mode-icons magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode))
  '(safe-local-variable-values
-   (quote
-    ((eval ispell-change-dictionary "german8")
+   '((eval setq org-image-actual-width 600)
+     (eval setq org-image-actual-width 20)
+     (eval remove-hook 'org-after-tags-change-hook 'org-expiry-insert-created t)
+     (eval make-local-variable 'org-after-tags-change-hook)
+     (eval remove-hook 'org-after-todo-state-change-hook 'org-expiry-insert-created t)
+     (eval make-local-variable 'org-after-todo-state-change-hook)
+     (eval remove-hook 'org-insert-heading-hook 'org-expiry-insert-created t)
+     (eval make-local-variable 'org-insert-heading-hook)
+     (eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
-     (flyspell-default-dictionary . "german8")))))
+     (flyspell-default-dictionary . "german8")))
+ '(tramp-default-user "vk" nil (tramp)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
