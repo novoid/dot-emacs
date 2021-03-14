@@ -1625,12 +1625,16 @@ Flat mode-line styling:
 (set-face-attribute 'mode-line-inactive nil :box nil)
 #+END_SRC
 
-** Themes
+** DISABLED Themes
 
 | 2021-01-08 | I switch back to light theme (leuven or default) for now |
 
 Since a couple of major versions, GNU/Emacs has a built-in theme
-manager. This is for dealing with the themes:
+manager. This is for dealing with the themes.
+
+- [2021-01-18 Mon] [[https://www.reddit.com/r/emacs/comments/kz347f/what_parts_of_your_config_do_you_like_best/gjp9n3m/?utm_source=reddit&utm_medium=web2x&context=3][What parts of your config do you like best? : emacs]]
+  - Cool snippet to load and unload theme(s).
+  - [ ] play around with it myself
 
 - set color theme according to day-time:
   - https://github.com/hadronzoo/theme-changer
@@ -14100,7 +14104,7 @@ setup to look like a default Emacs.
 
   ;;(setq org-hide-leading-stars t)
 
-  (load-theme 'wombat t) ;; dark theme
+  ;; disabled 2021-02-15 since I switched to bright mode:  (load-theme 'wombat t) ;; dark theme
 
 )
 
@@ -14127,7 +14131,7 @@ setup to look like a default Emacs.
   (org-expiry-deinsinuate);; omit automatically created drawers
   (setq org-log-into-drawer nil)
 
-  (disable-theme 'wombat)
+    ;; disabled 2021-02-15 since I switched to bright mode:    (disable-theme 'wombat)
 
   ;; http://stackoverflow.com/questions/24684979/how-to-add-a-tool-bar-button-in-emacs
   ;;(add-hook 'after-init-hook
