@@ -13967,6 +13967,19 @@ process for my situation:
 )
 #+END_SRC
 
+** keycast - show pressed keys
+
+| 2021-03-14 | installed for screen recording |
+
+- Project URL: https://github.com/tarsius/keycast
+
+#+BEGIN_SRC emacs-lisp
+(use-package keycast
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
