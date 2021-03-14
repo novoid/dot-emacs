@@ -17,8 +17,7 @@ Unfortunately, within the Org-mode rendering of GitHub, you won't see
 the =DISABLED= keyword nor the =:tangle no= parameter of the babel
 blocks. Please get the Org-mode file and open it in your Emacs directly.
 
-Originally, I found this process on
-http://www.holgerschurig.de/en/emacs-init-tangle/ However, I adapted
+Originally, I found this process on [[https://archive.org/search.php?query=http%3A%2F%2Fwww.holgerschurig.de%2Fen%2Femacs-init-tangle%2F][this web page]]. However, I adapted
 its code and write additional features.
 
 Links that start with =id:= won't work for you because they link to my
@@ -107,6 +106,24 @@ important generic hydras in contrast to the ~F1~-mapped mode hydras.
 ; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
 ; (require 'org)
 ; -------------------------------------------------------------------------------------------
+#+END_SRC
+
+* DISABLED literate test 1
+
+Testing the noweb principle as shown on this page: https://www.hhyu.org/posts/literate_config/
+
+- [2021-02-05 Fri 11:09] issue: my (very fast) custom function to
+  tangle does not handle noweb syntax and Holger's page (the original
+  author of the tangle function) doesn't exist any more.
+
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref nowebtest
+;; nowebtest3
+(setq nowebtest3 t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :noweb yes
+;; nowebtest1
+<<nowebtest>>
 #+END_SRC
 
 * Function keys
@@ -16037,6 +16054,13 @@ Somehow, the binding from the definition of the hydra does not work.
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key [f9] 'hydra-search/body)
+#+END_SRC
+
+* DISABLED literate test 2
+
+#+BEGIN_SRC emacs-lisp :tangle no :noweb-ref nowebtest
+;; nowebtest2
+(setq nowebtest2 t)
 #+END_SRC
 
 * autostart
