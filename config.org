@@ -53,37 +53,37 @@ workflow, please do search for corresponding keywords. There are
 seldom multiple search hits except for separate key binding
 definitions or hydras.
 
-| *Workflow*                          | *Solution*                                         | *Notes*                          |
-|-------------------------------------+----------------------------------------------------+----------------------------------|
-| Installing software packages        | ~use-package~ with packages and git repositories   |                                  |
-| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature                      |
-| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ | top feature                      |
-| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                 |
-| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space |
-| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                  |
-| Filter Org files                    | sparse trees                                       |                                  |
-| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                  |
-| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                  |
-| Switching buffers                   | ~ibuffer~                                          |                                  |
-| Desktop notifications               | ~alert~                                            |                                  |
-| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                  |
-| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                                  |
-| Copying region to Org property      | ~my-org-region-to-property()~                      | very handy for org-contacts      |
-| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                                  |
-| Passwords                           | ~org-crypt~ on Org mode headings                   |                                  |
-| Coding python                       | ~elpy~, ~flycheck~                                 |                                  |
-| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                                  |
-| Coding: Folding/unfolding           | ~yafolding~                                        |                                  |
-| Versioning files                    | ~magit~                                            |                                  |
-| Snippet management                  | ~yankpad~ with ~yasnippet~                         | [[https://karl-voit.at/2016/12/18/org-depend/][advanced workflows]]               |
-| Spell checking                      | ~flyspell~ with ~aspell~                           |                                  |
-| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                  |
-| Formatting headings                 | ~my-title-capitalization()~                        |                                  |
-| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to        |
-| Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | top featurel; based on [[https://en.wikipedia.org/wiki/Frecency][frecency]]  |
-| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to        |
-| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to        |
-| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                                  |
+| *Workflow*                          | *Solution*                                         | *Notes*                                                                     |
+|-------------------------------------+----------------------------------------------------+-----------------------------------------------------------------------------|
+| Installing software packages        | ~use-package~ with packages and git repositories   |                                                                             |
+| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature                                                                 |
+| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ | top feature                                                                 |
+| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                                                            |
+| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space                                            |
+| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                                                             |
+| Filter Org files                    | sparse trees                                       |                                                                             |
+| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                                                             |
+| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                                                             |
+| Switching buffers                   | ~ibuffer~                                          |                                                                             |
+| Desktop notifications               | ~alert~                                            |                                                                             |
+| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                                                             |
+| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                                                                             |
+| Copying region to Org property      | ~my-org-region-to-property()~                      | very handy for org-contacts                                                 |
+| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                                                                             |
+| Passwords                           | ~org-crypt~ on Org mode headings                   |                                                                             |
+| Coding python                       | ~elpy~, ~flycheck~                                 |                                                                             |
+| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                                                                             |
+| Coding: Folding/unfolding           | ~yafolding~                                        |                                                                             |
+| Versioning files                    | ~magit~                                            |                                                                             |
+| Snippet management                  | ~yankpad~ with ~yasnippet~                         | [[https://karl-voit.at/2016/12/18/org-depend/][advanced workflows]]         |
+| Spell checking                      | ~flyspell~ with ~aspell~                           |                                                                             |
+| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                                                             |
+| Formatting headings                 | ~my-title-capitalization()~                        |                                                                             |
+| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to                                                   |
+| Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | top featurel; based on [[https://en.wikipedia.org/wiki/Frecency][frecency]] |
+| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to                                                   |
+| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to                                                   |
+| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                                                                             |
 
 What I'm not using at the moment:
 - projectile or other source code project management tools
@@ -1946,6 +1946,39 @@ menu of options and the hydra-k offers a prefix for it.
 
 See 33min30s of the video linked in: [[http://irreal.org/blog/?p=6453][Irreal: Hydra Video]]
 
+* Misc modes/packages (part I)
+
+** which-key - displays the available key bindings automatically
+:PROPERTIES:
+:CREATED:  [2018-07-15 Sun 20:06]
+:END:
+
+https://github.com/justbur/emacs-which-key
+
+I got the recommendation via [[https://www.reddit.com/r/emacs/comments/8x8rz7/my_emacs_key_binding_strategy/e22x2cu/][this reddit thread]] with the arguments,
+that =which-key= is inferior to =guide-key= which I used before::
+- more active
+- more features
+- more contributions
+
+when I do press my prefix for =my-map= and wait a bit,
+I get a popup buffer that tells me what bindings I am able to use.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-which-key/")))
+    :defer 120
+    :config ;; executed after loading package
+    (which-key-setup-side-window-right)
+    (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("RET" . nil) . ("⏎" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⇤" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil)))
+
+    (which-key-mode)
+  )
+#+END_SRC
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
@@ -2252,7 +2285,7 @@ https://www.emacswiki.org/emacs/HalfScrolling
 
 ** my-screnshot-svg
 
-| 2021-03-26 | added to my config after test looks awesome | 
+| 2021-03-26 | added to my config after test looks awesome |
 
 - From [[https://www.reddit.com/r/emacs/comments/idz35e/emacs_27_can_take_svg_screenshots_of_itself/][reddit]]
   - [[https://www.masteringemacs.org/article/whats-new-in-emacs-27-1][mentioned by Clement on Mickey's blog post]]
@@ -2517,7 +2550,484 @@ within Org-mode only is defined in my yankpad file.
 )
 #+END_SRC
 
-* Elisp
+* Programming
+
+** company (completion)
+
+| 2021-04-04 | stolen config from https://github.com/zamansky/dot-emacs for playing with LSP |
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 3)
+    
+    (add-hook 'after-init-hook 'global-company-mode)
+    ;;  (global-company-mode t)
+
+    ;; disable company mode in org mode:
+    (add-hook 'org-mode-hook (lambda () (company-mode 1)))
+)
+#+END_SRC
+
+** Git
+:PROPERTIES:
+:CREATED:  [2018-09-02 Sun 10:41]
+:END:
+
+This is a section where all [[https://en.wikipedia.org/wiki/Git][Git]]-related configuration is happening.
+
+*** magit → my-map g
+
+«[[https://github.com/magit/magit][Magit]] is an interface to the version control system Git, implemented
+as an Emacs package. Magit aspires to be a complete Git porcelain.
+While we cannot (yet) claim that Magit wraps and improves upon each
+and every Git command, it is complete enough to allow even experienced
+Git users to perform almost all of their daily version control tasks
+directly from within Emacs. While many fine Git clients exist, only
+Magit and Git itself deserve to be called porcelains.»
+
+Some people start using Emacs just to be able to use this nifty Git
+interface of Magit.
+
+
+#+BEGIN_SRC emacs-lisp
+;;2018-07-09 test when using GitHub version;;(setq with-editor-file-name-history-exclude 1) ;; https://github.com/syl20bnr/spacemacs/issues/7225
+
+(use-package magit
+  ;;2018-07-09 disabled because lots of errors on load;; :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/magit/lisp/")))
+
+  :if (and (my-eval-if-binary-or-warn "git") (my-system-type-is-gnu))
+  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
+  :config ;; executed after loading package
+
+  (setq magit-diff-refine-hunk 'all) ;; enable in-line diff highlighting
+
+  ;; full screen magit-status
+  ;; http://whattheemacsd.com//setup-magit.el-01.html
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+
+  (defun magit-quit-session ()
+    "restores the previous window configuration and kills the magit buffer"
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "g" #'magit-status my-map)
+#+END_SRC
+
+*** DISABLED smeargle (highlighting)
+
+Disabled 2020-01-07 because I don't use it.
+
+- smeargle - Highlighting Regions by Last Updated Time (my-map c)
+  - https://github.com/syohex/emacs-smeargle/
+  - M-x smeargle  -  Highlight regions by last updated time.
+  - M-x smeargle-age  -  Highlight regions by age of changes.
+  - M-x smeargle-clear  - Clear overlays in current buffer
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smeargle
+    :ensure t
+    :defer 110
+    :config ;; executed after loading package
+    ;;:bind (:map my-map ("c" . smeargle)) ;; CONFLICTS with my title capitalization
+#+END_SRC
+
+You can set highlighted colors of smeargle by changing smeargle-colors:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(custom-set-variables
+ '(smeargle-colors '((older-than-1day   . "red")
+                     (older-than-3day   . "green")
+                     (older-than-1week  . "yellow")
+                     (older-than-2week  . nil)
+                     (older-than-1month . "orange")
+                     (older-than-3month . "pink")
+                     (older-than-6month . "cyan")
+                     (older-than-1year . "grey50"))))
+#+END_SRC
+
+And you can also set colors of =smeargle-commits= by =smeargle-age-colors=:
+
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(smeargle-age-colors '((0 . nil)
+                         (1 . "grey80")
+                         (2 . "grey70")
+                         (3 . "grey60")
+                         (4 . "grey50")
+                         (5 . "grey40")
+                         (6 . "grey30")
+                         (7 . "grey20")
+                         (8 . "grey10"))))
+#+END_SRC
+
+You can specify parameters until =smeargle-age-threshold=. =age= is set to
+=smeargle-age-threshold= if actual age of changes is older than
+=smeargle-age-threshold=. Default value of =smeargle-age-threshold= is 7.
+
+Misc settings:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "C-x v s") 'smeargle)
+(global-set-key (kbd "C-x v c") 'smeargle-commits)
+
+;; Highlight regions at opening file
+(add-hook 'find-file-hook 'smeargle)
+
+;; Updating after save buffer
+(add-hook 'after-save-hook 'smeargle)
+#+END_SRC
+
+End of smeargle:
+#+BEGIN_SRC emacs-lisp
+  );; end of smeargle
+#+END_SRC
+
+*** DISABLED GitGutter
+:PROPERTIES:
+:CREATED:  [2018-09-01 Sat 16:39]
+:END:
+
+2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
+
+[[https://github.com/syohex/emacs-git-gutter][GitGutter]] is visualizing modified lines within the source code buffer.
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-gutter
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-git-gutter/")))
+  :config
+#+END_SRC
+
+Either you use the global minor mode ...
+#+BEGIN_SRC emacs-lisp
+  (global-git-gutter-mode +1)
+
+  ;; inactivate git-gutter-mode in asm-mode and image-mode
+  (custom-set-variables
+    '(git-gutter:disabled-modes '(asm-mode image-mode)))
+#+END_SRC
+
+... or activate the minor mode for specific modes:
+#+BEGIN_SRC emacs-lisp :tangle no
+  (add-hook 'python-mode-hook 'git-gutter-mode)
+  (add-hook 'ruby-mode-hook 'git-gutter-mode)
+#+END_SRC
+
+Keyboard bindings: Jump to next/previous hunk
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "S-<f2>") 'git-gutter:previous-hunk)
+(global-set-key (kbd "S-<f3>") 'git-gutter:next-hunk)
+#+END_SRC
+
+More bindings:
+#+BEGIN_SRC emacs-lisp :tangle no
+(global-set-key (kbd "C-x C-g") 'git-gutter)
+(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
+
+;; Jump to next/previous hunk
+(global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
+(global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
+
+;; Stage current hunk
+(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
+
+;; Revert current hunk
+(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
+
+;; Mark current hunk
+(global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
+#+END_SRC
+
+If you set git-gutter:update-interval seconds larger than 0,
+git-gutter updates diff information in real-time by idle timer.
+#+BEGIN_SRC emacs-lisp :tangle no
+  (custom-set-variables
+  '(git-gutter:update-interval 2))
+#+END_SRC
+
+Pass option to 'git diff' command: You can pass git diff option to set
+git-gutter:diff-option.
+
+#+BEGIN_SRC emacs-lisp
+;; ignore all spaces
+(custom-set-variables
+ '(git-gutter:diff-option "-w"))
+#+END_SRC
+
+Customize visualization:
+#+BEGIN_SRC emacs-lisp
+(custom-set-variables
+ '(git-gutter:modified-sign "~ ") ;; two space
+ '(git-gutter:added-sign "++")    ;; multiple character is OK
+ '(git-gutter:deleted-sign "--"))
+
+(set-face-background 'git-gutter:modified "purple") ;; background color
+(set-face-foreground 'git-gutter:added "green")
+(set-face-foreground 'git-gutter:deleted "red")
+#+END_SRC
+
+You can change minor-mode name in mode-line to set =git-gutter:lighter=.
+Default is =GitGutter=. First character should be a space.
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(custom-set-variables
+ '(git-gutter:lighter " GG"))
+#+END_SRC
+
+End of git-gutter:
+#+BEGIN_SRC emacs-lisp
+)
+#+END_SRC
+
+*** DISABLED git-timemachine
+
+2019-12-08: disabled because I was not using it.
+
+Step through historic versions: https://github.com/pidu/git-timemachine (2018-09-02: repo has been removed)
+
+[[http://emacsredux.com/blog/2014/07/22/travel-back-and-forward-in-git-history/][A page with an animated GIF]] showing its functionality.
+
+#+BEGIN_QUOTE
+Step through historic versions of git controlled file using everyone's
+favourite editor
+
+Visit a git-controlled file and issue =M-x git-timemachine= (or bind
+it to a keybinding of your choice). If you just need to toggle the
+time machine you can use =M-x git-timemachine-toggle=.
+
+Use the following keys to navigate historic version of the file
+
+| p | Visit previous historic version                                         |
+| n | Visit next historic version                                             |
+| w | Copy the abbreviated hash of the current historic version               |
+| W | Copy the full hash of the current historic version                      |
+| g | Goto nth revision                                                       |
+| q | Exit the time machine.                                                  |
+| b | Run magit-blame on the currently visited revision (if magit available). |
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package git-timemachine
+  :ensure t
+  :defer 120
+  :init
+#+END_SRC
+
+[[http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html][Source]] -> start from selected revision instead of HEAD
+#+BEGIN_SRC emacs-lisp
+      (defun my-git-timemachine-show-selected-revision ()
+        "Show last (current) revision of file."
+        (interactive)
+        (let (collection)
+          (setq collection
+                (mapcar (lambda (rev)
+                          ;; re-shape list for the ivy-read
+                          (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
+                        (git-timemachine--revisions)))
+          (ivy-read "commits:"
+                    collection
+                    :action (lambda (rev)
+                              (git-timemachine-show-revision rev)))))
+#+END_SRC
+
+Open git snapshot with the selected version. Based on ivy-mode:
+#+BEGIN_SRC emacs-lisp
+      (defun my-git-timemachine ()
+        "Open git snapshot with the selected version.  Based on ivy-mode."
+        (interactive)
+        (unless (featurep 'git-timemachine)
+          (require 'git-timemachine))
+        (git-timemachine--start #'my-git-timemachine-show-selected-revision))
+#+END_SRC
+
+end of git-timemachine:
+#+BEGIN_SRC emacs-lisp
+);; end of git-timemachine
+#+END_SRC
+
+*** magit-log--add-date-headers
+:PROPERTIES:
+:CREATED:  [2019-12-17 Tue 18:48]
+:END:
+
+From: https://github.com/alphapapa/unpackaged.el
+
+This requires ov.el: https://github.com/emacsorphanage/ov
+#+BEGIN_SRC emacs-lisp
+(use-package ov
+   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ov/")))
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun unpackaged/magit-log--add-date-headers (&rest _ignore)
+  "Add date headers to Magit log buffers."
+  (when (derived-mode-p 'magit-log-mode)
+    (save-excursion
+      (ov-clear 'date-header t)
+      (goto-char (point-min))
+      (cl-loop with last-age
+               for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
+                                        car
+                                        (overlay-get it 'before-string)
+                                        (get-text-property 0 'display it)
+                                        cadr
+                                        (s-match (rx (group (1+ digit) ; number
+                                                            " "
+                                                            (1+ (not blank))) ; unit
+                                                     (1+ blank) eos)
+                                                 it)
+                                        cadr)
+               do (when (and this-age
+                             (not (equal this-age last-age)))
+                    (ov (line-beginning-position) (line-beginning-position)
+                        'after-string (propertize (concat " " this-age "\n")
+                                                  'face 'magit-section-heading)
+                        'date-header t)
+                    (setq last-age this-age))
+               do (forward-line 1)
+               until (eobp)))))
+
+(define-minor-mode unpackaged/magit-log-date-headers-mode
+  "Display date/time headers in `magit-log' buffers."
+  :global t
+  (if unpackaged/magit-log-date-headers-mode
+      (progn
+        ;; Enable mode
+        (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+        (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
+    ;; Disable mode
+    (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
+    (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
+ #+END_SRC
+
+*** End of Git
+:PROPERTIES:
+:CREATED:  [2018-09-02 Sun 10:44]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+) ;; end of magit use-package
+;(my-log-hostspecific "magit-version" magit-version) ;; doesn't work (anywhere here) for some reason
+#+END_SRC
+
+** highlight-symbol → my-map h
+
+This package does highlight all occurrences of a given word. Very
+handy when programming: visualize all occurrences of a variable/function.
+
+Note: This package here somehow overlaps with the "hover" feature of a
+LSP server that supports it. In that case, you should disable the
+=highlight-symbol-mode= below.
+
+#+BEGIN_SRC emacs-lisp
+(use-package highlight-symbol
+  :ensure t
+  :defer 110
+  ;;(bind-key (kbd "h") #'highlight-symbol my-map)
+  :bind (:map my-map ("h" . highlight-symbol))
+  :hook (python-mode . highlight-symbol-mode)
+  )
+;; original: (global-set-key [(control f3)] 'highlight-symbol)
+;; original: (global-set-key [f3] 'highlight-symbol-next)
+;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
+;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
+#+END_SRC
+
+** projectile
+
+| 2020-12-10 | initial setup |
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
+** Language Server Protocol (LSP) → C-c l
+
+| 2021-04-03 | initial setup for testing with Python/pyls |
+
+Why? Python code completion was always a bit of a drag. I don't code
+that often. When there was a long break between my Python sessions,
+somehow code completion was a fragile thing that often did not work.
+Because of [[https://www.reddit.com/r/emacs/comments/mj3kcr/good_completion_backends_for_python/][this thread]] I do give LSP a try.
+
+lsp-mode:
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((python-mode . lsp)
+         ;; if you want which-key integration
+         ;; (lsp-mode . lsp-enable-which-key-integration) ;; 2021-04-04: I'm using lsp-deferred instead
+       )
+  :commands lsp
+  )
+#+END_SRC
+
+- [ ] FIXXME: maybe customize
+  - lsp-pyls-plugins-flake8-ignore
+  - lsp-pyls-plugins-pycodestyle-max-line-length
+  - lsp-pyls-plugins-flake8-max-line-length
+
+lsp-ui:
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-ui 
+      :ensure t 
+      :commands lsp-ui-mode
+      :hook (lsp-mode . lsp-ui-mode)
+      :config
+      (setq lsp-ui-sideline-enable t)
+      (setq lsp-ui-sideline-show-hover nil)
+      (setq lsp-ui-doc-position 'bottom)
+      ;; lsp config stuff
+      (setq lsp-enable-links t)
+      (setq lsp-signature-render-documentation t)
+      (setq lsp-headerline-breadcrumb-enable t)
+      (setq lsp-ui-doc-enable t)
+      (setq lsp-completion-enable-additional-text-edit nil)
+      (setq web-mode-enable-current-element-highlight t)
+      (lsp-ui-doc-show)
+  )
+#+END_SRC
+
+for helm:
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-lsp :ensure t :commands helm-lsp-workspace-symbol)
+#+END_SRC
+
+others:
+#+BEGIN_SRC emacs-lisp :tangle no
+  ;; ;; if you are ivy user
+  ;; (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  ;; watch https://www.youtube.com/watch?v=0bilcQVSlbM to get an idea
+  ;; (use-package dap-mode :ensure t)
+  ;; (use-package dap-python :ensure t) ;; to load the dap adapter for your language
+
+  ;;;; optional if you want which-key integration
+  ;;(use-package which-key
+  ;;    :ensure t
+  ;;    :config
+  ;;    (which-key-mode))
+#+END_SRC
+
+** Elisp
 
 This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Elisp][Elisp]] code.
 
@@ -2548,7 +3058,7 @@ the matching parenthesis:
 (show-paren-mode t)
 #+END_SRC
 
-** DISABLED ert
+*** DISABLED ert
 
 for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnippet-tests.el)
 
@@ -2558,7 +3068,7 @@ for using unit tests of yasnippet (see id:2013-02-07yasnippetdebuggen and yasnip
 (my-load-local-el "contrib/ert-x.el")
 #+END_SRC
 
-** DISABLED buttercup - Elisp test suite
+*** DISABLED buttercup - Elisp test suite
 
 #+BEGIN_QUOTE
 [[https://github.com/jorgenschaefer/emacs-buttercup][Buttercup]] is a behavior-driven development framework for testing Emacs
@@ -2581,7 +3091,7 @@ Disabled for now because I do not use it at the moment.
 )
 #+END_SRC
 
-** DISABLED smartparens - highlight corresponding parens
+*** DISABLED smartparens - highlight corresponding parens
 
 - nice overview of different hightlight modes: http://danmidwood.com/content/2014/11/21/animated-paredit.html
 - nice overview: https://ebzzry.github.io/emacs-pairs.html (Dead link as of 2017-05-26)
@@ -2629,7 +3139,7 @@ Disabled for now because I do not use it at the moment.
 
 #+END_SRC
 
-** s - «The long lost Emacs string manipulation library.»
+*** s - «The long lost Emacs string manipulation library.»
 
 https://github.com/magnars/s.el
 
@@ -2641,7 +3151,7 @@ https://github.com/magnars/s.el
 )
 #+END_SRC
 
-** Elisp: → my-map er|el|ef
+*** Elisp: → my-map er|el|ef
 
 Misc bindings for Elisp:
 
@@ -2651,7 +3161,7 @@ Misc bindings for Elisp:
 (bind-key "ef" #'find-function-at-point my-map)
 #+END_SRC
 
-** macrostep
+*** macrostep
 
 I found the [[https://github.com/joddie/macrostep][macrostep]] package through [[http://irreal.org/blog/?p=6442][the Irreal article John Wiegley and Sacha Chua on
 use-package]] which links [[https://www.youtube.com/watch?v=2TSKxxYEbII][2015-04-01 Emacs package highlight: use-package from YouTube]].
@@ -2689,77 +3199,75 @@ From the README:
     Exit macrostep-mode by typing =q= or =C-c C-c=, or by successively
     typing =c= to collapse all surrounding expansions.
 #+END_QUOTE
-* Python
+** Python
+
+| 2021-04-04 | shift from previous elpy-based setup to a LSB-based setup |
 
 This heading contains configurations for editing [[https://en.wikipedia.org/wiki/Python_(programming_language)][Python]] code. Python
 is the programming language I prefer for [[https://github.com/novoid/][my private projects]]. I do
 like its easy-to-read syntax, providing a high level of
 maintainability. It also ships with a large set of libraries.
 
-Misc stuff is taken from: https://github.com/jorgenschaefer/elpy/wiki/
-
-If you want to learn about setting up Emacs for Python, I'd recommend
-you to read https://realpython.com/emacs-the-best-python-editor/ which
-does a great job in explaining everything.
-
 Selected keyboard commands (summary): (see defined hydra for python mode!)
 
-| Key       | Command                                               | Command                           |
-|-----------+-------------------------------------------------------+-----------------------------------|
-| C-up/down | jump to previous/next line of that indentation level  | =elpy-nav-move-line-or-region-up= |
-| M-h       | hide/show current function                            | =hs-cycle=                        |
-| my-map P  | pylookup: show Python documentation for word at point | =pylookup-lookup=                 |
-| C-c i     | elpygen: implement stub (or jump to definition)       | =elpygen-implement=               |
-| F5        | previous error                                        | =flymake-goto-prev-error=         |
-| F6        | next error                                            | =flymake-goto-next-error=         |
-| C-c C-r r | refactor code/region/word                             | =elpy-refactor=                   |
+| Key       | Command                    | Command               |
+|-----------+----------------------------+-----------------------|
+| M-h       | hide/show current function | =hs-cycle=            |
+| C-c l g g | find definition            | =lsp-find-definition= |
+| C-c l g r | find references            | =lsp-find-references= |
+| <missing> | function overview          |                       |
 
------------
-
-https://www.emacswiki.org/emacs/PythonProgrammingInEmacs
-
-#+BEGIN_QUOTE
-Note that some IDE packages provide completion, e.g. Elpy provides
-completion using either jedi or rope as a backend to CompanyMode, and
-anaconda-mode provides completion via CompanyMode or AutoComplete.
-
-You can also configure completion by using either jedi or rope as a
-backend to either CompanyMode or AutoComplete.
-#+END_QUOTE
-
-** BEGIN of Python-related stuff
+*** BEGIN of Python-related stuff
 
 The code blocks here are only executed when python is found on the current system:
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "python")
 #+END_SRC
 
-** BEGIN of Elpy
+*** auto-mode-list for Python files
 
-[[https://github.com/jorgenschaefer/elpy][Elpy]] provides a very cool programming experience for Python code.
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
 
-BEGIN of elpy package
-#+BEGIN_SRC emacs-lisp
-(use-package elpy
-  :ensure t
-  ;;:if (or (my-system-type-is-gnu) (my-system-type-is-windows))
-  :mode ("\\.py\\'" . elpy-mode)
-  :config ;; executed after loading package
+  (add-hook 'python-mode-hook
+      (lambda ()
+        (lsp-mode)
+        ))
+
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(setq elpy-rpc-virtualenv-path package-user-dir (concat my-user-emacs-directory "var/elpy/rpc-venv"))
+*** pyls (LSP)
+
+- https://emacs-lsp.github.io/lsp-mode/page/lsp-pyls/
+  - https://github.com/palantir/python-language-server
+    - "The base language server requires Jedi to provide Completions, Definitions, Hover, References, Signature Help, and Symbols"
+
+: sudo python3 -m pip install 'python-language-server[all]'
+or even better:
+: python3 -m pip install --user 'python-language-server[all]'
+
+Optional:
+: sudo python3 -m pip install pyls-mypy
+
+*** DISABLED jedi (LSP)
+
+[2021-04-04 Sun 16:56] disabled: I want to test pure pyls 
+
+Setup according to https://github.com/zamansky/dot-emacs
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package lsp-jedi
+    :ensure t
+    :config
+    (with-eval-after-load "lsp-mode"
+      (add-to-list 'lsp-disabled-clients 'pyls)
+      (add-to-list 'lsp-enabled-clients 'jedi)))
+
+  (setq lsp-ui-doc-show-with-cursor nil)
 #+END_SRC
 
-enable elpy and use ipython:
-#+BEGIN_SRC emacs-lisp
-(elpy-enable)
-;; (elpy-use-ipython) ;; 2019-12-09: after updating packages, this got deprecated:
-;;      Error (use-package): elpy/:config: elpy-use-ipython is deprecated; see https://elpy.readthedocs.io/en/latest/ide.html#interpreter-setup
-(my-log-hostspecific "elpy-version" elpy-version) ;; will be written on elpy start, not before
-#+END_SRC
-
-** Switch for ipython (NOT YET TESTED)
+*** Switch to ipython (NOT YET TESTED)
 
 From [[https://www.reddit.com/r/emacs/comments/70chy1/emacs_ipython_completion/][this reddit]] and [[https://emacs.stackexchange.com/questions/24453/weird-shell-output-when-using-ipython-5][this solution]]: NOT TESTED YET! (2017-10-02)
 
@@ -2781,55 +3289,9 @@ tested/confirmed yet)
 Note: Org mode babel is using =org-babel-python-command= which is set
 elsewhere (to =python3= as of 2019-03-05).
 
-** auto-mode-list for Python files
+*** flymake, flycheck
 
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.py$" . company-mode))
-#+END_SRC
-
-** DISABLED ropemacs
-
-2018-08-31: disabled because path below is not found in my current
-setup. Need to investigate how to re-enable it or remove it.
-
-[[https://github.com/python-rope/ropemacs][ropemacs]] is an evironment that provides advanced things such as refactoring:
-
-http://www.saltycrane.com/blog/2010/05/my-emacs-python-environment/
-Ropemacs:
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'load-path (concat my-user-emacs-directory "vendor/pymacs-0.24-beta2"))
-(use-package pymacs)
-(pymacs-load "ropemacs" "rope-")
-(setq ropemacs-enable-autoimport t)
-#+END_SRC
-
-** auto-completion
-
-#+BEGIN_SRC emacs-lisp
-(use-package auto-complete
-  :ensure t
-)
-#+END_SRC
-
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-to-list 'load-path (concat my-user-emacs-directory "elpa/auto-complete-1.5.1"))
-(use-package auto-complete-config)
-(add-to-list 'ac-dictionary-directories (concat my-user-emacs-directory "elpa/auto-complete-1.5.1/dict"))
-(ac-config-default)
-
-(add-to-list 'auto-mode-alist '("\\.py$" . auto-complete-mode))
-#+END_SRC
-
-** pyflakes
-
-[[https://pypi.python.org/pypi/pyflakes][Pyflakes]] is a simple program which checks Python source files for errors:
-#+BEGIN_SRC emacs-lisp
-(setq python-check-command "pyflakes")
-#+END_SRC
-
-** flymake, flycheck
+| 2021-04-04 | I'm unsure if this is still necessary after switching to LSP/pyls |
 
 #+BEGIN_QUOTE
 [[https://www.emacswiki.org/emacs/FlyMake][FlyMake]] performs on-the-fly syntax checks on the files being edited
@@ -2868,36 +3330,7 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
         ))
 #+END_SRC
 
-** pylookup
-
-[[https://github.com/tsgates/pylookup][pylookup]]: Emacs mode for searching python documents with convenience
-
-#+BEGIN_SRC emacs-lisp
-  ;; add pylookup to your loadpath, ex) ~/.emacs.d/pylookup
-  (setq pylookup-dir (concat my-user-emacs-directory "contrib/pylookup"))
-  (add-to-list 'load-path pylookup-dir)
-  ;; load pylookup when compile time
-;  (eval-when-compile (require 'pylookup))
-  ;; set executable file and db file
-  (setq pylookup-program (concat pylookup-dir "/pylookup.py"))
-  (setq pylookup-db-file (concat pylookup-dir "/pylookup.db"))
-  ;; set search option if you want
-  ;; (setq pylookup-search-options '("--insensitive" "0" "--desc" "0"))
-
-  ;; to speedup, just load it on demand
-  (autoload 'pylookup-lookup "pylookup"
-    "Lookup SEARCH-TERM in the Python HTML indexes." t)
-
-  ;; MANUALLY run the DB update on LOCAL resources:
-  ;; 1) install Debian package "python-doc"
-  ;; 2) run: ~/.emacs.d/contrib/pylookup/pylookup.py -u ~doc/python2.7/html
-  (autoload 'pylookup-update "pylookup"
-    "Run pylookup-update and create the database at `pylookup-db-file'." t)
-
-  (define-key my-map "P" 'pylookup-lookup)
-#+END_SRC
-
-** hideshow-orgmode
+*** hideshow-orgmode
 
 I found [[https://github.com/logangrado/hideshow-orgmode][hideshow-orgmode]] via [[https://www.reddit.com/r/emacs/comments/795u0o/hideshoworgmode/][this reddit thread]]. It provides (Python)
 code outlining similar to Org-mode =TAB= visibility cycling. This is a
@@ -2906,32 +3339,20 @@ very nice thing to have. So far, I used yafolding-mode for it.
 This needs the hideshow minor mode =M-x hideshow-minor-mode= enabled
 to work.
 
-FIXXME: Maybe this snippet should only be executed when opening a
-Python file. I don't know if this is true and how I should implement
-it for now.
-
-- [ ] FIXXME: auto-load hs-minor-mode and hideshow-orgmode for Python files
-- [ ] FIXXME: invoke =hs-cycle-all= on opening a python file
-
 #+BEGIN_SRC emacs-lisp
-  (use-package hideshow-orgmode
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/hideshow-orgmode")))
-    :config
-    (hs-minor-mode 1)
-    (global-set-key (kbd "M-h") 'hs-cycle)
-    (global-set-key (kbd "M-H") 'hs-cycle-all)
+    (use-package hideshow-orgmode
+      :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/hideshow-orgmode")))
+      :config
+      (add-hook 'python-mode-hook (lambda ()
+                                  (hs-minor-mode 1)
+                                  ;;(hs-cycle-all)
+                                  (global-set-key (kbd "M-h") 'hs-cycle)
+                                  (global-set-key (kbd "M-H") 'hs-cycle-all)
+                                  ))
   )
-
-  ;(add-hook 'python-mode-hook (lambda () (hs-minor-mode 1)))
-  (add-hook 'python-mode-hook 'hs-minor-mode)
-  (add-hook 'python-mode-hook (lambda ()
-                                (hs-cycle-all)
-                                (global-set-key (kbd "M-h") 'hs-cycle)
-                                (global-set-key (kbd "M-H") 'hs-cycle-all)
-                                ))
 #+END_SRC
 
-** sphinx-doc.el
+*** sphinx-doc.el
 :PROPERTIES:
 :CREATED:  [2018-08-27 Mon 17:45]
 :END:
@@ -2947,6 +3368,7 @@ the requirement of the [[http://sphinx-doc.org/index.html][Sphinx documentation 
 #+BEGIN_SRC emacs-lisp
   (use-package sphinx-doc
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/sphinx-doc.el")))
+    :ensure t
     :config
     (add-hook 'python-mode-hook (lambda ()
                                   (require 'sphinx-doc)
@@ -2958,7 +3380,7 @@ Issue:
 : let: Symbol’s value as variable is void: sphinx-doc-python-indent
 ... when applied. I could not find anything related.
 
-** elpygen → C-c i
+*** elpygen → C-c i
 :PROPERTIES:
 :CREATED:  [2017-12-26 Tue 10:49]
 :END:
@@ -2973,16 +3395,16 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
 #+BEGIN_SRC emacs-lisp
   (use-package elpygen
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/elpygen")))
+    :ensure t
     :config
     (require 'elpygen)
     (define-key python-mode-map (kbd "C-c i") 'elpygen-implement)
   )
 #+END_SRC
 
-** END of Python-related stuff + Elpy
+*** END of Python-related stuff
 
 #+BEGIN_SRC emacs-lisp
-);; use-package
 );; if python binary found
 #+END_SRC
 * dired
@@ -3054,7 +3476,11 @@ Enabling already pre-insalled dired-x:
 (require 'dired-x)
 #+END_SRC
 
-Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]]:
+Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]]
+
+- Dired plus is not available on MELPA: [[https://www.reddit.com/r/emacs/comments/84thzd/what_happened_to_dired_package/][reddit thread]]. It needs to be
+  fetched via https://www.emacswiki.org/emacs/download/dired%2b.el. I
+  wrote an update shell script for it.
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired+
@@ -3976,7 +4402,7 @@ As of 2021-01-07, I stop using notmuch (again) because of:
 - not being able to create standard appointment invitations
 - no HTML or rendering HTML content takes some time
 - notmuch does not offer an out-of-the-box possibility to delete emails: https://www.reddit.com/r/emacs/comments/6wqfp3/notmuch_delete_mail/
-  - [[https://web.archive.org/web/20190615040045/http://www.holgerschurig.de:80/en/notmuch-polling-with-mbsync/][workaround]] 
+  - [[https://web.archive.org/web/20190615040045/http://www.holgerschurig.de:80/en/notmuch-polling-with-mbsync/][workaround]]
 
 FIXXME:
 https://www.reddit.com/r/emacs/comments/kqixcg/notmuch_how_to_get_messageid_open_current_email/
@@ -6307,7 +6733,7 @@ updated when one of the following conditions occur:
     (interactive)
     ;; NOTE: my-webarchive-tsfile-dir-path is defined in the section where system-specific paths are defined in general
     ;; check if updating the filename cache is necessary:
-    (when (or 
+    (when (or
            (not (boundp 'my-webarchive-tsfile-file-list))
            (not (boundp 'my-webarchive-tsfile-last-invocation-time))
            (eq my-webarchive-tsfile-file-list nil)
@@ -7503,7 +7929,7 @@ Don't know why I disabled this:
   (org-link-set-parameters "gemSpec_IDP_Dienst"
                            :face `(:foreground ,my-linkcolor-file :underline t))
 
-  (org-link-set-parameters "messageid" 
+  (org-link-set-parameters "messageid"
                            :face `(:foreground ,my-linkcolor-file :underline t))
 
   ;; Web links --------------------------------------------------------------------------
@@ -7543,7 +7969,7 @@ Don't know why I disabled this:
   (org-link-set-parameters "gemSpec_IDP_Dienst"
                            :face '(:foreground "MediumSeaGreen" :underline t))
 
-  (org-link-set-parameters "messageid" 
+  (org-link-set-parameters "messageid"
                            :face '(:foreground "MediumSeaGreen" :underline t))
 
   ;; Web links --------------------------------------------------------------------------
@@ -7690,7 +8116,7 @@ Testing =my-org-super-links-filter-description=:
 I asked the author of [[https://github.com/toshism/org-super-links][org-super-links]] with [[https://github.com/toshism/org-super-links/issues/21][this feature request]] to
 extend org-super-links such that it can be used to define dependencies
 for [[https://www.nongnu.org/org-edna-el/][org-edna]]. He denied for org-usper-links but implemented it as
-extra packages: 
+extra packages:
 
 1. extract heading selection interface stuff: [[https://github.com/toshism/org-linker][org-linker]]
 2. org-edna interface that uses it: [[https://github.com/toshism/org-linker-edna][org-linker-edna]]
@@ -11504,355 +11930,6 @@ fontification
 #+BEGIN_SRC emacs-lisp
 (message "→★ orgmode finished in %.2fs" (float-time (time-subtract (current-time) my-org-config-start-time)))
 #+END_SRC
-* Git
-:PROPERTIES:
-:CREATED:  [2018-09-02 Sun 10:41]
-:END:
-
-This is a section where all [[https://en.wikipedia.org/wiki/Git][Git]]-related configuration is happening.
-
-** magit → my-map g
-
-«[[https://github.com/magit/magit][Magit]] is an interface to the version control system Git, implemented
-as an Emacs package. Magit aspires to be a complete Git porcelain.
-While we cannot (yet) claim that Magit wraps and improves upon each
-and every Git command, it is complete enough to allow even experienced
-Git users to perform almost all of their daily version control tasks
-directly from within Emacs. While many fine Git clients exist, only
-Magit and Git itself deserve to be called porcelains.»
-
-Some people start using Emacs just to be able to use this nifty Git
-interface of Magit.
-
-
-#+BEGIN_SRC emacs-lisp
-;;2018-07-09 test when using GitHub version;;(setq with-editor-file-name-history-exclude 1) ;; https://github.com/syl20bnr/spacemacs/issues/7225
-
-(use-package magit
-  ;;2018-07-09 disabled because lots of errors on load;; :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/magit/lisp/")))
-
-  :if (and (my-eval-if-binary-or-warn "git") (my-system-type-is-gnu))
-  :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
-  ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
-  :config ;; executed after loading package
-
-  (setq magit-diff-refine-hunk 'all) ;; enable in-line diff highlighting
-
-  ;; full screen magit-status
-  ;; http://whattheemacsd.com//setup-magit.el-01.html
-  (defadvice magit-status (around magit-fullscreen activate)
-    (window-configuration-to-register :magit-fullscreen)
-    ad-do-it
-    (delete-other-windows))
-
-  (defun magit-quit-session ()
-    "restores the previous window configuration and kills the magit buffer"
-    (interactive)
-    (kill-buffer)
-    (jump-to-register :magit-fullscreen))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "g" #'magit-status my-map)
-#+END_SRC
-
-** DISABLED smeargle (highlighting)
-
-Disabled 2020-01-07 because I don't use it.
-
-- smeargle - Highlighting Regions by Last Updated Time (my-map c)
-  - https://github.com/syohex/emacs-smeargle/
-  - M-x smeargle  -  Highlight regions by last updated time.
-  - M-x smeargle-age  -  Highlight regions by age of changes.
-  - M-x smeargle-clear  - Clear overlays in current buffer
-
-#+BEGIN_SRC emacs-lisp
-  (use-package smeargle
-    :ensure t
-    :defer 110
-    :config ;; executed after loading package
-    ;;:bind (:map my-map ("c" . smeargle)) ;; CONFLICTS with my title capitalization
-#+END_SRC
-
-You can set highlighted colors of smeargle by changing smeargle-colors:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(custom-set-variables
- '(smeargle-colors '((older-than-1day   . "red")
-                     (older-than-3day   . "green")
-                     (older-than-1week  . "yellow")
-                     (older-than-2week  . nil)
-                     (older-than-1month . "orange")
-                     (older-than-3month . "pink")
-                     (older-than-6month . "cyan")
-                     (older-than-1year . "grey50"))))
-#+END_SRC
-
-And you can also set colors of =smeargle-commits= by =smeargle-age-colors=:
-
-#+BEGIN_SRC emacs-lisp
-(custom-set-variables
- '(smeargle-age-colors '((0 . nil)
-                         (1 . "grey80")
-                         (2 . "grey70")
-                         (3 . "grey60")
-                         (4 . "grey50")
-                         (5 . "grey40")
-                         (6 . "grey30")
-                         (7 . "grey20")
-                         (8 . "grey10"))))
-#+END_SRC
-
-You can specify parameters until =smeargle-age-threshold=. =age= is set to
-=smeargle-age-threshold= if actual age of changes is older than
-=smeargle-age-threshold=. Default value of =smeargle-age-threshold= is 7.
-
-Misc settings:
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(global-set-key (kbd "C-x v s") 'smeargle)
-(global-set-key (kbd "C-x v c") 'smeargle-commits)
-
-;; Highlight regions at opening file
-(add-hook 'find-file-hook 'smeargle)
-
-;; Updating after save buffer
-(add-hook 'after-save-hook 'smeargle)
-#+END_SRC
-
-End of smeargle:
-#+BEGIN_SRC emacs-lisp
-  );; end of smeargle
-#+END_SRC
-
-** DISABLED GitGutter
-:PROPERTIES:
-:CREATED:  [2018-09-01 Sat 16:39]
-:END:
-
-2019-12-31: DISABLED for performance reasons: https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/
-
-[[https://github.com/syohex/emacs-git-gutter][GitGutter]] is visualizing modified lines within the source code buffer.
-
-#+BEGIN_SRC emacs-lisp
-(use-package git-gutter
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-git-gutter/")))
-  :config
-#+END_SRC
-
-Either you use the global minor mode ...
-#+BEGIN_SRC emacs-lisp
-  (global-git-gutter-mode +1)
-
-  ;; inactivate git-gutter-mode in asm-mode and image-mode
-  (custom-set-variables
-    '(git-gutter:disabled-modes '(asm-mode image-mode)))
-#+END_SRC
-
-... or activate the minor mode for specific modes:
-#+BEGIN_SRC emacs-lisp :tangle no
-  (add-hook 'python-mode-hook 'git-gutter-mode)
-  (add-hook 'ruby-mode-hook 'git-gutter-mode)
-#+END_SRC
-
-Keyboard bindings: Jump to next/previous hunk
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "S-<f2>") 'git-gutter:previous-hunk)
-(global-set-key (kbd "S-<f3>") 'git-gutter:next-hunk)
-#+END_SRC
-
-More bindings:
-#+BEGIN_SRC emacs-lisp :tangle no
-(global-set-key (kbd "C-x C-g") 'git-gutter)
-(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
-
-;; Jump to next/previous hunk
-(global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
-(global-set-key (kbd "C-x n") 'git-gutter:next-hunk)
-
-;; Stage current hunk
-(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
-
-;; Revert current hunk
-(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
-
-;; Mark current hunk
-(global-set-key (kbd "C-x v SPC") #'git-gutter:mark-hunk)
-#+END_SRC
-
-If you set git-gutter:update-interval seconds larger than 0,
-git-gutter updates diff information in real-time by idle timer.
-#+BEGIN_SRC emacs-lisp :tangle no
-  (custom-set-variables
-  '(git-gutter:update-interval 2))
-#+END_SRC
-
-Pass option to 'git diff' command: You can pass git diff option to set
-git-gutter:diff-option.
-
-#+BEGIN_SRC emacs-lisp
-;; ignore all spaces
-(custom-set-variables
- '(git-gutter:diff-option "-w"))
-#+END_SRC
-
-Customize visualization:
-#+BEGIN_SRC emacs-lisp
-(custom-set-variables
- '(git-gutter:modified-sign "~ ") ;; two space
- '(git-gutter:added-sign "++")    ;; multiple character is OK
- '(git-gutter:deleted-sign "--"))
-
-(set-face-background 'git-gutter:modified "purple") ;; background color
-(set-face-foreground 'git-gutter:added "green")
-(set-face-foreground 'git-gutter:deleted "red")
-#+END_SRC
-
-You can change minor-mode name in mode-line to set =git-gutter:lighter=.
-Default is =GitGutter=. First character should be a space.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(custom-set-variables
- '(git-gutter:lighter " GG"))
-#+END_SRC
-
-End of git-gutter:
-#+BEGIN_SRC emacs-lisp
-)
-#+END_SRC
-
-** DISABLED git-timemachine
-
-2019-12-08: disabled because I was not using it.
-
-Step through historic versions: https://github.com/pidu/git-timemachine (2018-09-02: repo has been removed)
-
-[[http://emacsredux.com/blog/2014/07/22/travel-back-and-forward-in-git-history/][A page with an animated GIF]] showing its functionality.
-
-#+BEGIN_QUOTE
-Step through historic versions of git controlled file using everyone's
-favourite editor
-
-Visit a git-controlled file and issue =M-x git-timemachine= (or bind
-it to a keybinding of your choice). If you just need to toggle the
-time machine you can use =M-x git-timemachine-toggle=.
-
-Use the following keys to navigate historic version of the file
-
-| p | Visit previous historic version                                         |
-| n | Visit next historic version                                             |
-| w | Copy the abbreviated hash of the current historic version               |
-| W | Copy the full hash of the current historic version                      |
-| g | Goto nth revision                                                       |
-| q | Exit the time machine.                                                  |
-| b | Run magit-blame on the currently visited revision (if magit available). |
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp
-(use-package git-timemachine
-  :ensure t
-  :defer 120
-  :init
-#+END_SRC
-
-[[http://blog.binchen.org/posts/new-git-timemachine-ui-based-on-ivy-mode.html][Source]] -> start from selected revision instead of HEAD
-#+BEGIN_SRC emacs-lisp
-      (defun my-git-timemachine-show-selected-revision ()
-        "Show last (current) revision of file."
-        (interactive)
-        (let (collection)
-          (setq collection
-                (mapcar (lambda (rev)
-                          ;; re-shape list for the ivy-read
-                          (cons (concat (substring (nth 0 rev) 0 7) "|" (nth 5 rev) "|" (nth 6 rev)) rev))
-                        (git-timemachine--revisions)))
-          (ivy-read "commits:"
-                    collection
-                    :action (lambda (rev)
-                              (git-timemachine-show-revision rev)))))
-#+END_SRC
-
-Open git snapshot with the selected version. Based on ivy-mode:
-#+BEGIN_SRC emacs-lisp
-      (defun my-git-timemachine ()
-        "Open git snapshot with the selected version.  Based on ivy-mode."
-        (interactive)
-        (unless (featurep 'git-timemachine)
-          (require 'git-timemachine))
-        (git-timemachine--start #'my-git-timemachine-show-selected-revision))
-#+END_SRC
-
-end of git-timemachine:
-#+BEGIN_SRC emacs-lisp
-);; end of git-timemachine
-#+END_SRC
-
-** magit-log--add-date-headers
-:PROPERTIES:
-:CREATED:  [2019-12-17 Tue 18:48]
-:END:
-
-From: https://github.com/alphapapa/unpackaged.el
-
-This requires ov.el: https://github.com/emacsorphanage/ov
-#+BEGIN_SRC emacs-lisp
-(use-package ov
-   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ov/")))
-)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(defun unpackaged/magit-log--add-date-headers (&rest _ignore)
-  "Add date headers to Magit log buffers."
-  (when (derived-mode-p 'magit-log-mode)
-    (save-excursion
-      (ov-clear 'date-header t)
-      (goto-char (point-min))
-      (cl-loop with last-age
-               for this-age = (-some--> (ov-in 'before-string 'any (line-beginning-position) (line-end-position))
-                                        car
-                                        (overlay-get it 'before-string)
-                                        (get-text-property 0 'display it)
-                                        cadr
-                                        (s-match (rx (group (1+ digit) ; number
-                                                            " "
-                                                            (1+ (not blank))) ; unit
-                                                     (1+ blank) eos)
-                                                 it)
-                                        cadr)
-               do (when (and this-age
-                             (not (equal this-age last-age)))
-                    (ov (line-beginning-position) (line-beginning-position)
-                        'after-string (propertize (concat " " this-age "\n")
-                                                  'face 'magit-section-heading)
-                        'date-header t)
-                    (setq last-age this-age))
-               do (forward-line 1)
-               until (eobp)))))
-
-(define-minor-mode unpackaged/magit-log-date-headers-mode
-  "Display date/time headers in `magit-log' buffers."
-  :global t
-  (if unpackaged/magit-log-date-headers-mode
-      (progn
-        ;; Enable mode
-        (add-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
-        (advice-add #'magit-setup-buffer-internal :after #'unpackaged/magit-log--add-date-headers))
-    ;; Disable mode
-    (remove-hook 'magit-post-refresh-hook #'unpackaged/magit-log--add-date-headers)
-    (advice-remove #'magit-setup-buffer-internal #'unpackaged/magit-log--add-date-headers)))
- #+END_SRC
-
-** End of Git
-:PROPERTIES:
-:CREATED:  [2018-09-02 Sun 10:44]
-:END:
-
-#+BEGIN_SRC emacs-lisp
-) ;; end of magit use-package
-;(my-log-hostspecific "magit-version" magit-version) ;; doesn't work (anywhere here) for some reason
-#+END_SRC
-
 * PDF
 :PROPERTIES:
 :CREATED:  [2018-03-08 Thu 09:48]
@@ -12027,7 +12104,7 @@ Support for opening last known pdf position in pdf-view-mode provided by pdf-too
 (customize-set-variable 'tramp-default-user "vk")
 #+END_SRC
 
-* Misc modes/packages
+* Misc modes/packages (part II)
 
 Misc sources for packages:
 - 2017-05: [[https://www.reddit.com/r/emacs/comments/6dk5tv/what_are_some_packages_you_once_used_but_have/][What are some packages you once used but have found a better alternative? : emacs]]
@@ -12697,37 +12774,6 @@ I get a popup buffer that tells me what bindings I am able to use.
   (guide-key-mode 1)  ; Enable guide-key-mode
 
 )
-#+END_SRC
-
-** which-key - displays the available key bindings automatically
-:PROPERTIES:
-:CREATED:  [2018-07-15 Sun 20:06]
-:END:
-
-https://github.com/justbur/emacs-which-key
-
-I got the recommendation via [[https://www.reddit.com/r/emacs/comments/8x8rz7/my_emacs_key_binding_strategy/e22x2cu/][this reddit thread]] with the arguments,
-that =which-key= is inferior to =guide-key= which I used before::
-- more active
-- more features
-- more contributions
-
-when I do press my prefix for =my-map= and wait a bit,
-I get a popup buffer that tells me what bindings I am able to use.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-which-key/")))
-    :defer 120
-    :config ;; executed after loading package
-    (which-key-setup-side-window-right)
-    (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
-    (add-to-list 'which-key-replacement-alist '(("RET" . nil) . ("⏎" . nil)))
-    (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⇤" . nil)))
-    (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil)))
-
-    (which-key-mode)
-  )
 #+END_SRC
 
 ** vcard-mode
@@ -13420,24 +13466,6 @@ https://github.com/rolandwalker/unicode-fonts
 ;(require 'goto-chg)
 #+END_SRC
 
-** highlight-symbol → my-map h
-
-This package does highlight all occurrences of a given word. Very
-handy when programming: visualize all occurrences of a variable/function.
-
-#+BEGIN_SRC emacs-lisp
-(use-package highlight-symbol
-  :ensure t
-  :defer 110
-  ;;(bind-key (kbd "h") #'highlight-symbol my-map)
-  :bind (:map my-map ("h" . highlight-symbol))
-  )
-;; original: (global-set-key [(control f3)] 'highlight-symbol)
-;; original: (global-set-key [f3] 'highlight-symbol-next)
-;; original: (global-set-key [(shift f3)] 'highlight-symbol-prev)
-;; original: (global-set-key [(meta f3)] 'highlight-symbol-query-replace)
-#+END_SRC
-
 ** DISABLED restclient
 
 [[https://github.com/pashky/restclient.el][GitHub - pashky/restclient.el: HTTP REST client tool for emacs]]
@@ -14026,17 +14054,6 @@ process for my situation:
 )
 #+END_SRC
 
-** projectile
-
-| 2020-12-10 | initial setup |
-
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :ensure t
-  :defer 110
-)
-#+END_SRC
-
 ** keycast - show pressed keys
 
 | 2021-03-14 | installed for screen recording |
@@ -14118,7 +14135,7 @@ PREVIOUS (simple) approach:
     )
   )
 ;;fancy search:  (global-set-key "\C-s" 'swiper)
-;;normal search: 
+;;normal search:
 (global-set-key "\C-S" 'isearch-forward)
 #+END_SRC
 
@@ -15173,12 +15190,13 @@ Not org related but might be candidates as well:
   _c_ycle all      M-H   _n_   error →  F6   ^^
   ^^                     _<_ ← symbol        ^^
   ^^                     _>_   symbol →      ^^
+  ^^                     _d_ definition      ^^
+  ^^                     _r_ references      ^^
   ^^                     ^^                  ^^
   ^Edit^                 ^Help^              ^^
   ^^─────────────────────^^──────────────────^^────────────────
   _i_mplement    C-c i   _H_elp (pylookup)   ^^
-  _r_efactor C-c C-r r   M-_._  goto definition                  ^^
-  sphinx-_d_oc           ^^                  ^^
+  ^^                     ^^                  ^^
   ^^                     ^^                  ^^
   ")
   ("q" nil "quit")
@@ -15190,10 +15208,13 @@ Not org related but might be candidates as well:
   ("<" highlight-symbol-prev nil)
   (">" highlight-symbol-next nil)
 
-  ("i" elpygen-implement nil)
-  ("r" elpy-refactor nil)
-  ("d" sphinx-doc nil)
-  ("." elpy-goto-definition nil)
+  ("d" lsp-find-definition nil)
+  ("r" lsp-find-references nil)
+
+  ;;old;; ("i" elpygen-implement nil)
+  ;;old;; ("r" elpy-refactor nil)
+  ;;old;; ("d" sphinx-doc nil)
+  ;;old;; ("." elpy-goto-definition nil)
 
   ("H" pylookup-lookup nil)
 ;  (""  nil)
@@ -15562,7 +15583,7 @@ FIXXME: add more features:
   _r_ename current window config
   _c_reate new window config
   _C_lose current window config     ^^
-  new _f_rame                       ^^                      
+  new _f_rame                       ^^
   _!_ save-buffers-kill-terminal    ^^                      ▄
   ^^            ▄                   C-x 2  split _v_ertical ▄      ^^  C-x 0  _d_elete this
        _t_oggle ▄ ←→▐▐              ^^                             ^^  C-x 1  _k_eep this, delete others
