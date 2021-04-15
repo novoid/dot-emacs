@@ -13594,7 +13594,7 @@ When you are working with multiple tasks in parallel, you most likely
 know the issue of getting lost in your buffers or destroying your
 window setup for an in-between task.
 
-[[https://github.com/wasamasa/eyebrowse][eyebrowse]] helps mitigating those issues by providing "saved buffer
+[[https://depp.brause.cc/eyebrowse/][eyebrowse]] helps mitigating those issues by providing "saved buffer
 configurations" and assign it to separate slots that are addressed by
 their number. If you know [[https://www.gnu.org/software/screen/][GNU screen]] or [[https://en.wikipedia.org/wiki/Tmux][tmux]] in your shell, this is
 quite familiar to you.
