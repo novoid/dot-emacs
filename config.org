@@ -2567,7 +2567,7 @@ within Org-mode only is defined in my yankpad file.
     ;;  (global-company-mode t)
 
     ;; disable company mode in org mode:
-    (add-hook 'org-mode-hook (lambda () (company-mode 1)))
+    (add-hook 'org-mode-hook (lambda () (company-mode -1)))
 )
 #+END_SRC
 
