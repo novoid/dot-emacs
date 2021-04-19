@@ -1972,7 +1972,8 @@ I get a popup buffer that tells me what bindings I am able to use.
     (which-key-setup-side-window-right)
     (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
     (add-to-list 'which-key-replacement-alist '(("RET" . nil) . ("⏎" . nil)))
-    (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⇤" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⌦" . nil)))
+    (add-to-list 'which-key-replacement-alist '(("ESC" . nil) . ("⎋" . nil)))
     (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil)))
 
     (which-key-mode)
