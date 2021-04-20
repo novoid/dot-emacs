@@ -3630,7 +3630,7 @@ Provides:
 )
 #+END_SRC
 
-** DISABLED image-dired+
+** image-dired+
 :PROPERTIES:
 :CREATED:  [2018-06-29 Fri 12:58]
 :END:
@@ -3639,6 +3639,11 @@ Image-dired extensions: https://www.emacswiki.org/emacs/ImageDired
 
 - Non-blocking thumbnail creating
 - Adjust image to window
+
+- https://www.youtube.com/watch?v=NrY3t3W0_cM → image-dired demo
+  - basic usage
+  - open externally
+  - tag images
 
 [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html][Emacs manual]]:
 
