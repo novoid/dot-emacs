@@ -1716,6 +1716,31 @@ My favorite light themes: leuven, whiteboard, solarized-light,
   )
 #+END_SRC
 
+I was using DejaVu Sans Mono a while ago:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
+;(add-to-list 'default-frame-alist
+;                       '(font . "DejaVu Sans Mono-10"))
+#+END_SRC
+
+- [2021-05-05 Wed] Discussion: [[https://www.reddit.com/r/emacs/comments/n3q6s4/whats_your_favorite_font_for_emacs/][What's your favorite font for emacs? : emacs]] → https://www.jetbrains.com/lp/mono/
+  - I'm trying JetBrains Mono for a while
+  - [2021-05-14 Fri] disabled and moving to FantasqueSansMono-NoLoopK
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
+;; (add-to-list 'default-frame-alist '(line-spacing . 0.2))
+#+END_SRC
+
+- [2021-05-14 Fri] I'm switching to FantasqueSansMono-NoLoopK because JetBrains Mono does not emphasize *boldface* boldly enough for me
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist '(font . "Fantasque Sans Mono-12"))
+#+END_SRC
+
+ ------------
+
 Host-specific font sizes: values are in 1/10pt → 100 are 10pt
 
 #+BEGIN_SRC emacs-lisp
@@ -1742,14 +1767,8 @@ Host-specific font sizes: values are in 1/10pt → 100 are 10pt
   (set-face-attribute 'default (selected-frame) :height 110) ;; 2019-12-04: bigger font on native 30" resolution
   )
 (when (my-system-is-rise)
-  (set-face-attribute 'default (selected-frame) :height 90)
+  (set-face-attribute 'default (selected-frame) :height 100)
 )
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(set-face-attribute 'default nil :font "DejaVu Sans Mono-10")
-;(add-to-list 'default-frame-alist
-;                       '(font . "DejaVu Sans Mono-10"))
 #+END_SRC
 
 Different font size for mode-line (from [[https://emacs.stackexchange.com/questions/1030/how-can-i-set-different-font-sizes-for-buffers-and-for-the-mode-line][this stackexchange page]]):
@@ -1763,7 +1782,7 @@ Different font size for mode-line (from [[https://emacs.stackexchange.com/questi
       (lambda (face) (set-face-attribute face nil :font "DejaVu Sans Mono-8"))
       faces))
 #+END_SRC
-
+ 
 ** DISABLED Modeline with icons
 :PROPERTIES:
 :CREATED:  [2018-07-23 Mon 13:44]
