@@ -4592,6 +4592,44 @@ Helper function to open any given message-id in Evolution:
 
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (defun my-convert-mail-header-to-org-link ()
+  "Assumes an email header in the killring, parses it and returns an org mode link for it."
+  (interactive)
+  (with-temp-buffer
+    (save-match-data
+
+    (yank) ;; yank from clipboard
+    (goto-char (point-min)) ;; start from top
+    (re-search-forward "^Message-Id:.+<\\(.+\\)>$" nil nil 1)
+    (setq messageid (match-string 1))
+
+    (goto-char (point-min))
+    (re-search-forward "^From:	\\(.+\\)$" nil nil 1)
+    (setq from (string-replace "\"" "" (match-string 1)))
+
+    (goto-char (point-min))
+    (re-search-forward "^Subject:	\\(.+\\)$" nil nil 1)
+    (setq subject (match-string 1))
+
+    (goto-char (point-min))
+    (re-search-forward "^Date:	\\(.+\\)$" nil nil 1)
+    (setq rawdate (match-string 1))
+    (setq date 
+    (let ((time (date-to-time rawdate)))
+      (set-time-zone-rule t) ;; Use Universal time.
+      (prog1 (format-time-string "%Y-%m-%d %H:%M" time)
+        (set-time-zone-rule nil))))
+
+    ;;(message (concat "MID: " messageid " F:" from " S:" subject "RD:" rawdate " D:" date))
+    ))
+    (insert (concat "[[messageid:" messageid "][" date " " from ": " subject "]]"))
+)
+
+(bind-key "e" #'my-convert-mail-header-to-org-link my-map)
+
+#+END_SRC
+
 Note that the link colors are set via =my-set-linkcolors=.
 
 - test link for testing color: [[messageid:this-is-a-test@example.com][2020-07-27T15:57:45.000Z First Last: Subject]]
