@@ -4466,10 +4466,11 @@ To set lynx as default html renderer use this:
 (setq mm-text-html-renderer 'lynx) or check other options.
 #+END_QUOTE
 
-** Thunderbird
+** DISABLED Thunderbird
 
 | 2021-02-26 | With an unintended upgrade from Thunderbird 68 to 78, the original =thunderlink= is broken. |
 | 2021-02-28 | Setup of [[https://camiel.bouchier.be/en/cb_thunderlink][cb_thunderlink]] as a TB 78.x replacement                                            |
+| 2021-05-26 | Moved from Thunderbird to GNOME Evolution, disabling this                                   |
 
 I got this workflow from https://vxlabs.com/2019/04/20/link-thunderbird-emails-from-emacs-orgmode/
 
@@ -4567,6 +4568,50 @@ You should then get something similar to:
 : [[messageid:1578475923.390512.037689999@example.com][[1/9/2020 - 11:30:41 First Last <name@example.com>: Things I wanted to say to you]]
 
 When =C-c C-o= onto it, Thunderbird should pop up showing the email
+with the corresponding message ID.
+
+** GNOME Evolution
+
+| 2021-05-26 | migrated from Thunderbird to [[https://help.gnome.org/users/evolution/stable/][GNOME Evolution]], re-creating the workflow here |
+
+Helper function to open any given message-id in Evolution:
+#+BEGIN_SRC emacs-lisp
+  ;; modify this for your system
+  (defun my-open-message-id-in-evolution (message-id)
+  "open an email with a given message-ID in Evolution"
+  (interactive)
+  (start-process
+   (concat "mid: " message-id)
+   ;;nil
+   "evolution-messageid-openings"
+   "/usr/bin/flatpak"
+   "run" "org.gnome.Evolution" (concat "mid:<" message-id ">")
+   )
+  )
+
+  (org-link-set-parameters "messageid" :follow #'my-open-message-id-in-evolution)
+
+#+END_SRC
+
+Note that the link colors are set via =my-set-linkcolors=.
+
+- test link for testing color: [[messageid:this-is-a-test@example.com][2020-07-27T15:57:45.000Z First Last: Subject]]
+
+Installation:
+1. install GNOME Evolution in version 3.39+ because [[https://bugzilla.gnome.org/show_bug.cgi?id=788192][Evolution added the command line switch with this version]].
+   - =flatpak install --user --from https://dl.flathub.org/repo/appstream/org.gnome.Evolution.flatpakref=
+3. if you need the flatpak version (because your distro has only older versions), you should be finished
+   - If [[https://gitlab.gnome.org/GNOME/evolution/-/issues/1508][my feature request is implemented]], this will get much easier!
+4. if you did not install Evolution via flatpak, adapt the code above
+5. Evolution: Account preferences → Receiving Options → [X] Synchronize remote mail locally in all folders
+
+Workflow to use it:
+1. FIXXME: find a workflow to generate Message-ID links in Evolution
+
+You should then get something similar to:
+: [[messageid:1578475923.390512.037689999@example.com][[1/9/2020 - 11:30:41 First Last <name@example.com>: Things I wanted to say to you]]
+
+When =C-c C-o= onto it, Evolution should pop up showing the email
 with the corresponding message ID.
 
 * LaTeX
