@@ -1998,6 +1998,8 @@ I get a popup buffer that tells me what bindings I am able to use.
   )
 #+END_SRC
 
+Please note [[https://github.com/novoid/dot-emacs/pull/3][this pull request]] that explains why my characters are non-standard ones. It also adds a symbol for ESC.
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
@@ -12916,6 +12918,8 @@ for it, I can save precious horizontal space.
   (nyan-mode t)
 )
 #+END_SRC
+
+If you do find Nyan too childish, [[https://github.com/jdtsmith/mlscroll][mlscroll]] is an interactive neutral alternative.
 
 ** DISABLED highlight-tail
 
