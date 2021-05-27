@@ -4601,19 +4601,19 @@ Helper function to open any given message-id in Evolution:
 
     (yank) ;; yank from clipboard
     (goto-char (point-min)) ;; start from top
-    (re-search-forward "^Message-Id:.+<\\(.+\\)>$" nil nil 1)
+    (re-search-forward "^Message-Id:.+<\\(.+\\)>[ ]*$" nil nil 1)
     (setq messageid (match-string 1))
 
     (goto-char (point-min))
-    (re-search-forward "^From:	\\(.+\\)$" nil nil 1)
+    (re-search-forward "^From:[	 ]+\\(.+?\\)[ ]*$" nil nil 1)
     (setq from (string-replace "\"" "" (match-string 1)))
 
     (goto-char (point-min))
-    (re-search-forward "^Subject:	\\(.+\\)$" nil nil 1)
+    (re-search-forward "^Subject:[	 ]+\\(.+?\\)[ ]*$" nil nil 1)
     (setq subject (match-string 1))
 
     (goto-char (point-min))
-    (re-search-forward "^Date:	\\(.+\\)$" nil nil 1)
+    (re-search-forward "^Date:[	 ]+\\(.+?\\)[ ]*$" nil nil 1)
     (setq rawdate (match-string 1))
     (setq date 
     (let ((time (date-to-time rawdate)))
