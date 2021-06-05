@@ -638,6 +638,16 @@ started overwriting them here:
 )
 #+END_SRC
 
+** bookmarks
+
+| 2021-06-05 | started to use bookmarks after watching [[https://www.youtube.com/watch?v=ajiEBK2swKo][this video]] |
+
+#+BEGIN_SRC emacs-lisp
+(setq bookmark-save-flag 1) ;; save bookmarks on every change
+
+(setq bookmark-default-file (concat my-user-emacs-directory "/var/bookmark-default.el")) ;; this was set somewhere else; I did not look how/why. I just set it here again to make it explicit.
+#+END_SRC
+
 * use-package and quelpa
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:09]
