@@ -12459,6 +12459,7 @@ you can then access this list through a command or the menu.»
 (autoload 'recentf "recentf.el")
 (recentf-mode 1)
 (setq recentf-max-menu-items 50)
+(setq recentf-max-saved-items 50)
 #+END_SRC
 
 ** DISABLED Confluence: vk-open-as-confluence-page() → my-map C
