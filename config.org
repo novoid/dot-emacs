@@ -13546,6 +13546,7 @@ This enhances the style of Emacs IMHO.
   :defer 120
   :config
   (mode-icons-mode)
+  (add-hook 'dired-mode-hook #'mode-icons--mode-disable) ;; with mode-icons, visiting a dir with dired takes up *lots* of CPU for =mode-icons-reset= (performance-issue)
 )
 #+END_SRC
 
