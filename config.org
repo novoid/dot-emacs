@@ -16283,6 +16283,19 @@ approximately 25 seconds as of 2019-04-17.
        (my-org-agenda)
        (message "my-org-startup-visibility …")
        (my-org-startup-visibility)
+
+       ;; setup my buffers the way I like it:
+       (my-hsplit-last-buffer)          ;; split horizontal: left is agenda
+       (my-mobile-org-import)           ;; switch to inbox.org (right side) and move latest input from mobileorg.org into inbox.org
+       (eyebrowse-create-window-config) ;; create 2nd config for misc personal stuff
+       (switch-to-buffer "notes.org")   ;; open notes buffer 
+       ;; MAYBE: open misc.org on the other side
+       (eyebrowse-rename-window-config 2 "misc") ;; name 2nd config
+       (eyebrowse-create-window-config) ;; create 3rd config for rise
+       (switch-to-buffer "rise.org")    ;; open rise buffer
+       (org-shifttab)                   ;; toggle visibility
+       (eyebrowse-rename-window-config 3 "rise") ;; set name for rise config
+       (other-window) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
        )
       )
 )
