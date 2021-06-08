@@ -15705,7 +15705,7 @@ FIXXME: add more features:
   _._   window →                      ...                    ^^       prefix ,  rename
   ^↦^ previous window config        _9_ switch to window config 9     prefix l  last window
   _r_ename current window config
-  _c_reate new window config
+  _c_reate new window config        ^^                                _b_ ibuffer-list-buffers 
   _C_lose current window config     ^^
   new _f_rame                       ^^
   _!_ save-buffers-kill-terminal    ^^                      ▄
@@ -15746,6 +15746,8 @@ FIXXME: add more features:
     ("s" my-toggle-split-and-single-window nil :color blue)
 
     ("w" window-swap-states nil)
+
+    ("b" ibuffer-list-buffers nil)
 
 ;;    ("-" shrink-window-horizontally nil :color red)
 ;;    ("=" enlarge-window-horizontally nil :color red)
