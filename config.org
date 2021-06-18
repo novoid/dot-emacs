@@ -252,6 +252,15 @@ To avoid "Error saving to X clipboard manager." as well as endless loop on exiti
 (setq x-select-enable-clipboard-manager nil)
 #+END_SRC
 
+Turn off header when printing with =M-x ps-print-buffer-with-faces= and format according to [[https://www.emacswiki.org/emacs/PsPrint][this page]]:
+#+BEGIN_SRC emacs-lisp
+(setq ps-paper-type 'a4
+	  ps-font-size 9.0
+	  ps-print-header nil
+	  ps-landscape-mode nil
+	  ps-number-of-columns 1)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
