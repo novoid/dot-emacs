@@ -15017,11 +15017,11 @@ visualization is brilliant.
 (defhydra hydra-search (:color blue)
     (concat my-f-key-settings
   "
-  ^^Rifle                   ^^Profiler          ^^Bookmarks            Ex.:    #A NEXT :foo:bar: !unwanted
-  ^^────────────────────────^^──────────────────^^────────────────
-  rifle _c_urrent buffer    _p_rofile CPU       _m_ark new bookmark   C-x r m
-  rifle _o_pen buffers      _r_eport            jump _b_ookmark       C-x r b
-  rifle _a_genda files      profiler sto_P_     _l_ist bookmarks      C-x r l
+  ^^Rifle                   ^^Profiler          ^^Bookmarks                    ^^MISC                    Ex.:    #A NEXT :foo:bar: !unwanted
+  ^^────────────────────────^^──────────────────^^─────────────────────────────^^────────────────
+  rifle _c_urrent buffer    _p_rofile CPU       _m_ark new bookmark  C-x r m   _d_ired-jump
+  rifle _o_pen buffers      _r_eport            jump _b_ookmark      C-x r b  
+  rifle _a_genda files      profiler sto_P_     _l_ist bookmarks     C-x r l  
   rifle whole _O_rg dir     ^^                  ^^
   ^^                        ^^                  ^^
   ")
@@ -15039,6 +15039,8 @@ visualization is brilliant.
   ("m" bookmark-set nil)
   ("b" bookmark-jump nil)
   ("l" bookmark-bmenu-list nil)
+
+  ("d" dired-jump nil)
 )
 
 (global-set-key [f9] 'hydra-search/body)
