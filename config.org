@@ -12605,10 +12605,12 @@ Automatically save buffers more often within certain modes:
   (setq real-auto-save-use-idle-timer t);; t → use *idle* timer instead; nil → use fixed timer
 
   ;; Auto save interval is 10 seconds by default. You can change it:
-  (setq real-auto-save-interval 3600) ;; hourly
-  (when (my-system-is-rise)
-    (setq real-auto-save-interval 60);; after one minute idle, save on the t490 + Xununtu 1910 due to XOrg instability issues
-  )
+  (setq real-auto-save-interval 1800) ;; every 30 minutes of idle time
+
+  ;; 2021-06-19 XOrg on Xubuntu 20.04 is stable ;; (when (my-system-is-rise)
+  ;; 2021-06-19 XOrg on Xubuntu 20.04 is stable ;;   (setq real-auto-save-interval 60);; after one minute idle, save on the lenovo t490 + Xubuntu 19.10 due to XOrg instability issues
+  ;; 2021-06-19 XOrg on Xubuntu 20.04 is stable ;; )
+
   ;;(setq real-auto-save-use-idle-timer t);; FIXXME: testing https://github.com/ChillarAnand/real-auto-save/issues/43
   ;;(setq real-auto-save-interval 15) ;; FIXXME: testing https://github.com/ChillarAnand/real-auto-save/issues/43
   ;;(real-auto-save-activate-advice) ;; suppress confirmation for Makefiles
