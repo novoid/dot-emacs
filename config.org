@@ -2389,7 +2389,7 @@ flyspell.el <http://kaolin.unice.fr/~serrano/>
 (setq flyspell-issue-welcome-flag nil)
 
 (when (my-system-type-is-windows)
-  (setq flyspell-default-dictionary "british")
+  (setq flyspell-default-dictionary "american")
 )
 (when (my-system-type-is-gnu)
   (setq flyspell-default-dictionary "de_AT")
@@ -2406,8 +2406,8 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
                   "~latin1" iso-8859-1)))
 
 (when (my-system-type-is-windows)
-    ;; use british english on powerplantwin:
-    (let ((langs '("british" "german8")))
+    ;; use english on powerplantwin:
+    (let ((langs '("american" "german8")))
       (setq lang-ring (make-ring (length langs)))
       (dolist (elem langs) (ring-insert lang-ring elem)))
   )
@@ -2418,7 +2418,7 @@ from here to my-toggle-ispell-english-deutsch: see id:2014-01-06-aspell-issue
       (dolist (elem langs) (ring-insert lang-ring elem)))
 )
 ;;  ;; use american english on all other systems:
-;;  (let ((langs '("german8" "british")))
+;;  (let ((langs '("german8" "american")))
 ;;    (setq lang-ring (make-ring (length langs)))
 ;;    (dolist (elem langs) (ring-insert lang-ring elem)))
 ;;  )
@@ -2437,7 +2437,9 @@ between them:
     (ispell-change-dictionary lang)))
 #+END_SRC
 
-** auto-dictionary-mode
+** DISABLED auto-dictionary-mode
+
+| 2021-06-20 | disabled since I can't remember that it did anything for me |
 
 This mode determines the dictionary language for the current buffer
 according to the text found. It switches language automatically when
@@ -12491,7 +12493,7 @@ a WYSIWYG editor. This killed my beautiful "edit in Emacs" method:
  (dolist (hook '(confluence-mode-hook))
    (add-hook hook (lambda ()
              (flyspell-mode 1)
-             (ispell-change-dictionary "british")
+             (ispell-change-dictionary "american")
              (flyspell-buffer)
              ))
    )
