@@ -15228,6 +15228,7 @@ Not org related but might be candidates as well:
     ^^                               generate & copy _i_d                                        ^^
     ^^                               _t_ag headline according to words                           ^^
     ^^                               _w_ebarchive tsfile                                         ^^
+    ^^                               indent-_r_igidly   C-x TAB                                  ^^
     ^^                               ^^                                                          ^^
     ^^Filter                         ^^Export                         ^^MISC
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
@@ -15306,6 +15307,7 @@ Not org related but might be candidates as well:
     ("N" (lambda () (interactive) (org-set-property "NOBLOCKING" "t")) nil)
     ("o" (lambda () (interactive) (org-set-property "ORDERED" "t")) nil)
 
+    ("r" indent-rigidly nil)
 
     ("q" nil "quit")
 
