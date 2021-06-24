@@ -15548,8 +15548,8 @@ Not org related but might be candidates as well:
   _c_ollapse mode       _v_idir (C-x C-q)     _s_ize ordered     C  copy/clone        C-t d    image-dired+ of marked files  M chmod
   _o_pen in file manager      ^^              _h_uman size       r  rename/move       <percent> l  lowercase                 O chown
   _O_pen in tmux        _SPC_ filetags.el     _1_ time ordered   !  pipe to shell     <percent> u  uppercase                 S ln -s
-  _i_mage thumbnails    ^^                    _n_ormal ordered   x  delete flagged    <percent> &  flag temp files
-  _(_ toggle details    ^^                    ^^                 c  compress 
+  _i_mage thumbnails    ^^                    _n_ormal ordered   x  delete flagged    <percent> &  flag temp files           C-x C-f  create file
+  _(_ toggle details    ^^                    ^^                 c  compress
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
 
