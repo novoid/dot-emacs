@@ -2584,7 +2584,9 @@ within Org-mode only is defined in my yankpad file.
   ;;:defer 110
   :init
   (setq yankpad-file (concat my-org-files-path "yankpad.org"))
-  :bind (:map my-map ("SPC" . yankpad-insert))
+  :bind (:map my-map ("SPC" . yankpad-insert)
+                     ("y" . yankpad-expand)
+        )
   :config
   (bind-key "<S-f5>" 'yankpad-expand)
   (bind-key "<S-f6>" 'yankpad-map)
