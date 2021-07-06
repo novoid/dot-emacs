@@ -6885,6 +6885,29 @@ updated when one of the following conditions occur:
 
 #+END_SRC
 
+*** my-mark-block
+
+| 2021-07-06 | Marks the current block at point including BEGIN and END lines. |
+
+Just like =org-babel-mark-block= but for all block types (between
+=#+BEGIN_= and =#+END_=) and it marks including the BEGIN and END
+lines. It's not clever enough to detect quoted block begin/end strings.
+
+#+BEGIN_SRC emacs-lisp :results none
+  (defun my-mark-block()
+    "marks the block at point including BEGIN and END lines."
+    (interactive)
+    ;; you don't want to use save-excursion here since it resets your point, not staying at the located begin of block position.
+    (search-forward (concat "#+" "END_") nil t);; go to end of the block
+    (end-of-line)
+    (set-mark-command nil)
+    (search-backward (concat "#+" "BEGIN_") nil t);; go to start of the block
+    (setq deactivate-mark nil))
+    )
+
+  (bind-key "b" 'my-mark-block my-map)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
