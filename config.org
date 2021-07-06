@@ -6449,10 +6449,13 @@ This is part 4/4 of the soluiton to split up blocks via =M-RET=:
 (advice-add 'org-meta-return :before-until #'my-org-meta-return-advice)
 #+END_SRC
 
-*** my-newsrob-capture-fix()
+*** DISABLED my-newsrob-capture-fix()
+CLOSED: [2021-07-06 Tue 18:38]
 :PROPERTIES:
 :CREATED:  [2019-02-16 Sat 16:11]
 :END:
+
+| 2021-07-06 | Situation with NewsRob and capture did change: not needed for quite some time → disabling it |
 
 Currently as of 2019-02-16, I'm using [[https://www.appbrain.com/app/newsrob-google-reader-rss/com.newsrob][NewsRob Android]] for reading Atom
 and RSS feeds.
@@ -7323,7 +7326,10 @@ END of the templates:
           )
         )
 #+END_SRC
-*** Moving web bookmarks from =inbox.org= to =notes.org= → my-map b
+
+*** DISABLED Moving web bookmarks from =inbox.org= to =notes.org= → my-map b
+
+| 2021-07-06 | Not used for quite some time → disabled |
 
 Smart moving bookmark headings from =inbox.org= to =notes.org=
 - see id:2014-03-09-inbox-to-bookmarks or read http://www.karl-voit.at/2014/08/10/bookmarks-with-orgmode/
@@ -7387,10 +7393,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 
   (bind-key "b" 'my-save-bookmark my-map)
 #+END_SRC
-
-#+RESULTS:
-: my-save-bookmark
-
+ 
 ** Refiling
 
 - http://orgmode.org/manual/Capture-_002d-Refile-_002d-Archive.html
