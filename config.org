@@ -15260,13 +15260,13 @@ Not org related but might be candidates as well:
     ^^                               _w_ebarchive tsfile                                         ^^
     ^^                               indent-_r_igidly   C-x TAB                                  ^^
     ^^                               ^^                                                          ^^
-    ^^Filter                         ^^Export                         ^^MISC
-    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────
-    filter open todos by _t_ags      _R_eddit/Wiki.js (region)        _s_ynonym
-    _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word
-    _3_ org-tags-sparse-tree         ^^                               _S_pray (speed reading)
-    _f_ocus agenda (prio A; sched .) ^^                               _W_eather Graz
-    _F_ocus disabled for agenda      ^^                               _!_ save-buffers-kill-terminal
+    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
+    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
+    filter open todos by _t_ags      _R_eddit/Wiki.js (region)                                        y  yankpad-expand 
+    _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word                   b  my-mark-block
+    _3_ org-tags-sparse-tree         ^^                                                               F  my-sparse-tree-with-tag-filter
+    _f_ocus agenda (prio A; sched .) ^^                               _W_eather Graz                  S  my-synonym-current-word
+    _F_ocus disabled for agenda      ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
     ")
 
     ("f" (lambda ()
@@ -15315,9 +15315,7 @@ Not org related but might be candidates as well:
     ("3" org-tags-sparse-tree nil)
 
     ("R" my-reddit-export-via-pandoc nil)
-    ("s" my-synonym-current-word nil)
     ("d" define-word-at-point nil)
-    ("S" spray-mode nil)
     ("W" (lambda () (interactive) (wttrin-query "graz")) nil)
     ("n" org-add-note nil)
     ("c" helm-org-contacts nil)
