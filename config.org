@@ -11181,9 +11181,9 @@ Gets "public voit"-URL from clipboard and jumps to its Org-mode heading:
       )
     )
 #+END_SRC
+binding the function: 2021-07-07 disabled because I'm happy with =M-x ...= and I don't use this binding
 
-binding the function:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (bind-key "l" #'my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard my-map)
 #+END_SRC
 
@@ -15989,7 +15989,9 @@ I tried some of those but they did not stick:
 (global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
 #+END_SRC
 
-** boxquote → my-map [qQ]
+** DISABLED boxquote → my-map [qQ]
+
+| 2021-07-07 | Disabled because I wasn't using it for over a decade |
 
 [[https://www.emacswiki.org/emacs/BoxQuote][Box quote]] does something like this:
 : ,----
