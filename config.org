@@ -6904,7 +6904,7 @@ lines. It's not clever enough to detect quoted block begin/end strings.
     (end-of-line)
     (set-mark-command nil)
     (search-backward (concat "#+" "BEGIN_") nil t);; go to start of the block
-    (setq deactivate-mark nil))
+    (setq deactivate-mark nil)
     )
 
   (bind-key "b" 'my-mark-block my-map)
