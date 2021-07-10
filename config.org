@@ -6910,6 +6910,35 @@ lines. It's not clever enough to detect quoted block begin/end strings.
   (bind-key "b" 'my-mark-block my-map)
 #+END_SRC
 
+*** my-rise-update-project-tables
+
+| 2021-07-10 | established to update two column view dynamic block tables which takes ~20 minutes somehow (performance) |
+
+#+BEGIN_SRC emacs-lisp
+(defun my-rise-update-project-tables ()
+  "Updates the two tables that contain focus and non-focus projects"
+  (interactive)
+  (save-excursion
+      (save-some-buffers t) ;; get latest contact changes
+      (setq my-rise-update-project-tables-start-time (current-time))
+    
+      (switch-to-buffer "rise.org")
+      (beginning-of-buffer)
+      (search-forward (concat "Name: RISE " "focus projects"))
+      (org-ctrl-c-ctrl-c)
+    
+      (search-forward (concat "Name: RISE " "non-focus projects"))
+      (org-ctrl-c-ctrl-c)
+    
+      ;; log info and inform the user:
+      (let ((my-tmp-log-string (format-message "my-rise-update-project-tables took %.1f minutes" 
+                                   (/ (float-time (time-subtract (current-time) my-rise-update-project-tables-start-time)) 60.0))))
+          (my-log-misc my-tmp-log-string)
+          (my-flash my-tmp-log-string)
+      ))
+)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -11982,10 +12011,19 @@ at once before leaving the computer for a longer period of time.
   "Calls misc re-cache functions to refresh caches and make new content accessible. This might take long."
   (interactive)
 
+  (if (> (string-to-number (emacs-uptime "%m")) 2) ;; (= Emacs runs longer than 2 minutes)
+     (setq my-boot-process nil)
+     (setq my-boot-process t)
+  )
+
   (my-helm-org-contacts-refresh-cache)
-  (when (> (string-to-number (emacs-uptime "%m")) 2) ;; only flash when not part of the boot process (= Emacs runs longer than 2 minutes)
+  (when (eq my-boot-process nil)
     (my-flash "continuing with \"my-refile-recache\" ..."))
   (my-refile-recache)
+
+  (when (eq my-boot-process nil)
+     (my-rise-update-project-tables) ;; omit this on boot process since it takes ~20min
+  )
 )
 #+END_SRC
 
@@ -16342,7 +16380,14 @@ approximately 25 seconds as of 2019-04-17.
        (switch-to-buffer "rise.org")    ;; open rise buffer
        (org-shifttab)                   ;; toggle visibility
        (eyebrowse-rename-window-config 3 "rise") ;; set name for rise config
-       (other-window) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
+       (other-window 1) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
+       (when (my-system-is-rise)
+         (eyebrowse-create-window-config) ;; create 4th config for rise/dired
+         (eyebrowse-rename-window-config 4 "rise-dired") ;; set name for config
+         (other-window 1) ;; switch from on the left side → may not work yet (test!)
+         (dired my-business-dired-folder);; open dired buffer with business config
+         (eyebrowse-switch-to-window-config-3);; switch back to "rise"
+       )
        )
       )
 )
