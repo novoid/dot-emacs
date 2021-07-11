@@ -6617,9 +6617,6 @@ found in the combined lists of:
     )
 #+END_SRC
 
-#+RESULTS:
-: my-org-auto-tag
-
 *** my-generate-sanitized-alnum-dash-string
 :PROPERTIES:
 :CREATED:  [2019-11-14 Thu 23:38]
@@ -15094,6 +15091,12 @@ visualization is brilliant.
   rifle _a_genda files      profiler sto_P_     _l_ist bookmarks     C-x r l  
   rifle whole _O_rg dir     ^^                  ^^
   ^^                        ^^                  ^^
+  ^^Filter                  ^^                  ^^                             ^^
+  ^^────────────────────────────────────────^^─────────────────────────────^^────────────────
+  tree: OPEN TASKS by tags, no completion: my-sparse-tree-with-_t_ag-filter
+  tree: all tasks by tags: org-tags-sparse-_T_ree
+  list: all tasks by tags: org-tags-_v_iew  (C-c a m)
+
   ")
   ("q" nil "quit")
 
@@ -15111,6 +15114,11 @@ visualization is brilliant.
   ("l" bookmark-bmenu-list nil)
 
   ("d" dired-jump nil)
+
+  ("t" my-sparse-tree-with-tag-filter nil)
+  ("T" org-tags-sparse-tree nil)
+  ("v" org-tags-view nil)
+
 )
 
 (global-set-key [f9] 'hydra-search/body)
@@ -15294,17 +15302,15 @@ Not org related but might be candidates as well:
     ^^                               _c_ontact link                                              ^^
     ^^                               mark as _P_roject                                           ^^
     ^^                               generate & copy _i_d                                        ^^
-    ^^                               _t_ag headline according to words                           ^^
     ^^                               _w_ebarchive tsfile                                         ^^
     ^^                               indent-_r_igidly   C-x TAB                                  ^^
     ^^                               ^^                                                          ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
-    filter open todos by _t_ags      _R_eddit/Wiki.js (region)                                        y  yankpad-expand 
-    _2_ org-tags-view  (C-c a m)     ^^                               _d_efine word                   b  my-mark-block
-    _3_ org-tags-sparse-tree         ^^                                                               F  my-sparse-tree-with-tag-filter
-    _f_ocus agenda (prio A; sched .) ^^                               _W_eather Graz                  S  my-synonym-current-word
-    _F_ocus disabled for agenda      ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
+    _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        ^^                              y  yankpad-expand 
+    _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
+    ^^                               ^^                               _W_eather Graz                  S  my-synonym-current-word
+    ^^                               ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
     ")
 
     ("f" (lambda ()
@@ -15345,12 +15351,8 @@ Not org related but might be candidates as well:
     ("L" my-jump-to-lazyblorg-heading-according-to-URL-in-clipboard nil)
     ("u" my-insert-orgmode-url-from-clipboard nil)
     ("T" my-set-tags-including-inherited nil)
-    ("t" my-org-tag-alist nil)
     ("1" my-org-split-block nil)
 
-    ("t" my-sparse-tree-with-tag-filter nil)
-    ("2" org-tags-view nil)
-    ("3" org-tags-sparse-tree nil)
 
     ("R" my-reddit-export-via-pandoc nil)
     ("d" define-word-at-point nil)
