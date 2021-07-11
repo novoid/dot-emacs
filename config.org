@@ -6283,6 +6283,20 @@ See: id:2014-11-02-filter-org-tasks-by-tag
 
 #+END_SRC
 
+*** my-sparse-tree-WAITING()
+
+| 2021-07-11 | created |
+
+#+BEGIN_SRC emacs-lisp
+(defun my-sparse-tree-WAITING()
+  "shows org sparse tree with all WAITING tasks of current buffer"
+  (interactive "*")
+  (org-occur
+   (concat "^\\*+ WAITING .+")
+   )
+  )
+#+END_SRC
+
 *** my-reddit-export-via-pandoc
 :PROPERTIES:
 :CREATED:  [2018-07-14 Sat 09:23]
@@ -15093,6 +15107,7 @@ visualization is brilliant.
   ^^                        ^^                  ^^
   ^^Filter                  ^^                  ^^                             ^^
   ^^────────────────────────────────────────^^─────────────────────────────^^────────────────
+  tree: _w_aiting tasks
   tree: OPEN TASKS by tags, no completion: my-sparse-tree-with-_t_ag-filter
   tree: all tasks by tags: org-tags-sparse-_T_ree
   list: all tasks by tags: org-tags-_v_iew  (C-c a m)
@@ -15115,6 +15130,7 @@ visualization is brilliant.
 
   ("d" dired-jump nil)
 
+  ("w" my-sparse-tree-WAITING nil)
   ("t" my-sparse-tree-with-tag-filter nil)
   ("T" org-tags-sparse-tree nil)
   ("v" org-tags-view nil)
