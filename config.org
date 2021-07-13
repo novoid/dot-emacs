@@ -14281,6 +14281,39 @@ process for my situation:
 )
 #+END_SRC
 
+** copy-as-format
+
+| 2021-07-13 | Got this tip [[https://www.reddit.com/r/emacs/comments/oil7xw/i_made_a_thing_for_org_bespoke_completion_sparse/][on reddit]] |
+
+#+BEGIN_SRC emacs-lisp
+(use-package copy-as-format
+  :ensure t
+  :defer 110
+  :after org
+  :bind (:map my-map ("f" . (lambda () (interactive)
+                  (setq current-prefix-arg '(4)) ; C-u (universal argument)
+                  (call-interactively 'copy-as-format))))
+  :config
+(defvar copy-as-format-format-alist
+  '(;;("asciidoc"  copy-as-format--asciidoc)
+    ;;("bitbucket" copy-as-format--github)
+    ("disqus"    copy-as-format--disqus)
+    ("github"    copy-as-format--github)
+    ("gitlab"    copy-as-format--github)
+    ;;("hipchat"   copy-as-format--hipchat)
+    ("html"      copy-as-format--html)
+    ("jira"      copy-as-format--jira)
+    ("markdown"  copy-as-format--markdown)
+    ;;("mediawiki" copy-as-format--mediawiki)
+    ;;("org-mode"  copy-as-format--org-mode)
+    ;;("pod"       copy-as-format--pod)
+    ;;("rst"       copy-as-format--rst)
+    ;;("slack"     copy-as-format--slack)
+    )
+  "Alist of format names and the function to do the formatting.")
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
