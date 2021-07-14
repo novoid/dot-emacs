@@ -15358,13 +15358,13 @@ Not org related but might be candidates as well:
     _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link         Start  C-c C-x _0_       _o_rdered dependency
     _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)
     _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna
-    ^^                               add _n_ote to logbook              Stop   C-c C-x ___       ^^
+    org-_a_ttach-reveal              add _n_ote to logbook              Stop   C-c C-x ___       ^^
     ^^                               _c_ontact link                                              ^^
     ^^                               mark as _P_roject                                           ^^
     ^^                               generate & copy _i_d                                        ^^
     ^^                               _w_ebarchive tsfile                                         ^^
     ^^                               indent-_r_igidly   C-x TAB                                  ^^
-    ^^                               org-_a_ttach-set-directory                                  ^^
+    ^^                               org-_A_ttach-set-directory                                  ^^
     ^^                               ^^                                                          ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
@@ -15437,7 +15437,8 @@ Not org related but might be candidates as well:
     ("o" (lambda () (interactive) (org-set-property "ORDERED" "t")) nil)
 
     ("r" indent-rigidly nil)
-    ("a" org-attach-set-directory nil)
+    ("A" org-attach-set-directory nil)
+    ("a" org-attach-reveal nil)
 
     ("q" nil "quit")
 
