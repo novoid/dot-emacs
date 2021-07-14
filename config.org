@@ -15364,6 +15364,7 @@ Not org related but might be candidates as well:
     ^^                               generate & copy _i_d                                        ^^
     ^^                               _w_ebarchive tsfile                                         ^^
     ^^                               indent-_r_igidly   C-x TAB                                  ^^
+    ^^                               org-_a_ttach-set-directory                                  ^^
     ^^                               ^^                                                          ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
@@ -15436,6 +15437,7 @@ Not org related but might be candidates as well:
     ("o" (lambda () (interactive) (org-set-property "ORDERED" "t")) nil)
 
     ("r" indent-rigidly nil)
+    ("a" org-attach-set-directory nil)
 
     ("q" nil "quit")
 
