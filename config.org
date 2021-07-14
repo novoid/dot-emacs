@@ -6703,6 +6703,14 @@ History of this function: id:2019-11-14-Org-Project-Management-Workflow
 :ID:       2019-11-14-my-id-get-or-generate
 :END:
 
+| 2019-11-14 | wrote this function to get nice ID properties |
+
+I don't like UUIDs as they tell the user nothing. Therefore, I
+generate ID properties like [[https://itnext.io/whats-a-slug-f7e74b6c23e0?gi=1a378dbc2c7b][slugs]].
+
+You may want to read [[https://www.reddit.com/r/emacs/comments/ojca7q/nicer_org_ids/][this reddit discussion]] for alternative methods to
+generate nice IDs.
+
 #+BEGIN_SRC emacs-lisp
 (defun my-id-get-or-generate()
 "Returns the ID property if set or generates and returns a new one if not set.
