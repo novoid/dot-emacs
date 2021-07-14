@@ -14302,6 +14302,7 @@ process for my situation:
                   (setq current-prefix-arg '(4)) ; C-u (universal argument)
                   (call-interactively 'copy-as-format))))
   :config
+(defalias 'copy-as-format-reddit 'copy-as-format-markdown) ;; idea from https://www.reddit.com/r/emacs/comments/oil7xw/i_made_a_thing_for_org_bespoke_completion_sparse/h517hps/?context=3
 (defvar copy-as-format-format-alist
   '(;;("asciidoc"  copy-as-format--asciidoc)
     ;;("bitbucket" copy-as-format--github)
@@ -14312,6 +14313,7 @@ process for my situation:
     ("html"      copy-as-format--html)
     ("jira"      copy-as-format--jira)
     ("markdown"  copy-as-format--markdown)
+    ("reddit"  copy-as-format--reddit)
     ;;("mediawiki" copy-as-format--mediawiki)
     ;;("org-mode"  copy-as-format--org-mode)
     ;;("pod"       copy-as-format--pod)
@@ -14319,6 +14321,7 @@ process for my situation:
     ;;("slack"     copy-as-format--slack)
     )
   "Alist of format names and the function to do the formatting.")
+
 )
 #+END_SRC
 
