@@ -15359,13 +15359,13 @@ Not org related but might be candidates as well:
     _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)  C-u C-u C-c =  edit cell formular
     _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna                     C-c ?  info on cell + reference
     org-_a_ttach-reveal              add _n_ote to logbook              Stop   C-c C-x ___       ^^                                    C-c {  debug formula mode
-    ^^                               _c_ontact link                                              ^^                                    C-c }  toggle row/column overlay
-    ^^                               mark as _P_roject                                           ^^
-    ^^                               generate & copy _i_d                                        ^^
-    ^^                               _w_ebarchive tsfile                                         ^^
-    ^^                               indent-_r_igidly   C-x TAB                                  ^^
-    ^^                               org-_A_ttach-set-directory                                  ^^
-    ^^                               ^^                                                          ^^
+    ^^                               _c_ontact link                     ^^                       ^^                                    C-c }  toggle row/column overlay
+    ^^                               mark as _P_roject                  ^^                       ^^                                    C-c '  edit formulas (S-<arrows> for changing references)
+    ^^                               generate & copy _i_d               ^^                       ^^
+    ^^                               _w_ebarchive tsfile                ^^                       ^^
+    ^^                               indent-_r_igidly   C-x TAB         ^^                       ^^
+    ^^                               org-_A_ttach-set-directory         ^^                       ^^
+    ^^                               ^^                                 ^^                       ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
     _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        ^^                              y  yankpad-expand 
