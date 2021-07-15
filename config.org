@@ -5856,6 +5856,12 @@ Inserts URL from clipboard and retrieves title as Org-mode link
 - see id:2014-08-10-bookmarks-with-orgmode
 - 2015-05-22: Via email arjan: http://www.rexim.me/emacs-as-bookmark-manager-links.html
 
+- 2021-07-15: on [[https://www.reddit.com/r/emacs/comments/oknesu/bagel_convert_urls_to_org_links_with_tags/][reddit there is this thread]] where alternative
+  implementations are discussed. They might be more mature than mine.
+  For now, I'm happy with mine. The original thread author refers to
+  https://github.com/vrind-nl/bag.el which also tries to extract a
+  defined set of tags (with their alternatives keywords).
+
 =straight-string()=
 #+BEGIN_SRC emacs-lisp
   (defun straight-string (s)
