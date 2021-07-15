@@ -15353,13 +15353,13 @@ Not org related but might be candidates as well:
   (defhydra hydra-org (:color blue)
     (concat my-f-key-settings
     "
-    ^^Go to                          ^^Inserting                        ^^Org-timer              ^^Properties
-    ^────────^───────────────────────^──────^───────────────────────────^^───────────────────────^─────────^───────────────
-    _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link         Start  C-c C-x _0_       _o_rdered dependency
-    _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)
-    _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna
-    org-_a_ttach-reveal              add _n_ote to logbook              Stop   C-c C-x ___       ^^
-    ^^                               _c_ontact link                                              ^^
+    ^^Go to                          ^^Inserting                        ^^Org-timer              ^^Properties                          ^^Tables
+    ^────────^───────────────────────^──────^───────────────────────────^^───────────────────────^─────────^───────────────────────────^^──────────────────────────────────── 
+    _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link         Start  C-c C-x _0_       _o_rdered dependency                  S-RET  fill from cell above
+    _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)  C-u C-u C-c =  edit cell formular
+    _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna                     C-c ?  info on cell + reference
+    org-_a_ttach-reveal              add _n_ote to logbook              Stop   C-c C-x ___       ^^                                    C-c {  debug formula mode
+    ^^                               _c_ontact link                                              ^^                                    C-c }  toggle row/column overlay
     ^^                               mark as _P_roject                                           ^^
     ^^                               generate & copy _i_d                                        ^^
     ^^                               _w_ebarchive tsfile                                         ^^
