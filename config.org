@@ -15369,7 +15369,7 @@ Not org related but might be candidates as well:
     ^^                               mark as _P_roject                  ^^                       ^^                                    C-c '  edit formulas (S-<arrows> for changing references)
     ^^                               generate & copy _i_d               ^^                       ^^
     ^^                               _w_ebarchive tsfile                ^^                       ^^
-    ^^                               indent-_r_igidly   C-x TAB         ^^                       ^^
+    ^^C-c C-a  attachment menu       indent-_r_igidly   C-x TAB         ^^                       ^^
     ^^                               org-_A_ttach-set-directory         ^^                       ^^
     ^^                               ^^                                 ^^                       ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
