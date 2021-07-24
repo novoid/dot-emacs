@@ -7319,7 +7319,7 @@ My general templates:
           ("b" "Bookmark" entry (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
            "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("p" "public voit" entry (file+headline ,(concat my-org-files-path "public_voit.org") "Unfinished (non-series, non-persistent)")
-           "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n" :empty-lines 2)
+           "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n-----------------------\n- [ ] link on older/similar articles?\n- [ ] link on tag pages?\n\n" :empty-lines 2)
           ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
            "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 2)
           ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
