@@ -14385,7 +14385,7 @@ Read http://karl-voit.at/2016/04/09/chosing-emacs-search-method/ for the whole s
 ))
 
 (global-set-key "\C-s" 'my-search-method-according-to-numlines)
-;;(global-set-key "\C-S" 'isearch-forward)
+(global-set-key "\C-S" 'isearch-forward)
 #+END_SRC
 
 PREVIOUS (simple) approach:
