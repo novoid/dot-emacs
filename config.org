@@ -8959,11 +8959,6 @@ See also: id:2017-08-12-org-super-agenda
             (:name "DEADLINES" :deadline t :order 1)
             (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
             (:name "Important" :priority "A" :order 4)
-            (:priority<= "B"
-                         ;; Show this section after "Today" and "Important", because
-                         ;; their order is unspecified, defaulting to 0. Sections
-                         ;; are displayed lowest-number-first.
-                         :order 6)
     ;        (:name "Habits" :habit t :order 3)
             (:name "Shopping" :tag "Besorgung" :order 8)
                    ;; Boolean AND group matches items that match all subgroups
@@ -8978,8 +8973,7 @@ See also: id:2017-08-12-org-super-agenda
             ;;       :and (:regexp ("space" "NASA")
             ;;                     ;; Boolean NOT also has implicit OR between selectors
             ;;                     :not (:regexp "moon" :tag "planet")))
-            (:name "BWG" :tag "@BWG" :order 16)
-            (:todo "WAITING" :order 18)  ; Set order of this section
+            ;;(:name "BWG" :tag "@BWG" :order 16)
             (:name "read" :tag "2read" :order 22)
             ;; Groups supply their own section names when none are given
             (:todo ("SOMEDAY" "WATCHING")
@@ -8989,10 +8983,19 @@ See also: id:2017-08-12-org-super-agenda
                    ;; displayed in that group instead, because items are grouped
                    ;; out in the order the groups are listed.
                    :order 25)
+
+            ;; "other items": an auto-group with order 99 ----------------------------
+
+            (:priority<= "B"
+                         ;; Show this section after "Today" and "Important", because
+                         ;; their order is unspecified, defaulting to 0. Sections
+                         ;; are displayed lowest-number-first.
+                         :order 105)
             (:name "reward"
                    :tag ("reward" "lp")
-                   :order 100
+                   :order 110
                    )
+            (:todo "WAITING" :order 118)  ; Set order of this section
 
             ;; After the last group, the agenda will display items that didn't
             ;; match any of these groups, with the default order position of 99
