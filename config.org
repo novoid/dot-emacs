@@ -6964,6 +6964,49 @@ lines. It's not clever enough to detect quoted block begin/end strings.
 )
 #+END_SRC
 
+*** my-replace-id-property
+
+| 2021-07-31 | Added to my config |
+
+- Why? https://www.reddit.com/r/orgmode/comments/ouihd3/how_to_modify_searchreplace_an_id_property/
+  #+BEGIN_QUOTE
+  I do think that many Orgers are changing IDs all the time as long as
+  they tend to keep a human readable ID aligned with a changed heading
+  text.
+
+  When I do have the urge to change an existing ID property which is
+  just used within the same file, I need to close the Org file in Emacs,
+  re-open the buffer either in Emacs in basic mode or in vim, apply
+  search&replace for the ID and re-open it in Emacs/Org mode again.
+
+  The reason is that - by default or at least in my setup - text in link
+  targets is not affected by search&replace.
+
+  Is there a more clever way of doing this?
+
+  Optimum would be something like "change this ID (either by yanking
+  manually, point on property or point on link to an ID) in all agenda
+  files". But I'm also interested in an improved workaround in
+  comparison to my method above.
+  #+END_QUOTE
+
+alphapapa helped me with a stub which I expanded to an interactive function:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-replace-id-property ()
+  "Replaces the ID of the current heading to a different one and replaces all occurrences in agenda files."
+  (interactive)
+    (let* ((my-old-id (org-macro--get-property "ID" ""))
+           (my-new-id (read-string "Enter new ID: " nil nil my-old-id))
+           (my-old-target (concat "id:" my-old-id))
+           (my-new-target (concat "id:" my-new-id)))
+      (org-ql-select (org-agenda-files)
+        `(link :target ,my-old-target)
+        :action `(save-excursion (cl-loop while (re-search-forward ,my-old-target
+                                                                   (org-entry-end-position) t) do
+                                                                   (replace-match ,my-new-target t t))))
+      (org-set-property "ID" my-new-id)))
+#+END_SRC
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
