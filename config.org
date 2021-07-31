@@ -14377,6 +14377,17 @@ process for my situation:
 )
 #+END_SRC
 
+** lisp-format
+
+| 2021-07-31 | I wanted to test the Elisp formatter for formatting my code |
+
+#+BEGIN_SRC emacs-lisp
+(use-package elisp-format
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
