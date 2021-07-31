@@ -15208,8 +15208,8 @@ visualization is brilliant.
   ^^Rifle                   ^^Profiler          ^^Bookmarks                    ^^MISC                    Ex.:    #A NEXT :foo:bar: !unwanted
   ^^────────────────────────^^──────────────────^^─────────────────────────────^^────────────────
   rifle _c_urrent buffer    _p_rofile CPU       _m_ark new bookmark  C-x r m   _d_ired-jump
-  rifle _o_pen buffers      _r_eport            jump _b_ookmark      C-x r b  
-  rifle _a_genda files      profiler sto_P_     _l_ist bookmarks     C-x r l  
+  rifle _o_pen buffers      _r_eport            jump _b_ookmark      C-x r b
+  rifle _a_genda files      profiler sto_P_     _l_ist bookmarks     C-x r l
   rifle whole _O_rg dir     ^^                  ^^
   ^^                        ^^                  ^^
   ^^Filter                  ^^                  ^^                             ^^
@@ -15417,7 +15417,7 @@ Not org related but might be candidates as well:
     (concat my-f-key-settings
     "
     ^^Go to                          ^^Inserting                        ^^Org-timer              ^^Properties                          ^^Tables
-    ^────────^───────────────────────^──────^───────────────────────────^^───────────────────────^─────────^───────────────────────────^^──────────────────────────────────── 
+    ^────────^───────────────────────^──────^───────────────────────────^^───────────────────────^─────────^───────────────────────────^^────────────────────────────────────
     _L_azyblorg ID via clipboard ID  _u_rl clipboard → Org link         Start  C-c C-x _0_       _o_rdered dependency                  S-RET  fill from cell above
     _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)  C-u C-u C-c =  edit cell formular
     _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna                     C-c ?  info on cell + reference
@@ -15431,7 +15431,7 @@ Not org related but might be candidates as well:
     ^^                               ^^                                 ^^                       ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
-    _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        ^^                              y  yankpad-expand 
+    _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        ^^                              y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
     ^^                               ^^                               _W_eather Graz                  S  my-synonym-current-word
     ^^                               ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
@@ -15743,7 +15743,7 @@ Not org related but might be candidates as well:
   _i_mage thumbnails    ^^                    _n_ormal ordered   x  delete flagged    <percent> &  flag temp files           C-x C-f  create file
   _(_ toggle details    ^^                    ^^                 c  compress
   ^^                    ^^                    ^^                 Z  dired-do-compress (=unp)
-  ^^                    ^^                    ^^                 
+  ^^                    ^^                    ^^
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
 
@@ -15916,7 +15916,7 @@ FIXXME: add more features:
   _._   window →                      ...                    ^^       prefix ,  rename
   ^↦^ previous window config        _9_ switch to window config 9     prefix l  last window
   _r_ename current window config
-  _c_reate new window config        ^^                                _b_ ibuffer-list-buffers 
+  _c_reate new window config        ^^                                _b_ ibuffer-list-buffers
   _C_lose current window config     ^^
   new _f_rame                       ^^
   _!_ save-buffers-kill-terminal    ^^                      ▄
@@ -16500,7 +16500,7 @@ approximately 25 seconds as of 2019-04-17.
        (my-hsplit-last-buffer)          ;; split horizontal: left is agenda
        (my-mobile-org-import)           ;; switch to inbox.org (right side) and move latest input from mobileorg.org into inbox.org
        (eyebrowse-create-window-config) ;; create 2nd config for misc personal stuff
-       (switch-to-buffer "notes.org")   ;; open notes buffer 
+       (switch-to-buffer "notes.org")   ;; open notes buffer
        ;; MAYBE: open misc.org on the other side
        (eyebrowse-rename-window-config 2 "misc") ;; name 2nd config
        (eyebrowse-create-window-config) ;; create 3rd config for rise
