@@ -1801,7 +1801,7 @@ Different font size for mode-line (from [[https://emacs.stackexchange.com/questi
       (lambda (face) (set-face-attribute face nil :font "DejaVu Sans Mono-8"))
       faces))
 #+END_SRC
- 
+
 ** DISABLED Modeline with icons
 :PROPERTIES:
 :CREATED:  [2018-07-23 Mon 13:44]
@@ -2606,7 +2606,7 @@ within Org-mode only is defined in my yankpad file.
     :config
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 3)
-    
+
     (add-hook 'after-init-hook 'global-company-mode)
     ;;  (global-company-mode t)
 
@@ -3029,8 +3029,8 @@ lsp-mode:
 
 lsp-ui:
 #+BEGIN_SRC emacs-lisp
-  (use-package lsp-ui 
-      :ensure t 
+  (use-package lsp-ui
+      :ensure t
       :commands lsp-ui-mode
       :hook (lsp-mode . lsp-ui-mode)
       :config
@@ -3296,7 +3296,7 @@ Optional:
 
 *** DISABLED jedi (LSP)
 
-[2021-04-04 Sun 16:56] disabled: I want to test pure pyls 
+[2021-04-04 Sun 16:56] disabled: I want to test pure pyls
 
 Setup according to https://github.com/zamansky/dot-emacs
 
@@ -4638,7 +4638,7 @@ Helper function to open any given message-id in Evolution:
     (goto-char (point-min))
     (re-search-forward "^Date:[	 ]+\\(.+?\\)[ ]*$" nil nil 1)
     (setq rawdate (match-string 1))
-    (setq date 
+    (setq date
     (let ((time (date-to-time rawdate)))
       (set-time-zone-rule t) ;; Use Universal time.
       (prog1 (format-time-string "%Y-%m-%d %H:%M" time)
@@ -6946,17 +6946,17 @@ lines. It's not clever enough to detect quoted block begin/end strings.
   (save-excursion
       (save-some-buffers t) ;; get latest contact changes
       (setq my-rise-update-project-tables-start-time (current-time))
-    
+
       (switch-to-buffer "rise.org")
       (beginning-of-buffer)
       (search-forward (concat "Name: RISE " "focus projects"))
       (org-ctrl-c-ctrl-c)
-    
+
       (search-forward (concat "Name: RISE " "non-focus projects"))
       (org-ctrl-c-ctrl-c)
-    
+
       ;; log info and inform the user:
-      (let ((my-tmp-log-string (format-message "my-rise-update-project-tables took %.1f minutes" 
+      (let ((my-tmp-log-string (format-message "my-rise-update-project-tables took %.1f minutes"
                                    (/ (float-time (time-subtract (current-time) my-rise-update-project-tables-start-time)) 60.0))))
           (my-log-misc my-tmp-log-string)
           (my-flash my-tmp-log-string)
@@ -7007,6 +7007,7 @@ alphapapa helped me with a stub which I expanded to an interactive function:
                                                                    (replace-match ,my-new-target t t))))
       (org-set-property "ID" my-new-id)))
 #+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
@@ -7515,7 +7516,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
 
   (bind-key "b" 'my-save-bookmark my-map)
 #+END_SRC
- 
+
 ** Refiling
 
 - http://orgmode.org/manual/Capture-_002d-Refile-_002d-Archive.html
@@ -13911,6 +13912,10 @@ is not shown in the modeline.
   (setq eyebrowse-keymap-prefix (kbd "C-:"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
   :config
   (eyebrowse-mode t)
+
+  ;; 2021-07-16: FIXXME: this does not work yet:
+  ;;(add-hook 'eyebrowse-post-window-switch-hook 'my-pulse-line) ;; flash current line after switching
+  ;;  (add-hook 'eyebrowse-post-window-switch-hook '(pulse-momentary-highlight-one-line (point)))
 )
 #+END_SRC
 
