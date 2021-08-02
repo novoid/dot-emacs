@@ -6996,17 +6996,22 @@ alphapapa helped me with a stub which I expanded to an interactive function:
   (defun my-replace-id-property ()
   "Replaces the ID of the current heading to a different one and replaces all occurrences in agenda files."
   (interactive)
-    (let* ((my-old-id (org-macro--get-property "ID" ""))
+    (let* ((my-old-id (org-entry-get nil "ID"))
            (my-new-id (read-string "Enter new ID: " nil nil my-old-id))
            (my-old-target (concat "id:" my-old-id))
            (my-new-target (concat "id:" my-new-id)))
+      (org-set-property "ID" my-new-id)
       (org-ql-select (org-agenda-files)
         `(link :target ,my-old-target)
         :action `(save-excursion (cl-loop while (re-search-forward ,my-old-target
                                                                    (org-entry-end-position) t) do
                                                                    (replace-match ,my-new-target t t))))
-      (org-set-property "ID" my-new-id)))
+      ))
 #+END_SRC
+
+As [[https://www.reddit.com/r/orgmode/comments/ouihd3/how_to_modify_searchreplace_an_id_property/h7a6jx6/?utm_source=reddit&utm_medium=web2x&context=3][alphapapa pointed out]], there is no error handling yet (undo
+boundaries in each buffer). If you know how to implement this
+properly, please do submit a pull request.
 
 ** org-mode-hook
 
