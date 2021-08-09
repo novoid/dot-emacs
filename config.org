@@ -15574,6 +15574,7 @@ Not org related but might be candidates as well:
     ("r" indent-rigidly nil)
     ("A" org-attach-set-directory nil)
     ("a" org-attach-reveal nil)
+    ("I" my-org-attach-insert nil)
 
     ("q" nil "quit")
 
