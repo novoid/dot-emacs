@@ -7740,6 +7740,40 @@ I did not invest much in finding the reason. So it's disabled for now:
 (require 'org-attach-git)
 #+END_SRC
 
+*** org-attach-insert
+
+| 2021-08-09 | Found this nugget [[https://www.reddit.com/r/orgmode/comments/oz7h31/interacting_with_attachments/][on reddit]] |
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-attach-insert (&optional in-emacs)
+  "Insert attachment from list."
+  (interactive "P")
+  (let ((attach-dir (org-attach-dir)))
+    (if attach-dir
+    (let* ((file (pcase (org-attach-file-list attach-dir)
+               (`(,file) file)
+               (files (completing-read "Insert attachment: "
+                           (mapcar #'list files) nil t))))
+           (path (expand-file-name file attach-dir))
+               (desc (file-name-nondirectory path)))
+          (let ((initial-input
+             (cond
+              ((not org-link-make-description-function) desc)
+              (t (condition-case nil
+                 (funcall org-link-make-description-function link desc)
+               (error
+                (message "Can't get link description from %S"
+                     (symbol-name org-link-make-description-function))
+                (sit-for 2)
+                nil))))))
+        (setq desc (if (called-interactively-p 'any)
+                   (read-string "Description: " initial-input)
+                 initial-input))
+            (org-insert-link nil path (concat "attachment:" desc))))
+      (error "No attachment directory exist"))))
+;; (define-key org-mode-map (kbd "C-c o i") #'org-attach-insert)
+#+END_SRC
+
 ** Archiving - preserve top level node and tags when archiving
 
 *** DISABLED preserving one level of heading + tags when archiving
@@ -15465,6 +15499,7 @@ Not org related but might be candidates as well:
     ^^                               _w_ebarchive tsfile                ^^                       ^^
     ^^C-c C-a  attachment menu       indent-_r_igidly   C-x TAB         ^^                       ^^
     ^^                               org-_A_ttach-set-directory         ^^                       ^^
+    ^^                               my-org-attach-_I_nsert             ^^                       ^^
     ^^                               ^^                                 ^^                       ^^
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
