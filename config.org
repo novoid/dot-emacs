@@ -7522,6 +7522,113 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
   (bind-key "b" 'my-save-bookmark my-map)
 #+END_SRC
 
+** Mobile capture
+
+- http://orgmode.org/org.html#MobileOrg
+- https://github.com/matburt/mobileorg-android
+  - "Active development of MobileOrg has stopped."
+  - → I moved from MobileOrg to Orgzly also for mobile capture, keeping the capture workflow from MobileOrg:
+    - new headings get captured in =mobileorg.org= and =my-mobile-org-import()= moves those new items into my =inbox.org=.
+    - This should prevent overwriting data due to race conditions because of [[https://github.com/orgzly/orgzly-android/issues/8][infrequent sync of Orgzly]]
+
+General OrgMobile setup:
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org")
+(setq org-mobile-directory my-org-files-path)
+(setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
+#+END_SRC
+
+Do not generate IDs for all headings: http://orgmode.org/manual/Pushing-to-MobileOrg.html
+#+BEGIN_SRC emacs-lisp
+(setq org-mobile-force-id-on-agenda-items nil)
+#+END_SRC
+
+*** my-mobile-org-import() → my-map i
+
+On my Android phone, I use [[https://github.com/matburt/mobileorg-android/wiki][MobileOrg]] to capture stuff. Following
+binding brings me the most current captured items into my =inbox.org=:
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-mobile-org-import ()
+    "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
+    (interactive "P")
+    (org-mobile-pull)
+    (find-file (concat my-org-files-path "inbox.org"))
+    (delete-trailing-whitespace)
+    )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "i" (lambda ()
+                         """foobar"""
+                         (interactive) (my-mobile-org-import)) my-map )
+#+END_SRC
+
+Note that even though I use [[http://www.orgzly.com/][Orgzly]] to /view/ Org-mode data on my
+Android phone, I use MobileOrg to capture. This might change in
+future, when I am able to choose whether or not single [[https://syncthing.net/][SyncThing]]
+folders gets synced on WiFi or on 4G networks (instead of all or
+nothing). Take a look at [[https://github.com/syncthing/syncthing-android/issues/888][my feature wish report]] and [[https://github.com/syncthing/syncthing-android/issues/511][the other issue I
+was referred to]].
+
+*** DISABLED my-org-mobile-push() - pushing to org-mobile
+
+The function generates misc files for MobileOrg.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-mobile-push (&optional arg)
+  (interactive)
+  ;; when called with universal argument (C-u), Emacs will be closed
+  ;;      after pushing to files
+  ;; save original agenda in temporary variable
+  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
+  ;; set agenda for MobileOrg (omit some agenda
+  ;; views I do not need on my phone):
+  (setq org-agenda-custom-commands
+        (quote (
+
+                ("1" "1 month"
+                 ((agenda "1 month"
+                          ((org-agenda-ndays 31)
+                           (org-agenda-time-grid nil)
+                           (org-agenda-entry-types '(:timestamp :sexp))
+                           )
+                          )))
+
+                ("B" "borrowed" tags "+borrowed"
+                 (
+                  (org-agenda-overriding-header "borrowed or lend")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                ("$" "Besorgungen" tags "+Besorgung"
+                 (
+                  (org-agenda-overriding-header "Besorgungen")
+                  (org-agenda-skip-function 'tag-without-done-or-canceled)
+                  ))
+
+                )))
+  ;; generate MobileOrg export:
+  (org-mobile-push)
+  ;; restore previously saved agenda:
+  (setq org-agenda-custom-commands
+        ORIGSAVED-org-agenda-custom-commands)
+  (if (equal arg '(4))
+      ;; save buffers and exit emacs;; FIXXME: not working yet
+      (save-buffers-kill-terminal 't)
+    )
+  )
+#+END_SRC
+
+*** DISABLED MobileOrg push → my-map I
+
+As of 2017-04, I moved from [[https://github.com/matburt/mobileorg-android/wiki][MobileOrg]] to [[http://www.orgzly.com/][Orgzly]] for mobile viewing
+data within my Org-mode data. Therefore, this function is not of any
+use any more:
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "I" #'my-org-mobile-push my-map)
+#+END_SRC
 ** Refiling
 
 - http://orgmode.org/manual/Capture-_002d-Refile-_002d-Archive.html
@@ -11703,113 +11810,6 @@ END of org-crypt setup
     )
 #+END_SRC
 
-** Mobile capture
-
-- http://orgmode.org/org.html#MobileOrg
-- https://github.com/matburt/mobileorg-android
-  - "Active development of MobileOrg has stopped."
-  - → I moved from MobileOrg to Orgzly also for mobile capture, keeping the capture workflow from MobileOrg:
-    - new headings get captured in =mobileorg.org= and =my-mobile-org-import()= moves those new items into my =inbox.org=.
-    - This should prevent overwriting data due to race conditions because of [[https://github.com/orgzly/orgzly-android/issues/8][infrequent sync of Orgzly]]
-
-General OrgMobile setup:
-#+BEGIN_SRC emacs-lisp
-(setq org-directory "~/org")
-(setq org-mobile-directory my-org-files-path)
-(setq org-mobile-inbox-for-pull (concat my-org-files-path "inbox.org"))
-#+END_SRC
-
-Do not generate IDs for all headings: http://orgmode.org/manual/Pushing-to-MobileOrg.html
-#+BEGIN_SRC emacs-lisp
-(setq org-mobile-force-id-on-agenda-items nil)
-#+END_SRC
-
-*** my-mobile-org-import() → my-map i
-
-On my Android phone, I use [[https://github.com/matburt/mobileorg-android/wiki][MobileOrg]] to capture stuff. Following
-binding brings me the most current captured items into my =inbox.org=:
-
-#+BEGIN_SRC emacs-lisp
-  (defun my-mobile-org-import ()
-    "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
-    (interactive "P")
-    (org-mobile-pull)
-    (find-file (concat my-org-files-path "inbox.org"))
-    (delete-trailing-whitespace)
-    )
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "i" (lambda ()
-                         """foobar"""
-                         (interactive) (my-mobile-org-import)) my-map )
-#+END_SRC
-
-Note that even though I use [[http://www.orgzly.com/][Orgzly]] to /view/ Org-mode data on my
-Android phone, I use MobileOrg to capture. This might change in
-future, when I am able to choose whether or not single [[https://syncthing.net/][SyncThing]]
-folders gets synced on WiFi or on 4G networks (instead of all or
-nothing). Take a look at [[https://github.com/syncthing/syncthing-android/issues/888][my feature wish report]] and [[https://github.com/syncthing/syncthing-android/issues/511][the other issue I
-was referred to]].
-
-*** DISABLED my-org-mobile-push() - pushing to org-mobile
-
-The function generates misc files for MobileOrg.
-
-#+BEGIN_SRC emacs-lisp
-(defun my-org-mobile-push (&optional arg)
-  (interactive)
-  ;; when called with universal argument (C-u), Emacs will be closed
-  ;;      after pushing to files
-  ;; save original agenda in temporary variable
-  (setq ORIGSAVED-org-agenda-custom-commands org-agenda-custom-commands)
-  ;; set agenda for MobileOrg (omit some agenda
-  ;; views I do not need on my phone):
-  (setq org-agenda-custom-commands
-        (quote (
-
-                ("1" "1 month"
-                 ((agenda "1 month"
-                          ((org-agenda-ndays 31)
-                           (org-agenda-time-grid nil)
-                           (org-agenda-entry-types '(:timestamp :sexp))
-                           )
-                          )))
-
-                ("B" "borrowed" tags "+borrowed"
-                 (
-                  (org-agenda-overriding-header "borrowed or lend")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                ("$" "Besorgungen" tags "+Besorgung"
-                 (
-                  (org-agenda-overriding-header "Besorgungen")
-                  (org-agenda-skip-function 'tag-without-done-or-canceled)
-                  ))
-
-                )))
-  ;; generate MobileOrg export:
-  (org-mobile-push)
-  ;; restore previously saved agenda:
-  (setq org-agenda-custom-commands
-        ORIGSAVED-org-agenda-custom-commands)
-  (if (equal arg '(4))
-      ;; save buffers and exit emacs;; FIXXME: not working yet
-      (save-buffers-kill-terminal 't)
-    )
-  )
-#+END_SRC
-
-*** DISABLED MobileOrg push → my-map I
-
-As of 2017-04, I moved from [[https://github.com/matburt/mobileorg-android/wiki][MobileOrg]] to [[http://www.orgzly.com/][Orgzly]] for mobile viewing
-data within my Org-mode data. Therefore, this function is not of any
-use any more:
-
-#+BEGIN_SRC emacs-lisp
-(bind-key "I" #'my-org-mobile-push my-map)
-#+END_SRC
 ** DISABLED Reference management → my-map (|)
 
 Do read http://karl-voit.at/2015/12/26/reference-management-with-orgmode/
