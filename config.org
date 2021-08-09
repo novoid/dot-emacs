@@ -16590,6 +16590,8 @@ approximately 25 seconds as of 2019-04-17.
        )
        )
       )
+   (my-log-misc "end of autostart")
+
 )
 #+END_SRC
 
