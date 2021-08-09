@@ -7560,9 +7560,35 @@ On my Android phone, I use [[https://github.com/matburt/mobileorg-android/wiki][
 binding brings me the most current captured items into my =inbox.org=:
 
 #+BEGIN_SRC emacs-lisp
+  (defun my-merge-mobileorg-inbox-files-to-mobileorg-file () 
+    "Merges individual inbox files from different hosts and appends their content to the mobileorg.org file." 
+    (let ((my-mobileorg-files `( ,(concat my-org-files-path "mobileorg-pixel4a.org") 
+                                 ,(concat my-org-files-path "mobileorg-dylan.org"))) 
+          (my-mobileorg-result-file (concat my-org-files-path "mobileorg.org")))
+
+      (find-file my-mobileorg-result-file) ;; open mobileorg.org
+      (goto-char (point-max)) ;; go to the end of the buffer (for appending content)
+
+      (dolist (file my-mobileorg-files) ;; loop over all input files and copy content to mobileorg.org
+        (when (file-regular-p file) 
+          (insert-file-contents file)))
+    
+      (save-buffer) ;; save all new changes to mobileorg.org
+      (kill-buffer) ;; close mobileorg.org buffer
+
+      (dolist (file my-mobileorg-files) ;; loop over all input files for deleting their content which already got moved to mobileorg.org above
+        (when (file-regular-p file) 
+          (find-file file) 
+          (delete-region (point-min) (point-max)) 
+          (save-buffer) 
+          (kill-buffer)))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
   (defun my-mobile-org-import ()
     "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
     (interactive "P")
+    (my-merge-mobileorg-inbox-files-to-mobileorg-file) ;; Merges individual inbox files from different hosts and appends their content to the mobileorg.org file.
     (org-mobile-pull)
     (find-file (concat my-org-files-path "inbox.org"))
     (delete-trailing-whitespace)
