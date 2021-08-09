@@ -3243,6 +3243,17 @@ From the README:
     Exit macrostep-mode by typing =q= or =C-c C-c=, or by successively
     typing =c= to collapse all surrounding expansions.
 #+END_QUOTE
+
+*** lisp-format
+
+| 2021-07-31 | I wanted to test the Elisp formatter for formatting my code |
+
+#+BEGIN_SRC emacs-lisp
+(use-package elisp-format
+  :ensure t
+  :defer 110
+)
+#+END_SRC
 ** Python
 
 | 2021-04-04 | shift from previous elpy-based setup to a LSB-based setup |
@@ -14387,16 +14398,6 @@ process for my situation:
 )
 #+END_SRC
 
-** lisp-format
-
-| 2021-07-31 | I wanted to test the Elisp formatter for formatting my code |
-
-#+BEGIN_SRC emacs-lisp
-(use-package elisp-format
-  :ensure t
-  :defer 110
-)
-#+END_SRC
 
 * My helper functions (part II)
 
