@@ -14459,6 +14459,20 @@ process for my situation:
 )
 #+END_SRC
 
+** dogears
+
+| 2021-08-13 | found [[https://www.reddit.com/r/emacs/comments/p3mdyg/ann_dogearsel_never_lose_your_place_in_emacs_again/][on reddit]] and set up |
+
+This looks like a cool method to jump back and forth between buffers. I need to test this.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dogears
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dogears.el/")))
+  :defer 90
+  :config
+  (dogears-mode 1)
+)
+#+END_SRC
 
 * My helper functions (part II)
 
@@ -15280,10 +15294,11 @@ visualization is brilliant.
   ^^Rifle                   ^^Profiler          ^^Bookmarks                    ^^MISC                    Ex.:    #A NEXT :foo:bar: !unwanted
   ^^────────────────────────^^──────────────────^^─────────────────────────────^^────────────────
   rifle _c_urrent buffer    _p_rofile CPU       _m_ark new bookmark  C-x r m   _d_ired-jump
-  rifle _o_pen buffers      _r_eport            jump _b_ookmark      C-x r b
+  rifle _o_pen buffers      _R_eport            jump _b_ookmark      C-x r b
   rifle _a_genda files      profiler sto_P_     _l_ist bookmarks     C-x r l
   rifle whole _O_rg dir     ^^                  ^^
-  ^^                        ^^                  ^^
+  ^^                        ^^                  dogears-_g_o
+  ^^                        ^^                  dogears-_r_emember
   ^^Filter                  ^^                  ^^                             ^^
   ^^────────────────────────────────────────^^─────────────────────────────^^────────────────
   tree: _w_aiting tasks
@@ -15300,12 +15315,14 @@ visualization is brilliant.
   ("a" helm-org-rifle-agenda-files nil)
 
   ("p" (lambda () (interactive) (profiler-start 'cpu)) nil)
-  ("r" profiler-report nil)
+  ("R" profiler-report nil)
   ("P" profiler-stop nil)
 
   ("m" bookmark-set nil)
   ("b" bookmark-jump nil)
   ("l" bookmark-bmenu-list nil)
+  ("g" dogears-go nil)
+  ("r" dogears-remember nil)
 
   ("d" dired-jump nil)
 
