@@ -10254,12 +10254,14 @@ The first subexpression matches the time in minutes (an integer).
 This overrides the default ‘appt-message-warning-time’.
 #+END_VERSE
 
-This *does not work* yet according to my tests on id:2020-09-01-setup-desktop-notifications:
+This *pre-warning does not work* yet according to my tests on id:2020-09-01-setup-desktop-notifications:
 
 #+BEGIN_SRC emacs-lisp
 ;;(setq appt-warning-time-regexp "warntime \\([0-9]+\\)");; original
 (setq appt-warning-time-regexp ":rem\\([0-9]+\\):");; to be used, e.g., as tags: =:rem3:= → 3 minutes
 #+END_SRC
+
+I haven't invested this issue such that I know a fix yet.
 
 *** DISABLED my-org-agenda-to-appt
 
