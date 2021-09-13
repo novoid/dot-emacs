@@ -3305,6 +3305,14 @@ or even better:
 Optional:
 : sudo python3 -m pip install pyls-mypy
 
+On [2021-08-27 Fri] my Emacs wrote:
+: Warning (emacs): The palantir python-language-server (pyls) is unmaintained; a maintained fork is the python-lsp-server (pylsp) project; you can install it with pip via: pip install python-lsp-server Disable showing Disable logging
+
+So I did:
+
+: sudo python3 -m pip uninstall 'python-language-server[all]'
+: sudo python3 -m pip install python-lsp-server
+
 *** DISABLED jedi (LSP)
 
 [2021-04-04 Sun 16:56] disabled: I want to test pure pyls
