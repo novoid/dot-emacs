@@ -14487,6 +14487,24 @@ This looks like a cool method to jump back and forth between buffers. I need to 
 )
 #+END_SRC
 
+** qrencode
+
+| 2021-09-21 | found via Emacs News and going to test it |
+
+- [[https://github.com/ruediger/qrencode-el/][Source code repo]]
+
+| *command*             | *explanation*                             |
+|-----------------------+-------------------------------------------|
+| qrencode-region       | Shows the current selection as a QR Code. |
+| qrencode-url-at-point | Encode URL at point as QR Code.           |
+
+#+BEGIN_SRC emacs-lisp
+(use-package qrencode
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
