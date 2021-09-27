@@ -261,6 +261,11 @@ Turn off header when printing with =M-x ps-print-buffer-with-faces= and format a
 	  ps-number-of-columns 1)
 #+END_SRC
 
+Open file system read-only files as read-only in Emacs as well: (via [[https://www.wisdomandwonder.com/programming/13521/automatically-open-read-only-files-in-view-mode?utm_source=rss&utm_medium=rss&utm_campaign=automatically-open-read-only-files-in-view-mode][this article]])
+#+BEGIN_SRC emacs-lisp
+(setq view-read-only t)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
