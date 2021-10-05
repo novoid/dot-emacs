@@ -8016,6 +8016,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("RB" . ,(concat my-business-jira2-server "/RB-%s"))
           ("GEMIDP" . ,(concat my-business-jira2-server "/GEMIDP-%s"))
           ("GEMIDPANF" . ,(concat my-business-jira2-server "/GEMIDPANF-%s"))
+          ("IDP" . ,(concat my-business-sd-server "/IDP-%s"))
           ))
 #+END_SRC
 
