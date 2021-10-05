@@ -5115,6 +5115,8 @@ Might cause performance issues; http://orgmode.org/manual/Clean-view.html
   (setq org-startup-indented t)
 #+END_SRC
 
+For a more fine-grained control on expanded headings when visiting a Org file, look at [[https://github.com/alphapapa/org-auto-expand][org-auto-expand]].
+
 #+BEGIN_SRC emacs-lisp
   (setq org-enforce-todo-dependencies t)
   (setq org-insert-heading-respect-content nil)
@@ -5715,6 +5717,8 @@ Take a look at =my-reset-org()= as well.
             )
           )
 #+END_SRC
+
+For a more fine-grained control on expanded headings when visiting a Org file, look at [[https://github.com/alphapapa/org-auto-expand][org-auto-expand]].
 
 *** my-reset-org() - reset some Org-mode stuff
 
