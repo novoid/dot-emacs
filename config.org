@@ -14515,6 +14515,20 @@ This looks like a cool method to jump back and forth between buffers. I need to 
 )
 #+END_SRC
 
+** secret-mode
+
+| 2021-10-05 | found via [[https://sachachua.com/blog/2021/10/2021-10-04-emacs-news/][Emacs News]] |
+
+"secret-mode is an Emacs minor mode to hide your current text." ([[https://github.com/bkaestner/secret-mode.el][Source]])
+
+#+BEGIN_SRC emacs-lisp
+(use-package secret-mode
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/secret-mode.el/")))
+  :defer 110
+  :after org
+  )
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
@@ -15559,10 +15573,10 @@ Not org related but might be candidates as well:
     ^^C-c C-a  attachment menu       indent-_r_igidly   C-x TAB         ^^                       ^^
     ^^                               org-_A_ttach-set-directory         ^^                       ^^
     ^^                               my-org-attach-_I_nsert             ^^                       ^^
-    ^^                               ^^                                 ^^                       ^^
+    ^^                               ^^                                 ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
-    _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        ^^                              y  yankpad-expand
+    _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
     ^^                               ^^                               _W_eather Graz                  S  my-synonym-current-word
     ^^                               ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
@@ -15634,6 +15648,8 @@ Not org related but might be candidates as well:
     ("A" org-attach-set-directory nil)
     ("a" org-attach-reveal nil)
     ("I" my-org-attach-insert nil)
+
+    ("x" secret-mode nil)
 
     ("q" nil "quit")
 
