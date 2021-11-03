@@ -14531,6 +14531,40 @@ This looks like a cool method to jump back and forth between buffers. I need to 
   )
 #+END_SRC
 
+** crdt
+
+| 2021-11-03 | found via Emacs news video of Sacha for EmacsConf21 |
+
+*Collaborative editing* using Conflict-free Replicated Data Types \o/
+
+- how to collaborate
+  1. =crdt-protocol-version= needs to be the same on all peers
+  2. make sure to use a computer that has a reachable IP
+  3. =M-x crdt-share-buffer=
+  4. enter session name
+  5. enter port (default to 6530), optional password and your display name
+
+- how to join a session
+  - =M-x crdt-connect=
+  - enter address, port, and your display name.
+
+- interesting:
+  - =M-x crdt-list-users=
+  - =M-x crdt-list-sessions=
+  - =M-x crdt-stop-session= stops a session you’ve started and disconnect all other users from it.
+  - =M-x crdt-disconnect= then choose a session to disconnect from.
+  - =crdt-visualize-author-mode=
+  - Turn on =crdt-org-sync-overlay-mode=. All peers that have this enabled have their folding status synchronized.
+
+- [ ] test this with one host with public IPs and peers with private IPs
+
+#+BEGIN_SRC emacs-lisp
+(use-package crdt
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/crdt.el/")))
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
