@@ -15885,7 +15885,7 @@ Not org related but might be candidates as well:
   ^^─────────────────────^^──────────────────^^────────────────
   _s_tatus    my-map g   ^^                  ^^
   _t_ime-machine         ^^                  ^^
-  ^^                     ^^                  ^^
+  magit-_l_og-buffer-file^^                  ^^
   ^^                     ^^                  ^^
   ^^Smeargle             ^^                  ^^
   ^^─────────────────────^^──────────────────^^────────────────
@@ -15897,7 +15897,8 @@ Not org related but might be candidates as well:
   ("q" nil "quit")
 
   ("s" magit-status nil)
-  ("t" git-timemachine-toggle)
+  ("t" git-timemachine-toggle nil)
+  ("l" magit-log-buffer-file nil)
 
   ("h" smeargle nil :color red)
   ("c" smeargle-commits nil :color red)
