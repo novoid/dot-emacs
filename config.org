@@ -4981,18 +4981,18 @@ assign file extensions to Org-mode:
 Loading contributed packages:
 #+BEGIN_SRC emacs-lisp
 (use-package org-checklist
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
 
 (use-package org-expiry
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
 ;;disabled 2019-06-26;; (use-package ob-restclient
 ;;disabled 2019-06-26;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ob-restclient.el/")))
 ;;disabled 2019-06-26;; )
 
   (when (my-system-is-rise)
-     (my-load-local-el "contrib/org-mode/contrib/lisp/ox-confluence.el")
+     (my-load-local-el "contrib/org-contrib/lisp/ox-confluence.el")
 
      ;; https://www.reddit.com/r/emacs/comments/fk5z1b/how_to_remove_foo_barfoo_bar_links_via/fkrbc0e/
      ;; Do not handle radio links (and generate broken page links):
@@ -5004,7 +5004,7 @@ Loading contributed packages:
                  #'export-radio-links-as-plain-text)
 
   )
-  ;;disabled;; (my-load-local-el "contrib/org-mode/contrib/lisp/ox-freemind.el")
+  ;;disabled;; (my-load-local-el "contrib/org-contrib/lisp/ox-freemind.el")
   (autoload 'org-checklist "org-checklist.el")
 
   ;; http://repo.or.cz/w/org-mode.git?a=blob_plain;f=contrib/lisp/org-expiry.el;hb=HEAD
@@ -5076,7 +5076,7 @@ based on the =:TRIGGER:= and =:BLOCKER:= properties.
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package org-depend
 ;  :if (not noninteractive)  ;; I do have issues with org-depend
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
 #+END_SRC
 
@@ -11522,7 +11522,7 @@ know how to get rid of.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ox-koma-letter
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp/")))
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
 (eval-after-load 'ox '(require 'ox-koma-letter))
 #+END_SRC
@@ -14432,7 +14432,7 @@ process for my situation:
 (package-initialize)
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-contrib/lisp"))
 (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
 (require 'org)
 #+end_src
