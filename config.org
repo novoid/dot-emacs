@@ -12203,7 +12203,7 @@ at once before leaving the computer for a longer period of time.
     (my-flash "continuing with \"my-refile-recache\" ..."))
   (my-refile-recache)
 
-  (when (eq my-boot-process nil)
+  (when (not my-boot-process)
      (my-rise-update-project-tables) ;; omit this on boot process since it takes ~20min
   )
 )
