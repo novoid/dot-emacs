@@ -13,9 +13,10 @@ file is interpreted by my GNU/Emacs on startup.
 
 Note that all Elisp blocks part of a =DISABLED= heading or which are
 marked with =:tangle no= won't be tangled to the =config.el= file.
-Unfortunately, within the Org-mode rendering of GitHub, you won't see
-the =DISABLED= keyword nor the =:tangle no= parameter of the babel
-blocks. Please get the Org-mode file and open it in your Emacs directly.
+Unfortunately, within *the Org-mode rendering of GitHub, you won't see
+the =DISABLED= keyword nor the =:tangle no= parameter* of the babel
+blocks. Please get the Org-mode file and open it in your Emacs
+directly.
 
 Originally, I found this process on [[https://archive.org/search.php?query=http%3A%2F%2Fwww.holgerschurig.de%2Fen%2Femacs-init-tangle%2F][this web page]]. However, I adapted
 its code and write additional features.
@@ -264,6 +265,13 @@ Turn off header when printing with =M-x ps-print-buffer-with-faces= and format a
 Open file system read-only files as read-only in Emacs as well: (via [[https://www.wisdomandwonder.com/programming/13521/automatically-open-read-only-files-in-view-mode?utm_source=rss&utm_medium=rss&utm_campaign=automatically-open-read-only-files-in-view-mode][this article]])
 #+BEGIN_SRC emacs-lisp
 (setq view-read-only t)
+#+END_SRC
+
+I'm not using abbrev mode and get annoyed by its questions:
+#+BEGIN_SRC emacs-lisp
+;(save-abbrevs 'silently) ;; Silently save abbrevs: http://ergoemacs.org/emacs/emacs_abbrev_mode_tutorial.html
+(setq save-abbrevs nil) ;; not saving abbrevs
+(setq-default abbrev-mode nil)
 #+END_SRC
 
 ** DISABLED Guru mode
@@ -557,6 +565,8 @@ monitor.)
 :END:
 
 See hydra-buffers() near the end of this file for a nice summary.
+
+See [[https://github.com/karthink/popper][GitHub - karthink/popper: Emacs minor-mode to summon and dismiss buffers easily]] for defining pop-up buffers.
 
 *** my-vsplit-last-buffer() my-hsplit-last-buffer ()
 
