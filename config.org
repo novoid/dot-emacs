@@ -4987,6 +4987,13 @@ Loading contributed packages:
 (use-package org-expiry
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
+
+;; 2021-11-23: to avoid "org-timestamp-change: Symbol’s function definition is void: org-clock-update-time-maybe"
+(use-package org-clock
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
+)
+
+
 ;;disabled 2019-06-26;; (use-package ob-restclient
 ;;disabled 2019-06-26;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ob-restclient.el/")))
 ;;disabled 2019-06-26;; )
