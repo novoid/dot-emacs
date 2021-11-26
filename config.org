@@ -5086,6 +5086,10 @@ dependencies between tasks]].
 
 [[https://karl-voit.at/2019/11/16/UOMF-Linking-Headings/][This article]] also shows some handy functions related to this topic.
 
+[[https://www.reddit.com/r/emacs/comments/qyajk9/any_package_for_querying_or_visualizing_orgedna/][Please do read this page]] with a very interesting discussion by
+[[https://www.reddit.com/user/TeMPOraL_PL/][u/TeMPOraL\_PL]] on org-edna and task dependency with visualizations and
+a BLOCKER status.
+
 *** DISABLED org-depend
 
 The default method is using =org-depend=. It has a very simple syntax
