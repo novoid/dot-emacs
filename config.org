@@ -2034,6 +2034,21 @@ I get a popup buffer that tells me what bindings I am able to use.
 
 Please note [[https://github.com/novoid/dot-emacs/pull/3][this pull request]] that explains why my characters are non-standard ones. It also adds a symbol for ESC.
 
+** project
+
+| 2021-12-02 | added due to error |
+
+Recently, I got the error =and: Symbol’s value as variable is void:
+project-switch-commands= when running Magit. I don't know how this was caused.
+
+However, loading the project package which was already in my Elpa directory does help. OK, so it is:
+
+#+BEGIN_SRC emacs-lisp
+(use-package project
+  :ensure t
+)
+#+END_SRC
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
