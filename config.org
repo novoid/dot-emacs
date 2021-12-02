@@ -5376,6 +5376,17 @@ Reverting a changed behavior in indentation ([[https://code.orgmode.org/bzg/org-
 (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
 #+end_src
 
+With 2021-12, I started to get "Lisp nesting exceeds
+‘max-lisp-eval-depth’" errors, e.g., when invoking =org-linker-edna=
+and it was looking for target candidates. On [[https://stackoverflow.com/questions/11807128/emacs-nesting-exceeds-max-lisp-eval-depth][stackoverflow]] I found
+this workaround. Without understanding the root cause, I tried it and
+this worked. So maybe the default value of 800 is really too small for
+my large Org-mode setup?
+
+#+BEGIN_SRC emacs-lisp
+(setq max-lisp-eval-depth 10000)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
