@@ -2622,11 +2622,12 @@ within Org-mode only is defined in my yankpad file.
     (setq company-idle-delay 0)
     (setq company-minimum-prefix-length 3)
 
-    (add-hook 'after-init-hook 'global-company-mode)
-    ;;  (global-company-mode t)
+    ;; (add-hook 'after-init-hook 'global-company-mode)
 
-    ;; disable company mode in org mode:
-    (add-hook 'org-mode-hook (lambda () (company-mode -1)))
+    (add-hook 'python-mode-hook 'company-mode)
+
+    ;; disable company mode in org mode:  (doesn't work → company was enabled all the time; disabled global company mode and enabled it only for Python)
+    ;; (add-hook 'org-mode-hook (lambda () (company-mode -1)))
 )
 #+END_SRC
 
