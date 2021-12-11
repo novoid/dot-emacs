@@ -2020,6 +2020,7 @@ I get a popup buffer that tells me what bindings I am able to use.
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-which-key/")))
+    :ensure t
     :defer 120
     :config ;; executed after loading package
     (which-key-setup-side-window-right)
@@ -2039,9 +2040,11 @@ Please note [[https://github.com/novoid/dot-emacs/pull/3][this pull request]] th
 | 2021-12-02 | added due to error |
 
 Recently, I got the error =and: Symbol’s value as variable is void:
-project-switch-commands= when running Magit. I don't know how this was caused.
+project-switch-commands= when running Magit. See also [[https://www.reddit.com/r/emacs/comments/okse5o/magit_not_accepting_cnp_or_updown_arrows/][this thread on
+reddit]]. I don't know how this was caused.
 
-However, loading the project package which was already in my Elpa directory does help. OK, so it is:
+However, loading the project package which was already in my Elpa
+directory does help. OK, so it is:
 
 #+BEGIN_SRC emacs-lisp
 (use-package project
