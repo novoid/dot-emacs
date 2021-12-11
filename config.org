@@ -14019,21 +14019,6 @@ commands should be mapped to easy to type shortcuts.
 
 You can see the current result by calling =keyfreq-show=.
 
-** Pulse: Highlight lines on misc occasions
-
-This is a tip I got from [[https://karthinks.com/software/batteries-included-with-emacs/][that blog article]]:
-
-#+BEGIN_SRC emacs-lisp
-(defun my-pulse-line (&rest _)
-      "Pulse the current line."
-      (pulse-momentary-highlight-one-line (point)))
-
-(dolist (command '(eyebrowse-post-window-switch-hook recenter-top-bottom other-window ace-window my-scroll-down-half my-scroll-up-half))
-  (advice-add command :after #'my-pulse-line))
-#+END_SRC
-
-#+RESULTS:
-
 ** eyebrowse → my-map ,
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:41]
@@ -14081,7 +14066,6 @@ is not shown in the modeline.
 #+BEGIN_SRC emacs-lisp
 (use-package eyebrowse
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/eyebrowse/")))
-  ;;:defer 90
   :init
   (setq eyebrowse-keymap-prefix (kbd "C-:"));; the default overrides org-refile: https://github.com/wasamasa/eyebrowse/issues/86
   :config
@@ -14094,6 +14078,53 @@ is not shown in the modeline.
 #+END_SRC
 
 See hydra definition near the end of this file.
+
+** eyebrowse-restore
+
+| 2021-12-11 | setup for testing purposes |
+
+Before that package, I set up my eyebrowse startup setting via Elisp
+commands in my autostart part below. This somehow worked for 70% of
+the things, requiring manual fixes here and there after booting Emacs.
+
+With that, I would like to test =eyebrowse-restore-save-all= when I've
+manually set up everything and call =eyebrowse-restore= at the end of
+Emacs boot process to prepare my session according to the defined
+state. Maybe even depending on the current machine (personal vs.
+business)?
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package eyebrowse-restore
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/eyebrowse-restore/eyebrowse-restore.el")))
+  :config
+  (setq eyebrowse-restore-dir (expand-file-name (concat my-user-emacs-directory "etc/eyebrowse-restore-" system-name)))
+  (make-directory eyebrowse-restore-dir "also create parents")
+)
+#+END_SRC
+
+How to restore a session:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(eyebrowse-restore)
+#+END_SRC
+
+Note that this is interactive only as of 2021-12-11 and can't use a
+fixed config like "emacs@sting". [[https://github.com/FrostyX/eyebrowse-restore/issues/1][I created a feature request]].
+Therefore, I can't use this package to automatically restore my
+initial session for now. I'll follow the issue closely.
+
+** Pulse: Highlight lines on misc occasions
+
+This is a tip I got from [[https://karthinks.com/software/batteries-included-with-emacs/][that blog article]]:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-pulse-line (&rest _)
+      "Pulse the current line."
+      (pulse-momentary-highlight-one-line (point)))
+
+(dolist (command '(eyebrowse-post-window-switch-hook recenter-top-bottom other-window ace-window my-scroll-down-half my-scroll-up-half))
+  (advice-add command :after #'my-pulse-line))
+#+END_SRC
 
 ** ibuffer
 
