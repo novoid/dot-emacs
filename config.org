@@ -6756,13 +6756,10 @@ found in the combined lists of:
                 (replace-regexp-in-string
                  "\\+" " plus " str))))
          ;; Replace German Umlauts with 7-bit ASCII.
-         (str (replace-regexp-in-string "[Ä]" "Ae" str t))
-         (str (replace-regexp-in-string "[Ü]" "Ue" str t))
-         (str (replace-regexp-in-string "[Ö]" "Oe" str t))
-         (str (replace-regexp-in-string "[ä]" "ae" str t))
-         (str (replace-regexp-in-string "[ü]" "ue" str t))
-         (str (replace-regexp-in-string "[ö]" "oe" str t))
-         (str (replace-regexp-in-string "[ß]" "ss" str t))
+         (str (replace-regexp-in-string "ä" "ae" str nil))
+         (str (replace-regexp-in-string "ü" "ue" str nil))
+         (str (replace-regexp-in-string "ö" "oe" str nil))
+         (str (replace-regexp-in-string "ß" "ss" str nil))
          ;; Replace all characters except alphabets, numbers and
          ;; parentheses with spaces.
          (str (replace-regexp-in-string "[^[:alnum:]()]" " " str))
