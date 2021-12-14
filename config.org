@@ -7057,6 +7057,98 @@ lines. It's not clever enough to detect quoted block begin/end strings.
 )
 #+END_SRC
 
+*** yant/org-columns-custom-formatter
+
+| 2021-07-27 | added from mailinglist; DISABLED because of performance impact  |
+
+I posed a question on the org mailinglist:
+
+#+BEGIN_EXAMPLE
+From: Karl Voit <devnull@Karl-Voit.at>
+Newsgroups: gmane.emacs.orgmode
+Subject: Dynamic block tables: adding prefix of "id:" to %ID
+Date: Fri, 23 Jul 2021 10:46:57 +0200
+Message-ID: <2021-07-23T10-42-47@devnull.Karl-Voit.at>
+
+I do have a dynamic block table like this:
+
+#+BEGIN: columnview :id global :match "+project-focus/!+STARTED|+NEXT|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID) %TAGS(Tags)"
+| State   | What               | ID  | Tags          |
+|---------+--------------------+-----+---------------|
+| STARTED | [12/14] proj foo   | foo | :foo:project: |
+| NEXT    | [0/0] proj bar     | bar | :bar:project: |
+| STARTED | [191/191] proj baz | baz | :baz:project: |
+#+END:
+
+Is there a way to get the ID column with working ID links such as:
+
+#+BEGIN: columnview :id global :match "+project-focus/!+STARTED|+NEXT|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID) %TAGS(Tags)"
+| State   | What               | ID     | Tags          |
+|---------+--------------------+--------+---------------|
+| STARTED | [12/14] proj foo   | id:foo | :foo:project: |
+| NEXT    | [0/0] proj bar     | id:bar | :bar:project: |
+| STARTED | [191/191] proj baz | id:baz | :baz:project: |
+#+END:
+
+Thanks!
+#+END_EXAMPLE
+
+Ihor Radchenko answered with a cool method by overwriting =org-columns-modify-value-for-display-function=:
+
+Ihor's initial function which had an issue with performance on my
+side, resulting in aborting the table update after two hours in a 72k
+line Org file:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defun yant/org-columns-custom-formatter (column-title value)
+  "Format column values for columns with ID-LINK title as proper Org mode id: link."
+  (pcase column-title
+    ("ID-LINK"
+     (format "[[id:%s][%s]]"
+             value
+             (org-with-point-at (org-id-find value 'marker)
+               (org-get-heading t t t t))))
+    (_ nil)))
+#+END_SRC
+
+Improved function by Ihor:
+
+#+BEGIN_SRC emacs-lisp
+(defun yant/org-columns-custom-formatter (column-title value)
+  "Format column values for columns with ID-LINK title as proper Org mode id: link."
+  (pcase column-title
+    ("ID-LINK"
+     (format "[[id:%s]]" value))
+    (_ nil)))
+
+(setq org-columns-modify-value-for-display-function #'yant/org-columns-custom-formatter)
+#+END_SRC
+
+While this basically works (see table and test headings below), it has
+a huge impact on performance. An update which usually took 20min on a
+72k lines Org file had to be aborted after two hours.
+
+#+BEGIN: columnview :id global :match "+project+focus/!+STARTED|+NEXT|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID-LINK) %TAGS(Tags)"
+| State | What           | ID-LINK        | Tags            |
+|-------+----------------+----------------+-----------------|
+| NEXT  | [/] focus proj | [[id:2021-07-27-focus-proj][[/] focus proj]] | :focus:project: |
+#+END:
+
+
+**** NEXT [/] focus proj                                                           :focus:project:
+:PROPERTIES:
+:CREATED:  [2021-07-27 Tue 13:59]
+:COOKIE_DATA: todo recursive
+:ID:       2021-07-27-focus-proj
+:END:
+
+**** NEXT [/] non-focus proj                                                             :project:
+:PROPERTIES:
+:CREATED:  [2021-07-27 Tue 13:59]
+:COOKIE_DATA: todo recursive
+:ID:       2021-07-27-non-focus-proj
+:END:
+
 *** my-replace-id-property
 
 | 2021-07-31 | Added to my config |
