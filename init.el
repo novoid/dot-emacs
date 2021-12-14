@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2021-06-06 17:53:58 vk>
+;; Time-stamp:    <2021-12-11 11:26:50 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -28,10 +28,11 @@
 ;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
 (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
 (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
+(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-contrib/lisp"))
 ;(setq load-path (delete "/usr/share/emacs/28.0.50/lisp/org" load-path));; disabling built-in org on floyd - didn't help
 (require 'org)
-
-
+(require 'org-element)
+(require 'org-eldoc)
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -132,7 +133,8 @@ Note the weekly scope of the command's precision.")
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(notmuch-saved-searches
-   '((:name "inbox" :query "tag:inbox" :key "i")
+   (quote
+    ((:name "inbox" :query "tag:inbox" :key "i")
      (:name "unread" :query "tag:unread" :key "u")
      (:name "flagged" :query "tag:flagged" :key "f")
      (:name "sent" :query "tag:sent" :key "t")
@@ -140,28 +142,43 @@ Note the weekly scope of the command's precision.")
      (:name "all mail" :query "*" :key "a")
      (:name "Sent" :query "folder:archive")
      (:name "this_week" :query "date:\"this week\"")
-     (:name "today¬me" :query "date:today and not from:karl.voit")))
+     (:name "today¬me" :query "date:today and not from:karl.voit"))))
  '(org-agenda-files
-   '("~/org/rise.org" "~/org/misc.org" "~/org/issues.org" "~/org/projects.org" "~/org/finanzen_behoerden_versicherungen.org" "~/org/bwg.org" "~/org/contacts.org" "~/org/hardware.org" "~/org/fhsp.org" "~/org/notes.org" "~/org/public_voit.org" "~/org/errors.org" "~/org/errors_public_voit.org" "~/org/memacs/error.org"))
+   (quote
+    ("~/org/rise.org" "~/org/misc.org" "~/org/issues.org" "~/org/projects.org" "~/org/finanzen_behoerden_versicherungen.org" "~/org/bwg.org" "~/org/contacts.org" "~/org/hardware.org" "~/org/fhsp.org" "~/org/notes.org" "~/org/public_voit.org" "~/org/errors.org" "~/org/memacs/error.org")))
  '(org-contacts-address-property "CITY" t)
  '(org-contacts-birthday-property "BORN" t)
  '(org-contacts-icon-property "PHOTOGRAPH" t)
  '(package-selected-packages
-   '(helm-pass password-generator pass image-dired+ eglot lsp-docker which-key dap-python dap-mode helm-lsp lsp-ui lsp-mode keycast projectile elisp-bug-hunter bug-hunter spatial-navigate org-edna org-ql org-super-links quelpa-use-package quelpa orly helm-org-rifle ace-window vimgolf lorem-ipsum gif-screencast pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-pdfview org-bullets nyan-mode mode-icons magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode))
+   (quote
+    (eyebrowse-restore qrencode dogears copy-as-format helm-pass password-generator pass image-dired+ eglot lsp-docker which-key dap-python dap-mode helm-lsp lsp-ui lsp-mode keycast projectile elisp-bug-hunter bug-hunter spatial-navigate org-edna org-ql org-super-links quelpa-use-package quelpa orly helm-org-rifle ace-window vimgolf lorem-ipsum gif-screencast pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-pdfview org-bullets nyan-mode mode-icons magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode)))
  '(safe-local-variable-values
-   '((eval org-expiry-deinsinuate)
+   (quote
+    ((eval org-expiry-deinsinuate)
      (eval setq org-image-actual-width 600)
      (eval setq org-image-actual-width 20)
-     (eval remove-hook 'org-after-tags-change-hook 'org-expiry-insert-created t)
-     (eval make-local-variable 'org-after-tags-change-hook)
-     (eval remove-hook 'org-after-todo-state-change-hook 'org-expiry-insert-created t)
-     (eval make-local-variable 'org-after-todo-state-change-hook)
-     (eval remove-hook 'org-insert-heading-hook 'org-expiry-insert-created t)
-     (eval make-local-variable 'org-insert-heading-hook)
+     (eval remove-hook
+           (quote org-after-tags-change-hook)
+           (quote org-expiry-insert-created)
+           t)
+     (eval make-local-variable
+           (quote org-after-tags-change-hook))
+     (eval remove-hook
+           (quote org-after-todo-state-change-hook)
+           (quote org-expiry-insert-created)
+           t)
+     (eval make-local-variable
+           (quote org-after-todo-state-change-hook))
+     (eval remove-hook
+           (quote org-insert-heading-hook)
+           (quote org-expiry-insert-created)
+           t)
+     (eval make-local-variable
+           (quote org-insert-heading-hook))
      (eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
-     (flyspell-default-dictionary . "german8")))
+     (flyspell-default-dictionary . "german8"))))
  '(tramp-default-user "vk" nil (tramp)))
 
 (custom-set-faces
