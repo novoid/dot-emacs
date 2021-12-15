@@ -16102,7 +16102,7 @@ Not org related but might be candidates as well:
   _a_bsolute link       _m_emacs tsfile link  _D_ate2name.el     D  delete marked
   _A_bsolute basename   ^^                    ^^                 tk hide marked       C-c C-o  open externally
   ^^                    ^^                    ^^                 U  unmark all        C-o      open in new frame
-  ^View    ^            ^Edit^                ^Order^
+  ^View    ^            ^Edit^                ^Order^            %& dired-flag-garbage-files
   ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename        T touch/set date
   _c_ollapse mode       _v_idir (C-x C-q)     _s_ize ordered     C  copy/clone        C-t d    image-dired+ of marked files  M chmod
   _o_pen in file manager      ^^              _h_uman size       r  rename/move       <percent> l  lowercase                 O chown
