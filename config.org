@@ -7198,6 +7198,18 @@ As [[https://www.reddit.com/r/orgmode/comments/ouihd3/how_to_modify_searchreplac
 boundaries in each buffer). If you know how to implement this
 properly, please do submit a pull request.
 
+*** my-org-align-all-tags
+
+| 2021-12-16 | Created since =org-align-all-tags= got obsolete but =org-align-tags= offers a parameter for it |
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-align-all-tags()
+  "Align tags in the visible part of the buffer."
+  (interactive)
+  (org-align-tags t)
+)
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
