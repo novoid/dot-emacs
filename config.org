@@ -1915,6 +1915,39 @@ the same coding systems as Emacs."
     ad-do-it))
 #+END_SRC
 
+** Entering emojis
+
+| 2021-12-20 | Idea from [[http://www.masteringemacs.org/article/inserting-emoji-input-methods][Inserting Emoji with Input Methods - Mastering Emacs]] |
+
+You need to type =C-u C-\=, enter "Emoji" (TAB-completion works) and
+then one of the defined emojis below such as =:P= or =:thumb:=.
+
+- [ ] add more emojis!
+
+#+BEGIN_SRC emacs-lisp
+(quail-define-package
+ "Emoji" "UTF-8" "😎" t
+ "Emoji input mode for people that really, really like Emoji"
+ '(("\t" . quail-completion))
+ t t nil nil nil nil nil nil nil t)
+
+(quail-define-rules
+ (":)" ?😀)
+ (":P" ?😋)
+ (":D" ?😂)
+ (":thumb:" ?👍)
+ (":think:" ?🤔)
+ (":roll:" ?🙄)
+ (":weary:" ?😩)
+ (":wink:" ?😉)
+ (":cry:" ?😢)
+ (":kiss:" ?😘)
+ (":unamused:" ?😒)
+; ("::" ?)
+; ("::" ?)
+)
+#+END_SRC
+
 * my-map: my own keyboard shortcut prefix
 
 About defining keys: [[http://ergoemacs.org/emacs/keyboard_shortcuts.html][Emacs: How to Define Keys]]
