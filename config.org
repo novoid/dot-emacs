@@ -14800,6 +14800,24 @@ This looks like a cool method to jump back and forth between buffers. I need to 
 )
 #+END_SRC
 
+** repetition_error_finder (Beta)
+
+| 2022-01-07 | Setup for test purposes.|
+
+I found this nugget via [[https://irreal.org/blog/?p=10235][this irreal article]]. The project is [[https://github.com/ioah86/repetition_error_finder][hosted on
+GitHub]]. Its goal is to find repetition errors in written text. It
+seems to work in any language.
+
+Currently, I don't use any keybinding. Instead, I'm using =M-x
+find-reperr-whole-buffer= or =M-x find-reperr-from-point=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package repetition-error
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/repetition_error_finder/")))
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
