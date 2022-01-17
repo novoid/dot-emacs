@@ -274,6 +274,29 @@ I'm not using abbrev mode and get annoyed by its questions:
 (setq-default abbrev-mode nil)
 #+END_SRC
 
+2022-01-16: larger columns for profiler reports:
+#+BEGIN_SRC emacs-lisp
+ (setq profiler-report-cpu-line-format '((70 left)
+					  (14 right ((9 right) (5 right))))) 
+#+END_SRC
+
+2022-01-16: This has a positive impact on the performance as long as
+you would not need it for consistency warnings. Re-enable it if
+something is fishy and you want the self-check functionality again.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-element--cache-self-verify nil) 
+#+END_SRC
+
+For issue, see id:2022-01-06-Emacs-Warning--emacs--Unrecognized-key-i-when-invoking-my-title-capitalization.
+- [2022-01-06 Thu] via Message-ID: <875yqxhx0i.fsf@localhost>: avoiding the warning:
+  : Warning (emacs): Unrecognized key: _i_                                                                                                                                                                                                                                                  
+  : Warning (emacs): org-element--cache: Unregistered buffer modifications detected. Resetting.
+
+#+BEGIN_SRC emacs-lisp
+(setq org-element--cache-diagnostics-modifications nil)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
@@ -2581,7 +2604,7 @@ is part of GNU Emacs.»
 (use-package flycheck
   :ensure t
   :init
-  (global-flycheck-mode)
+  ;; (global-flycheck-mode) ;; has performance impact on non-programming buffers as well
   :config
   (setq flycheck-flake8-maximum-line-length 200); http://www.flycheck.org/manual/latest/Configuring-checkers.html#Configuring-checkers
   )
@@ -3457,6 +3480,7 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
         (unless (eq buffer-file-name nil) (flymake-mode 1)) ;dont invoke flymake on temporary buffers for the interpreter
         (local-set-key [f6] 'flymake-goto-prev-error)
         (local-set-key [f7] 'flymake-goto-next-error)
+        (flycheck-mode 1) ;; instead of global
         ))
 #+END_SRC
 
@@ -3619,6 +3643,8 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
   ;;:defer 90
   :config
   (diredp-toggle-find-file-reuse-dir 1) ;; https://www.emacswiki.org/emacs/DiredReuseDirectoryBuffer
+  (remove-hook 'dired-after-readin-hook 'diredp-nb-marked-in-mode-name) ;; better performance on dired buffer start
+  (remove-hook 'dired-mode-hook         'diredp-nb-marked-in-mode-name) ;; better performance on dired buffer start
 )
 #+END_SRC
 
@@ -5142,6 +5168,10 @@ dependencies between tasks]].
 [[https://www.reddit.com/user/TeMPOraL_PL/][u/TeMPOraL\_PL]] on org-edna and task dependency with visualizations and
 a BLOCKER status.
 
+#+BEGIN_SRC emacs-lisp
+(setq org-enforce-todo-checkbox-dependencies t)
+#+END_SRC
+
 *** DISABLED org-depend
 
 The default method is using =org-depend=. It has a very simple syntax
@@ -5762,43 +5792,49 @@ visibility, I invoke this function to get a fresh environment again.
 
 Take a look at =my-reset-org()= as well.
 
+2022-01-16: yantar92 reminded me that =#+STARTUP: indent= is not a
+valid option (any more?). So lets disable the content for now and see
+how that goes. If it solves my issue, then I'd get rid of this
+function completely.
+
 #+BEGIN_SRC emacs-lisp
         (defun my-org-startup-visibility (&optional ignore)
           "Sets the startup visibility in my most important buffers"
-          (interactive "P")
-          (save-window-excursion ;; Why save-excursion is not sufficient here: https://emacs.stackexchange.com/questions/24133/save-excursion-doesnt-restore-the-currently-visible-buffer
-            (when (my-buffer-exists "misc.org")
-              (switch-to-buffer "misc.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "projects.org")
-              (switch-to-buffer "projects.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "issues.org")
-              (switch-to-buffer "issues.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "contacts.org")
-              (switch-to-buffer "contacts.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "notes.org")
-              (switch-to-buffer "notes.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "hardware.org")
-              (switch-to-buffer "hardware.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "public_voit.org")
-              (switch-to-buffer "public_voit.org")
-              (org-set-startup-visibility)
-              )
-            (when (my-buffer-exists "rise.org")
-              (switch-to-buffer "rise.org")
-              (org-set-startup-visibility)
-              )
+          (interactive "P") 
+          (setq dummyvar nil)
+         ;2022-01-16;(save-window-excursion ;; Why save-excursion is not sufficient here: https://emacs.stackexchange.com/questions/24133/save-excursion-doesnt-restore-the-currently-visible-buffer
+         ;2022-01-16;  (when (my-buffer-exists "misc.org")
+         ;2022-01-16;    (switch-to-buffer "misc.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "projects.org")
+         ;2022-01-16;    (switch-to-buffer "projects.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "issues.org")
+         ;2022-01-16;    (switch-to-buffer "issues.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "contacts.org")
+         ;2022-01-16;    (switch-to-buffer "contacts.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "notes.org")
+         ;2022-01-16;    (switch-to-buffer "notes.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "hardware.org")
+         ;2022-01-16;    (switch-to-buffer "hardware.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "public_voit.org")
+         ;2022-01-16;    (switch-to-buffer "public_voit.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
+         ;2022-01-16;  (when (my-buffer-exists "rise.org")
+         ;2022-01-16;    (switch-to-buffer "rise.org")
+         ;2022-01-16;    (org-set-startup-visibility)
+         ;2022-01-16;    )
             ;; (when (my-system-type-is-windows)
             ;;   (when (my-buffer-exists "detego.org")
             ;;     (switch-to-buffer "detego.org")
@@ -6119,6 +6155,8 @@ Replaces URL with Org-mode link including description
 - see id:2014-03-09-inbox-to-bookmarks
 - 2014-03-18: alternative method: http://orgmode.org/worg/org-hacks.html#sec-1-6-3 "Insert link with HTML title as default description"
 - see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
+
+A similar approach can be found in https://github.com/alphapapa/org-web-tools.
 
 #+BEGIN_SRC emacs-lisp
   (defun my-www-get-page-title (url)
@@ -10446,10 +10484,11 @@ cause desktop notifications via =notify-send=:
         (appt-activate 1)))           ;; active appt (appointment notification)
 
     ;; add agenda→diary mechanism to the org-super-agenda hook
-    (add-hook 'org-super-agenda-mode-hook
+    ;; 2022-01-16: org-super-agenda-mode-hook → org-agenda-mode-hook
+    (add-hook 'org-agenda-finalize-hook
       (lambda ()
         (setq appt-time-msg-list nil) ;; clear list of appointments for today.
-        (org-agenda-to-appt)          ;; copy all agenda schedule to appointments
+        (org-agenda-to-appt)          ;; copy all agenda schedule to appointments;; 2022-01-16: opens all agenda files and closes them
         (appt-activate 1)))           ;; active appt (appointment notification)
 
 #+END_SRC
@@ -11854,8 +11893,20 @@ of setting this -- see the docstring for details
 #+END_SRC
 
 When some code generates an image file, display it in the results:
-#+BEGIN_SRC emacs-lisp
+
+2022-01-16: this has some performance impact because it affects all babel blocks of the current file
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-babel-after-execute-hook
+  (lambda ()
+  (unless (eq this-command 'org-babel-tangle)
+    (org-display-inline-images nil nil
+                               (save-excursion (org-back-to-heading-or-point-min t))
+                               (save-excursion (or (outline-next-heading) (point-max)))))))
 #+END_SRC
 
 http://orgmode.org/manual/Sparse-trees.html#index-org_002dshow_002dentry_002dbelow-179
@@ -12698,10 +12749,13 @@ Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_be
 (use-package gcmh
   :ensure t
   :config
+  (gcmh-mode +1)
   (setq garbage-collection-messages t)
   (setq gcmh-verbose t)
+  (setq gcmh-low-cons-threshold (* 200 1000 1000)) ;; 2022-01-16: yantar92 proposed a much less conservative setting for GC
 )
 #+END_SRC
+
 
 ** DISABLED tabbar
 
@@ -14766,9 +14820,11 @@ This looks like a cool method to jump back and forth between buffers. I need to 
   )
 #+END_SRC
 
-** crdt
+** DISABLE crdt
 
 | 2021-11-03 | found via Emacs news video of Sacha for EmacsConf21 |
+
+- [2022-01-16 Sun 11:19] performance impact on generating dynamic tables (6%)
 
 *Collaborative editing* using Conflict-free Replicated Data Types \o/
 
@@ -16955,6 +17011,7 @@ approximately 25 seconds as of 2019-04-17.
        )
        )
       )
+   ;;(remove-hook 'after-change-major-mode-hook #'yankpad-local-category-to-major-mode) ;; 2022-01-16 temp remove hook for performance
    (my-log-misc "end of autostart")
 
 )
