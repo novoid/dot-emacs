@@ -137,7 +137,7 @@ Here are my function-key-mappings that are included in most hydra help screens:
 "                                                                                                     (propertize
 "    F1        F2    F3   F4  ┃  F5     F6       F7  F8   ┃  F9      F10      F11       F12
 "                                                                                                      'face '(:foreground "green"))
-"    Hydra  Windows        ★  ┃  spell  (←) error →  fix  ┃  Search  Menu     maximize  naked
+"    Hydra  Windows  run   ★  ┃  spell  (←) error →  fix  ┃  Search  Menu     maximize  naked
 
 "))
 #+END_SRC
@@ -15494,6 +15494,26 @@ match the one of =insert-char= taken from [[https://www.reddit.com/r/emacs/comme
   (with-temp-buffer
     (call-interactively 'counsel-unicode-char-to-kill)
     (kill-ring-save (point-min) (point-max))))
+#+END_SRC
+
+** my-run-launcher → F3
+
+| 2022-01-19 | setup |
+
+I got this snippet from [[https://www.reddit.com/r/unixporn/comments/s7p7pr/so_which_run_launcher_do_you_use_rofi_or_dmenu/][this reddit posting]].
+
+#+BEGIN_SRC emacs-lisp :results none
+  (defun my-run-launcher ()
+      "Create and select a frame called emacs-run-launcher which consists only of a minibuffer and has specific dimensions. Run counsel-linux-app on that frame, which is an emacs command that prompts you to select an app and open it in a dmenu like behaviour. Delete the frame after that command has exited"
+      (interactive)
+      (with-selected-frame (make-frame '((name . "emacs-run-launcher")
+      (minibuffer . only)
+      (width . 120)
+      (height . 11)))
+      (counsel-linux-app)
+      (delete-frame)))
+
+  (global-set-key [f3] 'my-run-launcher)
 #+END_SRC
 
 * hydra
