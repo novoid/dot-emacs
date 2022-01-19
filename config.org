@@ -14874,6 +14874,22 @@ find-reperr-whole-buffer= or =M-x find-reperr-from-point=.
 )
 #+END_SRC
 
+** Wordel (game)
+
+| 2022-01-18 | setup of package with ngerman |
+
+Project: https://github.com/progfolio/wordel (via [[https://www.reddit.com/r/emacs/comments/s608jw/if_you_like_wordle/][reddit]])
+
+I replaced the original =words.txt= with german: =sudo apt install wngerman= and =ln -s /usr/share/dict/ngerman ~/.emacs.d/contrib/wordel/words.txt=
+
+#+BEGIN_SRC emacs-lisp
+(use-package wordel
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/wordel/")))
+ ; :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
