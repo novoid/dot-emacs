@@ -6696,75 +6696,6 @@ A macro that is very handy when inserting images to a lazyblorg entry.
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([return up 35 43 67 65 80 84 73 79 78 58 32 return 35 43 65 84 84 82 95 72 84 77 76 58 32 58 97 108 59 backspace 105 103 110 32 99 101 110 116 101 114 32 58 119 105 100 116 104 32 53 54 48 1 down 91 91 116 115 102 105 108 101 58 67108896 5 escape 119 93 91 25 93 93 15 1 down down] 0 "%d")) arg)))
 #+END_SRC
 
-*** my-mark-as-project
-:PROPERTIES:
-:CREATED:  [2019-11-08 Fri 12:00]
-:END:
-
-With [[https://karl-voit.at/2019/11/03/org-projects/][UOMF: On How to Define Projects in Org Mode]] I started to use
-marking projects with a specific tag and made sure the =COOKIE_DATA=
-property ignores the checkboxes.
-
-Following function makes sure that these things are set properly (and
-a bit more):
-
-#+BEGIN_SRC emacs-lisp
-(defun my-mark-as-project ()
-"This function makes sure that the current heading has
-(1) the tag :project:
-(2) has property COOKIE_DATA set to \"todo recursive\"
-(3) has any TODO keyword and
-(4) a leading progress indicator
-(5) expand a yankpad/yasnippet element which is inserted at the top of the body of the heading"
-    (interactive)
-    (org-toggle-tag "project" 'on)
-    (org-set-property "COOKIE_DATA" "todo recursive")
-    (org-back-to-heading t)
-    (let* ((title (nth 4 (org-heading-components)))
-           (keyword (nth 2 (org-heading-components))))
-       (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
-           (message "TODO keyword and progress indicator found")
-           )
-       (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
-           (message "no TODO keyword but progress indicator found")
-           (forward-whitespace 1)
-           (insert "NEXT ")
-           )
-       (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
-           (message "no TODO keyword and no progress indicator found")
-           (forward-whitespace 1)
-           (insert "NEXT [/] ")
-           )
-       (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
-           (message "TODO keyword but no progress indicator found")
-           (forward-whitespace 2)
-           (insert "[/] ")
-           )
-       )
-     (search-forward "
-
-");; goto the first paragraph of the body
-     (insert "pchecklist
-
-");; insert snippet name for yankpad project management checklist snippet
-     (search-backward "list")
-     (org-end-of-line);; goto back to the snippet name
-     (yankpad-expand);; expand snippet
-)
-#+END_SRC
-
-Personal notes from the implementation task: id:2019-11-08-my-mark-as-project
-
-I found following interesting elisp sources for implementing this function:
-- get heading parsed: http://ergoemacs.org/emacs/elisp_parse_org_mode.html
-- insert text: http://ergoemacs.org/emacs/elisp_examples.html
-
----------------
-
-You also might be interested to read [[https://karl-voit.at/2020/08/14/project-mgt-draft][A Draft Workflow for Advanced
-Project Management Using Org Mode and Org Edna]] where this is a part of
-the proposed project management workflow.
-
 *** my-org-auto-tag
 :PROPERTIES:
 :CREATED:  [2019-11-08 Fri 14:00]
@@ -6920,6 +6851,76 @@ generate nice IDs.
 
 History of this function:
 id:2019-11-14-Org-Project-Management-Workflow
+
+*** my-mark-as-project
+:PROPERTIES:
+:CREATED:  [2019-11-08 Fri 12:00]
+:END:
+
+With [[https://karl-voit.at/2019/11/03/org-projects/][UOMF: On How to Define Projects in Org Mode]] I started to use
+marking projects with a specific tag and made sure the =COOKIE_DATA=
+property ignores the checkboxes.
+
+Following function makes sure that these things are set properly (and
+a bit more):
+
+#+BEGIN_SRC emacs-lisp
+(defun my-mark-as-project ()
+"This function makes sure that the current heading has
+(1) the tag :project:
+(2) has property COOKIE_DATA set to \"todo recursive\"
+(3) has any TODO keyword and
+(4) a leading progress indicator
+(5) expand a yankpad/yasnippet element which is inserted at the top of the body of the heading"
+    (interactive)
+    (org-toggle-tag "project" 'on)
+    (org-set-property "COOKIE_DATA" "todo recursive")
+    (my-id-get-or-generate)  ;; make sure it has an ID
+    (org-back-to-heading t)
+    (let* ((title (nth 4 (org-heading-components)))
+           (keyword (nth 2 (org-heading-components))))
+       (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
+           (message "TODO keyword and progress indicator found")
+           )
+       (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
+           (message "no TODO keyword but progress indicator found")
+           (forward-whitespace 1)
+           (insert "NEXT ")
+           )
+       (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
+           (message "no TODO keyword and no progress indicator found")
+           (forward-whitespace 1)
+           (insert "NEXT [/] ")
+           )
+       (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
+           (message "TODO keyword but no progress indicator found")
+           (forward-whitespace 2)
+           (insert "[/] ")
+           )
+       )
+     (search-forward "
+
+");; goto the first paragraph of the body
+     (insert "pchecklist
+
+");; insert snippet name for yankpad project management checklist snippet
+     (search-backward "list")
+     (org-end-of-line);; goto back to the snippet name
+     (yankpad-expand);; expand snippet
+)
+#+END_SRC
+
+Personal notes from the implementation task: id:2019-11-08-my-mark-as-project
+
+I found following interesting elisp sources for implementing this function:
+- get heading parsed: http://ergoemacs.org/emacs/elisp_parse_org_mode.html
+- insert text: http://ergoemacs.org/emacs/elisp_examples.html
+
+---------------
+
+You also might be interested to read [[https://karl-voit.at/2020/08/14/project-mgt-draft][A Draft Workflow for Advanced
+Project Management Using Org Mode and Org Edna]] where this is a part of
+the proposed project management workflow.
 
 *** my-org-tree-to-indirect-buffer
 :PROPERTIES:
