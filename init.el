@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2021-12-11 11:26:50 vk>
+;; Time-stamp:    <2022-02-22 14:57:41 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -123,68 +123,10 @@ Note the weekly scope of the command's precision.")
 	  (my-tangle-config-org))))
 (add-hook 'after-save-hook 'my-tangle-config-org-hook-func)
 
+;; 2022-02-22: from https://systemcrafters.net/emacs-from-scratch/the-best-default-settings/
+;; Move customization variables to a separate file and load it
+(setq custom-file (concat my-user-emacs-directory "custom-file.el"))
+(load custom-file 'noerror 'nomessage)
 
 (message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) my-init-el-start-time)))
 
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(notmuch-saved-searches
-   (quote
-    ((:name "inbox" :query "tag:inbox" :key "i")
-     (:name "unread" :query "tag:unread" :key "u")
-     (:name "flagged" :query "tag:flagged" :key "f")
-     (:name "sent" :query "tag:sent" :key "t")
-     (:name "drafts" :query "tag:draft" :key "d")
-     (:name "all mail" :query "*" :key "a")
-     (:name "Sent" :query "folder:archive")
-     (:name "this_week" :query "date:\"this week\"")
-     (:name "today¬me" :query "date:today and not from:karl.voit"))))
- '(org-agenda-files
-   (quote
-    ("~/org/rise.org" "~/org/misc.org" "~/org/issues.org" "~/org/projects.org" "~/org/finanzen_behoerden_versicherungen.org" "~/org/bwg.org" "~/org/contacts.org" "~/org/hardware.org" "~/org/fhsp.org" "~/org/notes.org" "~/org/public_voit.org" "~/org/errors.org" "~/org/memacs/error.org")))
- '(org-contacts-address-property "CITY" t)
- '(org-contacts-birthday-property "BORN" t)
- '(org-contacts-icon-property "PHOTOGRAPH" t)
- '(package-selected-packages
-   (quote
-    (eyebrowse-restore qrencode dogears copy-as-format helm-pass password-generator pass image-dired+ eglot lsp-docker which-key dap-python dap-mode helm-lsp lsp-ui lsp-mode keycast projectile elisp-bug-hunter bug-hunter spatial-navigate org-edna org-ql org-super-links quelpa-use-package quelpa orly helm-org-rifle ace-window vimgolf lorem-ipsum gif-screencast pandoc-mode tabbar session pod-mode notmuch muttrc-mode mutt-alias markdown-mode initsplit htmlize graphviz-dot-mode folding ess eproject diminish csv-mode browse-kill-ring boxquote bm bar-cursor auto-complete apache-mode ag yankpad yafolding wttrin use-package unicode-fonts spray smart-mode-line scss-mode pcre2el ox-reveal ox-pandoc ox-gfm org-table-sticky-header org-pdfview org-bullets nyan-mode mode-icons magit json-mode hydra highlight-symbol helm-org helm-dired-history gnuplot gcmh flycheck elpy dumb-jump counsel char-menu anzu alert adoc-mode)))
- '(safe-local-variable-values
-   (quote
-    ((eval org-expiry-deinsinuate)
-     (eval setq org-image-actual-width 600)
-     (eval setq org-image-actual-width 20)
-     (eval remove-hook
-           (quote org-after-tags-change-hook)
-           (quote org-expiry-insert-created)
-           t)
-     (eval make-local-variable
-           (quote org-after-tags-change-hook))
-     (eval remove-hook
-           (quote org-after-todo-state-change-hook)
-           (quote org-expiry-insert-created)
-           t)
-     (eval make-local-variable
-           (quote org-after-todo-state-change-hook))
-     (eval remove-hook
-           (quote org-insert-heading-hook)
-           (quote org-expiry-insert-created)
-           t)
-     (eval make-local-variable
-           (quote org-insert-heading-hook))
-     (eval ispell-change-dictionary "german8")
-     (eval ispell-change-dictionary "american")
-     (eval ispell-change-dictionary "en_US")
-     (flyspell-default-dictionary . "german8"))))
- '(tramp-default-user "vk" nil (tramp)))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(put 'dired-find-alternate-file 'disabled nil)

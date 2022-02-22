@@ -27,3 +27,4 @@ quelpa
 .stignore*
 abbrev_defs
 straight
+/custom-file.el
