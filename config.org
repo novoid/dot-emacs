@@ -17091,13 +17091,13 @@ approximately 25 seconds as of 2019-04-17.
        (org-shifttab)                   ;; toggle visibility
        (eyebrowse-rename-window-config 3 "rise") ;; set name for rise config
        (other-window 1) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
-       (when (my-system-is-rise)
-         (eyebrowse-create-window-config) ;; create 4th config for rise/dired
-         (eyebrowse-rename-window-config 4 "rise-dired") ;; set name for config
-         (other-window 1) ;; switch from on the left side → may not work yet (test!)
-         (dired my-business-dired-folder);; open dired buffer with business config
-         (eyebrowse-switch-to-window-config-3);; switch back to "rise"
-       )
+       ;; 2022-01-25 disabled ;; (when (my-system-is-rise)
+       ;; 2022-01-25 disabled ;;   (eyebrowse-create-window-config) ;; create 4th config for rise/dired
+       ;; 2022-01-25 disabled ;;   (eyebrowse-rename-window-config 4 "rise-dired") ;; set name for config
+       ;; 2022-01-25 disabled ;;   (other-window 1) ;; switch from on the left side → may not work yet (test!)
+       ;; 2022-01-25 disabled ;;   (dired my-business-dired-folder);; open dired buffer with business config
+       ;; 2022-01-25 disabled ;;   (eyebrowse-switch-to-window-config-3);; switch back to "rise"
+       ;; 2022-01-25 disabled ;; )
        )
       )
    ;;(remove-hook 'after-change-major-mode-hook #'yankpad-local-category-to-major-mode) ;; 2022-01-16 temp remove hook for performance
