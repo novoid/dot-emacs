@@ -8747,6 +8747,7 @@ Don't know why I disabled this:
 - test links
   - file: [[file:foo/bar.txt]] [[file:foo/bar.txt][description]]
   - tsfile: [[tsfile:foo/bar.txt]] [[tsfile:foo/bar.txt][description]]
+  - lfile: [[lfile:foo/bar.txt]] [[tsfile:foo/bar.txt][description]]
   - pdf: pdf:foo.pdf [[pdf:foo.pdf][description]]
 
   - http: http://Karl-Voit.at [[http://Karl-Voit.at][description]]
