@@ -8840,9 +8840,9 @@ to link using existing IDs instead of fragile links.
           (replace-regexp-in-string org-element--timestamp-regexp ""
                 ;; removes priority indicators such as [#A]
   	      (replace-regexp-in-string org-priority-regexp ""
-                    ;; removes staistic cookies with absolute numbers such as [2/5]
-         	          (replace-regexp-in-string " ?\\[[0-9]+/[0-9]\\]" ""
-                            ;; removes staistic cookies with percentages such as [33%]
+                    ;; removes statistic cookies with absolute numbers such as [2/5]
+         	          (replace-regexp-in-string " ?\\[[0-9]+/[0-9]+\\]" ""
+                            ;; removes statistic cookies with percentages such as [33%]
            	          (replace-regexp-in-string " ?\\[[0-9]+%\\]" "" desc)
   			      ))))
   )
