@@ -12607,6 +12607,89 @@ fontification
     (org-remove-font-lock-display-properties beg end)))
 #+END_SRC
 
+** Bookmarks
+:PROPERTIES:
+:ID:       2022-03-04-Bookmarks
+:END:
+
+| 2022-03-04 | initial test |
+
+I adapted standard Emacs bookmarks instead of manually curated
+=id=-links at the start of each major Orgdown file only in 2021. I
+should have started much earlier.
+
+Unfortunately, the standard method of storing bookmarks only involve a
+file path, a rough position and string context:
+
+#+BEGIN_SRC emacs-lisp
+("bookmark test with the standard feature"
+ (filename . "~/org/misc.org")
+ (front-context-string . "nding of it.    ")
+ (rear-context-string . "TBLFM)\n\n*** Tes")
+ (position . 538745))
+#+END_SRC
+
+For quasi-static files, this is probably fine. However, within larger
+Orgdown files that get new headings all over the place, positions
+change which leads to bookmarks that point to completely wrong
+sections of a file.
+
+[[https://www.reddit.com/r/emacs/comments/siphk3/im_looking_for_simple_bookmarks_but_with_robust/][I discussed this issue on reddit]] and asked for a method do use
+Org-mode =ID= properties which I usually use for linking to headings.
+They're unique (at least I make sure that they are) and stable over
+time. Being independent of the position within the Orgdown file,
+they're the perfect candidates for bookmark destinations as well.
+
+One downside of this method is that bookmarks only jump to the heading
+and not to a specific content line within a heading body. I can
+totally live with that.
+
+[[https://www.reddit.com/user/oantolin/][oantolin]] answered with an Elisp snippet that solved the issue. I
+adapted the snippet a bit.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-handle-org-bookmark (bookmark)
+  "Handle bookmarks which have Org links."
+  (find-file (alist-get 'filename bookmark)) ;; jumping to IDs of current buffer is MUCH faster! So let's go there first.
+  (org-link-open-from-string (alist-get 'org-link bookmark))
+)
+
+(defun my-bookmark-org-link-to-here ()
+  "Bookmark the org link that `org-store-link' would make."
+  (interactive)
+
+  ;; The following line is an ugly hack which makes sure that the current heading 
+  ;; does have an ID property. This could be integrated to the rest
+  ;; of this function while removing the if-id-not-found-then handling
+  ;; which is obsolete.
+  (my-id-get-or-generate)
+
+  (when-let ((link (substring-no-properties (org-store-link nil))))
+    `(,(when (string-match org-link-bracket-re link)
+         (match-string-no-properties 2 link))
+      (org-link . ,link)
+      (handler . my-handle-org-bookmark)
+      (position . ,(point))
+      ,@(when buffer-file-name
+          `((filename . ,(abbreviate-file-name buffer-file-name)))))))
+
+(defun my-use-org-link-for-bookmarks ()
+  "Configure bookmarks to current buffer to use Org links."
+  (interactive)
+  (setq-local bookmark-make-record-function #'my-bookmark-org-link-to-here))
+
+(add-hook 'org-mode-hook #'my-use-org-link-for-bookmarks)
+#+END_SRC
+
+Using that, bookmark definitions now look like that:
+
+#+BEGIN_SRC emacs-lisp
+("bookmark test"
+ (org-link . "[[id:2022-02-10-bookmark-test][bookmark test]]")
+ (handler . my-handle-org-bookmark)
+ (position . 330380)
+ (filename . "~/org/misc.org"))
+#+END_SRC
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
