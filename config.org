@@ -12607,7 +12607,7 @@ fontification
     (org-remove-font-lock-display-properties beg end)))
 #+END_SRC
 
-** Bookmarks
+** DISABLED Bookmarks
 :PROPERTIES:
 :ID:       2022-03-04-Bookmarks
 :END:
@@ -12621,7 +12621,7 @@ should have started much earlier.
 Unfortunately, the standard method of storing bookmarks only involve a
 file path, a rough position and string context:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ("bookmark test with the standard feature"
  (filename . "~/org/misc.org")
  (front-context-string . "nding of it.    ")
@@ -12683,7 +12683,7 @@ adapted the snippet a bit.
 
 Using that, bookmark definitions now look like that:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 ("bookmark test"
  (org-link . "[[id:2022-02-10-bookmark-test][bookmark test]]")
  (handler . my-handle-org-bookmark)
