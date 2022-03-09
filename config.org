@@ -16073,6 +16073,8 @@ Not org related but might be candidates as well:
 
 - [ ] https://github.com/abo-abo/hydra/wiki/Org-agenda
 
+- [2022-03-09 Wed] =C-x SPC= for =rectangle-mark-mode= via https://irreal.org/blog/?p=10378
+
 #+BEGIN_SRC emacs-lisp
   (defhydra hydra-org (:color blue)
     (concat my-f-key-settings
@@ -16091,7 +16093,7 @@ Not org related but might be candidates as well:
     ^^                               org-_A_ttach-set-directory         ^^                       ^^
     ^^                               my-org-attach-_I_nsert             ^^                       ^^
     ^^                               ^^                                 ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
-    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,
+    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   ^^C-x SPC    rectangle-mark-mode
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
     _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
