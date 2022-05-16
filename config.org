@@ -11868,6 +11868,41 @@ I prefer the language German in my letters:
      (setq org-koma-letter-default-class "my-letter")))
 #+END_SRC
 
+*** my-org-copy-region-as-markdown
+
+| 2022-05-03 | initial setup and disabled because of error |
+
+I've found this nugget on http://mbork.pl/2021-05-02_Org-mode_to_Markdown_via_the_clipboard.
+
+I often work with tools that accept Markdown as input syntax. When I
+prefer Org-mode for authoring, I just have to mark the result in a
+region, invoke this snippet and paste in the other tool.
+
+Please enable Markdown export as stated on https://lists.gnu.org/archive/html/emacs-orgmode/2022-05/msg00062.html
+
+: (require 'ox-md)
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-copy-region-as-markdown ()
+  "Copy the region (in Org) to the system clipboard as Markdown."
+  (interactive)
+  (if (use-region-p)
+      (let* ((region
+	      (buffer-substring-no-properties
+		      (region-beginning)
+		      (region-end)))
+	     (markdown
+	      (org-export-string-as region 'md t '(:with-toc nil))))
+	(gui-set-selection 'CLIPBOARD markdown))))
+#+END_SRC
+
+Debugging:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq region "/foo/ *bar* https://example.com baz")
+(org-export-string-as region 'md t '(:with-toc nil))
+#+END_SRC
+
 ** Contact management
 
 Yes, of course I do manage contact data about people within Org-mode.
