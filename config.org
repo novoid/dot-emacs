@@ -7290,6 +7290,39 @@ properly, please do submit a pull request.
 )
 #+END_SRC
 
+*** my-create-rise-appointment-surrogate
+
+| 2022-05-16 | created initial version |
+
+When I'm having private appointments during office hours (e.g.,
+health-related appointments) I want to make sure that there is a
+blocker on my business calendar as well which I categorize with the
+company name.
+
+Instead of manually creating those surrogate headings, I recorded a
+simple macro:
+
+1. goto start of current heading via:
+   - goto next heading
+   - goto previous heading
+2. goto end of line
+3. isearch-backward for =>=
+4. start region
+5. goto begin of line
+6. end region
+7. copy region
+   - this covers mandatory date-stamps, time-stamps as well as durations.
+8. =C-RET= for new heading below
+9. indent one level to the right
+10. yank timestamp(s)
+11. enter dummy text
+12. set =rise= property
+
+#+BEGIN_SRC emacs-lisp
+(fset 'my-create-rise-appointment-surrogate
+   [?\C-c ?\C-n ?\C-c ?\C-p ?\C-e ?\M-x ?i ?s ?e ?a ?r ?c ?h ?- ?b ?a ?c ?k ?w ?a ?r ?d return ?> return right ?\C-  ?\C-a escape ?w C-return tab ?\C-y ?  ?p ?r ?i ?v ?a ?t ?e ?  ?a ?p ?p ?o ?i ?n ?t ?m ?e ?n ?t ?\M-x ?o ?r ?g ?  ?s ?e ?t ?  ?p ?r ?o ?p return ?c ?a ?t ?e ?g ?o ?r ?y return ?r ?i ?s ?e return])
+#+END_SRC
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
