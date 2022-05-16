@@ -12686,7 +12686,7 @@ fontification
     (org-remove-font-lock-display-properties beg end)))
 #+END_SRC
 
-** DISABLED Bookmarks
+** Bookmarks
 :PROPERTIES:
 :ID:       2022-03-04-Bookmarks
 :END:
@@ -14999,7 +14999,7 @@ This looks like a cool method to jump back and forth between buffers. I need to 
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dogears.el/")))
   :defer 90
   :config
-  (dogears-mode 1)
+;;  (dogears-mode 1)
 )
 #+END_SRC
 
