@@ -5469,6 +5469,10 @@ my large Org-mode setup?
 (setq max-lisp-eval-depth 10000)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-folded 'overview)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
@@ -7717,6 +7721,11 @@ Company templates:
            ,my-capture-template-next :empty-lines 2)
           ("re" "event" entry (file+headline ,(concat my-org-files-path "rise.org") "Events")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
+          ("ri" "IDP")
+          ("ris" "IDP short" entry (id "2021-07-23-shorts")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
+          ("rim" "IDP meeting" entry (id "2021-07-23-Meetings")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("ro" "RB onboarding" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rbos-heading)
            ,my-business-rbo-template :empty-lines 2)
           ("rO" "RB offboarding" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rbos-heading)
@@ -7724,7 +7733,7 @@ Company templates:
 #+END_SRC
 
 Template for my lecture:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
           ("f" "FH St. Pölten shorts" entry (file+headline ,(concat my-org-files-path "fhsp.org") "shorts")
            ,my-capture-template-next :empty-lines 2)
 #+END_SRC
@@ -8301,6 +8310,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("GEMIDP" . ,(concat my-business-jira-server "/GEMIDP-%s"))
           ("GEMIDPANF" . ,(concat my-business-jira-server "/GEMIDPANF-%s"))
           ("IDP" . ,(concat my-business-sd-server "/IDP-%s"))
+          ("SIEMOC" . ,(concat my-business-jira-server "/SIEMOC-%s"))
           ))
 #+END_SRC
 
@@ -17233,17 +17243,18 @@ approximately 25 seconds as of 2019-04-17.
        (my-org-startup-visibility)
 
        ;; setup my buffers the way I like it:
-       (my-hsplit-last-buffer)          ;; split horizontal: left is agenda
-       (my-mobile-org-import)           ;; switch to inbox.org (right side) and move latest input from mobileorg.org into inbox.org
-       (eyebrowse-create-window-config) ;; create 2nd config for misc personal stuff
-       (switch-to-buffer "notes.org")   ;; open notes buffer
-       ;; MAYBE: open misc.org on the other side
-       (eyebrowse-rename-window-config 2 "misc") ;; name 2nd config
-       (eyebrowse-create-window-config) ;; create 3rd config for rise
-       (switch-to-buffer "rise.org")    ;; open rise buffer
-       (org-shifttab)                   ;; toggle visibility
-       (eyebrowse-rename-window-config 3 "rise") ;; set name for rise config
-       (other-window 1) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
+       (eyebrowse-restore (concat "emacs@" system-name))
+       ;;2022-03-27;; (my-hsplit-last-buffer)          ;; split horizontal: left is agenda
+       ;;2022-03-27;; (my-mobile-org-import)           ;; switch to inbox.org (right side) and move latest input from mobileorg.org into inbox.org
+       ;;2022-03-27;; (eyebrowse-create-window-config) ;; create 2nd config for misc personal stuff
+       ;;2022-03-27;; (switch-to-buffer "notes.org")   ;; open notes buffer
+       ;;2022-03-27;; ;; MAYBE: open misc.org on the other side
+       ;;2022-03-27;; (eyebrowse-rename-window-config 2 "misc") ;; name 2nd config
+       ;;2022-03-27;; (eyebrowse-create-window-config) ;; create 3rd config for rise
+       ;;2022-03-27;; (switch-to-buffer "rise.org")    ;; open rise buffer
+       ;;2022-03-27;; (org-shifttab)                   ;; toggle visibility
+       ;;2022-03-27;; (eyebrowse-rename-window-config 3 "rise") ;; set name for rise config
+       ;;2022-03-27;; (other-window 1) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
        ;; 2022-01-25 disabled ;; (when (my-system-is-rise)
        ;; 2022-01-25 disabled ;;   (eyebrowse-create-window-config) ;; create 4th config for rise/dired
        ;; 2022-01-25 disabled ;;   (eyebrowse-rename-window-config 4 "rise-dired") ;; set name for config
