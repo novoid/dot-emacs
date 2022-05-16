@@ -11108,6 +11108,7 @@ Not necessary any more:
   ;;(require 'ox-odt)
   ;;(require 'ox-freemind)
   ;;(require 'ox-taskjuggler)
+(require 'ox-md) ;; 2022-05-04: seems to be necessary: https://lists.gnu.org/archive/html/emacs-orgmode/2022-05/msg00062.html
 #+END_SRC
 
 Add bibtex to pdf export method:
