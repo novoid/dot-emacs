@@ -8276,7 +8276,7 @@ Please note that =my-business-...= variables are not available to you for privac
 
 Do *not* use =org-link-abbrev-alist= for defining links that are handled via functions. Use =org-link-set-parameters= instead.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
   (setq org-link-abbrev-alist
         `(
           ("bib" . "~/archive/library/%s.bib")
@@ -8311,6 +8311,8 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("GEMIDPANF" . ,(concat my-business-jira-server "/GEMIDPANF-%s"))
           ("IDP" . ,(concat my-business-sd-server "/IDP-%s"))
           ("SIEMOC" . ,(concat my-business-jira-server "/SIEMOC-%s"))
+          ("KIM" . ,(concat my-business-jira-server "/KIM-%s"))
+          ("SOC" . ,(concat my-business-sd-server "/SOC-%s"))
           ))
 #+END_SRC
 
@@ -17360,6 +17362,7 @@ loading my configuration (famous last words):
   (message "»»» Binaries not found in checks above: %s" my-binary-not-found-list)
   ;;(my-log-hostspecific (format "Binaries not found at startup checks: %s" my-binary-not-found-list))
   (message "→★ finished loading config.org in %.2fs" my-config-el-loading-time)
+
 #+END_SRC
 
 * Current key mappings (sorted)
