@@ -2437,6 +2437,64 @@ Resulting image can ge opened, e.g., in inkscape. Using the context
 menu feature "Enter group #..." you can go as deep into the elements
 as you wish. It really looks amazing.
 
+** my-find-duplicate-filetags-reformatter
+
+| 2022-06-08 | added for helping me reformat results of =rdfind= output files |
+
+Following function reformats the output of =rdfind=:
+
+: rdfind -outputname "`date +%Y-%m-%d`_find_duplicates.log" ~/path/to/subhierarchy
+
+This produces output files with content like:
+
+#+BEGIN_EXAMPLE
+# Automatically generated
+# duptype id depth size device inode priority name
+DUPTYPE_FIRST_OCCURRENCE 14598 5 15867904 64772 437191892 3 /home/vk/src/tagstore/2013-01-29_tagstore-migration/tagstore-ORIG/installer/needs4tagstore/python-2.7.3.msi
+DUPTYPE_WITHIN_SAME_TREE -14598 5 15867904 64772 437322430 3 /home/vk/src/tagstore/tagstore/research_platform/installer/needs4tagstore/python-2.7.3.msi
+DUPTYPE_FIRST_OCCURRENCE 14597 5 21509961 64772 437191891 3 /home/vk/src/tagstore/2013-01-29_tagstore-migration/tagstore-ORIG/installer/needs4tagstore/python-2.7-macosx10.5.dmg
+DUPTYPE_WITHIN_SAME_TREE -14597 5 21509961 64772 437322429 3 /home/vk/src/tagstore/tagstore/research_platform/installer/needs4tagstore/python-2.7-macosx10.5.dmg
+DUPTYPE_FIRST_OCCURRENCE 14593 5 28955664 64772 437191887 3 /home/vk/src/tagstore/2013-01-29_tagstore-migration/tagstore-ORIG/installer/needs4tagstore/PyQt-Py2.7-x86-gpl-4.9.4-1.exe
+DUPTYPE_WITHIN_SAME_TREE -14593 5 28955664 64772 437322421 3 /home/vk/src/tagstore/tagstore/research_platform/installer/needs4tagstore/PyQt-Py2.7-x86-gpl-4.9.4-1.exe
+# end of file
+#+END_EXAMPLE
+
+My process is now:
+
+1. Remove initial and ending comment lines
+2. Go to start of the file
+3. =C-u 100 M-x my-find-duplicate-filetags-reformatter=
+   - Change "100" to any number that is larger than the number of
+     invocations necessary or invoke function multiple times.
+   - This reformats the lines above to:
+     #+BEGIN_EXAMPLE
+     filetags -t "2del duplicate" "src/tagstore/2013-01-29_tagstore-migration/tagstore-ORIG/installer/needs4tagstore/python-2.7.3.msi"
+     filetags -t "2del duplicate" "tagstore/tagstore/research_platform/installer/needs4tagstore/python-2.7.3.msi"
+
+     filetags -t "2del duplicate" "src/tagstore/2013-01-29_tagstore-migration/tagstore-ORIG/installer/needs4tagstore/python-2.7-macosx10.5.dmg"
+     filetags -t "2del duplicate" "tagstore/tagstore/research_platform/installer/needs4tagstore/python-2.7-macosx10.5.dmg"
+
+     filetags -t "2del duplicate" "src/tagstore/2013-01-29_tagstore-migration/tagstore-ORIG/installer/needs4tagstore/PyQt-Py2.7-x86-gpl-4.9.4-1.exe"
+     filetags -t "2del duplicate" "tagstore/tagstore/research_platform/installer/needs4tagstore/PyQt-Py2.7-x86-gpl-4.9.4-1.exe"
+     #+END_EXAMPLE
+   - This is now a shell script for invoking [[https://github.com/novoid/filetags][filetags]] that tags all
+     duplicate files with two tags: "2del" and "duplicate".
+   - *NOTE*: this works only for exactly two duplicates per file. If
+     you do have more than two duplicates for a file, you need to
+     modify your workflow or the function accordingly.
+4. Go through the shell script and decide which files to keep by
+   removing their filetags line.
+5. Invoke the shell script file so that the remaining tags get applied.
+6. Remove the now tagged files for deletion via:
+   : find ~/path/to/subhierarchy -type f -name '* --* 2del*' -print0 | xargs -0 rm -f
+
+The function to reformat the =rdfind= output file is:
+
+#+BEGIN_SRC emacs-lisp
+(fset 'my-find-duplicate-filetags-reformatter
+   [?\C-  C-right C-right C-right C-right C-right C-right C-right C-right C-right ?\C-w ?f ?i ?l ?e ?t ?a ?g ?s ?  ?- ?t ?  ?\" ?2 ?d ?e ?l ?  ?d ?u ?p ?l ?i ?c ?a ?t ?e ?\" ?  ?\" ?\C-d ?\C-e ?\" ?\C-a down ?\C-  C-right C-right C-right C-right C-right C-right C-right C-right C-right C-right ?\C-w ?f ?i ?l ?e ?t ?a ?g ?s ?  ?- ?t ?  ?\" ?r ?s backspace backspace ?2 ?d ?e ?l ?  ?d ?u ?p ?l ?i ?c ?a ?t ?e ?\" ?  ?\" ?\C-d ?\C-e ?\" return down])
+#+END_SRC
+
 * Spell checking
 
 «[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
