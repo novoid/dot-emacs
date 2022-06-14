@@ -62,6 +62,10 @@ of a second* and *automatically happens on two occasions*:
 
 This way, there is *no unnecessary tangling process*.
 
+This method is great in terms of speed and effort. However, I can't
+follow any advanced literate programming aspect such as re-using a
+snippet multiple times or changing the order of the snippets.
+
 I also added some output functionality to the tangling method. This
 results in helpful lines in =*Messages*= like:
 
@@ -89,6 +93,12 @@ config • Styling …
 config • Themes …
 [...]
 #+END_EXAMPLE
+
+Update 2022-06-14: If I would follow a more standard way of tangling
+the el file from the org file, I'd probably take a look at
+https://github.com/yilkalargaw/org-auto-tangle which is also features
+on this short video demo: https://www.youtube.com/watch?v=D3FzMPZm7vY
+(13min).
 
 ** In Case You Want to Use My Configuration
 
