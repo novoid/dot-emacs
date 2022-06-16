@@ -15186,6 +15186,23 @@ I replaced the original =words.txt= with german: =sudo apt install wngerman= and
 )
 #+END_SRC
 
+** imenu-list
+
+| 2022-06-16 | initial setup for testing |
+
+I stumbled over =[[https://github.com/bmag/imenu-list][imenu-list]]= when reading [[https://www.reddit.com/r/emacs/comments/ujuokl/my_take_on_dotemacsorg/][that reddit article on a literate Emacs configuration]].
+
+Due to [[https://karl-voit.at/2020/05/03/current-org-files/][my large Org-mode files]] I will not use it within Org-mode.
+However, it seems to be handy for programming Python and working in
+Markdown documents or similar.
+
+#+BEGIN_SRC emacs-lisp
+(use-package imenu-list
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
@@ -16745,7 +16762,7 @@ FIXXME: add more features:
   ^↦^ previous window config        _9_ switch to window config 9     prefix l  last window
   _r_ename current window config
   _c_reate new window config        ^^                                _b_ ibuffer-list-buffers
-  _C_lose current window config     ^^
+  _C_lose current window config     ^^                                _i_menu-list (heading overview)
   new _f_rame                       ^^
   _!_ save-buffers-kill-terminal    ^^                      ▄
   ^^            ▄                   C-x 2  split _v_ertical ▄      ^^  C-x 0  _d_elete this
@@ -16787,6 +16804,7 @@ FIXXME: add more features:
     ("w" window-swap-states nil)
 
     ("b" ibuffer-list-buffers nil)
+    ("i" imenu-list nil)
 
 ;;    ("-" shrink-window-horizontally nil :color red)
 ;;    ("=" enlarge-window-horizontally nil :color red)
