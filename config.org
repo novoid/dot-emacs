@@ -12508,6 +12508,77 @@ Setup according to https://github.com/jkitchin/org-ref:
 (require 'doi-utils)
 #+END_SRC
 
+** org-cite
+
+| 2022-06-16 | initial test setup |
+
+I'm - unfortunately - not [[https://karl-voit.at/tagstore/en/papers.shtml][working in academia]] any more. So I don't
+have the necessity of using a reference management system any more.
+
+Back in the old days, there was no org-ref around and therefore, [[https://karl-voit.at/2015/12/26/reference-management-with-orgmode/][my process was somewhat DIY]].
+
+This is out of curiosity and a possible scouting task for writing my PIM book one fine day.
+
+I've got ideas [[https://kristofferbalintona.me/posts/202206141852/][from this great blog article]].
+
+#+BEGIN_SRC emacs-lisp :results none
+(setq org-cite-global-bibliography '("/home/vk/org/org-ref.bib")) ;; Alternatively, you can use the org-mode #+BIBLIOGRAPHY: keyword to set this value per-file; it’s value should be a file path.
+#+END_SRC
+
+A minimal bib-file has the content:
+
+#+BEGIN_EXAMPLE
+@PhdThesis{Voit2012b,
+  author =       {Karl Voit},
+  title =        {TagTrees: Improving Personal Information Management
+                  using Associative Navigation},
+  school =       {Graz University of Technology},
+  year =         {2012},
+  OPTkey =       {},
+  OPTtype =      {},
+  address =      {Graz, Austria},
+  month =        nov,
+  OPTnote =      {},
+  OPTannote =    {}
+}
+
+@article{xu15_linear_respon_dft_study_trend,
+  author =       {Zhongnan Xu and Jan Rossmeisl and John R. Kitchin},
+  title =        {A Linear Response Dft+u Study of Trends in the
+                  Oxygen Evolution Activity of Transition Metal Rutile
+                  Dioxides},
+  journal =      {The Journal of Physical Chemistry C},
+  volume =       119,
+  number =       9,
+  pages =        {4827-4833},
+  year =         2015,
+  doi =          {10.1021/jp511426q},
+  url =          {https://doi.org/10.1021/jp511426q},
+  DATE_ADDED =   {Thu Sep 12 19:31:45 2019},
+}
+
+
+@article{ailamaki03_time_manag_new_facul,
+  author =       {Anastassia Ailamaki and Johannes Gehrke},
+  title =        {Time Management for New Faculty},
+  journal =      {ACM SIGMOD Record},
+  volume =       32,
+  number =       2,
+  pages =        102,
+  year =         2003,
+  doi =          {10.1145/776985.777004},
+  url =          {https://doi.org/10.1145/776985.777004},
+  DATE_ADDED =   {Thu Sep 12 19:37:23 2019},
+
+#+END_EXAMPLE
+
+Unfortunately, I could not insert =Voit2012b= from that file during a
+test on 2022-06-16. Maybe it's because of its biblatex format (in
+contrast to bibtex format)?
+
+I need to investigate this issue some time.
+
+I may also play around with =citar= mentioned in [[https://kristofferbalintona.me/posts/202206141852/][this blog article]].
 
 ** Org-mode docu → my-map o
 
