@@ -8700,6 +8700,53 @@ Setting link parameters:
 )
 #+END_SRC
 
+*** my-dired-insert-lfile-link-list-to-other-org-window()
+
+| 2022-06-20 | I had this idea and implemented it |
+
+Development task: id:2022-06-20-implement-add-lfile-links-to-buffer-with-marked-dired-files
+
+[[https://emacs.stackexchange.com/questions/60359/is-there-a-quicker-way-to-create-links-to-attachments][This stackexchange snippet]] had the almost exactly perfect code which I adapted.
+
+The idea of the process is:
+
+1. I have an Org-mode buffer and a dired buffer side-by-side (which is my usual setup).
+2. I place the cursor in the Org-mode buffer so that I may add a list.
+3. I switch to the dired buffer and mark one or more files.
+4. I invoke this function.
+
+This results in a list that gets added to the Org-mode buffer similar to:
+
+: - [[lfile:This is an example.odt][This is an example.odt]]
+: - [[lfile:2022-06-20 an image.png][2022-06-20 an image.png]]
+
+#+begin_src emacs-lisp :results none
+  (defun my-dired-insert-lfile-link-list-to-other-org-window (files)
+    ;; adapted by Karl Voit from https://emacs.stackexchange.com/a/60369
+    (interactive
+     (list (dired-get-marked-files)))
+    (unless (eq major-mode 'dired-mode)
+      (user-error "This command must be triggered in a dired buffer"))
+    (let ((dired-win (selected-window))
+          (orgmode-win
+           (get-window-with-predicate
+            (lambda (window)
+              (with-current-buffer (window-buffer window)
+                (eq major-mode 'org-mode))))))
+      (unless orgmode-win
+        (user-error
+         "Can't attach to subtree.  No window displaying an Org buffer"))
+      (select-window orgmode-win)
+      (dolist (file files)
+        (let* ((fname (file-name-nondirectory file))
+               (link (format "lfile:%s" fname))
+               (desc fname))
+          ;;(push (list link desc) org-stored-links) ;; original idea was to insert to this buffer in order to paste via C-c C-l
+          (insert (format "%s" (concat "- [[" link "][" desc "]]\n")))
+      ))
+      (select-window dired-win)))
+#+end_src
+
 *** DISABLED links color (OLD)
 
 Don't know why I disabled this:
@@ -16641,7 +16688,7 @@ Not org related but might be candidates as well:
 :CREATED:  [2018-06-30 Sat 19:10]
 :END:
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
 (defhydra hydra-dired (:color blue)
     (concat my-f-key-settings
   "
@@ -16660,6 +16707,7 @@ Not org related but might be candidates as well:
   _(_ toggle details    ^^                    ^^                 c  compress
   ^^                    ^^                    ^^                 Z  dired-do-compress (=unp)
   ^^                    ^^                    ^^
+  ^^                    ^^                    ^^                 l  my-dired-insert-lfile-_l_ink-list-to-other-org-window
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
 
@@ -16695,6 +16743,7 @@ Not org related but might be candidates as well:
   ("1" (dired-sort-other "-alt --group-directories-first") nil)
   ("n" (dired-sort-other "-al --group-directories-first") nil)
 
+  ("l" my-dired-insert-lfile-link-list-to-other-org-window nil)
   ("3" (lambda ()
                 (interactive)
                 (let ((org-attach-method 'lns))
