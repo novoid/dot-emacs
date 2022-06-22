@@ -7436,6 +7436,8 @@ Opening image files with external viewer:
 
 ** TODO keywords and faces
 
+Get ideas how others are using the todo keywords: https://www.reddit.com/r/emacs/comments/twlmxy/open_ended_question_what_are_your_orgtodokeywords/
+
 Define my default keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords (quote
