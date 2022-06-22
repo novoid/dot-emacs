@@ -13149,8 +13149,9 @@ Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_be
 )
 #+END_SRC
 
-2022-05-28: from https://emacs.stackexchange.com/questions/34342/is-there-any-downside-to-setting-gc-cons-threshold-very-high-and-collecting-ga
-#+BEGIN_SRC emacs-lisp 
+- 2022-05-28: from https://emacs.stackexchange.com/questions/34342/is-there-any-downside-to-setting-gc-cons-threshold-very-high-and-collecting-ga
+- 2022-06-21: I've got the impression that GC got much worse with those settings. Disabling them for now.
+#+BEGIN_SRC emacs-lisp :tangle no
 ;;;;;; Set garbage collection threshold
 ;; From https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
 (setq gc-cons-threshold-original gc-cons-threshold)
