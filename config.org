@@ -5783,6 +5783,23 @@ UTF-8 symbols were not in my current (Windows) font.
 
 #+END_SRC
 
+*** DISABLED org-modern
+
+| 2022-06-22 | initial setup for testing |
+
+After reading [[https://blog.tecosaur.com/tmio/2022-05-31-folding.html][about performance improvements]], I want to try out
+[[https://github.com/minad/org-modern][org-modern]] at least for demo purposes.
+
+2022-06-22: This requires at least Emacs 27.1. I'll come back to that later.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-modern
+  :ensure t
+ ;; :defer 110
+  :after org
+)
+#+END_SRC
+
 ** General key bindings
 
 Standard key bindings:
