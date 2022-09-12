@@ -1077,7 +1077,7 @@ because with them, I lose some generic approach:
 
 (defun my-system-is-karl-voit-at ()
   "Return true if the system we are running on is karl-voit.at"
-  (string-equal system-name "friends.grml.info")
+  (string-equal system-name "friends")
   )
 
 (defun my-system-is-powerplantlinux ()
@@ -7436,6 +7436,7 @@ Make TAB the yas trigger key in the org-mode-hook and enable flyspell mode and a
 Opening image files with external viewer:
 - http://stackoverflow.com/questions/3973896/emacs-org-mode-file-viewer-associations
 #+BEGIN_SRC emacs-lisp
+(if (not (eq window-system 'x))
   (add-hook 'org-mode-hook
             '(lambda ()
                (setq org-file-apps
@@ -7448,7 +7449,7 @@ Opening image files with external viewer:
                                ("\\.docx\\'" . default)
                                ("\\.xlsx\\'" . default)
                                ("\\.pptx\\'" . default)
-                               ) org-file-apps ))))
+                               ) org-file-apps )))))
 #+END_SRC
 
 ** TODO keywords and faces
@@ -8390,6 +8391,9 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("SIEMOC" . ,(concat my-business-jira-server "/SIEMOC-%s"))
           ("KIM" . ,(concat my-business-jira-server "/KIM-%s"))
           ("SOC" . ,(concat my-business-sd-server "/SOC-%s"))
+          ("GEMFED" . ,(concat my-business-jira-server "/GEMFED-%s"))
+          ("GEMFEDANF" . ,(concat my-business-jira-server "/GEMFEDANF-%s"))
+          ("GEMFEDAFO" . ,(concat my-business-jira-server "/GEMFEDANF-1?jql=project%20%3D%20GEMFEDANF%20AND%20Afo-ID%20~%20%22%s%22"))
           ))
 #+END_SRC
 
@@ -10480,6 +10484,7 @@ I don't know how to fix this and so I stick with the hard coded path
 and with a bleeding heart.
 
 #+BEGIN_SRC emacs-lisp
+(if (not (eq window-system 'x))
   (setq org-agenda-category-icon-alist nil)
   ;(when (my-system-type-is-windows)
     (add-to-list 'org-agenda-category-icon-alist
@@ -13434,7 +13439,7 @@ you can then access this list through a command or the menu.»
 ** DISABLED Confluence: vk-open-as-confluence-page() → my-map C
 
 Editing Confluence wiki pages (up to Confluence 3.x)
-- https://code.google.com/p/confluence-el/
+- https://sourceforge.net/projects/confluence-el/
 - =M-x confluence-get-page=
 
 Unfortunately, Altlassian moved away from a Wiki style editing mode to
