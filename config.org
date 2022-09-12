@@ -4767,8 +4767,8 @@ with the corresponding message ID.
 
 | 2021-05-26 | migrated from Thunderbird to [[https://help.gnome.org/users/evolution/stable/][GNOME Evolution]], re-creating the workflow here |
 
-Helper function to open any given message-id in Evolution:
-#+BEGIN_SRC emacs-lisp
+Helper function to open any given message-id in the Flatpak version of Evolution:
+#+BEGIN_SRC emacs-lisp :tangle no
   ;; modify this for your system
   (defun my-open-message-id-in-evolution (message-id)
   "open an email with a given message-ID in Evolution"
@@ -4778,6 +4778,24 @@ Helper function to open any given message-id in Evolution:
    nil
    "/usr/bin/flatpak"
    "run" "org.gnome.Evolution" (concat "mid:<" message-id ">")
+   )
+  )
+
+  (org-link-set-parameters "messageid" :follow #'my-open-message-id-in-evolution)
+
+#+END_SRC
+
+Helper function to open any given message-id in the normal version of Evolution:
+#+BEGIN_SRC emacs-lisp
+  ;; modify this for your system
+  (defun my-open-message-id-in-evolution (message-id)
+  "open an email with a given message-ID in Evolution"
+  (interactive)
+  (start-process
+   (concat "mid: " message-id)
+   nil
+   "/usr/bin/evolution"
+   (concat "mid:<" message-id ">")
    )
   )
 
