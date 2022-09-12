@@ -12966,6 +12966,27 @@ Using that, bookmark definitions now look like that:
  (position . 330380)
  (filename . "~/org/misc.org"))
 #+END_SRC
+
+** emacs-everywhere
+
+| 2022-09-12 | initial setup |
+
+This enables a method to edit arbitrary selected text in an Emacs buffer: https://github.com/tecosaur/emacs-everywhere
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package emacs-everywhere
+  :ensure t
+  :defer 110
+  :after org
+  :config
+  (setq emacs-everywhere-markdown-windows ("Reddit" "Stack Exchange" "Stack Overflow" "Discord" "Element" "Slack" "HedgeDoc" "HackMD" "Zulip" "Pull Request" "Issue" "Comparing .*\\.\\.\\."))
+  (setq emacs-everywhere-frame-name-format "Emacs Everywhere • C-c C-c • %s — %s")
+  (setq emacs-everywhere-frame-parameters `((name . "emacs-everywhere")
+   (width . 100)
+   (height . 30)))
+)
+#+END_SRC
+
 ** debug message: config orgmode finished.
 
 #+BEGIN_SRC emacs-lisp
