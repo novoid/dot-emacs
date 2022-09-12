@@ -9163,7 +9163,7 @@ Definition of work files: (only used in cron-job shell script)
 #+END_SRC
 
 The following file is only accessible on my work computer:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (when (my-system-is-rise)
   (add-to-list 'my-work-agenda-files my-business-siko-notes))
 #+END_SRC
@@ -10558,6 +10558,7 @@ and with a bleeding heart.
                  ;; /usr/share/icons/oxygen/16x16/actions/go-home.png
                   )
    )
+)
 #+END_SRC
 
 *** my-org-agenda() → my-map a
