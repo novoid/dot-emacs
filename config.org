@@ -8580,6 +8580,12 @@ Helper function =string-replace (this withthat in)=
 
 *** handling =tsfile= links (Memacs)
 
+| 2022-09-18 | I moved from my previous tsfile concept using Memacs to lfile only |
+
+[2022-09-18 Sun] =lfile= turned out to be much faster than searching
+via my Memacs =lsfile= method. I keep the Memacs index because I do
+get benefits from other workflows such as lazyblorg file links. For existing =tsfile= links, I move to the =lfile= method.
+
 Defining memacs variables:
 #+BEGIN_SRC emacs-lisp
   (defvar memacs-root (concat my-org-files-path "memacs/"))
@@ -8624,8 +8630,20 @@ Defining memacs variables:
           (org-open-at-point))))))
 #+END_SRC
 
-Setting link parameters:
+NEW settings for accessing =tsfile= links just as if they were =tfile= links:
 #+BEGIN_SRC emacs-lisp
+(org-link-set-parameters
+ "tsfile"
+ :follow (lambda (filename) (my-handle-lfile-link filename))
+ :help-echo "Opens the file located via \"locate\" with your default application"
+ :face '(:foreground "DarkSeaGreen" :underline t)
+)
+#+END_SRC
+
+OLD stuff for reference:
+
+PREVIOUS settings for link parameters using =tsfile= and Memacs:
+#+BEGIN_SRC emacs-lisp :tangle no
 (org-link-set-parameters
  "tsfile"
  :follow (lambda (path) (my-handle-tsfile-link path))
@@ -8634,7 +8652,7 @@ Setting link parameters:
 )
 #+END_SRC
 
-OLD code:
+OLD code for reference:
 #+BEGIN_SRC emacs-lisp :tangle no
   (defun my-handle-tsfile-link (querystring)
     ;; get a list of hits
