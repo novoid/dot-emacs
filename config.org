@@ -2540,6 +2540,7 @@ flyspell.el <http://kaolin.unice.fr/~serrano/>
 )
 (when (my-system-type-is-gnu)
   (setq flyspell-default-dictionary "de_AT")
+  (setq default-dictionary "de_AT")
 )
 #+END_SRC
 
