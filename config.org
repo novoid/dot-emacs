@@ -3620,6 +3620,58 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
 #+BEGIN_SRC emacs-lisp
 );; if python binary found
 #+END_SRC
+
+** JavaScript
+
+*** js-beautify
+
+| 2022-10-20 | I had to review JS code which was "optimized" and searched for a beautifyer |
+
+[2022-10-20 Thu] I found
+https://sethmason.com/2011/04/28/beautify-your-javascript-in-emacs.html
+which points to https://beautifier.io/ and
+https://github.com/beautify-web/js-beautify.
+
+On Debian-based systems, you can install it via: =apt install jsbeautifier=
+
+#+BEGIN_SRC emacs-lisp :results none
+;;; js-beautify.el -- beautify some js code
+;;; copied from https://sethmason.com/2011/04/28/beautify-your-javascript-in-emacs.html
+
+(defgroup js-beautify nil
+  "Use jsbeautify to beautify some js"
+  :group 'editing)
+
+(defcustom js-beautify-args "--jslint-happy --brace-style=end-expand
+--keep-array-indentation"
+  "Arguments to pass to jsbeautify script"
+  :type '(string)
+  :group 'js-beautify)
+
+(defcustom js-beautify-path "/usr/bin/js-beautify"
+  "Path to jsbeautifier python file"
+  :type '(string)
+  :group 'js-beautify)
+
+(defun js-beautify ()
+  "Beautify a region of javascript using the code from jsbeautify.org"
+  (interactive)
+  (let ((orig-point (point)))
+    (unless (mark)
+      (mark-defun))
+    (shell-command-on-region (point)
+                             (mark)
+                             (concat "python3 "
+                                     js-beautify-path
+                                     " --stdin "
+                                     js-beautify-args)
+                             nil t)
+    (goto-char orig-point)))
+
+(provide 'js-beautify)
+;;; js-beautify.el ends here
+#+END_SRC
+
 * dired
 
 Usually, I do file management in [[http://karl-voit.at/2015/12/14/screen-to-tmux/][tmux]] and zsh. There are my aliases,
