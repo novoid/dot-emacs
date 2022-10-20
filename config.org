@@ -13074,7 +13074,7 @@ This enables a method to edit arbitrary selected text in an Emacs buffer: https:
   :defer 110
   :after org
   :config
-  (setq emacs-everywhere-markdown-windows ("Reddit" "Stack Exchange" "Stack Overflow" "Discord" "Element" "Slack" "HedgeDoc" "HackMD" "Zulip" "Pull Request" "Issue" "Comparing .*\\.\\.\\."))
+;;2022-10-17 "Reddit" is causing an error?;  (setq emacs-everywhere-markdown-windows ("Reddit" "Stack Exchange" "Stack Overflow" "Discord" "Element" "Slack" "HedgeDoc" "HackMD" "Zulip" "Pull Request" "Issue" "Comparing .*\\.\\.\\."))
   (setq emacs-everywhere-frame-name-format "Emacs Everywhere • C-c C-c • %s — %s")
   (setq emacs-everywhere-frame-parameters `((name . "emacs-everywhere")
    (width . 100)
