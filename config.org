@@ -325,7 +325,7 @@ installs its local copies of the packages:
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; from https://irreal.org/blog/?p=8243
     (setq package-user-dir (concat my-user-emacs-directory "elpa"))
     (require 'package)
-    (package-initialize)
+    ;;2022-10-17 is called in init.el before;; (package-initialize)
 
     ;;2019-12-07;;  ;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
     ;;2019-12-07;;  ;;OLD:(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"));; moved to stable.melpa.org https://www.reddit.com/r/emacs/comments/4zqbz0/whats_up_with_melpa_stable/
@@ -15258,7 +15258,7 @@ process for my situation:
 4. start bisecting via =M-x bug-hunter-file=, select file and then =i=nteractive
 
 #+begin_src emacs-lisp :tangle no
-(package-initialize)
+;(package-initialize)
 (defvar my-init-el-start-time (current-time) "Time when init.el was started")
 (setq my-user-emacs-directory "~/.emacs.d/")
 (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-contrib/lisp"))
@@ -16629,7 +16629,7 @@ Not org related but might be candidates as well:
   ^^                     ^^                  ^^
   ^Edit^                 ^Help^              ^^
   ^^─────────────────────^^──────────────────^^────────────────
-  _i_mplement    C-c i   _H_elp (pylookup)   ^^
+  implement    C-c i   _H_elp (pylookup)   ^^
   ^^                     ^^                  ^^
   ^^                     ^^                  ^^
   ")
