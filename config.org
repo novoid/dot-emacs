@@ -17601,6 +17601,8 @@ approximately 25 seconds as of 2019-04-17.
 
        ;; setup my buffers the way I like it:
        (eyebrowse-restore (concat "emacs@" system-name))
+       (my-toggle-dark-bright-theme)
+
        ;;2022-03-27;; (my-hsplit-last-buffer)          ;; split horizontal: left is agenda
        ;;2022-03-27;; (my-mobile-org-import)           ;; switch to inbox.org (right side) and move latest input from mobileorg.org into inbox.org
        ;;2022-03-27;; (eyebrowse-create-window-config) ;; create 2nd config for misc personal stuff
