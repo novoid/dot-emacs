@@ -15458,6 +15458,44 @@ Markdown documents or similar.
 )
 #+END_SRC
 
+** whisper.el (S2T; speech to text)
+
+| 2022-12-14 | initial test |
+
+- https://github.com/natrys/whisper.el
+
+#+BEGIN_QUOTE
+You will use these functions:
+
+- =whisper-run= : Toggle between recording from your microphone and transcribing
+- =whisper-file= : Same as before but transcribes a local file on disk
+
+Invoking =whisper-run= with a prefix argument (C-u) has the same effect as =whisper-file= .
+
+Both of these functions will automatically compile whisper.cpp
+dependency and download language model the first time they are run.
+When recording is in progress, invoking them stops it and starts
+transcribing. Otherwise if compilation, download (of model file) or
+transcription job is in progress, calling them again cancels that.
+#+END_QUOTE
+
+Use =whisper-run= once to start recording and a second time for start
+the translation process which puts the text into the buffer. This
+works *offline* (without cloud or network) and amazingly well for English.
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package whisper
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/whisper.el/")))
+;;  :bind ("C-H-r" . whisper-run)
+  :config
+  (setq whisper-install-directory (concat my-user-emacs-directory "bin/")
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil)
+  :defer 110
+)
+#+END_SRC
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
@@ -17115,7 +17153,7 @@ FIXXME: add more features:
 
 Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_better_manage_your_spelling_mistakes/][this reddit thread]].
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
 (defhydra hydra-spelling (:color red)
     (concat my-f-key-settings
   "
@@ -17127,6 +17165,9 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   _s_ynonym
   _d_efine word
   ^^
+  ^S2T^               ^^                  ^^
+  ^────────^──────────^──────^────────────^───────^───────
+  _w_hisper (toggle)
   ")
   ("q" nil "quit")
   ("r" flyspell-region nil)
@@ -17139,8 +17180,9 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   ("c" flyspell-correct-word-before-point nil)
 ;;  ("d" ispell-change-dictionary)
   ("b" flyspell-buffer nil)
-  ("m" flyspell-mode nil))
-
+  ("m" flyspell-mode nil)
+  ("w" whisper-run nil)
+  )
   (global-set-key [f5] 'hydra-spelling/body)
 #+END_SRC
 
