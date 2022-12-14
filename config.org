@@ -2030,8 +2030,8 @@ New method that allows overwriting of bindings (see [[https://github.com/jwiegle
          :prefix-docstring "My own keyboard map"
          :prefix "C-c C-,"
          ("-" . text-scale-decrease)
-         ("+" . text-scale-increase))
-         ("=" . text-scale-increase);; because "+" needs "S-=" and I might forget to press shift
+         ("+" . text-scale-increase)
+         ("=" . text-scale-increase));; because "+" needs "S-=" and I might forget to press shift
   :after org)
 #+END_SRC
 
@@ -11543,8 +11543,8 @@ Customized «scrartcl»
 #+BEGIN_SRC emacs-lisp
     (add-to-list 'org-latex-classes
                  '("lyrics"
-                   "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}\\usepackage\{savetrees\}
-                    \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
+                   "\\documentclass\[a4paper,parskip=half\]\{scrartcl\}
+                    \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
                    ("\\section\{%s\}" . "\\section*\{%s\}")
                    ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
                    ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
@@ -11554,8 +11554,8 @@ Customized «scrartcl»
 #+BEGIN_SRC emacs-lisp
     (add-to-list 'org-latex-classes
                  '("lyrics2"
-                   "\\documentclass\[a4paper,parskip=half,twocolumn\]\{scrartcl\}\\usepackage\{savetrees\}
-                    \\usepackage\{lmodern\} \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
+                   "\\documentclass\[a4paper,parskip=half,twocolumn\]\{scrartcl\}
+                    \\renewcommand*\\sfdefault\{lcmss\} \\renewcommand*\\familydefault\{\\sfdefault\}"
                    ("\\section\{%s\}" . "\\section*\{%s\}")
                    ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
                    ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
@@ -13284,6 +13284,10 @@ Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_be
   (setq gcmh-low-cons-threshold (* 200 1000 1000)) ;; 2022-01-16: yantar92 proposed a much less conservative setting for GC
 )
 #+END_SRC
+
+- 2022-11-19: also read
+  https://www.reddit.com/r/emacs/comments/yzb77m/comment/iwz1vek/?utm_source=reddit&utm_medium=web2x&context=3
+  about setting the =gc-cons-threshold= value.
 
 - 2022-05-28: from https://emacs.stackexchange.com/questions/34342/is-there-any-downside-to-setting-gc-cons-threshold-very-high-and-collecting-ga
 - 2022-06-21: I've got the impression that GC got much worse with those settings. Disabling them for now.
