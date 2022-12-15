@@ -15495,11 +15495,14 @@ works *offline* (without cloud or network) and amazingly well for English.
   :config
   (setq whisper-install-directory (concat my-user-emacs-directory "bin/")
         whisper-model "base"
-        whisper-language "en"
+        whisper-language "de"
         whisper-translate nil)
   :defer 110
 )
 #+END_SRC
+
+Please note that in my hydra-settings "hydra-spelling → F5" I define a
+shortcut for capturing German and English language.
 
 * My helper functions (part II)
 
@@ -17168,18 +17171,19 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   check _r_egion      _n_ext error        _m_ode
   check _b_uffer      _c_orrect           toggle _l_anguage
   _s_ynonym
-  _d_efine word
+  _D_efine word
   ^^
   ^S2T^               ^^                  ^^
   ^────────^──────────^──────^────────────^───────^───────
-  _w_hisper (toggle)
+  _e_nglish (toggle)
+  _d_eutsch (toggle)
   ")
   ("q" nil "quit")
   ("r" flyspell-region nil)
   ("l" my-toggle-ispell-language nil)
   ("n" flyspell-goto-next-error nil)
   ("s" my-synonym-current-word nil :color blue)
-  ("d" define-word-at-point nil :color blue) ;; define-word
+  ("D" define-word-at-point nil :color blue) ;; define-word
 ;;  ("<" flyspell-correct-previous :color pink nil)
 ;;  (">" flyspell-correct-next :color pink nil)
   ("c" flyspell-correct-word-before-point nil)
@@ -17187,6 +17191,19 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   ("b" flyspell-buffer nil)
   ("m" flyspell-mode nil)
   ("w" whisper-run nil)
+
+  ("e" (lambda ()
+          (interactive)
+          (setq whisper-language "en")
+          (whisper-run)
+  ) nil)
+  ("d" (lambda ()
+          (interactive)
+          (setq whisper-language "de")
+          (whisper-run)
+  ) nil)
+
+
   )
   (global-set-key [f5] 'hydra-spelling/body)
 #+END_SRC
