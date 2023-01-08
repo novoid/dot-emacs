@@ -5857,17 +5857,162 @@ UTF-8 symbols were not in my current (Windows) font.
 *** DISABLED org-modern
 
 | 2022-06-22 | initial setup for testing |
+| 2023-01-07 | initial tests and disabled after quick test |
 
 After reading [[https://blog.tecosaur.com/tmio/2022-05-31-folding.html][about performance improvements]], I want to try out
 [[https://github.com/minad/org-modern][org-modern]] at least for demo purposes.
 
-2022-06-22: This requires at least Emacs 27.1. I'll come back to that later.
+It's nice but I guess it's not something for my daily work. More for demo purposes.
 
-#+BEGIN_SRC emacs-lisp
+[[https://github.com/rougier/nano-emacs][N Λ N O Emacs]] is supposed to be more mature and maintained than org-modern. You might want to look at that.
+
+#+BEGIN_SRC emacs-lisp :results none
 (use-package org-modern
   :ensure t
  ;; :defer 110
   :after org
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :results none
+(defun my-org-modern ()
+  "Enabling org-modern and changing all sorts of settings according to its README."
+  (interactive)
+
+  ;; Option 1: Per buffer
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+  
+  ;; Option 2: Globally
+  (global-org-modern-mode)
+  
+  ;; Minimal UI
+  (package-initialize)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+;  (modus-themes-load-operandi)
+  
+  ;; Choose some fonts
+  (set-face-attribute 'default nil :family "Iosevka")
+  (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
+  (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
+  
+  ;; Add frame borders and window dividers
+  (modify-all-frames-parameters
+   '((right-divider-width . 40)
+     (internal-border-width . 40)))
+  (dolist (face '(window-divider
+                  window-divider-first-pixel
+                  window-divider-last-pixel))
+    (face-spec-reset-face face)
+    (set-face-foreground face (face-attribute 'default :background)))
+  (set-face-background 'fringe (face-attribute 'default :background))
+  
+  (setq
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
+  
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
+
+   ;; Do not add source block fringe markers if org-indent-mode is
+   ;; enabled. org-indent-mode uses line prefixes for indentation.
+   ;; Therefore we cannot have both.
+  
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
+  
+  (global-org-modern-mode)
+  
+)
+#+END_SRC
+
+*** nano-emacs
+
+| 2023-01-07 | initial setup after learning that org-modern is only a prototype for this |
+
+I'm not using my usual use-package structure here because [[https://github.com/rougier/nano-emacs][the README]]
+suggests that this needs to be handled differntly.
+
+#+BEGIN_SRC emacs-lisp :results none
+(defun my-nano-emacs ()
+  "Enabling nano emacs and changing all sorts of settings according to its README."
+  (interactive)
+
+
+(add-to-list 'load-path (expand-file-name (concat my-user-emacs-directory "contrib/nano-emacs")))
+
+;; Default layout (optional)
+(require 'nano-layout)
+
+;; Theming Command line options (this will cancel warning messages)
+(add-to-list 'command-switch-alist '("-dark"   . (lambda (args))))
+(add-to-list 'command-switch-alist '("-light"  . (lambda (args))))
+(add-to-list 'command-switch-alist '("-default"  . (lambda (args))))
+(add-to-list 'command-switch-alist '("-no-splash" . (lambda (args))))
+(add-to-list 'command-switch-alist '("-no-help" . (lambda (args))))
+(add-to-list 'command-switch-alist '("-compact" . (lambda (args))))
+
+;; Theme
+(require 'nano-faces)
+(require 'nano-theme)
+(require 'nano-theme-dark)
+(require 'nano-theme-light)
+
+(cond
+ ((member "-default" command-line-args) t)
+ ((member "-dark" command-line-args) (nano-theme-set-dark))
+ (t (nano-theme-set-dark)))
+(call-interactively 'nano-refresh-theme)
+
+;; Nano default settings (optional)
+(require 'nano-defaults)
+(menu-bar-mode -1) ;; somehow, the defaults enable menus on my computer.
+
+;; Nano session saving (optional)
+;(require 'nano-session)
+
+;; Nano header & mode lines (optional)
+(require 'nano-modeline)
+
+;; Nano key bindings modification (optional)
+;(require 'nano-bindings)
+
+;; Compact layout (need to be loaded after nano-modeline)
+(when (member "-compact" command-line-args)
+  (require 'nano-compact))
+  
+;; Nano counsel configuration (optional)
+;; Needs "counsel" package to be installed (M-x: package-install)
+;; (require 'nano-counsel)
+
+;; Welcome message (optional)
+;(let ((inhibit-message t))
+;  (message "Welcome to GNU Emacs / N Λ N O edition")
+;  (message (format "Initialization time: %s" (emacs-init-time))))
+
+;; Splash (optional)
+;(unless (member "-no-splash" command-line-args)
+;  (require 'nano-splash))
+
+;; Help (optional)
+;(unless (member "-no-help" command-line-args)
+;  (require 'nano-help))
+
 )
 #+END_SRC
 
@@ -17665,7 +17810,10 @@ approximately 25 seconds as of 2019-04-17.
 
        ;; setup my buffers the way I like it:
        (eyebrowse-restore (concat "emacs@" system-name))
-       (my-toggle-dark-bright-theme)
+
+       ;; Styling:
+       ;(my-toggle-dark-bright-theme)
+       (my-nano-emacs) ;; 2023-01-07 let's test this for some time
 
        ;;2022-03-27;; (my-hsplit-last-buffer)          ;; split horizontal: left is agenda
        ;;2022-03-27;; (my-mobile-org-import)           ;; switch to inbox.org (right side) and move latest input from mobileorg.org into inbox.org
