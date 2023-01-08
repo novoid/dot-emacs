@@ -8554,7 +8554,7 @@ lines:
 *** peg
 
   | 2020-12-07 | switched to a manually downloaded version             |
-  | 2023-01-08 | moved from manually downloaded v1.0 to melpa 20150708 |
+  | 2023-01-08 | moved from manually downloaded v1.0 to melpa 20150708 and reverted (see below) |
 
 [[http://elpa.gnu.org/packages/peg.html][peg]] is required by org-ql (and was installed via ELPA as dependency)
 but the most recent version I got via =list-package= was
@@ -8563,9 +8563,14 @@ download:
 
 #+BEGIN_SRC emacs-lisp
 (use-package peg
-  :ensure t
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/peg/")))
+  ;;:ensure t
 )
 #+END_SRC
+
+2023-01-08: again tried (m)elpa version and had to revert back to
+manually downloaded version:
+id:2023-01-08-fix--void-function-with-peg-rules
 
 *** org-ql
 
