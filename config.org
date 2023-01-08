@@ -1975,6 +1975,31 @@ then one of the defined emojis below such as =:P= or =:thumb:=.
 )
 #+END_SRC
 
+----------------
+
+With Emacs 28, Emojis are supposed to be improved.
+
+FIXXME: this might not be necessary starting with Emacs 28.1:
+from http://xahlee.info/emacs/emacs/emacs_set_font_emoji.html
+#+BEGIN_SRC emacs-lisp
+(progn
+  ;; set font for emoji (if before emacs 28, should come after setting symbols. emacs 28 now has 'emoji . before, emoji is part of 'symbol)
+  (set-fontset-font
+   t
+   (if (version< emacs-version "28.1")
+       '(#x1f300 . #x1fad0)
+     'emoji
+     )
+   (cond
+    ((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+    ((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+    ((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+    ((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+    ((member "Symbola" (font-family-list)) "Symbola"))))
+#+END_SRC
+
+I have installed https://fonts.google.com/noto/specimen/Noto+Color+Emoji
+
 * my-map: my own keyboard shortcut prefix
 
 About defining keys: [[http://ergoemacs.org/emacs/keyboard_shortcuts.html][Emacs: How to Define Keys]]
