@@ -297,6 +297,20 @@ For issue, see id:2022-01-06-Emacs-Warning--emacs--Unrecognized-key-i-when-invok
 (setq org-element--cache-diagnostics-modifications nil)
 #+END_SRC
 
+-------
+
+Introduced with Emacs 28.1: id:2022-04-06-Emacs-28-dot-1
+
+#+BEGIN_SRC emacs-lisp
+(when (version< emacs-version "28.1")
+  (setq completions-detailed t)
+  (setq use-short-answers t)
+  (setq next-error-message-highlight t)
+  (setq mode-line-compact t)
+  
+)
+#+END_SRC
+
 ** DISABLED Guru mode
 
 #+BEGIN_SRC emacs-lisp
