@@ -1294,7 +1294,9 @@ from emax.org:
 )
 #+END_SRC
 
-* Cygwin Paths (Windows)
+* DISABLED Cygwin Paths (Windows)
+
+| 2023-01-08 | disabled since I'm not using Windows for years |
 
 As mentioned in the chapter of system-specific paths, I do use
 programs which are not part of the PATH variable of the operating
@@ -1380,7 +1382,7 @@ END of Cygwin/babun configuration
 
 end of Cygwin config
 #+BEGIN_SRC emacs-lisp
-(my-log-hostspecific "cygwin-mount-version" cygwin-mount-version)
+;;(my-log-hostspecific "cygwin-mount-version" cygwin-mount-version)
 );; end of if-windows
 #+END_SRC
 
@@ -2075,7 +2077,6 @@ I get a popup buffer that tells me what bindings I am able to use.
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-which-key/")))
     :ensure t
     :defer 120
     :config ;; executed after loading package
@@ -2896,7 +2897,7 @@ End of smeargle:
 
 #+BEGIN_SRC emacs-lisp
 (use-package git-gutter
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/emacs-git-gutter/")))
+  :ensure t
   :config
 #+END_SRC
 
@@ -3545,6 +3546,8 @@ better than flymake (and maintained): http://stackoverflow.com/a/1621489
 
 *** hideshow-orgmode
 
+| 2023-01-08 | still not on *elpa |
+
 I found [[https://github.com/logangrado/hideshow-orgmode][hideshow-orgmode]] via [[https://www.reddit.com/r/emacs/comments/795u0o/hideshoworgmode/][this reddit thread]]. It provides (Python)
 code outlining similar to Org-mode =TAB= visibility cycling. This is a
 very nice thing to have. So far, I used yafolding-mode for it.
@@ -3598,6 +3601,8 @@ Issue:
 :CREATED:  [2017-12-26 Tue 10:49]
 :END:
 
+| 2023-01-08 | moved from git repo to elpa |
+
 From [[https://github.com/vkazanov/elpygen][GitHub]]: "Generate Python function/method stub for a call-like symbol under point"
 
 Just write =a_function_call(first_named, 2, second_named)=, invoke the
@@ -3607,8 +3612,7 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package elpygen
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/elpygen")))
-    :ensure t
+      :ensure t
     :config
     (require 'elpygen)
     (define-key python-mode-map (kbd "C-c i") 'elpygen-implement)
@@ -3809,7 +3813,8 @@ via [[https://github.com/rupa/z][z]]. You might also look into =GoTo= (on steroi
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-recent
-   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/dired-recent.el/")))
+   :ensure t
+
    ;;:defer 90
    :config
    (require 'dired-recent)
@@ -4454,13 +4459,15 @@ This package got recommended for a specific [[https://github.com/abo-abo/oremacs
 :CREATED:  [2018-07-04 Wed 15:43]
 :END:
 
+| 2023-01-08 | switched to melpa version |
+
 https://github.com/beutelma/filetags.el provides
 =filetags-dired-update-tags()= which is an Elisp-native
 re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 
 #+BEGIN_SRC emacs-lisp
 (use-package filetags
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/filetags.el/")))
+  :ensure t
   :config
   (setq filetags-enforce-controlled-vocabulary nil) ;; let me invent new tags on the fly (might not be a good idea anyway!)
   (setq filetags-load-controlled-vocabulary-from-file t) ;; read CV from .filetags files within same or upper directories
@@ -4475,13 +4482,15 @@ re-implementation of my [[https://github.com/novoid/filetags/][filetags]]:
 :CREATED:  [2018-07-08 Sun 15:55]
 :END:
 
+| 2023-01-08 | switched to use-package melpa version, still not using it actively |
+
 https://github.com/beutelma/date2name.el provides
 =date2name-dired-add-date-to-name()= which is an Elisp-native
 re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 
 #+BEGIN_SRC emacs-lisp
 (use-package date2name
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/date2name.el/")))
+  :ensure t
   :config
   (setq date2name-enable-smart-separation-character-chooser t)
 
@@ -12309,6 +12318,8 @@ Take a look at =my-org-region-to-property()= as well.
 Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]] (a fork of
 [[https://github.com/tmalsburg/helm-org-contacts][tmalsburg/helm-org-contacts]]) to quickly link contacts.
 
+2023-01-08: still not on *elpa and my fork seems to be reasonable up-to-date.
+
 #+BEGIN_SRC emacs-lisp
 (use-package helm-org-contacts
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/helm-org-contacts/")))
@@ -14055,17 +14066,16 @@ find out if you killed that piece of text that you think you killed,
 but you're not quite sure? If so, then =browse-kill-ring= is the Emacs
 extension for you.»
 
+2023-01-08: =browse-kill-ring= is available via melpa. However, I've
+replaced it with =counsel-yank-pop= anyways. Therefore it stays
+disabled.
+
 #+BEGIN_SRC emacs-lisp
 (use-package browse-kill-ring
-   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/")))
-   ;:load-path (concat my-user-emacs-directory "contrib/")
+  :ensure t
    :config
    (browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
 )
-
-;; 2017-09-05: to delete when above is working:
-;;(require 'browse-kill-ring)
-;;(browse-kill-ring-default-keybindings); map M-y to browse-kill-ring
 #+END_SRC
 
 ** DISABLED pdf-mode - Edit raw PDF files in Emacs
@@ -14187,14 +14197,15 @@ disabled 2015-08-31 since I don't use it for now.
 :CREATED:  [2018-06-28 Thu 12:54]
 :END:
 
+| 2023-01-08 | switched from git repo to MELPA |
+
 - https://github.com/abo-abo/define-word
   - via [[http://irreal.org/blog/?p=7303][An Emacs Interface to the macOS System Dictionary | Irreal]] and [[http://irreal.org/blog/?p=7250][A Thesaurus for Emacs | Irreal]]
   - uses online service of https://www.wordnik.com/
 
 #+BEGIN_SRC emacs-lisp
 (use-package define-word
-   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/define-word/")))
-;;   :config
+  :ensure t
 )
 #+END_SRC
 
@@ -14681,7 +14692,7 @@ command history of some or all buffers.»
 
 Used in screencast video: https://www.reddit.com/r/emacs/comments/4yhfn6/emacs_screencast_acelink_swiper_lispy_and_macros/
 
-To see the log buffer, call M-x clm/open-command-log-buffer.
+To see the log buffer, call =M-x clm/open-command-log-buffer=.
 
 The key strokes in the log are decorated with ISO9601 timestamps on
 the property `:time' so if you want to convert the log for
@@ -17996,44 +18007,44 @@ sed ':a;N;$!ba;s/\n/ |\n/g'
 | M-/                                                      | ~hippie-expand~                                           |
 | M-q                                                      | ~my-fill-or-unfill~                                       |
 | M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~   |
-| [M-l]                                                    | ~downcase-word)~                                        |
-| [M-u]                                                    | ~upcase-word)~                                          |
-| [M-c]                                                    | ~capitalize-word)~                                      |
-| [remap fill-paragraph]                                 |                                                           |
-| global [(f5)]                                            | ~flyspell-mode)~                                        |
-| global [(shift f5)]                                      | ~my-toggle-ispell-language)~                            |
-| global [(f6)]                                            | ~flyspell-goto-next-error)~                             |
-| global [(f7)]                                            | ~flyspell-correct-word-before-point)~                   |
-| org-mode RET                                           |                                                           |
-| ~\C-cl~                                                  | ~org-store-link)~                                       |
-| ~\C-ca~                                                  | ~org-agenda)~                                           |
-| C-c %                                                    | ~org-mark-ring-push)~                                   |
-| C-c <left>                                               | ~org-mark-ring-goto)~                                   |
-| C-c <down>                                               | ~org-mark-ring-push)~                                   |
-| global ~\C-cc~                                           | ~org-capture)~                                          |
-| ~\C-cm~                                                  | ~my-memacs-org-agenda)~                                 |
-| org-mode C-c )                                           | ~reftex-citation)~                                      |
-| org-mode C-c (                                           | ~org-mode-reftex-search))~                              |
-| [f8]                                                     | ~minimap-mode)~                                         |
-| C-s-SPC                                                  | ~mode-line-in-header)~                                  |
-| [f12]                                                    | ~my-toggle-naked-emacs)~                                |
-| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~ |
-| [f4]                                                     | ~char-menu)~                                            |
-| [f2]                                                     | ~goto-last-change)~                                     |
-| [f3]                                                     | ~goto-last-change-reverse)~                             |
-| [f1]                                                     | ~neotree-toggle)~                                       |
-| ~\C-s~                                                   | ~my-search-method-according-to-numlines)~               |
-| global [tool-bar pdf-button]                           |                                                           |
-| [f1]                                                     | ~my-toggle-beginner-setup)~                             |
-| [(shift f1)]                                             | ~my-toggle-dark-bright-theme)~                          |
-| [home]                                                   | ~beginning-of-buffer)~                                  |
-| [end]                                                    | ~end-of-buffer)~                                        |
-| [C-left]                                                 | ~backward-word)~                                        |
-| [C-right]                                                | ~forward-word)~                                         |
-| C-p                                                      | ~scroll-down-command)~                                  |
-| C-n                                                      | ~scroll-up-command)~                                    |
-| C-f                                                      | ~(lambda () (interactive) (forward-line 5)))~           |
-| M-/                                                      | ~hippie-expand)~                                        |
+| [M-l]                                                    | ~downcase-word)~                                        |
+| [M-u]                                                    | ~upcase-word)~                                          |
+| [M-c]                                                    | ~capitalize-word)~                                      |
+| [remap fill-paragraph]                                 |                                                           |
+| global [(f5)]                                            | ~flyspell-mode)~                                        |
+| global [(shift f5)]                                      | ~my-toggle-ispell-language)~                            |
+| global [(f6)]                                            | ~flyspell-goto-next-error)~                             |
+| global [(f7)]                                            | ~flyspell-correct-word-before-point)~                   |
+| org-mode RET                                           |                                                           |
+| ~\C-cl~                                                  | ~org-store-link)~                                       |
+| ~\C-ca~                                                  | ~org-agenda)~                                           |
+| C-c %                                                    | ~org-mark-ring-push)~                                   |
+| C-c <left>                                               | ~org-mark-ring-goto)~                                   |
+| C-c <down>                                               | ~org-mark-ring-push)~                                   |
+| global ~\C-cc~                                           | ~org-capture)~                                          |
+| ~\C-cm~                                                  | ~my-memacs-org-agenda)~                                 |
+| org-mode C-c )                                           | ~reftex-citation)~                                      |
+| org-mode C-c (                                           | ~org-mode-reftex-search))~                              |
+| [f8]                                                     | ~minimap-mode)~                                         |
+| C-s-SPC                                                  | ~mode-line-in-header)~                                  |
+| [f12]                                                    | ~my-toggle-naked-emacs)~                                |
+| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~ |
+| [f4]                                                     | ~char-menu)~                                            |
+| [f2]                                                     | ~goto-last-change)~                                     |
+| [f3]                                                     | ~goto-last-change-reverse)~                             |
+| [f1]                                                     | ~neotree-toggle)~                                       |
+| ~\C-s~                                                   | ~my-search-method-according-to-numlines)~               |
+| global [tool-bar pdf-button]                           |                                                           |
+| [f1]                                                     | ~my-toggle-beginner-setup)~                             |
+| [(shift f1)]                                             | ~my-toggle-dark-bright-theme)~                          |
+| [home]                                                   | ~beginning-of-buffer)~                                  |
+| [end]                                                    | ~end-of-buffer)~                                        |
+| [C-left]                                                 | ~backward-word)~                                        |
+| [C-right]                                                | ~forward-word)~                                         |
+| C-p                                                      | ~scroll-down-command)~                                  |
+| C-n                                                      | ~scroll-up-command)~                                    |
+| C-f                                                      | ~(lambda () (interactive) (forward-line 5)))~           |
+| M-/                                                      | ~hippie-expand)~                                        |
 
 ** Mappings not using my-map (sorted output)
 
@@ -18071,32 +18082,32 @@ sort | uniq
 | *key*                                                    | *function*                                                                  |
 |----------------------------------------------------------+-----------------------------------------------------------------------------|
 | ~\C-ca~                                                  | ~org-agenda~                                                                |
-| ~\C-ca~                                                  | ~org-agenda)~                                                             |
+| ~\C-ca~                                                  | ~org-agenda)~                                                             |
 | C-c <down>                                               | ~org-mark-ring-push~                                                        |
-| C-c <down>                                               | ~org-mark-ring-push)~                                                     |
+| C-c <down>                                               | ~org-mark-ring-push)~                                                     |
 | C-c h                                                    | ~hydra-apropos/body~                                                        |
 | C-c <left>                                               | ~org-mark-ring-goto~                                                        |
-| C-c <left>                                               | ~org-mark-ring-goto)~                                                     |
+| C-c <left>                                               | ~org-mark-ring-goto)~                                                     |
 | ~\C-cl~                                                  | ~org-store-link~                                                            |
-| ~\C-cl~                                                  | ~org-store-link)~                                                         |
+| ~\C-cl~                                                  | ~org-store-link)~                                                         |
 | ~\C-cm~                                                  | ~my-memacs-org-agenda~                                                      |
-| ~\C-cm~                                                  | ~my-memacs-org-agenda)~                                                   |
+| ~\C-cm~                                                  | ~my-memacs-org-agenda)~                                                   |
 | C-c %                                                    | ~org-mark-ring-push~                                                        |
-| C-c %                                                    | ~org-mark-ring-push)~                                                     |
+| C-c %                                                    | ~org-mark-ring-push)~                                                     |
 | C-f                                                      | ~(lambda () (interactive) (forward-line 5~                                  |
-| C-f                                                      | ~(lambda () (interactive) (forward-line 5)))~                             |
+| C-f                                                      | ~(lambda () (interactive) (forward-line 5)))~                             |
 | [C-left]                                                 | ~backward-word~                                                             |
-| [C-left]                                                 | ~backward-word)~                                                          |
+| [C-left]                                                 | ~backward-word)~                                                          |
 | C-n                                                      | ~scroll-up-command~                                                         |
-| C-n                                                      | ~scroll-up-command)~                                                      |
+| C-n                                                      | ~scroll-up-command)~                                                      |
 | C-p                                                      | ~scroll-down-command~                                                       |
-| C-p                                                      | ~scroll-down-command)~                                                    |
+| C-p                                                      | ~scroll-down-command)~                                                    |
 | [C-right]                                                | ~forward-word~                                                              |
-| [C-right]                                                | ~forward-word)~                                                           |
+| [C-right]                                                | ~forward-word)~                                                           |
 | ~\C-s~                                                   | ~my-search-method-according-to-numlines~                                    |
-| ~\C-s~                                                   | ~my-search-method-according-to-numlines)~                                 |
+| ~\C-s~                                                   | ~my-search-method-according-to-numlines)~                                 |
 | C-s-SPC                                                  | ~mode-line-in-header~                                                       |
-| C-s-SPC                                                  | ~mode-line-in-header)~                                                    |
+| C-s-SPC                                                  | ~mode-line-in-header)~                                                    |
 | C-x C-b                                                  | ~ibuffer~                                                                   |
 | C-x r h                                                  | ~hydra-rectangle/body~                                                      |
 | C-z                                                      | ~my-dired-recent-dirs~                                                      |
@@ -18112,61 +18123,61 @@ sort | uniq
 | dired-mode M-v                                           | ~dired-ranger-paste) ;; overwrites: scroll-down-command~                    |
 | emacs-lisp-mode C-c e                                    | ~macrostep-expand~                                                          |
 | [end]                                                    | ~end-of-buffer~                                                             |
-| [end]                                                    | ~end-of-buffer)~                                                          |
+| [end]                                                    | ~end-of-buffer)~                                                          |
 | [f12]                                                    | ~my-toggle-naked-emacs~                                                     |
-| [f12]                                                    | ~my-toggle-naked-emacs)~                                                  |
+| [f12]                                                    | ~my-toggle-naked-emacs)~                                                  |
 | [f1]                                                     | ~my-toggle-beginner-setup~                                                  |
-| [f1]                                                     | ~my-toggle-beginner-setup)~                                               |
+| [f1]                                                     | ~my-toggle-beginner-setup)~                                               |
 | [f2]                                                     | ~goto-last-change~                                                          |
-| [f2]                                                     | ~goto-last-change)~                                                       |
+| [f2]                                                     | ~goto-last-change)~                                                       |
 | [f3]                                                     | ~goto-last-change-reverse~                                                  |
-| [f3]                                                     | ~goto-last-change-reverse)~                                               |
+| [f3]                                                     | ~goto-last-change-reverse)~                                               |
 | [f4]                                                     | ~char-menu~                                                                 |
-| [f4]                                                     | ~char-menu)~                                                              |
+| [f4]                                                     | ~char-menu)~                                                              |
 | [f5]                                                     | ~hydra-spelling/body~                                                       |
 | [f8]                                                     | ~minimap-mode~                                                              |
-| [f8]                                                     | ~minimap-mode)~                                                           |
-| [f1]                                                     | ~neotree-toggle)~                                                         |
+| [f8]                                                     | ~minimap-mode)~                                                           |
+| [f1]                                                     | ~neotree-toggle)~                                                         |
 | global ~\C-cc~                                           | ~org-capture~                                                               |
-| global ~\C-cc~                                           | ~org-capture)~                                                            |
-| global [(f5)]                                            | ~flyspell-mode)~                                                          |
-| global [(f6)]                                            | ~flyspell-goto-next-error)~                                               |
-| global [(f7)]                                            | ~flyspell-correct-word-before-point)~                                     |
-| global [(shift f5)]                                      | ~my-toggle-ispell-language)~                                              |
+| global ~\C-cc~                                           | ~org-capture)~                                                            |
+| global [(f5)]                                            | ~flyspell-mode)~                                                          |
+| global [(f6)]                                            | ~flyspell-goto-next-error)~                                               |
+| global [(f7)]                                            | ~flyspell-correct-word-before-point)~                                     |
+| global [(shift f5)]                                      | ~my-toggle-ispell-language)~                                              |
 | global [tool-bar pdf-button]                             |                                                                             |
-| global [tool-bar pdf-button]                           |                                                                             |
+| global [tool-bar pdf-button]                           |                                                                             |
 | [home]                                                   | ~beginning-of-buffer~                                                       |
-| [home]                                                   | ~beginning-of-buffer)~                                                    |
+| [home]                                                   | ~beginning-of-buffer)~                                                    |
 | image-dired-thumbnail-mode ~\C-n~                        | ~image-diredx-next-line~                                                    |
 | image-dired-thumbnail-mode ~\C-p~                        | ~image-diredx-previous-line~                                                |
 | image-dired-thumbnail-mode ~g~                           | ~revert-buffer);; revert all thumbnails if `image-diredx-async-mode' is on~ |
 | image-dired-thumbnail-mode ~x~                           | ~image-diredx-flagged-delete);; Delete confirmation prompt with thumbnails~ |
 | [M-c]                                                    | ~capitalize-word~                                                           |
-| [M-c]                                                    | ~capitalize-word)~                                                        |
+| [M-c]                                                    | ~capitalize-word)~                                                        |
 | M-h                                                      | ~hs-cycle~                                                                  |
 | M-H                                                      | ~hs-cycle-all~                                                              |
 | M-/                                                      | ~hippie-expand~                                                             |
-| M-/                                                      | ~hippie-expand)~                                                          |
+| M-/                                                      | ~hippie-expand)~                                                          |
 | M-i (lambda () (interactive) (my-codenav-prev-definition |                                                                             |
 | M-k (lambda () (interactive) (my-codenav-next-definition |                                                                             |
 | [M-l]                                                    | ~downcase-word~                                                             |
-| [M-l]                                                    | ~downcase-word)~                                                          |
+| [M-l]                                                    | ~downcase-word)~                                                          |
 | M-q                                                      | ~my-fill-or-unfill~                                                         |
 | [M-u]                                                    | ~upcase-word~                                                               |
-| [M-u]                                                    | ~upcase-word)~                                                            |
+| [M-u]                                                    | ~upcase-word)~                                                            |
 | M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~                     |
-| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~                   |
+| M-x                                                      | ~counsel-M-x) ;; id:2017-03-02-cool-command-completion~                   |
 | org-mode C-c (                                           | ~org-mode-reftex-search~                                                    |
-| org-mode C-c (                                           | ~org-mode-reftex-search))~                                                |
+| org-mode C-c (                                           | ~org-mode-reftex-search))~                                                |
 | org-mode C-c )                                           | ~reftex-citation~                                                           |
-| org-mode C-c )                                           | ~reftex-citation)~                                                        |
-| org-mode RET                                           |                                                                             |
+| org-mode C-c )                                           | ~reftex-citation)~                                                        |
+| org-mode RET                                           |                                                                             |
 | python-mode C-c i                                        | ~elpygen-implement~                                                         |
 | python-mode [f1]                                         | ~hydra-python/body~                                                         |
 | [remap fill-paragraph]                                   |                                                                             |
-| [remap fill-paragraph]                                 |                                                                             |
+| [remap fill-paragraph]                                 |                                                                             |
 | [(shift f1)]                                             | ~my-toggle-dark-bright-theme~                                               |
-| [(shift f1)]                                             | ~my-toggle-dark-bright-theme)~                                            |
+| [(shift f1)]                                             | ~my-toggle-dark-bright-theme)~                                            |
 
 ** Mapping from my-map outside of use-package
 
