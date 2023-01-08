@@ -3576,6 +3576,8 @@ to work.
 :CREATED:  [2018-08-27 Mon 17:45]
 :END:
 
+| 2023-01-08 | moved to elpa version |
+
 Source: https://github.com/naiquevin/sphinx-doc.el
 
 #+BEGIN_QUOTE
@@ -3586,7 +3588,6 @@ the requirement of the [[http://sphinx-doc.org/index.html][Sphinx documentation 
 
 #+BEGIN_SRC emacs-lisp
   (use-package sphinx-doc
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/sphinx-doc.el")))
     :ensure t
     :config
     (add-hook 'python-mode-hook (lambda ()
@@ -3620,6 +3621,18 @@ results in =def a_function_call(first_named, arg1, second_named):\npass=.
     (require 'elpygen)
     (define-key python-mode-map (kbd "C-c i") 'elpygen-implement)
   )
+#+END_SRC
+
+*** pylookup
+
+| 2023-01-08 | somehow this got lost: re-added via local package as I've found no *elpa |
+
+#+BEGIN_SRC emacs-lisp
+(use-package pylookup
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/pylookup/")))
+  ;:ensure t
+  :defer 110
+)
 #+END_SRC
 
 *** END of Python-related stuff
@@ -4444,7 +4457,8 @@ running in background. This is how it's done.
 :CREATED:  [2020-04-13 Mon 16:44]
 :END:
 
-  | 2020-04-13 | setup for testing |
+  | 2020-04-13 | setup for testing           |
+  | 2023-01-08 | still no *elpa; updated git |
 
 This package got recommended for a specific [[https://github.com/abo-abo/oremacs/issues/27][issue I faced using interactive Python scripts]].
 
@@ -4546,6 +4560,7 @@ it.
 ** DISABLED isync + notmuch
 
 | 2021-02-13 | disabled since I can't use business email with Emacs |
+| 2023-01-08 | still not on *elpa; no newer version (unmaintained?) |
 
 This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I use together with isync/mbsync/
 
@@ -5332,6 +5347,7 @@ properties and report format errors when other format is detected.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-edna
+  :ensure t
   :config
   (require 'org-edna)
   (org-edna-load)
@@ -5340,7 +5356,7 @@ properties and report format errors when other format is detected.
 
 =org-edna= has a syntax that is more complex when compared to
 =org-depend=. However, =org-edna= also features much more
-possibilities. My main driver to switch from =org=depend= to
+possibilities. My main driver to switch from =org-depend= to
 =org-edna= are relative SCHEDULED dates. This way, a follow-up task
 could be scheduled for, e.g., three days after the previous task was
 finished, whenever that happens.
@@ -5751,7 +5767,7 @@ Statistic cookies count ALL subtasks not only direkt ones
 
 Stop the mouse cursor from highlighting lines in the agenda:
 http://orgmode.org/worg/org-faq.html
-Somehow this stopped working with org-super-agenda I guess.
+Somehow this stopped working with =org-super-agenda= I guess.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-finalize-agenda-hook
             (lambda () (remove-text-properties
@@ -5792,35 +5808,6 @@ Set the width of inline images:
 #+END_SRC
 
 
-Nice looking bullets for headings:
-#+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
-    :ensure t
-    :config ;; executed after loading package
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  )
-#+END_SRC
-
-An alternative for =org-bullets= (above) would be:
-https://github.com/integral-dw/org-superstar-mode which I did not test
-so far. It also affects the simple lists which I do like as they are.
-
-Note to myself: if you include =org-superstar-mode= you also have to
-adapt the beginner mode setting.
-
-
-[[https://github.com/harrybournis/org-fancy-priorities][org-fancy-priorities]] replaces, e.g., "[A]" (for "highest priority") with a nice graphic.
-
-2018-07-23: disabled since it does not seem to work on my side. It
-somehow messes up my TODO keywords and my Windows font does not
-feature the icon characters.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(use-package org-fancy-priorities
-   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-fancy-priorities/")))
-)
-#+END_SRC
-
 Nice symbold instead of keywords. I got this from [[https://github.com/mwfogleman/.emacs.d/blob/master/michael.org#prettify-symbols-1][this config]] but his
 UTF-8 symbols were not in my current (Windows) font.
 
@@ -5860,6 +5847,22 @@ UTF-8 symbols were not in my current (Windows) font.
 
   ;;test: (set-face-background 'org-block-background "#1a1a1a")
 
+#+END_SRC
+
+*** DISABLED org-fancy-priorities
+
+| 2023-01-08 | still disabled but moved to its own heading |
+
+[[https://github.com/harrybournis/org-fancy-priorities][org-fancy-priorities]] replaces, e.g., "[A]" (for "highest priority") with a nice graphic.
+
+2018-07-23: disabled since it does not seem to work on my side. It
+somehow messes up my TODO keywords and my Windows font does not
+feature the icon characters.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-fancy-priorities
+  :ensure t
+)
 #+END_SRC
 
 *** DISABLED org-modern
@@ -5948,6 +5951,26 @@ It's nice but I guess it's not something for my daily work. More for demo purpos
   
 )
 #+END_SRC
+
+*** org-bullets
+
+| 2023-01-08 | moved to its own heading |
+
+Nice looking bullets for headings:
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config ;; executed after loading package
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+#+END_SRC
+
+An alternative for =org-bullets= (above) would be:
+https://github.com/integral-dw/org-superstar-mode which I did not test
+so far. It also affects the simple lists which I do like as they are.
+
+Note to myself: if you include =org-superstar-mode= you also have to
+adapt the beginner mode setting.
 
 *** nano-emacs
 
@@ -8530,7 +8553,8 @@ lines:
 
 *** peg
 
-  | 2020-12-07 | switched to a manually downloaded version |
+  | 2020-12-07 | switched to a manually downloaded version             |
+  | 2023-01-08 | moved from manually downloaded v1.0 to melpa 20150708 |
 
 [[http://elpa.gnu.org/packages/peg.html][peg]] is required by org-ql (and was installed via ELPA as dependency)
 but the most recent version I got via =list-package= was
@@ -8539,7 +8563,7 @@ download:
 
 #+BEGIN_SRC emacs-lisp
 (use-package peg
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/peg/")))
+  :ensure t
 )
 #+END_SRC
 
@@ -9293,7 +9317,8 @@ Testing =my-org-super-links-filter-description=:
 
 *** org-linker and org-linker-edna
 
-  | 2020-09-25 | initial setup for testing |
+  | 2020-09-25 | initial setup for testing                         |
+  | 2023-01-08 | org-linker and org-linker-edna still not on *elpa |
 
 I asked the author of [[https://github.com/toshism/org-super-links][org-super-links]] with [[https://github.com/toshism/org-super-links/issues/21][this feature request]] to
 extend org-super-links such that it can be used to define dependencies
@@ -9738,7 +9763,7 @@ See also: id:2017-08-12-org-super-agenda
 Loading the code:
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-agenda
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-super-agenda/")))
+  :ensure t
 )
 #+END_SRC
 
@@ -9912,9 +9937,8 @@ down below.
 See also: id:2017-08-12-org-super-agenda
 
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
 (use-package org-super-agenda
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-super-agenda/")))
   :ensure t
   ;; :hook (org-agenda-mode . org-super-agenda-mode)
   :config
@@ -11197,9 +11221,12 @@ item gets temporarily overwritten. You can use this to obfuscate or
 
 *** DISABLED iCal -> Org
 
+| 2023-01-08 | still not on melpa; keep it disabled |
+
 Import iCal to Org-mode
 - http://ozymandias.dk/emacs/org-import-calendar.el
-- https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el
+- https://github.com/vjohansen/emacs-config/
+  - https://raw.github.com/vjohansen/emacs-config/master/org-import-calendar.el
 
 #+BEGIN_SRC emacs-lisp
 (my-load-local-el "contrib/org-import-calendar.el")
@@ -11752,10 +11779,12 @@ END of LaTeX class definitions
   )
 #+END_SRC
 
-*** ox-slack
+*** DISABLED ox-slack
 :PROPERTIES:
 :CREATED:  [2018-12-10 Mon 16:55]
 :END:
+
+| 2023-01-08 | moved to *elpa package and disabled it since I don't use slack |
 
 From [[https://github.com/titaniumbones/ox-slack][GitHub]]: derived from MD export but optimized for syntax sub-set of slack.
 
@@ -11777,7 +11806,7 @@ resultant text into your slack client.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ox-slack
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-slack/")))
+  :ensure t
   :defer 110
   :if (my-system-type-is-windows)
   )
@@ -11785,13 +11814,14 @@ resultant text into your slack client.
 
 *** ox-pandoc - Export via Pandoc
 
+| 2023-01-08 | moved from git to melpa |
+
 https://github.com/kawabata/ox-pandoc - «This is another exporter that
 translates Org-mode file to various other formats via Pandoc.»
 
 #+BEGIN_SRC emacs-lisp
 (when (my-eval-if-binary-or-warn "pandoc")
   (use-package ox-pandoc
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-pandoc/")))
     :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
     :defer 110
     ;; :if (or (my-system-type-is-gnu) (my-system-type-is-windows))
@@ -11945,7 +11975,8 @@ https://github.com/yashi/org-asciidoc - «An Org Mode Exporter Backend For Ascii
 
 *** DISABLED ox-rst - Export to reStructuredText
 
-2019-09-28: disabled because I don't need it at the moment
+| 2019-09-28 | disabled because I don't need it at the moment  |
+| 2023-01-08 | removed repo locally since melpa package exists |
 
 https://github.com/msnoigrs/ox-rst
 
@@ -11960,9 +11991,10 @@ FIXXME: I don't know why loading via use-package is not working with
 this one: =package-compute-transaction: Package ‘ox-rst-’ is
 unavailable=
 
+- [ ] if re-enabled, check out elpa package instead
+
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package ox-rst
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-rst/")))
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
   :defer 110
   :if (my-system-type-is-windows)
@@ -12047,6 +12079,8 @@ https://github.com/yjwen/org-reveal
 
 *** DISABLED ox-clip - formatted copy from Org-mode to system clipboard
 
+| 2023-01-08 | keep disabled but switch to elpa version |
+
 #+BEGIN_QUOTE
 [[http://melpa.org/#/ox-clip][This module]] copies selected regions in org-mode as formatted text on the
 clipboard that can be pasted into other applications. When not in org-mode,
@@ -12102,8 +12136,6 @@ Windows, Mac and Linux.
          (my-system-type-is-windows);; For Windows the html-clip-w32.py script will be installed.
          )
     (use-package ox-clip
-      :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/ox-clip/")))
-        ;;:if
       :ensure t
       :defer 110
       )
@@ -12557,7 +12589,8 @@ want to install [[https://github.com/skuro/plantuml-mode][plantuml-mode]]:
 
 #+BEGIN_SRC emacs-lisp
   (use-package plantuml-mode
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/plantuml-mode")))
+    :ensure t
+
     :config
 
     (my-log-hostspecific "plantuml-mode-version" plantuml-mode-version)
@@ -12945,7 +12978,9 @@ org-feed - aggregating RSS feeds in news.org file:
       )
 #+END_SRC
 
-** org-protocol-capture-html - turn HTML into Org-mode
+** DISABLED org-protocol-capture-html - turn HTML into Org-mode
+
+| 2023-01-08 | disabled since I disabled the bookmarklet anyway |
 
 https://github.com/alphapapa/org-protocol-capture-html
 #+BEGIN_QUOTE
@@ -12954,6 +12989,8 @@ a page’s HTML content into plain-text. However, Pandoc supports
 converting from HTML to org-mode, so we can use it to turn HTML into
 Org-mode content! It can even turn HTML tables into Org tables!
 #+END_QUOTE
+
+It uses browser bookmarklets you need to set up.
 
 - see: id:2016-07-10-inst-org-protocol-capture
 - I disabled the package because I do have to play around with it to
@@ -12970,6 +13007,8 @@ Org-mode content! It can even turn HTML tables into Org tables!
 
 ** DISABLED org-mind-map
 
+| 2023-01-08 | moved to elpa version; still disabled |
+
 I found [[https://github.com/theodorewiles/org-mind-map][org-mind-map]] via an [[http://irreal.org/blog/?p=6561][article on irreal]].
 
 At the moment, I am not planning on using it intensively. It is maybe
@@ -12978,16 +13017,23 @@ mine for demonstration purposes for novice or non-Org-users.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-mind-map
-    ;;:ensure t
+    :ensure t
     :defer 120
-    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-mind-map/")))
     :config ;; executed after loading package
   )
 #+END_SRC
 
-2017-10-14: Unfortunately, I do have [[https://github.com/theodorewiles/org-mind-map/issues/13][issues with this tool so that I
-had to disable it]]. Maybe I'd give it another try in a couple of months
-or so.
+2017-10-14: Unfortunately, I do have [[https://github.com/theodorewiles/org-mind-map/issues/13][some issues with this tool so
+that I had to disable it]]. Maybe I'd give it another try in a couple of
+months or so.
+
+2023-01-08: A short re-test on this file: "Bad file descriptor,
+org-mind-map-s" which drove me to
+https://github.com/the-ted/org-mind-map/issues/19 which reads "This
+happened to me as well - in one of the headlines I had a '->'
+character combination and removing it fixed the issue." My impression
+of this project not being mature enough for my large Orgdown files
+seems to be confirmed for the moment. Maybe re-try in a couple of years?
 
 ** DISABLED org-sidebar
 :PROPERTIES:
@@ -13396,8 +13442,7 @@ Support for opening last known pdf position in pdf-view-mode provided by pdf-too
 
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-view-restore
-  ;:if (my-system-type-is-gnu)
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/pdf-view-restore/")))
+  :ensure t
   :after pdf-tools
   :defer 110
   :config
@@ -13667,10 +13712,12 @@ Here are some settings from [[https://github.com/sebasmonia/dotfiles/blob/e316a4
 
 ** Counting words → M-=
 
+| 2023-01-08 | old and not on *elpa; keeping it |
+
 Counting lines, words, characters.
 
 - http://www.emacswiki.org/emacs/WordCount
-- http://www.emacswiki.org/emacs/wc.el
+  - http://www.emacswiki.org/emacs/wc.el
 
 #+BEGIN_SRC emacs-lisp
 (use-package wc
@@ -14085,13 +14132,13 @@ disabled.
 
 ** DISABLED pdf-mode - Edit raw PDF files in Emacs
 
+| 2014-11-16 | works at a quick test but I disable it for now since I don't need it for now. |
+| 2023-01-08 | still not on *elpa; keep disabled                                             |
+
 «[[https://github.com/mishoo/pdf-mode.el][pdf-mode]] is a major mode for editing PDF files in Emacs. It's not
 perfect, but it should be a good starting point. It might be useful
 for the poor souls who are working on generating PDF; definitely
 useful to me.»
-
-2014-11-16 works at a quick test but I disable it for now since I
-don't need it for now.
 
 #+BEGIN_SRC emacs-lisp
 (use-package pdf-mode
@@ -14127,7 +14174,9 @@ I get a popup buffer that tells me what bindings I am able to use.
 )
 #+END_SRC
 
-** vcard-mode
+** DISABLED vcard-mode
+
+| 2023-01-08 | still not on *elpa; disabling for now |
 
 https://github.com/dochang/vcard-mode
 
@@ -14136,7 +14185,7 @@ https://github.com/dochang/vcard-mode
 #+BEGIN_SRC emacs-lisp
 (use-package vcard-mode
   :ensure nil ;; install package if not found OR: (setq use-package-always-ensure t)
-  :load-path "contrib/vcard-mode/" ;; relative to emacs dir
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/vcard-mode/")))
   :pin manual
   :mode ("\\.vc\\(f\\|ard\\)\\'" . vcard-mode)
 )
@@ -14146,7 +14195,8 @@ https://github.com/dochang/vcard-mode
 
 via http://www.emacswiki.org/emacs/Sunrise_Commander and GitHub
 
-disabled 2015-08-31 since I don't use it for now.
+| 2015-08-31 | disabled since I don't use it for now. |
+| 2023-01-08 | still not on *elpa; keep disabled      |
 
 #+BEGIN_SRC emacs-lisp
 (use-package sunrise-commander
@@ -14162,6 +14212,8 @@ disabled 2015-08-31 since I don't use it for now.
 
 ** DISABLED RAML-mode
 
+| 2023-01-08 | was already disabled; not found on *elpa |
+
 - via http://www2.tcs.ifi.lmu.de/~hoffmann/raml/raml-mode.el
 - [[https://en.wikipedia.org/wiki/RAML_%28software%29][What is RAML?]] (RESTful API Modeling Language)
 
@@ -14173,6 +14225,8 @@ disabled 2015-08-31 since I don't use it for now.
 #+END_SRC
 
 ** Synonyms → my-map S
+
+| 2023-01-08 | sill not on *elpa |
 
 - via http://www.emacswiki.org/emacs/ThesauriAndSynonyms and id:2015-08-28-synonyms.el
 - The file names are absolute, not relative, locations
@@ -15398,11 +15452,13 @@ decided to test this package myself.
 ** Emacs Slime Volleyball
 
 | 2020-05-26 | setup this little game after finding it via Emacs News on [[https://github.com/fitzsim/slime-volleyball][GitHub]] |
+| 2023-01-08 | switched to elpa version                                         |
 
 #+BEGIN_SRC emacs-lisp
 (use-package slime-volleyball
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/slime-volleyball/")))
+  :ensure t
   :config (require 'slime-volleyball)
+  :defer 110
 )
 #+END_SRC
 
@@ -15541,9 +15597,10 @@ This looks like a cool method to jump back and forth between buffers. I need to 
 )
 #+END_SRC
 
-** secret-mode
+** secret-mode → replace content with anonymous bars for demo purposes
 
 | 2021-10-05 | found via [[https://sachachua.com/blog/2021/10/2021-10-04-emacs-news/][Emacs News]] |
+| 2023-01-08 | still not on *elpa   |
 
 "secret-mode is an Emacs minor mode to hide your current text." ([[https://github.com/bkaestner/secret-mode.el][Source]])
 
@@ -15593,7 +15650,8 @@ This looks like a cool method to jump back and forth between buffers. I need to 
 
 ** repetition_error_finder (Beta)
 
-| 2022-01-07 | Setup for test purposes.|
+| 2022-01-07 | Setup for test purposes. |
+| 2023-01-08 | still not on *elpa       |
 
 I found this nugget via [[https://irreal.org/blog/?p=10235][this irreal article]]. The project is [[https://github.com/ioah86/repetition_error_finder][hosted on
 GitHub]]. Its goal is to find repetition errors in written text. It
@@ -15612,6 +15670,7 @@ find-reperr-whole-buffer= or =M-x find-reperr-from-point=.
 ** Wordel (game)
 
 | 2022-01-18 | setup of package with ngerman |
+| 2023-01-08 | switched to melpa version     |
 
 Project: https://github.com/progfolio/wordel (via [[https://www.reddit.com/r/emacs/comments/s608jw/if_you_like_wordle/][reddit]])
 
@@ -15619,8 +15678,7 @@ I replaced the original =words.txt= with german: =sudo apt install wngerman= and
 
 #+BEGIN_SRC emacs-lisp
 (use-package wordel
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/wordel/")))
- ; :ensure t
+  :ensure t
   :defer 110
 )
 #+END_SRC
