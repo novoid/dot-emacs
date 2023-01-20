@@ -5854,6 +5854,7 @@ UTF-8 symbols were not in my current (Windows) font.
 (add-hook 'org-mode-hook
               (lambda ()
                 (push '("TODO"  . ?█) prettify-symbols-alist)
+                (push '("NEXT"  . ?█) prettify-symbols-alist)
                 (push '("DONE"  . ?✓) prettify-symbols-alist)
                 (push '("WAITING"  . ?…) prettify-symbols-alist)
                 (push '("CANCELLED"  . ?×) prettify-symbols-alist)
@@ -7747,7 +7748,7 @@ Define my default keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords (quote
                            (
-                            (sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
+                            (sequence "NEXT(n)" "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
                             )
                            )
         )
@@ -7756,8 +7757,9 @@ Define my default keywords:
 Define the style of the keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keyword-faces
-        (quote (("TODO"      :foreground "lightblue"    :weight bold)
+        (quote (
                 ("NEXT"      :foreground "red"          :weight bold)
+                ("TODO"      :foreground "lightblue"    :weight bold)
                 ("STARTED"   :foreground "red"          :weight bold)
                 ("DONE"      :foreground "forest green" :weight bold)
                 ("WAITING"   :foreground "orange"       :weight bold)
@@ -7802,7 +7804,7 @@ CANCELED -> add ARCHIVE-tag: http://article.gmane.org/gmane.emacs.orgmode/64852
          ("WAITING" . t))
         (done
          ("WAITING"))
-        ("TODO"
+        ("NEXT"
          ("WAITING")
          ("CANCELLED"))
         ("NEXT"
@@ -9572,7 +9574,7 @@ files; on my other machines, start with my non-work-related files.
 #+BEGIN_SRC emacs-lisp
   (defun tag-without-done-or-canceled ()
     "Show items with tag \"borrowed\" that are neither in \"DONE\" or \"CANCELED \" state."
-    (let ((state (org-entry-get (point) "TODO")))
+    (let ((state (org-entry-get (point) "NEXT")))
       (if (and (member "borrowed" (org-get-tags-at (point)))
                (not (string= state "DONE"))
                (not (string= state "CANCELED")))
