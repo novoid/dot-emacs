@@ -7755,17 +7755,17 @@ Define my default keywords:
 #+END_SRC
 
 Define the style of the keywords:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
   (setq org-todo-keyword-faces
         (quote (
-                ("NEXT"      :foreground "red"          :weight bold)
-                ("TODO"      :foreground "lightblue"    :weight bold)
+                ("NEXT"      :foreground "yellow"       :weight bold)
+                ("TODO"      :foreground "lemon chiffon":weight bold)
                 ("STARTED"   :foreground "red"          :weight bold)
                 ("DONE"      :foreground "forest green" :weight bold)
                 ("WAITING"   :foreground "orange"       :weight bold)
                 ("TEAM"      :foreground "orange"       :weight bold)
                 ("SOMEDAY"   :foreground "magenta"      :weight bold)
-                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("CANCELLED" :foreground "lime green"   :weight bold)
                 ("QUOTE"     :foreground "red"          :weight bold)
                 ("QUOTED"    :foreground "magenta"      :weight bold)
                 ("APPROVED"  :foreground "forest green" :weight bold)
