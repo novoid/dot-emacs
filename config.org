@@ -5488,7 +5488,7 @@ Performance implications! See [[https://www.reddit.com/r/orgmode/comments/e9p84n
 Default state for repeating/recurring events
   - see http://orgmode.org/org.html#Repeated-tasks and http://orgmode.org/org.html#fn-77
 #+BEGIN_SRC emacs-lisp
-(setq org-todo-repeat-to-state "NEXT")
+(setq org-todo-repeat-to-state "TODO")
 #+END_SRC
 
 Smart navigation: begin/end of line is different for headings, list items, …
@@ -7251,12 +7251,12 @@ a bit more):
        (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
            (message "no TODO keyword but progress indicator found")
            (forward-whitespace 1)
-           (insert "NEXT ")
+           (insert "TODO ")
            )
        (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
            (message "no TODO keyword and no progress indicator found")
            (forward-whitespace 1)
-           (insert "NEXT [/] ")
+           (insert "TODO [/] ")
            )
        (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
            (message "TODO keyword but no progress indicator found")
@@ -7518,7 +7518,7 @@ Message-ID: <2021-07-23T10-42-47@devnull.Karl-Voit.at>
 
 I do have a dynamic block table like this:
 
-#+BEGIN: columnview :id global :match "+project-focus/!+STARTED|+NEXT|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID) %TAGS(Tags)"
+#+BEGIN: columnview :id global :match "+project-focus/!+STARTED|+NEXT|+TODO|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID) %TAGS(Tags)"
 | State   | What               | ID  | Tags          |
 |---------+--------------------+-----+---------------|
 | STARTED | [12/14] proj foo   | foo | :foo:project: |
@@ -7528,7 +7528,7 @@ I do have a dynamic block table like this:
 
 Is there a way to get the ID column with working ID links such as:
 
-#+BEGIN: columnview :id global :match "+project-focus/!+STARTED|+NEXT|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID) %TAGS(Tags)"
+#+BEGIN: columnview :id global :match "+project-focus/!+STARTED|+NEXT|+TODO|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID) %TAGS(Tags)"
 | State   | What               | ID     | Tags          |
 |---------+--------------------+--------+---------------|
 | STARTED | [12/14] proj foo   | id:foo | :foo:project: |
@@ -7748,7 +7748,7 @@ Define my default keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords (quote
                            (
-                            (sequence "NEXT(n)" "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
+                            (sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
                             )
                            )
         )
@@ -7758,8 +7758,8 @@ Define the style of the keywords:
 #+BEGIN_SRC emacs-lisp :results none
   (setq org-todo-keyword-faces
         (quote (
+                ("TODO"      :foreground "yellow"       :weight bold)
                 ("NEXT"      :foreground "yellow"       :weight bold)
-                ("TODO"      :foreground "lemon chiffon":weight bold)
                 ("STARTED"   :foreground "red"          :weight bold)
                 ("DONE"      :foreground "forest green" :weight bold)
                 ("WAITING"   :foreground "orange"       :weight bold)
@@ -7804,7 +7804,7 @@ CANCELED -> add ARCHIVE-tag: http://article.gmane.org/gmane.emacs.orgmode/64852
          ("WAITING" . t))
         (done
          ("WAITING"))
-        ("NEXT"
+        ("TODO"
          ("WAITING")
          ("CANCELLED"))
         ("NEXT"
@@ -7995,10 +7995,10 @@ http://storax.github.io/blog/2016/05/02/org-capture-tricks/
 
 *** org-capture-templates - Prelude
 
-A shortcut for a simple heading with keyword =NEXT= which will be used
+A shortcut for a simple heading with keyword =TODO= which will be used
 multiple times below:
 #+BEGIN_SRC emacs-lisp
-  (setq my-capture-template-next "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+  (setq my-capture-template-next "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
 #+END_SRC
 
 A test capture template:
@@ -8023,7 +8023,7 @@ Using test org-capture-templates:
 (setq org-capture-templates
 `(
   ("1" "first version with string" entry (file+headline (concat my-org-files-path "misc.org") "shorts")
-   "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
+   "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 1)
   ("2" "second version with variable" entry (file+headline (concat my-org-files-path "misc.org") "shorts")
    ,my-capture-template-next :empty-lines 1)
         ))
@@ -8049,9 +8049,9 @@ My general templates:
           ("b" "Bookmark" entry (file+headline ,(concat my-org-files-path "notes.org") "Bookmarks")
            "* %x%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("p" "public voit" entry (file+headline ,(concat my-org-files-path "public_voit.org") "Captured Blog Articles")
-           "* NEXT %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n-----------------------\n- [ ] link on older/similar articles?\n- [ ] link on tag pages?\n\n" :empty-lines 2)
+           "* TODO %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n-----------------------\n- [ ] link on older/similar articles?\n- [ ] link on tag pages?\n\n" :empty-lines 2)
           ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
-           "* NEXT %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 2)
+           "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 2)
           ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
            ,my-capture-template-next :empty-lines 2)
 #+END_SRC
@@ -8152,7 +8152,7 @@ Smart moving bookmark headings from =inbox.org= to =notes.org=
 
 #+BEGIN_SRC emacs-lisp
   (defun my-save-bookmark()
-    "removes NEXT/Bookmark, (NOT YET: FIXXME: retrieves title),
+    "removes TODO/Bookmark, (NOT YET: FIXXME: retrieves title),
 move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging process"
     (interactive)
     (save-excursion
@@ -8166,11 +8166,11 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
           (narrow-to-region mybegin (point))  ;; ignore everything outside of region
           ;; search/replace unwanted keywords at the beginning:
           (goto-char (point-min))
-          (while (search-forward "* NEXT Bookmark " nil t) (replace-match "* " nil t))
+          (while (search-forward "* TODO Bookmark " nil t) (replace-match "* " nil t))
           (goto-char (point-min))
 ;;    (join-line -1) ;; join line because with capturing via NewsBlur app, the content starts in line 2
 ;;        (goto-char (point-min))
-          (while (search-forward "* NEXT " nil t) (replace-match "* " nil t))
+          (while (search-forward "* TODO " nil t) (replace-match "* " nil t))
           (goto-char (point-min))
           (while (search-forward "* Bookmark " nil t) (replace-match "* " nil t))
           (goto-char (point-min))
@@ -9574,7 +9574,7 @@ files; on my other machines, start with my non-work-related files.
 #+BEGIN_SRC emacs-lisp
   (defun tag-without-done-or-canceled ()
     "Show items with tag \"borrowed\" that are neither in \"DONE\" or \"CANCELED \" state."
-    (let ((state (org-entry-get (point) "NEXT")))
+    (let ((state (org-entry-get (point) "TODO")))
       (if (and (member "borrowed" (org-get-tags-at (point)))
                (not (string= state "DONE"))
                (not (string= state "CANCELED")))
@@ -9603,7 +9603,7 @@ MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
            (has-next (save-excursion
                        (forward-line 1)
                        (and (< (point) subtree-end)
-                            (re-search-forward "^\\*+ \\(NEXT\\|STARTED\\) " subtree-end t)))))
+                            (re-search-forward "^\\*+ \\(TODO\\|STARTED\\) " subtree-end t)))))
       (if (and (bh/is-project-p) (not has-next))
           nil ; a stuck project, has subtasks but no next task
         subtree-end)))
@@ -9788,7 +9788,7 @@ For business, I use a different setup:
   (interactive "P")
 ;  (org-agenda-filter-apply "-\(WAITING\|:reward:\|:lp:\)" 'regexp)
 
-  (org-agenda-filter-apply "-NEXT.*:\\(@BWG\\|reward\\):" 'regexp)
+  (org-agenda-filter-apply "-TODO.*:\\(@BWG\\|reward\\):" 'regexp)
 ;; returns: wrong number of arguments
 
 ;  (setq current-prefix-arg '(4)) ; C-u
@@ -10342,9 +10342,9 @@ only see important business stuff.
                                                 (
                                                  (org-agenda-overriding-header "rewards: STARTED")
                                                  ))
-                                     (tags-todo "reward/!NEXT"
+                                     (tags-todo "reward/!TODO"
                                                 (
-                                                 (org-agenda-overriding-header "rewards: NEXT")
+                                                 (org-agenda-overriding-header "rewards: TODO")
                                                  ))
                                      (tags-todo "reward/!TODO"
                                                 (
@@ -10423,7 +10423,7 @@ only see important business stuff.
                 ((org-ql-block '(and (tags "project")
                               (not (done))
                               (not (todo "SOMEDAY"))
-                              (not (descendants (todo "NEXT")))
+                              (not (descendants (todo "TODO")))
                               ;;(not (descendants (not (done))))
                               (not (descendants (scheduled))))
                         ((org-ql-block-header "Stuck Projects: tagged with \"project\", open sub-tasks not scheduled")))))
@@ -10432,7 +10432,7 @@ only see important business stuff.
                 ("2" "Stuck: open todos with unscheduled open sub-tasks"
                 ((org-ql-block '(and
                               (not (done))
-                              (or (todo "NEXT") (todo "STARTED") (todo "WAITING"))
+                              (or (todo "TODO") (todo "STARTED") (todo "WAITING"))
                               ; (todo "NEXT STARTED WAITING");; no result instead of "just get rid of SOMEDAY"
                               (descendants (not (done)))
                               (descendants (not (scheduled))))
@@ -16625,7 +16625,7 @@ visualization is brilliant.
 (defhydra hydra-search (:color blue)
     (concat my-f-key-settings
   "
-  ^^Rifle                   ^^Profiler          ^^Bookmarks                    ^^MISC                    Ex.:    #A NEXT :foo:bar: !unwanted
+  ^^Rifle                   ^^Profiler          ^^Bookmarks                    ^^MISC                    Ex.:    #A TODO :foo:bar: !unwanted
   ^^────────────────────────^^──────────────────^^─────────────────────────────^^────────────────
   rifle _c_urrent buffer    _p_rofile CPU       _m_ark new bookmark  C-x r m   _d_ired-jump
   rifle _o_pen buffers      _R_eport            jump _b_ookmark      C-x r b
