@@ -7758,22 +7758,14 @@ Define the style of the keywords:
 #+BEGIN_SRC emacs-lisp :results none
   (setq org-todo-keyword-faces
         (quote (
-                ("TODO"      :foreground "yellow"       :weight bold)
-                ("NEXT"      :foreground "yellow"       :weight bold)
-                ("STARTED"   :foreground "red"          :weight bold)
+                ("TODO"      :foreground "firebrick1"   :weight bold)
+                ("NEXT"      :foreground "firebrick1"   :weight bold)
+                ("STARTED"   :foreground "red3"         :weight bold)
                 ("DONE"      :foreground "forest green" :weight bold)
                 ("WAITING"   :foreground "orange"       :weight bold)
-                ("TEAM"      :foreground "orange"       :weight bold)
                 ("SOMEDAY"   :foreground "magenta"      :weight bold)
                 ("CANCELLED" :foreground "lime green"   :weight bold)
-                ("QUOTE"     :foreground "red"          :weight bold)
-                ("QUOTED"    :foreground "magenta"      :weight bold)
-                ("APPROVED"  :foreground "forest green" :weight bold)
-                ("EXPIRED"   :foreground "forest green" :weight bold)
-                ("REJECTED"  :foreground "forest green" :weight bold)
-                ("OPEN"      :foreground "blue"         :weight bold)
-                ("CLOSED"    :foreground "forest green" :weight bold)
-                ("PHONE"     :foreground "forest green" :weight bold))))
+)))
 #+END_SRC
 
 «Non-nil means use the fast todo selection scheme with ‘C-c C-t’.
