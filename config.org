@@ -8683,6 +8683,8 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("GEMFEDAFO" . ,(concat my-business-jira-server "/GEMFEDANF-0?jql=project%20%3D%20GEMFEDANF%20AND%20Afo-ID%20~%20%22%s%22"))
           ("VVESB" . ,(concat my-business-jira-server "/VVESB-%s"))
           ("RIBR" . ,(concat my-business-jira-server "/RIBR-%s"))
+          ("KTRCANFN" . ,(concat my-business-jira-server "/KTRCANFN-%s"))
+          ("BCAFO" . ,(concat my-business-jira-server "/KTRCANFN-0?jql=project%20%3D%20KTRCANFN%20and%20Steckbrief%20%3D%20gemAnbT_Basis-Consumer%20AND%20Afo-ID%20~%20%22%s%22"))
           ))
 #+END_SRC
 
