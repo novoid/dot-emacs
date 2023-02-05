@@ -13928,7 +13928,7 @@ Automatically save buffers more often within certain modes:
 )
 #+END_SRC
 
-** spray (speed-reading region) → my-map s
+** spray (speed-reading region) → my-map S
 
 A speed reading mode for Emacs.
 - The algorithm is taken from OpenSpritz
@@ -13940,7 +13940,7 @@ A speed reading mode for Emacs.
   :ensure t
   :defer 110
   :config ;; executed after loading package
-  :bind (:map my-map ("s" . spray-mode))
+  :bind (:map my-map ("S" . spray-mode))
 )
 #+END_SRC
 
@@ -16406,6 +16406,42 @@ I got this snippet from [[https://www.reddit.com/r/unixporn/comments/s7p7pr/so_w
       (delete-frame)))
 
   (global-set-key [f3] 'my-run-launcher)
+#+END_SRC
+
+** my-speech-to-inbox
+
+| 2023-02-05 | idea and initial implementation |
+
+This function is using speech-to-text from whisper in order to create
+(capture) a new TODO heading in =inbox.org=.
+
+Development heading: id:2023-02-05-Elisp-fuer-inbox-short-S2T
+
+#+BEGIN_SRC emacs-lisp
+(defun my-speech-to-inbox ()
+  "This function is using speech-to-text from whisper in order to create (capture) a new TODO heading in =inbox.org=."
+  (interactive)
+  (switch-to-buffer "inbox.org")
+  (end-of-buffer)
+  (insert "\n\n* TODO ")
+  (setq whisper-language "de")
+  (alert "Bitte fünf Sekunden sprechen ..." :title "Speech-to-inbox")
+  (whisper-run)
+  (sit-for 5)
+  (alert "Danke" :title "Speech-to-inbox")
+  (whisper-run)
+  (org-expiry-insert-created)
+  ;(next-line) (kill-whole-line)  ;; there is a CRLF inserted by whisper which I could not remove using this because whisper's output is inserted async after.
+)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(bind-key "s"
+  (lambda ()
+    (interactive)
+    (my-speech-to-inbox))
+  my-map
+)
 #+END_SRC
 
 * hydra
