@@ -1194,7 +1194,8 @@ Setting the system-specific path for my-webarchive-tsfile-dir-path
 
 ** Emax64 settings
 
-2019-11-09: settings according to the emax64 default =.emacs= file:
+| 2019-11-09 | settings according to the emax64 default =.emacs= file                               |
+| 2023-02-06 | disabled UTF-8 stuff because of [[https://www.reddit.com/r/emacs/comments/10uj5nn/comment/j7ccyai/?utm_source=reddit&utm_medium=web2x&context=3][this]] recommendation (don't fuck with UTF-8 settings) |
 
 #+BEGIN_SRC emacs-lisp
 (when (my-system-type-is-windows)
@@ -1243,11 +1244,11 @@ Setting the system-specific path for my-webarchive-tsfile-dir-path
   (dolist (dir '("~/emax/" "~/emax/bin/" "~/emax/bin64/" "~/emax/mingw64/bin/" "~/emax/lisp/" "~/emax/elpa/" "~/bin/"))
   (add-to-list 'load-path dir))
 
-  (set-language-environment 'utf-8)
-  (setq locale-coding-system 'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
+;;disabled;;  (set-language-environment 'utf-8)
+;;disabled;;  (setq locale-coding-system 'utf-8)
+;;disabled;;  (set-default-coding-systems 'utf-8)
+;;disabled;;  (set-terminal-coding-system 'utf-8)
+;;disabled;;  (prefer-coding-system 'utf-8)
 
   ;; Tangle configuration
   (org-babel-load-file (expand-file-name "~/emax/emax.org" user-emacs-directory))
@@ -1919,8 +1920,10 @@ this does not work either:
     ;;       buffer-file-coding-system if found
     (setq-default buffer-file-coding-system 'utf-8)
   (setq default-buffer-file-coding-system 'utf-8))
+
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+;; Disabled because of: https://www.reddit.com/r/emacs/comments/10uj5nn/comment/j7ccyai/?utm_source=reddit&utm_medium=web2x&context=3
+;(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 #+END_SRC
 
 From: https://www.masteringemacs.org/article/working-coding-systems-unicode-emacs
@@ -8785,9 +8788,9 @@ This is business-related:
 
 *** Reference management: link handling functions
 
-Helper function =string-replace (this withthat in)=
+Helper function =my-string-replace (this withthat in)=
 #+BEGIN_SRC emacs-lisp
-  (defun string-replace (this withthat in)
+  (defun my-string-replace (this withthat in)
     "replace THIS with WITHTHAT' in the string IN"
     (with-temp-buffer
       (insert in)
@@ -8805,10 +8808,10 @@ Helper function =string-replace (this withthat in)=
       (let ((pwd (file-name-as-directory (expand-file-name ".")))
             (pwd1 (file-name-as-directory (abbreviate-file-name
                                            (expand-file-name ".")))))
-        (setq file (string-replace "~/archive/library/" "" file))
-        (setq file (string-replace pwd "" (string-replace pwd1 "" file)))
-        (setq file (string-replace ".bib" "" file))
-        (setq file (string-replace ".pdf" "" file))
+        (setq file (my-string-replace "~/archive/library/" "" file))
+        (setq file (my-string-replace pwd "" (my-string-replace pwd1 "" file)))
+        (setq file (my-string-replace ".bib" "" file))
+        (setq file (my-string-replace ".pdf" "" file))
         (setq link (concat "pdf:" file)))
       link))
 #+END_SRC
@@ -8821,10 +8824,10 @@ Helper function =string-replace (this withthat in)=
       (let ((pwd (file-name-as-directory (expand-file-name ".")))
             (pwd1 (file-name-as-directory (abbreviate-file-name
                                            (expand-file-name ".")))))
-        (setq file (string-replace "~/archive/library/" "" file))
-        (setq file (string-replace pwd "" (string-replace pwd1 "" file)))
-        (setq file (string-replace ".bib" "" file))
-        (setq file (string-replace ".pdf" "" file))
+        (setq file (my-string-replace "~/archive/library/" "" file))
+        (setq file (my-string-replace pwd "" (my-string-replace pwd1 "" file)))
+        (setq file (my-string-replace ".bib" "" file))
+        (setq file (my-string-replace ".pdf" "" file))
         (setq link (concat "ref:" file)))
       link))
 #+END_SRC
@@ -8837,11 +8840,11 @@ Helper function =string-replace (this withthat in)=
       (let ((pwd (file-name-as-directory (expand-file-name ".")))
             (pwd1 (file-name-as-directory (abbreviate-file-name
                                            (expand-file-name ".")))))
-        (setq file (string-replace "~/people/all_photographs/" "" file))
-        (setq file (string-replace pwd "" (string-replace pwd1 "" file)))
-                                        ;(setq file (string-replace ".jpg" "" file))
-                                        ;(setq file (string-replace ".jpeg" "" file))
-                                        ;(setq file (string-replace ".tiff" "" file))
+        (setq file (my-string-replace "~/people/all_photographs/" "" file))
+        (setq file (my-string-replace pwd "" (my-string-replace pwd1 "" file)))
+                                        ;(setq file (my-string-replace ".jpg" "" file))
+                                        ;(setq file (my-string-replace ".jpeg" "" file))
+                                        ;(setq file (my-string-replace ".tiff" "" file))
         (setq link (concat "photo:" file)))
       link))
 #+END_SRC
