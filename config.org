@@ -7577,21 +7577,21 @@ While this basically works (see table and test headings below), it has
 a huge impact on performance. An update which usually took 20min on a
 72k lines Org file had to be aborted after two hours.
 
-#+BEGIN: columnview :id global :match "+project+focus/!+STARTED|+NEXT|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID-LINK) %TAGS(Tags)"
+#+BEGIN: columnview :id global :match "+project+focus/!+STARTED|+TODO|+WAITING" :format "%TODO(State) %ITEM(What) %ID(ID-LINK) %TAGS(Tags)"
 | State | What           | ID-LINK        | Tags            |
 |-------+----------------+----------------+-----------------|
-| NEXT  | [/] focus proj | [[id:2021-07-27-focus-proj][[/] focus proj]] | :focus:project: |
+| TODO  | [/] focus proj | [[id:2021-07-27-focus-proj][[/] focus proj]] | :focus:project: |
 #+END:
 
 
-**** NEXT [/] focus proj                                                           :focus:project:
+**** TODO [/] focus proj                                                           :focus:project:
 :PROPERTIES:
 :CREATED:  [2021-07-27 Tue 13:59]
 :COOKIE_DATA: todo recursive
 :ID:       2021-07-27-focus-proj
 :END:
 
-**** NEXT [/] non-focus proj                                                             :project:
+**** TODO [/] non-focus proj                                                             :project:
 :PROPERTIES:
 :CREATED:  [2021-07-27 Tue 13:59]
 :COOKIE_DATA: todo recursive
@@ -7751,7 +7751,7 @@ Define my default keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords (quote
                            (
-                            (sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
+                            (sequence "TODO(t)" "NEXT" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
                             )
                            )
         )
