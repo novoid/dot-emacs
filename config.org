@@ -15016,9 +15016,17 @@ PCRE regex!
     - [[http://cestlaz.github.io/posts/using-emacs-33-projectile-jump/#.WRS1mVKZOuV][Using Emacs - 33 - projectile, dumb-jump | C'est la Z]] →
       Screecast with projectile and dumb-jump
 
+- [2023-03-17 Fri] see also this short demo: https://www.youtube.com/watch?v=BHWL13sQBWY
+  - ~M-.~ = ~xref-find-definitions~
+  - ~M-,~ = ~xref-pop-marker-stack~
+
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
-:ensure t
+  :ensure t
+  :init 
+  (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 )
 #+END_SRC
 
