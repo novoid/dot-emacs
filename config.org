@@ -1699,7 +1699,7 @@ I do not use.
 
 Interesting read: http://www.tbray.org/ongoing/When/201x/2012/09/24/Typographic-notes
 
-Show current column: 2020-01-01 disabled because of performance impact (re-drawing modeline at each keystroke)
+Show current column: 2020-01-01 *disabled* because of performance impact (re-drawing modeline at each keystroke)
 #+BEGIN_SRC emacs-lisp :tangle no
 (setq column-number-mode t)
 #+END_SRC
@@ -1717,6 +1717,9 @@ Flat mode-line styling:
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)
 #+END_SRC
+
+- Potential candidates:
+  - A minimal mode-line: https://github.com/jessiehildebrandt/mood-line
 
 ** DISABLED Themes
 
@@ -2352,6 +2355,10 @@ copy/paste to web forms or such where you need one paragraph per line.
 (global-set-key [remap fill-paragraph]
                 'my-fill-or-unfill)
 #+END_SRC
+
+[2023-02-15 Wed] potential alternative with some functionality to
+ignore Org mode elements that should not be changed:
+https://www.emacs.dyerdwelling.family/emacs/20230214201355-emacs--my-pure-paragraph-refill/
 
 ** my-open-in-external-app()
 
@@ -8628,12 +8635,20 @@ clearly states]].
 )
 #+END_SRC
 
-FIXXME: Workaround in order to make =helm-org-ql= available according to https://github.com/alphapapa/org-ql/issues/129#issuecomment-667310696:
+#+BEGIN_SRC emacs-lisp
+(use-package helm-org-ql
+  :ensure t
+)
+#+END_SRC
 
+
+- FIXXME: Workaround in order to make =helm-org-ql= available according to https://github.com/alphapapa/org-ql/issues/129#issuecomment-667310696:
+- [2023-01-09 Mon] I added a use-package for helm-org-ql above to test it instead of:
 #+BEGIN_SRC emacs-lisp
 (require 'org-ql)
 (require 'helm-org-ql)
 #+END_SRC
+
 
 ** Links
 
@@ -12398,8 +12413,18 @@ Take a look at =my-org-region-to-property()= as well.
 Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]] (a fork of
 [[https://github.com/tmalsburg/helm-org-contacts][tmalsburg/helm-org-contacts]]) to quickly link contacts.
 
-2023-01-08: still not on *elpa and my fork seems to be reasonable up-to-date.
-
+- 2023-01-08: still not on *elpa and my fork seems to be reasonable up-to-date.
+- 2023-01-09: had to *disable helm-org-contacts* because I got an issue with Emacs 28.2 on rise:
+  - the included =(require helm)= can't load helm somehow:
+    #+BEGIN_EXAMPLE
+    Debugger entered--Lisp error: (file-missing "Cannot open load file" "No such file or directory" "helm")
+      require(helm)
+    #+END_EXAMPLE
+  - I did move =use-package helm= to "Misc modes/packages (part I)" with no positive effect on this issue.
+  - tested https://github.com/tmalsburg/helm-org-contacts (which has
+    caching included; my reason for forking) but it shows the same
+    error.
+  - I don't use =helm-org-contacts= that often and org-superlinks may replace it.
 #+BEGIN_SRC emacs-lisp
 (use-package helm-org-contacts
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/helm-org-contacts/")))
@@ -16892,7 +16917,7 @@ Not org related but might be candidates as well:
     ^^                               my-org-attach-_I_nsert             ^^                       ^^
     ^^                               ^^                                 ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   ^^C-x SPC    rectangle-mark-mode
-    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────
+    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   ^^C-c C-x b  org-tree-to-indirect-buffer (focus) _2_
     _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
     ^^                               ^^                               _W_eather Graz                  S  my-synonym-current-word
