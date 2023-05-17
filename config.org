@@ -2156,6 +2156,30 @@ directory does help. OK, so it is:
 )
 #+END_SRC
 
+** helm - completion and selection narrowing
+
+This is something that really pushes Emacs usability.
+
+https://github.com/emacs-helm/helm
+
+«Emacs incremental completion and selection narrowing framework https://emacs-helm.github.io/helm/»
+
+#+BEGIN_QUOTE
+Helm is an Emacs framework for incremental completions and narrowing
+selections. It helps to rapidly complete file names, buffer names, or
+any other Emacs interactions requiring selecting an item from a list
+of possible choices. Helm is a fork of anything.el, which was
+originally written by Tamas Patrovic and can be considered to be its
+successor. Helm cleans the legacy code that is leaner, modular, and
+unchained from constraints of backward compatibility.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :ensure t
+)
+#+END_SRC
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
@@ -14626,31 +14650,6 @@ be of some use.»
          ("Umlaute"  "ä" "ö" "ü" "Ä" "Ö" "Ü" "ß")
         ))
   (global-set-key [f4] 'char-menu)
-)
-#+END_SRC
-
-** helm - completion and selection narrowing
-
-This is something that really pushes Emacs usability.
-
-https://github.com/emacs-helm/helm
-
-«Emacs incremental completion and selection narrowing framework https://emacs-helm.github.io/helm/»
-
-#+BEGIN_QUOTE
-Helm is an Emacs framework for incremental completions and narrowing
-selections. It helps to rapidly complete file names, buffer names, or
-any other Emacs interactions requiring selecting an item from a list
-of possible choices. Helm is a fork of anything.el, which was
-originally written by Tamas Patrovic and can be considered to be its
-successor. Helm cleans the legacy code that is leaner, modular, and
-unchained from constraints of backward compatibility.
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp
-(use-package helm
-  :ensure t
-  :defer 110
 )
 #+END_SRC
 
