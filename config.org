@@ -16993,6 +16993,8 @@ Not org related but might be candidates as well:
 
     ("x" secret-mode nil)
 
+    ("2" org-tree-to-indirect-buffer nil)
+
     ("q" nil "quit")
 
   )
