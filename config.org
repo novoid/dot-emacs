@@ -14463,7 +14463,9 @@ and smart truncation.»
 
 Performance implications! See [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/][reddit comment]] for details.
 
-** display-time-mode - Enable the display of time in the modeline
+** DISABLED display-time-mode - Enable the display of time in the modeline
+
+| 2023-05-17 | disabled because of redundancy to my xfce-bar + other stuff that is more important |
 
 http://www.emacswiki.org/emacs/DisplayTime
 - via: http://emacs.stackexchange.com/questions/13227/easy-way-to-give-the-time-its-own-face-in-modeline
