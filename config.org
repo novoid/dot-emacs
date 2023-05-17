@@ -17661,7 +17661,7 @@ I tried some of those but they did not stick:
 
 =C-f= jumps 5 lines:
 #+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-f") '(lambda () (interactive) (forward-line 5)))
+(global-set-key (kbd "C-f") #'(lambda () (interactive) (forward-line 5)))
 #+END_SRC
 
 ** DISABLED boxquote → my-map [qQ]
