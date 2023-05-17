@@ -5674,9 +5674,10 @@ standard value for it of 15, I had to extend it to 20 for now:
 #+END_SRC
 
 Using that setting, =_= and =^= are interpreted literally. Except for
-cases like =_{3}= which makes 3 a subscript:
+cases like =_{3}= which makes 3 a subscript.
+[2023-03-18 Sat] I don't want that any more and set it to "nil":
 #+BEGIN_SRC emacs-lisp
-(setq org-use-sub-superscripts "{}")
+(setq org-use-sub-superscripts "nil")
 #+END_SRC
 
 Reverting a changed behavior in indentation ([[https://code.orgmode.org/bzg/org-mode/src/master/etc/ORG-NEWS#L323][explanation and fix]]):
