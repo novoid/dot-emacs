@@ -10305,15 +10305,39 @@ only see important business stuff.
   (setq org-agenda-custom-commands
         ` (
 
-                ("s" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
-                 (org-super-agenda-mode)
-                 ((org-super-agenda-groups my-super-agenda-groups))
-                 (org-agenda nil "a"))
+                ;; 2023-04-18: FIXXME: needs improvement: if blocked by org-edna-dependency → don't list
+                ("o" "unfinished, no :someday: or :project:, not SCHEDULED → probably needs :someday: tag"
+                ((org-ql-block '(and (not (tags "someday"))
+                              (not (tags "project"))
+                              (not (done))
+                              (not (scheduled))
+                              (or (todo "TODO") (todo "STARTED") (todo "SOMEDAY") (todo "WAITING"))
+                              )
+                        ((org-ql-block-header "unfinished, no :someday:, not SCHEDULED  →  probably needs :someday: tag")))))
 
-                ("b" "Business Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
-                 (org-super-agenda-mode)
-                 ((org-super-agenda-groups my-super-agenda-important-business-only-groups))
-                 (org-agenda nil "a"))
+                ("O" ":someday: + SCHEDULED → probably needs scheduled date removed"
+                ((org-ql-block '(and (tags "someday")
+                              (not (done))
+                              (scheduled)
+                              )
+                        ((org-ql-block-header ":someday: and SCHEDULED  →  probably needs scheduled date removed")))))
+
+                ("p" "PICK :someday: task (not SCHEDULED)"
+                ((org-ql-block '(and (tags "someday")
+                              (not (done))
+                              (not (scheduled))
+                              )
+                        ((org-ql-block-header ":someday: + not SCHEDULED  →  choose any task! ;-)")))))
+
+                ;; disabled 2023-04-18 ;; ("u" "Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
+                ;; disabled 2023-04-18 ;;  (org-super-agenda-mode)
+                ;; disabled 2023-04-18 ;;  ((org-super-agenda-groups my-super-agenda-groups))
+                ;; disabled 2023-04-18 ;;  (org-agenda nil "a"))
+
+                ;; disabled 2023-04-18 ;; ("b" "Business Super Agenda" agenda "FIXXME: does work but w/o super-agenda"
+                ;; disabled 2023-04-18 ;;  (org-super-agenda-mode)
+                ;; disabled 2023-04-18 ;;  ((org-super-agenda-groups my-super-agenda-important-business-only-groups))
+                ;; disabled 2023-04-18 ;;  (org-agenda nil "a"))
 
                 ("g" "Agenda" agenda ""
                  (org-agenda nil "a"))
@@ -10323,15 +10347,17 @@ only see important business stuff.
                 ;; disabled 2014-08-17 ;;           (
                 ;; disabled 2014-08-17 ;;            (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'todo))
                 ;; disabled 2014-08-17 ;;            ))
+
+                ;; disabled 2023-04-18 ;; ("n" "no TODO events +180d"
+                ;; disabled 2023-04-18 ;; ((org-ql-block '(and (tags "project")
+                ;; disabled 2023-04-18 ;;               (ts-active :from -1 :to +180)
+                ;; disabled 2023-04-18 ;;               (not (todo))
+                ;; disabled 2023-04-18 ;;               ;(not (descendants (not (done))))
+                ;; disabled 2023-04-18 ;;               ;(not (descendants (scheduled)))
+                ;; disabled 2023-04-18 ;;               )
+                ;; disabled 2023-04-18 ;;         ((org-ql-block-header "no TODO events +180d")))))
+
                 ("n" "no TODO events +180d"
-                ((org-ql-block '(and (tags "project")
-                              (ts-active :from -1 :to +180)
-                              (not (todo))
-                              ;(not (descendants (not (done))))
-                              ;(not (descendants (scheduled)))
-                              )
-                        ((org-ql-block-header "no TODO events +180d")))))
-                ("7" "no TODO events +180d"
                  ((agenda "no TODO events +180d"
                           ((org-agenda-span 180)
                            (org-agenda-time-grid nil)
@@ -10347,7 +10373,7 @@ only see important business stuff.
                           )))
                  nil (,(concat my-org-files-path "agenda_180d_filtered.html")))
 
-                ("D" "detail agenda"
+                ("D" "detail agenda +31d"
                  ((agenda "detail agenda"
                           ((org-agenda-span 31)
                            (org-agenda-time-grid nil)
@@ -10374,42 +10400,43 @@ only see important business stuff.
                 ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;            )
                 ;; disabled 2015-02-15 - replaced by no TODO + normal agenda ;;           )))
 
-                ("r" "reward tasks" (
-                                     (tags-todo "reward/!STARTED"
-                                                (
-                                                 (org-agenda-overriding-header "rewards: STARTED")
-                                                 ))
-                                     (tags-todo "reward/!TODO"
-                                                (
-                                                 (org-agenda-overriding-header "rewards: TODO")
-                                                 ))
-                                     (tags-todo "reward/!TODO"
-                                                (
-                                                 (org-agenda-overriding-header "rewards: TODO")
-                                                 ))
-                                     (tags-todo "reward/!SOMEDAY"
-                                                (
-                                                 (org-agenda-overriding-header "rewards: SOMEDAY")
-                                                 ))
-                                     ))
-                ("i" "issues" (
-                                     (tags-todo "issue/!STARTED"
-                                                (
-                                                 (org-agenda-overriding-header "issues: STARTED")
-                                                 ))
-                                     (tags-todo "issue/!NEXT"
-                                                (
-                                                 (org-agenda-overriding-header "issues: NEXT")
-                                                 ))
-                                     (tags-todo "issue/!TODO"
-                                                (
-                                                 (org-agenda-overriding-header "issues: TODO")
-                                                 ))
-                                     (tags-todo "issue/!SOMEDAY"
-                                                (
-                                                 (org-agenda-overriding-header "issues: SOMEDAY")
-                                                 ))
-                                     ))
+                ;; disabled 2023-04-18 ;; ("r" "reward tasks" (
+                ;; disabled 2023-04-18 ;;                      (tags-todo "reward/!STARTED"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "rewards: STARTED")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      (tags-todo "reward/!TODO"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "rewards: TODO")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      (tags-todo "reward/!TODO"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "rewards: TODO")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      (tags-todo "reward/!SOMEDAY"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "rewards: SOMEDAY")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      ))
+
+                ;; disabled 2023-04-18 ;; ("i" "issues" (
+                ;; disabled 2023-04-18 ;;                      (tags-todo "issue/!STARTED"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "issues: STARTED")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      (tags-todo "issue/!NEXT"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "issues: NEXT")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      (tags-todo "issue/!TODO"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "issues: TODO")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      (tags-todo "issue/!SOMEDAY"
+                ;; disabled 2023-04-18 ;;                                 (
+                ;; disabled 2023-04-18 ;;                                  (org-agenda-overriding-header "issues: SOMEDAY")
+                ;; disabled 2023-04-18 ;;                                  ))
+                ;; disabled 2023-04-18 ;;                      ))
 
                 ;;disabled;              ("R" "grab reward" tags-todo "reward/!TODO|SOMEDAY"
                 ;;disabled;            (
@@ -10421,17 +10448,19 @@ only see important business stuff.
                               (not (done))
                               )
                         ((org-ql-block-header "borrowed")))))
+
                 ;;2019-12-17 replaced by org-ql-block ;; ("8" "borrowed" tags "+borrowed"
                 ;;2019-12-17 replaced by org-ql-block ;;  (
                 ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-overriding-header "borrowed or lend")
                 ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-skip-function 'tag-without-done-or-canceled)
                 ;;2019-12-17 replaced by org-ql-block ;;   ))
 
-                ("$" "Besorgungen"
-                ((org-ql-block '(and (tags "Besorgungen")
-                              (not (done))
-                              )
-                        ((org-ql-block-header "Besorgungen")))))
+                ;; disabled 2023-04-18 ;; ("$" "Besorgungen"
+                ;; disabled 2023-04-18 ;; ((org-ql-block '(and (tags "Besorgungen")
+                ;; disabled 2023-04-18 ;;               (not (done))
+                ;; disabled 2023-04-18 ;;               )
+                ;; disabled 2023-04-18 ;;         ((org-ql-block-header "Besorgungen")))))
+
                 ;;2019-12-17 replaced by org-ql-block ;; ("9" "OLDBesorgungen" tags "+Besorgung"
                 ;;2019-12-17 replaced by org-ql-block ;;  (
                 ;;2019-12-17 replaced by org-ql-block ;;   (org-agenda-overriding-header "Besorgungen")
@@ -10439,7 +10468,7 @@ only see important business stuff.
                 ;;2019-12-17 replaced by org-ql-block ;;   ))
 
                 ;; 2020-10-26: open focus projects
-                ("p" "Nonbusiness: Open focus projects: open tasks tagged with \"project\" and \"focus\""
+                ("N" "Nonbusiness: Open focus projects: open tasks tagged with \"project\" and \"focus\""
                 ((org-ql-block '(and (tags "project") (tags "focus")
                                 (not (category "rise"))
                                 (not (done))
