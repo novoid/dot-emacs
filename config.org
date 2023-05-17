@@ -17013,8 +17013,8 @@ Not org related but might be candidates as well:
   ^View^                 ^Navigation^        ^^                   C-↑↓   goto line of same level
   ^^─────────────────────^^──────────────────^^────────────────   M-RET  yafolding-toggle-element
   _h_ide/show fun  M-h   _p_ ← error    F5   ^^
-  _c_ycle all      M-H   _n_   error →  F6   ^^
-  ^^                     _<_ ← symbol        ^^
+  _c_ycle all      M-H   _n_   error →  F6   ^^                   M-.    xref-find-definitions (via dumb-jump)
+  ^^                     _<_ ← symbol        ^^                   M-,    xref-pop-marker-stack (via dumb-jump)
   ^^                     _>_   symbol →      ^^
   ^^                     _d_ definition      ^^
   ^^                     _r_ references      ^^
