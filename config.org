@@ -16204,9 +16204,9 @@ which I included here:
       (let* ((current-symbol-pos (marker-position (cdr symbol)))
 	     (next-symbol-pos (marker-position (cdr (nth next-index names-and-pos)))))
         (if (and (= current-index 0) (< current-pos current-symbol-pos))
-            (return 0))
+            (cl-return 0))
 	(if (and (>= current-pos current-symbol-pos) (< current-pos next-symbol-pos))
-	    (return current-index)))
+	    (cl-return current-index)))
       (setq current-index (1+ current-index)))
     ;; If last item, decrement index
     (if (eq current-index (length names-and-pos))
