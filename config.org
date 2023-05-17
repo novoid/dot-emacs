@@ -5700,6 +5700,11 @@ my large Org-mode setup?
 (setq org-startup-folded 'overview)
 #+END_SRC
 
+2023-05-02: From [[https://www.reddit.com/r/emacs/comments/12wyimc/is_there_any_way_to_fix_new_line_indentation_in/][this reddit thread]] that describes the issue of unwanted indentation in SRC blocks:
+#+BEGIN_SRC emacs-lisp
+(setq org-src-preserve-indentation t)
+#+END_SRC
+
 *** DISABLED scimax/org-return
 
 Smart return does add new list item, … if appropriate
