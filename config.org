@@ -15859,6 +15859,21 @@ For searching within my Emacs files, I do use more sophisticated
 methods than =isearch= if possible. On operating systems that provide
 a decent shell environment, I use =grep= or =git grep= or =ag=.
 
+*** isearch config
+
+| 2023-05-18 | found https://zck.org/improved-emacs-search with =isearch-lazy-count= |
+
+Showing count of matches found:
+#+BEGIN_SRC emacs-lisp
+(setq isearch-lazy-count t)
+#+END_SRC
+
+Modify output string format so that count is at the end:
+#+BEGIN_SRC emacs-lisp :tangle no
+(setq lazy-count-prefix-format nil)
+(setq lazy-count-suffix-format "   (%s/%s)")
+#+END_SRC
+
 *** helm-do-grep-ag: grep within files → my-map G
 
 This is for [[https://github.com/ggreer/the_silver_searcher][using =ag=, the silver searcher]]:
