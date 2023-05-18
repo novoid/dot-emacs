@@ -8116,6 +8116,8 @@ Company templates:
            ,my-business-rbo-template :empty-lines 2)
           ("rO" "RB offboarding" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rbos-heading)
            ,my-business-rboff-template :empty-lines 2)
+          ("rs" "RB S/NOTIFY" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rs-heading)
+           ,my-business-rs-template :empty-lines 2)
 #+END_SRC
 
 Template for my lecture:
