@@ -2199,12 +2199,46 @@ from: http://stackoverflow.com/questions/23622296/emacs-timing-execution-of-func
      (message " Execution time: %.06f" (float-time (time-since time)))))
 #+END_SRC
 
+** my-region-contains-line-break-p()
+
+| 2023-05-24 | added initial version |
+
+I needed this function for =my-title-capitalization()= below in order
+to be able to detect when it's applied to more than one line which
+usually indicates an inadvertently use.
+
+#+BEGIN_SRC emacs-lisp :results none
+(defun my-region-contains-line-break-p ()
+  "Returns t if current region contains more than one line, nil otherwise"
+  (save-excursion
+    (if (not (use-region-p))
+        nil ;; return nil if (1) no active region or (2) empty region is found
+        (let
+          ;; there is an active region
+          (
+             (my-region-beginning-line-number (line-number-at-pos (region-beginning)))
+             (my-region-end-line-number (line-number-at-pos (region-end)))
+          )
+          ;;(message (concat 
+          ;;            "Line number start/end of current region: " 
+          ;;            (number-to-string my-region-beginning-line-number) 
+          ;;            " and " 
+          ;;            (number-to-string my-region-end-line-number) 
+          ;;            "."))
+          (if (eq my-region-beginning-line-number my-region-end-line-number)
+             nil t)
+        )
+    )
+  )
+)
+#+END_SRC
+
 ** my-title-capitalization(): Proper English Title Capitalization of a Marked Region → my-map C
 
 Read http://www.karl-voit.at/2015/05/25/elisp-title-capitalization/
 where I wrote a verbose description of the topic and my solution.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
 ;; additionally to the list defined in title-capitalization:
 (defvar my-do-not-capitalize-words '("lazyblorg" "mutt")
   "My personal list of words that doesn't get capitalized in titles.")
@@ -2218,53 +2252,55 @@ where I wrote a verbose description of the topic and my solution.
   ;; - after:  A a a a a a a A
   (interactive "r")
   (save-excursion
-    (let* (
-	   ;; basic list of words which don't get capitalized according to simplified rules:
-	   ;; http://karl-voit.at/2015/05/25/elisp-title-capitalization/
-           (do-not-capitalize-basic-words '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
-                                            "from" "in" "into" "it" "next" "nor" "of" "off"
-                                            "on" "onto" "or" "over" "past" "so" "the" "till"
-                                            "to" "up" "yet"
-                                            "n" "t" "es" "s"))
-	   ;; if user has defined 'my-do-not-capitalize-words, append to basic list:
-           (do-not-capitalize-words (if (boundp 'my-do-not-capitalize-words)
-                                        (append do-not-capitalize-basic-words my-do-not-capitalize-words )
-                                      do-not-capitalize-basic-words
+  (if (my-region-contains-line-break-p)
+      (message "The current region contains more than one line which indicates inadvertently use. I stop here.")
+      (let* (
+  	   ;; basic list of words which don't get capitalized according to simplified rules:
+  	   ;; http://karl-voit.at/2015/05/25/elisp-title-capitalization/
+             (do-not-capitalize-basic-words '("a" "ago" "an" "and" "as" "at" "but" "by" "for"
+                                              "from" "in" "into" "it" "next" "nor" "of" "off"
+                                              "on" "onto" "or" "over" "past" "so" "the" "till"
+                                              "to" "up" "yet"
+                                              "n" "t" "es" "s"))
+  	   ;; if user has defined 'my-do-not-capitalize-words, append to basic list:
+             (do-not-capitalize-words (if (boundp 'my-do-not-capitalize-words)
+                                          (append do-not-capitalize-basic-words my-do-not-capitalize-words )
+                                        do-not-capitalize-basic-words
+                                        )
                                       )
-                                    )
-           )
-      ;; go to begin of first word:
-      (goto-char beg)
-      (capitalize-word 1)
-      ;; go through the region, word by word:
-      (while (< (point) end)
-        (skip-syntax-forward "^w" end)
-        (let ((word (thing-at-point 'word)))
-          (if (stringp word)
-              ;; capitalize current word except it is list member:
-              (if (member (downcase word) do-not-capitalize-words)
-                  (downcase-word 1)
-                (capitalize-word 1)))))
-      ;; capitalize last word in any case:
-      (backward-word 1)
-      (if (and (>= (point) beg)
-               (not (member (or (thing-at-point 'word) "s")
-                            '("n" "t" "es" "s"))))
-          (capitalize-word 1))))
-)
+             )
+        ;; go to begin of first word:
+        (goto-char beg)
+        (capitalize-word 1)
+        ;; go through the region, word by word:
+        (while (< (point) end)
+          (skip-syntax-forward "^w" end)
+          (let ((word (thing-at-point 'word)))
+            (if (stringp word)
+                ;; capitalize current word except it is list member:
+                (if (member (downcase word) do-not-capitalize-words)
+                    (downcase-word 1)
+                  (capitalize-word 1)))))
+        ;; capitalize last word in any case:
+        (backward-word 1)
+        (if (and (>= (point) beg)
+                 (not (member (or (thing-at-point 'word) "s")
+                              '("n" "t" "es" "s"))))
+            (capitalize-word 1))))
+))
 
 (ert-deftest my-title-capitalization ()
   "Tests proper English title capitalization"
-  (should (string= (with-temp-buffer
-		     (insert "the presentation of this heading of my own from my keyboard and yet\n")
-		     (goto-char (point-min))
-		     (set-mark-command nil)
-		     (goto-char (point-max))
-		     ;(transient-mark-mode 1)
-		     (title-capitalization)
-		     (buffer-string))
-		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
-		   )))
+      (should (string= (with-temp-buffer
+    		     (insert "the presentation of this heading of my own from my keyboard and yet\n")
+    		     (goto-char (point-min))
+    		     (set-mark-command nil)
+    		     (goto-char (point-max))
+    		     ;(transient-mark-mode 1)
+    		     (title-capitalization)
+    		     (buffer-string))
+    		   "The Presentation of This Heading of My Own from My Keyboard and Yet\n"
+    		   )))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
