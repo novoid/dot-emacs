@@ -9894,7 +9894,7 @@ Original version (before testing the next one):
                    :time-grid t  ; Items that appear on the time grid
                    )
             (:name "DEADLINES" :deadline t :order 1)
-            (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
+            (:name "Focus" :tag "Focus" :priority "A" :order 2 :face (:append t :weight bold))
             (:name "Important" :priority "A" :order 4)
             (:priority<= "B"
                          ;; Show this section after "Today" and "Important", because
@@ -10066,26 +10066,26 @@ See also: id:2017-08-12-org-super-agenda
                    :time-grid t  ; Items that appear on the time grid
                    )
             (:name "DEADLINES" :deadline t :order 1)
-            (:name "Focus" :tag "Focus" :order 2 :face (:append t :weight bold))
-            (:name "Important" :priority "A" :order 4)
-    ;        (:name "Habits" :habit t :order 3)
-            (:name "Shopping" :tag "Besorgung" :order 8)
+            (:name "Focus | [A]" :tag "Focus" :priority "A" :order 2 :face (:append t :weight bold))
+    ;;        (:name "Important" :priority "A" :order 4)
+    ;;        (:name "Habits" :habit t :order 3)
+    ;;        (:name "Shopping" :tag "Besorgung" :order 8)
                    ;; Boolean AND group matches items that match all subgroups
                    ;;  :and (:tag "shopping" :tag "@town")
                    ;; Multiple args given in list with implicit OR
                    ;;  :tag ("food" "dinner"))
                    ;;  :habit t
                    ;;  :tag "personal")
-            (:name "Started" :todo "STARTED" :order 10)
+            (:name "Started" :and (:todo "STARTED" :not (:tag "someday") :not (:priority "C") ) :order 10)
             ;;(:name "Space-related (non-moon-or-planet-related)"
             ;;       ;; Regexps match case-insensitively on the entire entry
             ;;       :and (:regexp ("space" "NASA")
             ;;                     ;; Boolean NOT also has implicit OR between selectors
             ;;                     :not (:regexp "moon" :tag "planet")))
             ;;(:name "BWG" :tag "@BWG" :order 16)
-            (:name "read" :tag "2read" :order 22)
+    ;;        (:name "read" :tag "2read" :order 22)
             ;; Groups supply their own section names when none are given
-            (:todo ("SOMEDAY" "WATCHING")
+            (:name "Someday" :todo ("SOMEDAY" "WATCHING") :tag "someday"
                    ;; Show this group at the end of the agenda (since it has the
                    ;; highest number). If you specified this group last, items
                    ;; with these todo keywords that e.g. have priority A would be
