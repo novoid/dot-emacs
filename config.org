@@ -10095,7 +10095,7 @@ See also: id:2017-08-12-org-super-agenda
 
             ;; "other items": an auto-group with order 99 ----------------------------
 
-            (:priority<= "B"
+            (:name "Prio ≤ B" :priority<= "B"
                          ;; Show this section after "Today" and "Important", because
                          ;; their order is unspecified, defaulting to 0. Sections
                          ;; are displayed lowest-number-first.
@@ -10104,7 +10104,7 @@ See also: id:2017-08-12-org-super-agenda
                    :tag ("reward" "lp")
                    :order 110
                    )
-            (:todo "WAITING" :order 118)  ; Set order of this section
+            (:name "Waiting…" :todo "WAITING" :order 118)  ; Set order of this section
 
             ;; After the last group, the agenda will display items that didn't
             ;; match any of these groups, with the default order position of 99
