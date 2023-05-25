@@ -1720,6 +1720,7 @@ Flat mode-line styling:
 
 - Potential candidates:
   - A minimal mode-line: https://github.com/jessiehildebrandt/mood-line
+  - Simple mode-line: https://github.com/gexplorer/simple-modeline via [[https://www.wisdomandwonder.com/emacs/13900/configuring-a-simple-modeline][this article]]
 
 ** DISABLED Themes
 
