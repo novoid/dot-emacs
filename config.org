@@ -3846,6 +3846,17 @@ On Debian-based systems, you can install it via: =apt install jsbeautifier=
 ;;; js-beautify.el ends here
 #+END_SRC
 
+** Nix
+
+| 2023-06-01 | initial setup for my Nix(OS) test |
+
+#+BEGIN_SRC emacs-lisp
+(use-package nix-mode
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 * dired
 
 Usually, I do file management in [[http://karl-voit.at/2015/12/14/screen-to-tmux/][tmux]] and zsh. There are my aliases,
