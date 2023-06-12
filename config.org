@@ -2608,6 +2608,30 @@ The function to reformat the =rdfind= output file is:
    [?\C-  C-right C-right C-right C-right C-right C-right C-right C-right C-right ?\C-w ?f ?i ?l ?e ?t ?a ?g ?s ?  ?- ?t ?  ?\" ?2 ?d ?e ?l ?  ?d ?u ?p ?l ?i ?c ?a ?t ?e ?\" ?  ?\" ?\C-d ?\C-e ?\" ?\C-a down ?\C-  C-right C-right C-right C-right C-right C-right C-right C-right C-right C-right ?\C-w ?f ?i ?l ?e ?t ?a ?g ?s ?  ?- ?t ?  ?\" ?r ?s backspace backspace ?2 ?d ?e ?l ?  ?d ?u ?p ?l ?i ?c ?a ?t ?e ?\" ?  ?\" ?\C-d ?\C-e ?\" return down])
 #+END_SRC
 
+** my-tear-off-window()
+
+| 2023-06-12 | copied from web to test |
+
+This code is taken [[https://stackoverflow.com/a/57318988][from stackoverflow]] and adapted by me.
+
+With this function, I may create a new separate Emacs frame with the
+current buffer which I may destroy any time. This might get handy for
+working on source code buffers where magit tends to destroy my
+multi-buffer setup.
+
+#+BEGIN_SRC emacs-lisp :results none
+(defun my-tear-off-window ()
+  "Delete the selected window, and create a new frame displaying its buffer."
+  (interactive)
+  (let* ((window (selected-window))
+     (buf (window-buffer window))
+     (frame (make-frame)))          
+    (select-frame frame)
+    (switch-to-buffer buf)
+    ;(delete-window window)
+    ))
+#+END_SRC
+
 * Spell checking
 
 «[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
@@ -17529,7 +17553,7 @@ FIXXME: add more features:
     ("v" my-vsplit-last-buffer nil :color blue)
     ("h" my-hsplit-last-buffer nil :color blue)
     ("o" other-window nil :color red)
-    ("f" new-frame nil :color red)
+    ("f" my-tear-off-window nil :color red)
 
     ("t" my-toggle-vertical-horizontal-split nil :color blue)
     ("s" my-toggle-split-and-single-window nil :color blue)
