@@ -13496,7 +13496,7 @@ This enables a method to edit arbitrary selected text in an Emacs buffer: https:
 #+BEGIN_SRC emacs-lisp
 (message "→★ orgmode finished in %.2fs" (float-time (time-subtract (current-time) my-org-config-start-time)))
 #+END_SRC
-* PDF
+* DISABLED PDF
 :PROPERTIES:
 :CREATED:  [2018-03-08 Thu 09:48]
 :END:
@@ -13505,6 +13505,8 @@ For viewing and editing PDF files, Emacs has a lot to offer.
 
 2019-04-08: Had to disable showing PDFs within Windows Emacs because
 of frequent Emacs crashes(!) after displaying PDF buffers. :-(
+
+2023-06-06: disabled the whole section because of an error that pdf-tools is not available. Need to investigate further. FIXXME
 
 ** org-pdfview
 
