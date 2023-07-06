@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2022-02-22 14:57:41 vk>
+;; Time-stamp:    <2023-01-08 19:32:03 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -26,13 +26,13 @@
 (setq my-user-emacs-directory "~/.emacs.d/")
 
 ;; set paths to manually installed Org-mode (from git; instead of built-in Org-mode)
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
-(add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-contrib/lisp"))
+;;2023-01-08 disabled to try out Emacs 28.2 org-mode;; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/contrib/lisp"))
+;;2023-01-08 disabled to try out Emacs 28.2 org-mode;; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
+;;2023-01-08 disabled to try out Emacs 28.2 org-mode;; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-contrib/lisp"))
 ;(setq load-path (delete "/usr/share/emacs/28.0.50/lisp/org" load-path));; disabling built-in org on floyd - didn't help
 (require 'org)
 (require 'org-element)
-(require 'org-eldoc)
+;(require 'org-eldoc)
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
