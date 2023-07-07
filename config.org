@@ -2184,6 +2184,29 @@ unchained from constraints of backward compatibility.
 )
 #+END_SRC
 
+** crux - A Collection of Ridiculously Useful eXtensions for Emacs
+:PROPERTIES:
+:ID:       2023-07-07-crux
+:END:
+
+| 2023-07-07 | used by https://xenodium.com/duplicate-this/ together with id:2023-07-07-dwim-shell-command |
+
+https://github.com/bbatsov/crux
+
+This package seems to offer many functions I did add to my configuration before: crux-open-with, crux-top-join-line, ...
+
+At this moment, I don't "merge" those functions (yet).
+
+FIXXME: identify crux commands that I added to my setup before and maybe replace them with crux functions.
+
+#+BEGIN_SRC emacs-lisp
+(use-package crux
+  :ensure t
+  :commands crux-open-with
+  :bind
+  (("C-c d" . crux-duplicate-current-line-or-region)))
+#+END_SRC
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
@@ -4692,6 +4715,65 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 - [ ] FIXXME: add to cheatsheet (hydra): ask for day when used with
   universal prefix
 - [ ] FIXXME: do for time2name as well
+
+** dwim-shell-command
+:PROPERTIES:
+:ID:       2023-07-07-dwim-shell-command
+:END:
+
+| 2023-07-07 | used by https://xenodium.com/duplicate-this/ together with id:2023-07-07-crux and id:2023-07-07-dwim-shell-commands-duplicate |
+
+#+BEGIN_SRC emacs-lisp
+(use-package dwim-shell-command
+  :ensure t
+  :bind (:map dired-mode-map
+              ("C-c d" . dwim-shell-commands-duplicate)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package dwim-shell-command
+  :ensure t
+  )
+#+END_SRC
+
+#+RESULTS:
+: t
+
+- [2023-07-07 Fri] setup failed: from my startup *Messages*:
+#+BEGIN_EXAMPLE
+config • dwim-shell-command …
+Importing package-keyring.gpg...done
+Contacting host: jorgenschaefer.github.io:443
+Contacting host: melpa.org:443
+Contacting host: elpa.gnu.org:443 [2 times]
+Package refresh done
+#+END_EXAMPLE
+
+There is no dwim- command besides =dwim-shell-commands-duplicate=.
+
+** DISABLED dwim-shell-commands-duplicate  (error)
+:PROPERTIES:
+:ID:       2023-07-07-dwim-shell-commands-duplicate
+:END:
+
+| 2023-07-07 | used by https://xenodium.com/duplicate-this/ together with id:2023-07-07-crux |
+
+#+BEGIN_SRC emacs-lisp
+(defun dwim-shell-commands-duplicate ()
+  "Duplicate file(s)."
+  (interactive)
+  (dwim-shell-command-on-marked-files
+   "Duplicate file(s)."
+   "cp -R '<<f>>' '<<f(u)>>'"
+   :utils "cp"))
+#+END_SRC
+
+#+RESULTS:
+: dwim-shell-commands-duplicate
+
+[2023-07-07 Fri] FIXXME: On execution for testing, I get:
+: dwim-shell-commands-duplicate: Symbol’s function definition is void: dwim-shell-command-on-marked-files
+see id:2023-07-07-dwim-shell-command for details.
 
 ** DISABLED dired-show-readme
 :PROPERTIES:
