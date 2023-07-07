@@ -16719,6 +16719,22 @@ Development heading: id:2023-02-05-Elisp-fuer-inbox-short-S2T
 )
 #+END_SRC
 
+** my-toggle-checkbox-add-comment
+
+| 2023-07-07 | see id:2023-07-04-write-elisp-function-toggle-checkbox-and-add-comment--and-vice-versa |
+
+- Why? For using for book writing (ideas → resolved ideas but keep original todo) as well as blog article authoring
+
+#+BEGIN_SRC emacs-lisp
+(defun my-toggle-checkbox-add-comment ()
+"This function toggles an org-checkbox and inserts a comment hash character followed by a space to the start of the line."
+  (interactive)
+  (org-toggle-checkbox)
+  (beginning-of-line)
+  (insert "# ")
+)
+#+END_SRC
+
 * hydra
 
 [[https://github.com/abo-abo/hydra][Hydra]] is a method to customize personal and visual menus to summarize
@@ -17142,7 +17158,7 @@ Not org related but might be candidates as well:
 
 - [2022-03-09 Wed] =C-x SPC= for =rectangle-mark-mode= via https://irreal.org/blog/?p=10378
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :results none
   (defhydra hydra-org (:color blue)
     (concat my-f-key-settings
     "
@@ -17166,6 +17182,8 @@ Not org related but might be candidates as well:
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
     ^^                               ^^                               _W_eather Graz                  S  my-synonym-current-word
     ^^                               ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
+    ^^                               ^^                               org-_D_ecrypt-entry
+    ^^                               ^^                               my-_t_oggle-checkbox-add-comment
     ")
 
     ("f" (lambda ()
@@ -17208,6 +17226,7 @@ Not org related but might be candidates as well:
     ("T" my-set-tags-including-inherited nil)
     ("1" my-org-split-block nil)
 
+    ("t" my-toggle-checkbox-add-comment)
 
     ("R" my-reddit-export-via-pandoc nil)
     ("d" define-word-at-point nil)
@@ -17238,6 +17257,8 @@ Not org related but might be candidates as well:
     ("x" secret-mode nil)
 
     ("2" org-tree-to-indirect-buffer nil)
+
+    ("D" org-decrypt-entry nil)
 
     ("q" nil "quit")
 
