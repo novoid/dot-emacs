@@ -16004,11 +16004,12 @@ works *offline* (without cloud or network) and amazingly well for English.
 Please note that in my hydra-settings "hydra-spelling → F5" I define a
 shortcut for capturing German and English language.
 
-** emacs-gc-stats
+** DISABLED emacs-gc-stats
 
 | 2023-06-20 | via Mastodon | 
 
 - https://elpa.gnu.org/packages/emacs-gc-stats.html
+- first patch ran until 2023-07-15
 
 #+BEGIN_SRC emacs-lisp
 (use-package emacs-gc-stats
@@ -16019,9 +16020,6 @@ shortcut for capturing German and English language.
 (require 'emacs-gc-stats)
 (emacs-gc-stats-mode +1)
 #+END_SRC
-
-#+RESULTS:
-: t
 
 * My helper functions (part II)
 
