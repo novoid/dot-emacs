@@ -4727,31 +4727,19 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 (use-package dwim-shell-command
   :ensure t
   :bind (:map dired-mode-map
-              ("C-c d" . dwim-shell-commands-duplicate)))
+              ("C-c d" . dwim-shell-commands-duplicate))
+:config
+;; Loads all my own dwim shell commands.
+  (require 'dwim-shell-commands))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package dwim-shell-command
   :ensure t
   )
 #+END_SRC
 
-#+RESULTS:
-: t
-
-- [2023-07-07 Fri] setup failed: from my startup *Messages*:
-#+BEGIN_EXAMPLE
-config • dwim-shell-command …
-Importing package-keyring.gpg...done
-Contacting host: jorgenschaefer.github.io:443
-Contacting host: melpa.org:443
-Contacting host: elpa.gnu.org:443 [2 times]
-Package refresh done
-#+END_EXAMPLE
-
-There is no dwim- command besides =dwim-shell-commands-duplicate=.
-
-** DISABLED dwim-shell-commands-duplicate  (error)
+** dwim-shell-commands-duplicate
 :PROPERTIES:
 :ID:       2023-07-07-dwim-shell-commands-duplicate
 :END:
@@ -4767,13 +4755,6 @@ There is no dwim- command besides =dwim-shell-commands-duplicate=.
    "cp -R '<<f>>' '<<f(u)>>'"
    :utils "cp"))
 #+END_SRC
-
-#+RESULTS:
-: dwim-shell-commands-duplicate
-
-[2023-07-07 Fri] FIXXME: On execution for testing, I get:
-: dwim-shell-commands-duplicate: Symbol’s function definition is void: dwim-shell-command-on-marked-files
-see id:2023-07-07-dwim-shell-command for details.
 
 ** DISABLED dired-show-readme
 :PROPERTIES:
