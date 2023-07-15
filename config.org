@@ -15875,7 +15875,7 @@ This looks like a cool method to jump back and forth between buffers. I need to 
   )
 #+END_SRC
 
-** DISABLE crdt
+** DISABLED crdt
 
 | 2021-11-03 | found via Emacs news video of Sacha for EmacsConf21 |
 
