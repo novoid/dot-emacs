@@ -8872,6 +8872,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("IDP" . ,(concat my-business-sd-server "/IDP-%s"))
           ("SIEMOC" . ,(concat my-business-jira-server "/SIEMOC-%s"))
           ("KIM" . ,(concat my-business-jira-server "/KIM-%s"))
+          ("KIMAFO" . ,(concat my-business-jira-server "/KIMANF-0?jql=project%20%3D%20KIMANF%20AND%20Afo-ID%20~%20%22%s%22"))
           ("SOC" . ,(concat my-business-sd-server "/SOC-%s"))
           ("GEMFED" . ,(concat my-business-jira-server "/GEMFED-%s"))
           ("GEMFEDANF" . ,(concat my-business-jira-server "/GEMFEDANF-%s"))
