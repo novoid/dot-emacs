@@ -10198,7 +10198,7 @@ See also: id:2017-08-12-org-super-agenda
                    ;;  :tag ("food" "dinner"))
                    ;;  :habit t
                    ;;  :tag "personal")
-            (:name "Started" :and (:todo "STARTED" :not (:tag "someday") :not (:priority "C") ) :order 10)
+            (:name "Started" :and (:todo "STARTED" :not (:tag "someday") :not (:priority "C") :not (:priority "B") ) :order 10)
             ;;(:name "Space-related (non-moon-or-planet-related)"
             ;;       ;; Regexps match case-insensitively on the entire entry
             ;;       :and (:regexp ("space" "NASA")
@@ -10207,7 +10207,7 @@ See also: id:2017-08-12-org-super-agenda
             ;;(:name "BWG" :tag "@BWG" :order 16)
     ;;        (:name "read" :tag "2read" :order 22)
             ;; Groups supply their own section names when none are given
-            (:name "Someday" :todo ("SOMEDAY" "WATCHING") :tag "someday"
+            (:name "Someday" :and ( :todo ("SOMEDAY" "WATCHING") :tag "someday" :not (:priority "C") :not (:priority "B"))
                    ;; Show this group at the end of the agenda (since it has the
                    ;; highest number). If you specified this group last, items
                    ;; with these todo keywords that e.g. have priority A would be
