@@ -13575,9 +13575,11 @@ of frequent Emacs crashes(!) after displaying PDF buffers. :-(
 
 2023-06-06: disabled the whole section because of an error that pdf-tools is not available. Need to investigate further. FIXXME
 
-** org-pdfview
+** DISABLED org-pdfview
 
 This seems to be a pre-requisite to pdf-tools.
+
+2023-07-28: (error "Package ‘org-pdfview-’ is unavailable")
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-pdfview
@@ -13588,7 +13590,7 @@ This seems to be a pre-requisite to pdf-tools.
 )
 #+END_SRC
 
-** pdf-tools
+** DISABLED pdf-tools
 
 pdf-tools provides really cool functionality to annotate PDF files
 within Emacs.
@@ -13707,7 +13709,7 @@ Setting highlighting color:
 )
 #+END_SRC
 
-** pdf-view-restore
+** DISABLED pdf-view-restore
 
 Support for opening last known pdf position in pdf-view-mode provided by pdf-tools.
 
