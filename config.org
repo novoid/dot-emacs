@@ -17660,7 +17660,7 @@ FIXXME: add more features:
   _r_ename current window config
   _c_reate new window config        ^^                                _b_ ibuffer-list-buffers
   _C_lose current window config     ^^                                _i_menu-list (heading overview)
-  new _f_rame                       ^^
+  new _f_rame                       ^^                                _R_evert-buffer
   _!_ save-buffers-kill-terminal    ^^                      ▄
   ^^            ▄                   C-x 2  split _v_ertical ▄      ^^  C-x 0  _d_elete this
        _t_oggle ▄ ←→▐▐              ^^                             ^^  C-x 1  _k_eep this, delete others
@@ -17688,6 +17688,7 @@ FIXXME: add more features:
     ("8" eyebrowse-switch-to-window-config-8 nil :color blue)
     ("9" eyebrowse-switch-to-window-config-9 nil :color blue)
 
+    ("R" revert-buffer nil :color red)
     ("d" delete-window nil :color blue)
     ("k" delete-other-windows nil :color blue)
     ("v" my-vsplit-last-buffer nil :color blue)
