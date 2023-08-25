@@ -4612,6 +4612,26 @@ Memacs-indexed files (see Org Mode customized links):
 )
 #+END_SRC
 
+** my-dired-copy-filename-as-lfile-link → F1
+:PROPERTIES:
+:CREATED:  [2023-08-25 Fri 16:27] 
+:END:
+
+Same explanation as =my-dired-copy-filename-as-tsfile-link= holds
+but with the result being a =tfile:= link I use to [[https://karl-voit.at/2022/02/10/lfile/][link to
+locate-indexed files]]:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-dired-copy-filename-as-lfile-link ()
+  "Copy current file name with its basename as [[lfile:<basename>]] custom org-mode link."
+  (interactive)
+  (dired-copy-filename-as-kill) ;; current file name to kill ring
+  (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+    (kill-new (concat "[[lfile:" filename "][" filename "]]")) ;; write back new/modified kill ring element
+  )
+)
+#+END_SRC
+
 ** my-dired-open-here-in-tmux-shell
 :PROPERTIES:
 :CREATED:  [2018-09-04 Tue 18:44]
@@ -17473,7 +17493,7 @@ Not org related but might be candidates as well:
   _T_agtrees recursive  _F_ilter recursive    time_2_name        +  mkdir             M-v      dired-ranger-paste      M-a   appendfilename
   ^────────^────────────^──────^──────────────^─────────^─────   *. mark extensions   M-m      dired-ranger-move
   _a_bsolute link       _m_emacs tsfile link  _D_ate2name.el     D  delete marked
-  _A_bsolute basename   ^^                    ^^                 tk hide marked       C-c C-o  open externally
+  _A_bsolute basename   _l_file link          ^^                 tk hide marked       C-c C-o  open externally
   ^^                    ^^                    ^^                 U  unmark all        C-o      open in new frame
   ^View    ^            ^Edit^                ^Order^            percent ampersand: dired-flag-garbage-files
   ^────────^────────────^──────^──────────────^─────────^─────   w  copy filename  →  M-0 w    copy absolute filename        T touch/set date
@@ -17484,7 +17504,7 @@ Not org related but might be candidates as well:
   _(_ toggle details    ^^                    ^^                 c  compress
   ^^                    ^^                    ^^                 Z  dired-do-compress (=unp)
   ^^                    ^^                    ^^
-  ^^                    ^^                    ^^                 l  my-dired-insert-lfile-_l_ink-list-to-other-org-window
+  ^^                    ^^                    ^^                 L  my-dired-insert-lfile-_l_ink-list-to-other-org-window
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
 
@@ -17501,6 +17521,7 @@ Not org related but might be candidates as well:
 
   ("a" my-dired-copy-filename-as-absolute-link nil)
   ("m" my-dired-copy-filename-as-tsfile-link nil)
+  ("l" my-dired-copy-filename-as-lfile-link nil)
   ("A" (let ((current-prefix-arg '(4))) ;; emulate C-u
          (call-interactively 'my-dired-copy-filename-as-absolute-link)
        )
@@ -17520,7 +17541,7 @@ Not org related but might be candidates as well:
   ("1" (dired-sort-other "-alt --group-directories-first") nil)
   ("n" (dired-sort-other "-al --group-directories-first") nil)
 
-  ("l" my-dired-insert-lfile-link-list-to-other-org-window nil)
+  ("L" my-dired-insert-lfile-link-list-to-other-org-window nil)
   ("3" (lambda ()
                 (interactive)
                 (let ((org-attach-method 'lns))
