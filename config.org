@@ -8755,9 +8755,9 @@ Used by: org-ql
 (use-package helm-org
   ;;:defer 90
   :ensure t
-  :config
-  (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
-  (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
+  ;; 2023-09-02 :config
+  ;; 2023-09-02 (add-to-list 'helm-completing-read-handlers-alist '(org-capture . helm-org-completing-read-tags))
+  ;; 2023-09-02 (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags . helm-org-completing-read-tags))
 )
 #+END_SRC
 
