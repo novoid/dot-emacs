@@ -14850,12 +14850,17 @@ be of some use.»
 - via http://irreal.org/blog/?p=4926
 - add characters: "M-x customize-group char-menu RET"
 
+- 2023-09-12: added "℃" "℉" via https://infosec.exchange/@tychotithonus/111046936990008966
+  - tychotithonus@infosec.exchange - TIL there are single-grapheme UTF-8 for degrees Celsius and Fahrenheit!
+  - ℃ (vs °C) - U+2103
+  - ℉ (vs °F) - U+2109
+
 #+BEGIN_SRC emacs-lisp
 (use-package char-menu
   :ensure t
   :config
   (setq char-menu
-        '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "⌜⌟" "∅" "©" "†" "␣" "¥"
+        '("→" "…" "✓" "×" "·" "•" "№" "★" "°" "–" "—" "§" "«»" "»«" "‘’" "“”" "⌜⌟" "∅" "©" "†" "␣" "¥" "℃" "℉"
          ("Arrows"     "←" "→" "↑" "↓" "⇐" "⇒" "⇑" "⇓")
          ("Math"       "Δ" "¬" "≈" "≡" "≠" "∞" "×" "±" "∓" "÷" "√" "∄" "∃")
          ("Greek"      "α" "β" "Y" "δ" "ε" "ζ" "η" "θ" "ι" "κ" "λ" "μ"
