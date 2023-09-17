@@ -5125,7 +5125,7 @@ Helper function to open any given message-id in the normal version of Evolution:
   (start-process
    (concat "mid: " message-id)
    nil
-   "/usr/bin/evolution"
+   "evolution"
    (concat "mid:<" message-id ">")
    )
   )
