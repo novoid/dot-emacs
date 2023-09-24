@@ -4776,6 +4776,33 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
    :utils "cp"))
 #+END_SRC
 
+** dired-preview
+
+| 2023-09-24 | inital setup for trying |
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-preview
+  :ensure t
+  :defer 110
+  :config
+  (setq dired-preview-delay 0.7)
+  (setq dired-preview-max-size (expt 2 20))
+  (setq dired-preview-ignored-extensions-regexp
+        (concat "\\."
+                "\\(mkv\\|webm\\|mp4\\|mp3\\|ogg\\|m4a"
+                "\\|gz\\|zst\\|tar\\|xz\\|rar\\|zip"
+                "\\|iso\\|epub\\|pdf\\)"))
+  
+  ;; Enable `dired-preview-mode' in a given Dired buffer or do it
+  ;; globally:
+  (dired-preview-global-mode 1)
+
+  ;; my up/down keys are mapped to different commands than default, as it seams:
+  (add-to-list 'dired-preview-trigger-commands 'diredp-previous-line)
+  (add-to-list 'dired-preview-trigger-commands 'diredp-next-line)
+)
+#+END_SRC
+
 ** DISABLED dired-show-readme
 :PROPERTIES:
 :CREATED:  [2020-04-11 Sat 10:43]
@@ -17509,12 +17536,13 @@ Not org related but might be candidates as well:
   _O_pen in tmux        _SPC_ filetags.el     _1_ time ordered   !  pipe to shell     <percent> u  uppercase                 S ln -s
   _i_mage thumbnails    ^^                    _n_ormal ordered   x  delete flagged    <percent> &  flag temp files           C-x C-f  create file
   _(_ toggle details    ^^                    ^^                 c  compress
-  ^^                    ^^                    ^^                 Z  dired-do-compress (=unp)
+  _p_review toggle      ^^                    ^^                 Z  dired-do-compress (=unp)
   ^^                    ^^                    ^^
   ^^                    ^^                    ^^                 L  my-dired-insert-lfile-_l_ink-list-to-other-org-window
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
 
+  ("p" dired-preview-mode nil)
   ("t" my-dired-tagtrees nil)
   ("T" my-dired-tagtrees-recursive nil)
 
