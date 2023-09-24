@@ -10203,6 +10203,7 @@ See also: id:2017-08-12-org-super-agenda
   ;; :hook (org-agenda-mode . org-super-agenda-mode)
   :config
     (org-super-agenda-mode)
+    (setq org-super-agenda-hide-empty-groups t)
     (setq super-agenda-groups
           '(;; Each group has an implicit boolean OR operator between its selectors.
             (:name "Today"  ; Optionally specify section name
