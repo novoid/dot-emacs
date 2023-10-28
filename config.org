@@ -16082,6 +16082,40 @@ shortcut for capturing German and English language.
 (emacs-gc-stats-mode +1)
 #+END_SRC
 
+** gptel
+
+| 2023-10-28 | Testing GPT4All integration |
+
+- https://github.com/karthink/gptel → GPTel: A simple ChatGPT client for Emacs
+
+- To enable this package to query GPT4All, you need to activate the GPT4All setting: Application → "Enable API server"
+
+#+BEGIN_SRC emacs-lisp
+(use-package gptel
+  :ensure t
+  :defer 110
+  :after org
+  :config
+  (setq-default gptel-model "mistral-7b-openorca.Q4_0.gguf" ;; see /home/vk/hosts/sting/config/dot-local/share/nomic.ai/GPT4All/
+                gptel-host "localhost:4891"
+                gptel-protocol "http"
+                gptel-api-key "--"
+                gptel-stream nil)
+)
+#+END_SRC
+
+Mark a question and then invoke =gptel-send=:
+
+What is the airspeed velocity of an unladen swallow?
+----
+The airspeed velocity of an African Swallow (also known as Barn Swallow
+----
+The airspeed velocity of an unaden swallow is about 24 miles per
+--------
+
+Answer from GPT4All GUI: "﻿An African Swallow can reach speeds up to 99 miles per hour (160 km/h). However, this speed may vary depending on factors such as altitude and weather conditions."
+
+
 * My helper functions (part II)
 
 Here I defined some functions I am using interactively and probably
