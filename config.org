@@ -16123,6 +16123,26 @@ The airspeed velocity of an unaden swallow is about 24 miles per
 
 Answer from GPT4All GUI: "﻿An African Swallow can reach speeds up to 99 miles per hour (160 km/h). However, this speed may vary depending on factors such as altitude and weather conditions."
 
+** spacious-padding
+
+| 2023-11-16 | installed for testing |
+
+- I learned about that from [[https://baty.net/2023/11/spacious-padding-emacs-package/][Spacious-Padding Emacs package – Baty.net]]
+
+- https://git.sr.ht/~protesilaos/spacious-padding
+  - This package provides a global minor mode to increase the
+    spacing/padding of Emacs windows and frames. The idea is to make
+    editing and reading feel more comfortable. Enable the mode with
+    =M-x spacious-padding-mode=. Adjust the exact spacing values by
+    modifying the user option =spacious-padding-widths= .
+
+#+BEGIN_SRC emacs-lisp
+(use-package spacious-padding
+  :ensure t
+  :config
+  (spacious-padding-mode 1)
+)
+#+END_SRC
 
 * My helper functions (part II)
 
