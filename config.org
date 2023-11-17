@@ -16123,6 +16123,31 @@ The airspeed velocity of an unaden swallow is about 24 miles per
 
 Answer from GPT4All GUI: "﻿An African Swallow can reach speeds up to 99 miles per hour (160 km/h). However, this speed may vary depending on factors such as altitude and weather conditions."
 
+-------------
+
+Testing with a dedicated =gptel= buffer:
+#+BEGIN_EXAMPLE
+### What is the airspeed velocity of an unladen swallow?
+
+The question appears to be asking for the flying speed of a swift, often called
+#+END_EXAMPLE
+
+- I submitted the issue with the incomplete answers to https://github.com/karthink/gptel/issues/115
+
+------
+- [2023-10-29 Sun 13:43] after increasing =gptel-max-tokens=:
+
+What is the airspeed velocity of an unladen swallow?
+
+The airspeed velocity of an African Swallow (which can be referred to
+as "swallows" when referring collectively) varies depending on
+different conditions including wing sizes and wind speeds, but it
+generally averages around 40-60 miles per hour or 18 to 27 meters per
+second. It's important to note that the term "unladen swallow" is
+often incorrectly mistaken for an actual bird species, whereas in
+Monty Python's Flying Circus, they were joking about a bird carrying
+no cargo (or "lade").
+
 ** spacious-padding
 
 | 2023-11-16 | installed for testing |
