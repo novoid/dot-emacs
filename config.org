@@ -16092,17 +16092,25 @@ shortcut for capturing German and English language.
 
 #+BEGIN_SRC emacs-lisp
 (use-package gptel
+  :if (my-system-is-sting)
   :ensure t
   :defer 110
   :after org
-  :config
-  (setq-default gptel-model "mistral-7b-openorca.Q4_0.gguf" ;; see /home/vk/hosts/sting/config/dot-local/share/nomic.ai/GPT4All/
-                gptel-host "localhost:4891"
-                gptel-protocol "http"
-                gptel-api-key "--"
-                gptel-stream nil)
+  :config ;; according to https://github.com/karthink/gptel/issues/115#issuecomment-1784017720
+  ;; Make gpt4all the default
+  (setq-default
+   gptel-backend
+   (gptel-make-gpt4all
+    "GPT4All"                             ;Any name of your choosing
+    :protocol "http"                       
+    :host "localhost:4891"                       ;Where it's running
+    :models '("mistral-7b-openorca.Q4_0.gguf"))) ;Available models
+  (setq-default gptel-max-tokens 800) ;; Don't limit token count
 )
 #+END_SRC
+
+#+RESULTS:
+: t
 
 Mark a question and then invoke =gptel-send=:
 
