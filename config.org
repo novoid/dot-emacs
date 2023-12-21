@@ -8937,6 +8937,11 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("RSD" . ,(concat my-business-sd-server "/browse/RSD-%s"))
           ("AAFO" . ,(concat my-business-jira-server "/issues/?jql=Pr%C3%BCfverfahren%20%3D%20PV-STE_Sicherheitsgutachten%20and%20Afo-ID%20~%20%22%s%22"))
           ("ASUMMARY" . ,(concat my-business-jira-server "/issues/?jql=Pr%C3%BCfverfahren%20%3D%20PV-STE_Sicherheitsgutachten%20and%20summary%20~%20%22%s%22"))
+          ("AAFONWK" . ,(concat my-business-jira-server "/issues/?jql=Pr%C3%BCfverfahren%20%3D%20PV-STE_Sicherheitsgutachten%20and%20Afo-ID%20~%20%22%s%22%20and%20Nachweiskommentar%20is%20not%20EMPTY%20"))
+          ("ASUMMARYNWK" . ,(concat my-business-jira-server "/issues/?jql=Pr%C3%BCfverfahren%20%3D%20PV-STE_Sicherheitsgutachten%20and%20summary%20~%20%22%s%22%20and%20Nachweiskommentar%20is%20not%20EMPTY%20"))
+          ("TIZULAS" . ,(concat my-business-jira-server "/browse/TIZULAS-%s"))
+          ("TIPANF" . ,(concat my-business-jira-server "/browse/TIPANF-%s"))
+          ("ATIPANF" . ,(concat my-business-jira-server "/browse/GEMFEDANF-0?jql=project%20%3D%20TIPANF%20AND%20Afo-ID%20~%20%22%s%22"))
           ))
 #+END_SRC
 
