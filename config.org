@@ -9591,6 +9591,16 @@ to link using existing IDs instead of fragile links.
   (setq sl-backlink-into-drawer "LINKS"
         sl-related-into-drawer "LINKS") ;; according to https://github.com/toshism/org-super-links/issues/33#issuecomment-678815869
 
+;; fixes https://github.com/toshism/org-super-links/issues/87 until it gets fixed upstream:
+(defun sl-backlink-prefix-timestamp ()
+  "Return the default prefix string for a backlink.
+Inactive timestamp formatted according to `org-time-stamp-formats' and
+a separator ' <- '."
+  (let* ((time-format (cdr org-time-stamp-formats))
+	 (time-stamp (format-time-string time-format (current-time))))
+    (format "[%s] <- "
+	    time-stamp)))
+
 )
 #+END_SRC
 
