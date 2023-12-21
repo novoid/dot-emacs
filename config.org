@@ -1082,10 +1082,10 @@ because with them, I lose some generic approach:
     )
   )
 
-(defun my-system-is-rise ()
+(defun my-system-is-jackson ()
   "Return true if the system we are running on is floyd"
   (or
-    (string-equal system-name "rise")
+    (string-equal system-name "jackson")
     )
   )
 
@@ -1190,7 +1190,7 @@ Setting the system-specific path for my-webarchive-tsfile-dir-path
 #+BEGIN_SRC emacs-lisp
     ;; different hosts do have the dir at different locations:
     (setq my-webarchive-tsfile-dir-path (cond ((my-system-is-sting) "/home/vk/archive/backup/sting/webarchive")
-                                ((my-system-is-rise) "/home/vk/Downloads/webarchive")
+                                ((my-system-is-jackson) "/home/vk/Downloads/webarchive")
                                 (t "/home/vk/Downloads/");; fallback path (should NOT be used)
                                 ))
 #+END_SRC
@@ -1849,7 +1849,7 @@ Host-specific font sizes: values are in 1/10pt → 100 are 10pt
   ;;(set-face-attribute 'default (selected-frame) :height 102) ;; before 2019-12-04: even smaller on reduced resolution
   (set-face-attribute 'default (selected-frame) :height 110) ;; 2019-12-04: bigger font on native 30" resolution
   )
-(when (my-system-is-rise)
+(when (my-system-is-jackson)
   (set-face-attribute 'default (selected-frame) :height 100)
 )
 #+END_SRC
@@ -4874,7 +4874,7 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
        (:name "Sent" :query "folder:archive")))
    (setq message-default-headers "Reply-to: \nCC: \nBCC: \n")
    (setq notmuch-fcc-dirs "archive")
-   ;;(when (my-system-is-rise)
+   ;;(when (my-system-is-jackson)
    ;;   (setq notmuch-command "notmuch.cmd")
    ;;)
 
@@ -4896,7 +4896,7 @@ This is my email setup for [[https://notmuchmail.org/notmuch-emacs/][notmuch]] I
      (notmuch-poll)
      (notmuch-refresh-this-buffer))
 
-;   (when (not (my-system-is-rise))
+;   (when (not (my-system-is-jackson))
      (define-key notmuch-hello-mode-map "g" 'my-notmuch-sync-and-update-index-and-buffer)
 ;   )
 
@@ -5517,7 +5517,7 @@ Loading contributed packages:
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
 
-  (when (my-system-is-rise)
+  (when (my-system-is-jackson)
      (my-load-local-el "contrib/org-contrib/lisp/ox-confluence.el")
 
      ;; https://www.reddit.com/r/emacs/comments/fk5z1b/how_to_remove_foo_barfoo_bar_links_via/fkrbc0e/
@@ -6443,8 +6443,8 @@ function completely.
          ;2022-01-16;    (switch-to-buffer "public_voit.org")
          ;2022-01-16;    (org-set-startup-visibility)
          ;2022-01-16;    )
-         ;2022-01-16;  (when (my-buffer-exists "rise.org")
-         ;2022-01-16;    (switch-to-buffer "rise.org")
+         ;2022-01-16;  (when (my-buffer-exists "business.org")
+         ;2022-01-16;    (switch-to-buffer "business.org")
          ;2022-01-16;    (org-set-startup-visibility)
          ;2022-01-16;    )
             ;; (when (my-system-type-is-windows)
@@ -7720,19 +7720,19 @@ lines. It's not clever enough to detect quoted block begin/end strings.
   (bind-key "b" 'my-mark-block my-map)
 #+END_SRC
 
-*** my-rise-update-project-tables
+*** my-business-update-project-tables
 
 | 2021-07-10 | established to update two column view dynamic block tables which takes ~20 minutes somehow (performance) |
 
 #+BEGIN_SRC emacs-lisp
-(defun my-rise-update-project-tables ()
+(defun my-business-update-project-tables ()
   "Updates the two tables that contain focus and non-focus projects"
   (interactive)
   (save-excursion
       (save-some-buffers t) ;; get latest contact changes
-      (setq my-rise-update-project-tables-start-time (current-time))
+      (setq my-business-update-project-tables-start-time (current-time))
 
-      (switch-to-buffer "rise.org")
+      (switch-to-buffer "business.org")
       (beginning-of-buffer)
       (search-forward (concat "Name: RISE " "focus projects"))
       (org-ctrl-c-ctrl-c)
@@ -7741,8 +7741,8 @@ lines. It's not clever enough to detect quoted block begin/end strings.
       (org-ctrl-c-ctrl-c)
 
       ;; log info and inform the user:
-      (let ((my-tmp-log-string (format-message "my-rise-update-project-tables took %.1f minutes"
-                                   (/ (float-time (time-subtract (current-time) my-rise-update-project-tables-start-time)) 60.0))))
+      (let ((my-tmp-log-string (format-message "my-business-update-project-tables took %.1f minutes"
+                                   (/ (float-time (time-subtract (current-time) my-business-update-project-tables-start-time)) 60.0))))
           (my-log-misc my-tmp-log-string)
           (my-flash my-tmp-log-string)
       ))
@@ -7902,7 +7902,7 @@ properly, please do submit a pull request.
 )
 #+END_SRC
 
-*** my-create-rise-appointment-surrogate
+*** my-create-business-appointment-surrogate
 
 | 2022-05-16 | created initial version                                                              |
 | 2023-01-13 | re-recording macro because it was ambiguous with fresh org functions after an update |
@@ -7929,10 +7929,10 @@ simple macro:
 9. indent one level to the right
 10. yank timestamp(s)
 11. enter dummy text
-12. set =rise= property
+12. set business property
 
 #+BEGIN_SRC emacs-lisp
-(fset 'my-create-rise-appointment-surrogate
+(fset 'my-create-business-appointment-surrogate
    [?\C-c ?\C-n ?\C-c ?\C-p ?\C-e ?\M-x ?i ?s ?e ?a ?r ?c ?h ?- ?b ?a ?c ?k ?w ?a ?r ?d return ?> right ?\C-  ?\C-a escape ?w C-return tab ?\C-y ?  ?b ?l ?o ?c ?k ?e ?r ?: ?  ?p ?r ?i ?v ?a ?t ?e ?  ?a ?p ?p ?o ?i ?n ?t ?m ?e ?n ?t ?\M-x ?o ?r ?g ?- ?s ?e ?t ?- ?p ?r ?o ?p ?e ?r ?t ?y return ?c ?a ?t ?e ?g ?o ?r ?y return ?r ?i ?s ?e return])
 #+END_SRC
 
@@ -8308,20 +8308,20 @@ Templates for my home:
 Company templates:
 #+BEGIN_SRC emacs-lisp
           ("r" "RISE")
-    ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "rise.org") "shorts")
+    ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "business.org") "shorts")
            ,my-capture-template-next :empty-lines 2)
-          ("re" "event" entry (file+headline ,(concat my-org-files-path "rise.org") "Events")
+          ("re" "event" entry (file+headline ,(concat my-org-files-path "business.org") "Events")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("rb" "RB")
           ("rbs" "RB short" entry (id "2021-07-23-shorts")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
           ("rbm" "RB meeting" entry (id "2021-07-23-Meetings")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
-          ("ro" "RB onboarding" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rbos-heading)
+          ("ro" "RB onboarding" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rbos-heading)
            ,my-business-rbo-template :empty-lines 2)
-          ("rO" "RB offboarding" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rbos-heading)
+          ("rO" "RB offboarding" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rbos-heading)
            ,my-business-rboff-template :empty-lines 2)
-          ("rs" "RB S/NOTIFY" entry (file+headline ,(concat my-org-files-path "rise.org") ,my-business-rs-heading)
+          ("rs" "RB S/NOTIFY" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rs-heading)
            ,my-business-rs-template :empty-lines 2)
 #+END_SRC
 
@@ -9714,7 +9714,7 @@ Definition of work files: (only used in cron-job shell script)
   (setq my-work-agenda-files (append `(
   ;; 2019-06-26: backtick above and ,() below are because of: https://stackoverflow.com/questions/9449364/elisp-alist-and-strings-type-confusion
   ;; the (quote (("foo/bar.pro")) from before had to be changed when introducing the concat method for the path
-       ,(concat my-org-files-path "rise.org")
+       ,(concat my-org-files-path "business.org")
        ;;,(concat my-org-files-path "detego.org")
        ;;,(concat my-org-files-path "ciso.org")
        ;;,(concat my-org-files-path "exported-detego-calendar.org")
@@ -9725,7 +9725,7 @@ Definition of work files: (only used in cron-job shell script)
 
 The following file is only accessible on my work computer:
 #+BEGIN_SRC emacs-lisp :tangle no
-(when (my-system-is-rise)
+(when (my-system-is-jackson)
   (add-to-list 'my-work-agenda-files my-business-siko-notes))
 #+END_SRC
 
@@ -12692,7 +12692,7 @@ Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]
 [[https://github.com/tmalsburg/helm-org-contacts][tmalsburg/helm-org-contacts]]) to quickly link contacts.
 
 - 2023-01-08: still not on *elpa and my fork seems to be reasonable up-to-date.
-- 2023-01-09: had to *disable helm-org-contacts* because I got an issue with Emacs 28.2 on rise:
+- 2023-01-09: had to *disable helm-org-contacts* because I got an issue with Emacs 28.2 on jackson:
   - the included =(require helm)= can't load helm somehow:
     #+BEGIN_EXAMPLE
     Debugger entered--Lisp error: (file-missing "Cannot open load file" "No such file or directory" "helm")
@@ -13424,7 +13424,7 @@ at once before leaving the computer for a longer period of time.
   (my-refile-recache)
 
   (when (not my-boot-process)
-     (my-rise-update-project-tables) ;; omit this on boot process since it takes ~20min
+     (my-business-update-project-tables) ;; omit this on boot process since it takes ~20min
   )
 )
 #+END_SRC
@@ -14806,7 +14806,7 @@ via: http://ikiwiki.info/tips/Emacs_and_markdown/
 #+BEGIN_SRC emacs-lisp
 (use-package markdown-mode
   :ensure t
-  ;:if (my-system-is-rise)
+  ;:if (my-system-is-jackson)
   ;;:defer 110
   :mode ("\\.md\\'" . markdown-mode)
   :mode ("\\.mkdn\\'" . markdown-mode)
@@ -17365,14 +17365,14 @@ Not org related but might be candidates as well:
     ;; 2020-05-20: we do not share credentials in this company *g*
     ;; ("B" (lambda ()
     ;;         (interactive)
-    ;;         (switch-to-buffer "rise.org")
+    ;;         (switch-to-buffer "business.org")
     ;;         (org-id-goto "rise-shared-credentials")
     ;;         (org-decrypt-entry)
     ;; ) nil)
 
     ("b" (lambda ()
             (interactive)
-            (switch-to-buffer "rise.org")
+            (switch-to-buffer "business.org")
             (org-id-goto "rise-personal-credentials")
             (org-decrypt-entry)
     ) nil)
@@ -18388,6 +18388,9 @@ Somehow, the binding from the definition of the hydra does not work.
 #+END_SRC
 
 * autostart
+:PROPERTIES:
+:ORDERED:  t
+:END:
 
 At the end of loading most of my configuration, I want to execute some
 things, some of them only in interactive mode.
@@ -18438,7 +18441,7 @@ approximately 25 seconds as of 2019-04-17.
 
   (my-log-misc "interactive Emacs is started")
 
-  (when (or (my-system-is-rise) (my-system-is-sting))
+  (when (or (my-system-is-jackson) (my-system-is-sting))
      (my-hsplit-last-buffer)
   )
 
@@ -18472,17 +18475,17 @@ approximately 25 seconds as of 2019-04-17.
        ;;2022-03-27;; (switch-to-buffer "notes.org")   ;; open notes buffer
        ;;2022-03-27;; ;; MAYBE: open misc.org on the other side
        ;;2022-03-27;; (eyebrowse-rename-window-config 2 "misc") ;; name 2nd config
-       ;;2022-03-27;; (eyebrowse-create-window-config) ;; create 3rd config for rise
-       ;;2022-03-27;; (switch-to-buffer "rise.org")    ;; open rise buffer
+       ;;2022-03-27;; (eyebrowse-create-window-config) ;; create 3rd config for jackson
+       ;;2022-03-27;; (switch-to-buffer "business.org")    ;; open business buffer
        ;;2022-03-27;; (org-shifttab)                   ;; toggle visibility
-       ;;2022-03-27;; (eyebrowse-rename-window-config 3 "rise") ;; set name for rise config
-       ;;2022-03-27;; (other-window 1) ;; switch from rise.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
-       ;; 2022-01-25 disabled ;; (when (my-system-is-rise)
-       ;; 2022-01-25 disabled ;;   (eyebrowse-create-window-config) ;; create 4th config for rise/dired
+       ;;2022-03-27;; (eyebrowse-rename-window-config 3 "rise") ;; set name for business config
+       ;;2022-03-27;; (other-window 1) ;; switch from business.org to agenda on the left side → DOESN'T work yet because there is no agenda on the left for some reason
+       ;; 2022-01-25 disabled ;; (when (my-system-is-jackson)
+       ;; 2022-01-25 disabled ;;   (eyebrowse-create-window-config) ;; create 4th config for business/dired
        ;; 2022-01-25 disabled ;;   (eyebrowse-rename-window-config 4 "rise-dired") ;; set name for config
        ;; 2022-01-25 disabled ;;   (other-window 1) ;; switch from on the left side → may not work yet (test!)
        ;; 2022-01-25 disabled ;;   (dired my-business-dired-folder);; open dired buffer with business config
-       ;; 2022-01-25 disabled ;;   (eyebrowse-switch-to-window-config-3);; switch back to "rise"
+       ;; 2022-01-25 disabled ;;   (eyebrowse-switch-to-window-config-3);; switch back to "business"
        ;; 2022-01-25 disabled ;; )
        )
       )
