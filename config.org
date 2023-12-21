@@ -13800,10 +13800,12 @@ Support for opening last known pdf position in pdf-view-mode provided by pdf-too
 Misc sources for packages:
 - 2017-05: [[https://www.reddit.com/r/emacs/comments/6dk5tv/what_are_some_packages_you_once_used_but_have/][What are some packages you once used but have found a better alternative? : emacs]]
 
-** Garbage Collection Magic Hack
+** DISABLED Garbage Collection Magic Hack
 :PROPERTIES:
 :CREATED:  [2019-12-31 Tue 17:06]
 :END:
+
+| 2023-12-13 | I'll disable it for now: https://graz.social/@yantar92@emacs.ch/111574626493352202 |
 
 Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_better_to_use_more_medsize_files_or/fcm5bsc/][this reddit comment]] because of performance issues.
 
@@ -13815,7 +13817,8 @@ Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_be
   (gcmh-mode +1)
   (setq garbage-collection-messages t)
   (setq gcmh-verbose t)
-  (setq gcmh-low-cons-threshold (* 200 1000 1000)) ;; 2022-01-16: yantar92 proposed a much less conservative setting for GC
+;;  (setq gcmh-low-cons-threshold (* 200 1000 1000)) ;; 2022-01-16: yantar92 proposed a much less conservative setting for GC
+  (setq gc-cons-percentage 0.3) ;; id:2023-12-06-reset-gc-cons-threshold-and-increase-gc-cons-percentage
 )
 #+END_SRC
 
@@ -13845,6 +13848,15 @@ Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_be
    (message "gc-cons-threshold and file-name-handler-alist restored")))
 #+END_SRC
 
+
+** Garbage Collection
+
+| 2023-12-13 | I disabled gcmh and switched to simple GC for a while |
+
+#+BEGIN_SRC emacs-lisp
+  (setq garbage-collection-messages t) ;; let me know when GC is working
+  (setq gc-cons-percentage 0.3) ;; id:2023-12-06-reset-gc-cons-threshold-and-increase-gc-cons-percentage
+#+END_SRC
 
 ** DISABLED tabbar
 
