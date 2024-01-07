@@ -9545,7 +9545,8 @@ Alternative approach for Windows:
 
 *** org-super-links
 
-  | 2020-06-30 | initial setup for testing |
+  | 2020-06-30 | initial setup for testing                                  |
+  | 2024-01-07 | moved from old ELPA version 0.2 to (local) git version 0.4 |
 
 [[https://www.reddit.com/r/emacs/comments/hg2m5s/zettelkastenorgroamorgbrain_is_crap/fwe8afj/][This reddit comment]] brought me this nice package: https://github.com/toshism/org-super-links
 
@@ -9557,20 +9558,21 @@ to link using existing IDs instead of fragile links.
 
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-links
-  :quelpa (org-super-links :repo "toshism/org-super-links" :fetcher github :commit "develop")
+  ;; did never work: :quelpa (org-super-links :repo "toshism/org-super-links" :fetcher github :commit "develop")
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-super-links/"))) ;; 
   :after helm-org
-  :bind (("C-c s s" . sl-link)
-	 ("C-c s l" . sl-store-link)
-	 ("C-c s C-l" . sl-insert-link)             ;; inserts links to heading title (not property ID)
-	 ("C-c s d" . sl-quick-insert-drawer-link)
-	 ("C-c s i" . sl-quick-insert-inline-link))
+  :bind (("C-c s s" . org-super-links-link)
+	 ("C-c s l" . org-super-links-store-link)
+	 ("C-c s C-l" . org-super-links-insert-link)             ;; inserts links to heading title (not property ID)
+	 ("C-c s d" . org-super-links-quick-insert-drawer-link)
+	 ("C-c s i" . org-super-links-quick-insert-inline-link))
   :config
-  (setq sl-related-into-drawer t
-  	sl-link-prefix 'sl-link-prefix-timestamp)
+  (setq org-super-links-related-into-drawer t
+  	org-super-links-link-prefix 'org-super-links-link-prefix-timestamp)
 
   ;; use my custom function to generate ID properties accordin to https://karl-voit.at/2019/11/16/UOMF-Linking-Headings/
-  (add-hook 'sl-pre-link-hook 'my-id-get-or-generate)
-  (add-hook 'sl-pre-backlink-hook 'my-id-get-or-generate)
+  (add-hook 'org-super-links-pre-link-hook 'my-id-get-or-generate)
+  (add-hook 'org-super-links-pre-backlink-hook 'my-id-get-or-generate)
 
   ;; Formats link descriptions as suggested on: https://github.com/toshism/org-super-links#limit-length-of-link-description
   ;; development: id:2020-08-05-implement-filter-function
@@ -9587,19 +9589,9 @@ to link using existing IDs instead of fragile links.
            	          (replace-regexp-in-string " ?\\[[0-9]+%\\]" "" desc)
   			      ))))
   )
-  (setq sl-default-description-formatter 'my-org-super-links-filter-description)
-  (setq sl-backlink-into-drawer "LINKS"
-        sl-related-into-drawer "LINKS") ;; according to https://github.com/toshism/org-super-links/issues/33#issuecomment-678815869
-
-;; fixes https://github.com/toshism/org-super-links/issues/87 until it gets fixed upstream:
-(defun sl-backlink-prefix-timestamp ()
-  "Return the default prefix string for a backlink.
-Inactive timestamp formatted according to `org-time-stamp-formats' and
-a separator ' <- '."
-  (let* ((time-format (cdr org-time-stamp-formats))
-	 (time-stamp (format-time-string time-format (current-time))))
-    (format "[%s] <- "
-	    time-stamp)))
+  (setq org-super-links-default-description-formatter 'my-org-super-links-filter-description)
+  (setq org-super-links-backlink-into-drawer "LINKS"
+        org-super-links-related-into-drawer "LINKS") ;; according to https://github.com/toshism/org-super-links/issues/33#issuecomment-678815869
 
 )
 #+END_SRC
