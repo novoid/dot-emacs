@@ -54,37 +54,37 @@ workflow, please do search for corresponding keywords. There are
 seldom multiple search hits except for separate key binding
 definitions or hydras.
 
-| *Workflow*                          | *Solution*                                         | *Notes*                                                                     |
-|-------------------------------------+----------------------------------------------------+-----------------------------------------------------------------------------|
-| Installing software packages        | ~use-package~ with packages and git repositories   |                                                                             |
-| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature                                                                 |
-| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ | top feature                                                                 |
-| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                                                            |
-| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space                                            |
-| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                                                             |
-| Filter Org files                    | sparse trees                                       |                                                                             |
-| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                                                             |
-| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                                                             |
-| Switching buffers                   | ~ibuffer~                                          |                                                                             |
-| Desktop notifications               | ~alert~                                            |                                                                             |
-| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                                                             |
-| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                                                                             |
-| Copying region to Org property      | ~my-org-region-to-property()~                      | very handy for org-contacts                                                 |
-| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                                                                             |
-| Passwords                           | ~org-crypt~ on Org mode headings                   |                                                                             |
-| Coding python                       | ~elpy~, ~flycheck~                                 |                                                                             |
-| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                                                                             |
-| Coding: Folding/unfolding           | ~yafolding~                                        |                                                                             |
-| Versioning files                    | ~magit~                                            |                                                                             |
-| Snippet management                  | ~yankpad~ with ~yasnippet~                         | [[https://karl-voit.at/2016/12/18/org-depend/][advanced workflows]]         |
-| Spell checking                      | ~flyspell~ with ~aspell~                           |                                                                             |
-| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                                                             |
-| Formatting headings                 | ~my-title-capitalization()~                        |                                                                             |
-| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to                                                   |
-| Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | top featurel; based on [[https://en.wikipedia.org/wiki/Frecency][frecency]] |
-| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to                                                   |
-| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to                                                   |
-| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                                                                             |
+| *Workflow*                          | *Solution*                                         | *Notes*                          |
+|-------------------------------------+----------------------------------------------------+----------------------------------|
+| Installing software packages        | ~use-package~ with packages and git repositories   |                                  |
+| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature                      |
+| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ | top feature                      |
+| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                 |
+| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space |
+| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                  |
+| Filter Org files                    | sparse trees                                       |                                  |
+| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                  |
+| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                  |
+| Switching buffers                   | ~ibuffer~                                          |                                  |
+| Desktop notifications               | ~alert~                                            |                                  |
+| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                  |
+| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                                  |
+| Copying region to Org property      | ~my-org-region-to-property()~                      | very handy for org-contacts      |
+| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                                  |
+| Passwords                           | ~org-crypt~ on Org mode headings                   |                                  |
+| Coding python                       | ~elpy~, ~flycheck~                                 |                                  |
+| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                                  |
+| Coding: Folding/unfolding           | ~yafolding~                                        |                                  |
+| Versioning files                    | ~magit~                                            |                                  |
+| Snippet management                  | ~yankpad~ with ~yasnippet~                         | [[https://karl-voit.at/2016/12/18/org-depend/][advanced workflows]]               |
+| Spell checking                      | ~flyspell~ with ~aspell~                           |                                  |
+| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                  |
+| Formatting headings                 | ~my-title-capitalization()~                        |                                  |
+| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to        |
+| Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | top feature; based on [[https://en.wikipedia.org/wiki/Frecency][frecency]]   |
+| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to        |
+| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to        |
+| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                                  |
 
 What I'm not using at the moment:
 - projectile or other source code project management tools
