@@ -16169,9 +16169,10 @@ often incorrectly mistaken for an actual bird species, whereas in
 Monty Python's Flying Circus, they were joking about a bird carrying
 no cargo (or "lade").
 
-** spacious-padding
+** DISABLED spacious-padding
 
 | 2023-11-16 | installed for testing |
+| 2024-01-07 | disabled because of a syntax error below I could not find. |
 
 - I learned about that from [[https://baty.net/2023/11/spacious-padding-emacs-package/][Spacious-Padding Emacs package – Baty.net]]
 
@@ -16182,11 +16183,14 @@ no cargo (or "lade").
     =M-x spacious-padding-mode=. Adjust the exact spacing values by
     modifying the user option =spacious-padding-widths= .
 
+The package is not fully "compatible" with my setup as it introduces
+some whitespace in my dark theme that visually doesn't look good.
+
 #+BEGIN_SRC emacs-lisp
 (use-package spacious-padding
   :ensure t
   :config
-  (spacious-padding-mode 1)
+  (spacious-padding-mode)
 )
 #+END_SRC
 
