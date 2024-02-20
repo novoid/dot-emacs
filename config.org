@@ -13062,6 +13062,11 @@ DISABLED 2020-02-04 because of constand data loss when Emacs crashes.
  (setq auto-save-default nil)
 #+END_SRC
 
+2024-02-13: workaround for GnuPG-issue from https://irreal.org/blog/?p=11827
+#+BEGIN_SRC emacs-lisp
+(fset 'epg-wait-for-status 'ignore)
+#+END_SRC
+
 END of org-crypt setup
 #+BEGIN_SRC emacs-lisp
     )
