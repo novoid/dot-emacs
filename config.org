@@ -9615,6 +9615,7 @@ to link using existing IDs instead of fragile links.
   (setq org-super-links-default-description-formatter 'my-org-super-links-filter-description)
   (setq org-super-links-backlink-into-drawer "LINKS"
         org-super-links-related-into-drawer "LINKS") ;; according to https://github.com/toshism/org-super-links/issues/33#issuecomment-678815869
+  (defalias 'sl-store-link 'org-super-links-store-link) ;; should not be neccesary but I really can't find the outdated reference to the old function name :-O
 
 )
 #+END_SRC
