@@ -2207,6 +2207,28 @@ FIXXME: identify crux commands that I added to my setup before and maybe replace
   (("C-c d" . crux-duplicate-current-line-or-region)))
 #+END_SRC
 
+** marginalia - additional info in the minibuffer
+
+| 2024-02-20 | Tip from HVR |
+
+- https://github.com/minad/marginalia
+
+#+BEGIN_SRC emacs-lisp
+(use-package marginalia
+  :ensure t
+ ; :defer 110
+  :config
+  ;; To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :init
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode)
+)
+#+END_SRC
+
 * My helper functions (part I)
 
 Here I defined some functions I am using in the configuration below.
