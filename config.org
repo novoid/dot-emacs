@@ -5687,7 +5687,7 @@ For a more fine-grained control on expanded headings when visiting a Org file, l
 
 #+BEGIN_SRC emacs-lisp
   (setq org-enforce-todo-dependencies t)
-  (setq org-insert-heading-respect-content nil)
+  (setq org-insert-heading-respect-content t) ;; via https://irreal.org/blog/?p=11938
   (setq org-reverse-note-order nil)
   (setq org-show-following-heading t)
   (setq org-show-hierarchy-above t)
@@ -8625,7 +8625,7 @@ Activate caching of targets: (a must-have)
   (setq org-refile-use-cache t)
 #+END_SRC
 
-Targets complete directly with IDO: so much better!
+Targets complete directly with IDO: so much better! Also mentioned on https://irreal.org/blog/?p=11938
 #+BEGIN_SRC emacs-lisp
   (setq org-outline-path-complete-in-steps nil)
 #+END_SRC
