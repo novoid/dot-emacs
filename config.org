@@ -10252,7 +10252,7 @@ down below.
     )
 #+END_SRC
 
-*** super-agenda()
+*** org-super-agenda()
 
 | 2021-01-03 | new, standard org-super-agenda setup instead of old, complex setup |
 
@@ -10284,6 +10284,8 @@ See also: id:2017-08-12-org-super-agenda
                    ;;  :tag ("food" "dinner"))
                    ;;  :habit t
                    ;;  :tag "personal")
+;;            (:name "Started" :and (:todo "STARTED" :not (:tag "someday") :not (:priority "C") :not (:priority "B") ) :order 10 :auto-ts "reverse")
+;;            (:name "Started" :and (:todo "STARTED" :not (:tag "someday") :not (:priority "C") :not (:priority "B") ) :order 10 :auto-ts)
             (:name "Started" :and (:todo "STARTED" :not (:tag "someday") :not (:priority "C") :not (:priority "B") ) :order 10)
             ;;(:name "Space-related (non-moon-or-planet-related)"
             ;;       ;; Regexps match case-insensitively on the entire entry
