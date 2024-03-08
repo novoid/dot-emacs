@@ -18047,6 +18047,7 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
   ^────────^──────────^──────^────────────^───────^───────
   _e_nglish (toggle)
   _d_eutsch (toggle)
+  _i_nsert result file
   ")
   ("q" nil "quit")
   ("r" flyspell-region nil)
