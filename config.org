@@ -16106,18 +16106,65 @@ Use =whisper-run= once to start recording and a second time for start
 the translation process which puts the text into the buffer. This
 works *offline* (without cloud or network) and amazingly well for English.
 
-#+BEGIN_SRC emacs-lisp :results none
+Integration for sting/jackson: see id:2023-11-18-System-whisper-in-Emacs-einbinden
+
+#+BEGIN_SRC emacs-lisp
 (use-package whisper
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/whisper.el/")))
-;;  :bind ("C-H-r" . whisper-run)
-  :config
-  (setq whisper-install-directory (concat my-user-emacs-directory "bin/")
-        whisper-model "base"
-        whisper-language "de"
-        whisper-translate nil)
   :defer 110
+  :config
+  :config
+
+  (when (my-system-is-sting)
+      (setq whisper-install-directory (concat my-user-emacs-directory "bin/")
+            whisper-model "base"
+            whisper-language "de"
+            whisper-translate nil)
+  )
+
+  (when (my-system-is-jackson)
+      (setq ;whisper-model "large"
+            whisper-model "small"
+            whisper-use-threads 6
+            whisper-language "de"
+            whisper-translate nil
+            whisper-install-whispercpp nil
+            whisper--ffmpeg-input-device "default"
+            ;whisper-insert-text-at-point nil
+            )
+    
+      ;; adaptations from https://github.com/natrys/whisper.el/wiki/Setup-to-use-whisper%E2%80%90ctranslate2-instead-of-whisper.cpp
+      (defun whisper--ctranslate2-command (input-file)
+      `("/etc/profiles/per-user/vk/bin/whisper"
+        ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
+        "--task" ,(if whisper-translate "translate" "transcribe")
+        "--model" ,whisper-model
+        "--language" ,whisper-language
+        "--fp16" "False"
+        "--output_dir" "/tmp/"
+        "--output_format" "txt"
+        ,input-file))
+    
+      (advice-add 'whisper-command :override #'whisper--ctranslate2-command)
+    
+      ;; getting rid of the timestamps in the output:
+      (add-hook 'whisper-post-process-hook
+              (lambda ()
+                (save-excursion
+                  (goto-char (point-max))
+                  (delete-line)
+                  (goto-char (point-min))
+                  (delete-line)
+                  (while (not (eobp))
+                    (goto-char (pos-bol))
+                    (when (re-search-forward "\\]" (pos-eol) t 1)
+                      (skip-chars-forward " " (pos-eol))
+                      (delete-region (pos-bol) (point)))
+                    (forward-line 1)))))
+    )
 )
 #+END_SRC
+
 
 Please note that in my hydra-settings "hydra-spelling → F5" I define a
 shortcut for capturing German and English language.
@@ -18005,8 +18052,7 @@ Idea stolen from [[https://www.reddit.com/r/emacs/comments/8rxm7h/tip_how_to_bet
           (setq whisper-language "de")
           (whisper-run)
   ) nil)
-
-
+  ("i" (insert-file "/tmp/emacs-whisper.txt") nil :color blue)
   )
   (global-set-key [f5] 'hydra-spelling/body)
 #+END_SRC
