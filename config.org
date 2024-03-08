@@ -9859,8 +9859,15 @@ files; on my other machines, start with my non-work-related files.
         (line-end-position)))) ; skip
 #+END_SRC
 
-MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
-#+BEGIN_SRC emacs-lisp
+MISC functions from Bernt Hansen's famous
+http://doc.norang.ca/org-mode.html which I honestly don't fully
+understand. I copied them over and re-used some of them. This should
+actually be thinned out some fine day and perhaps replaced with an
+org-ql-based agenda.
+
+I'm not using the project-helper functions here I guess.
+
+#+BEGIN_SRC emacs-lisp :results none
   (defun bh/is-project-p ()
     "Any task with a todo keyword subtask"
     (let ((has-subtask)
@@ -9989,7 +9996,8 @@ MISC functions from Bernt Hansen's famous http://doc.norang.ca/org-mode.html
 
   (defun bh/agenda-sort (a b)
     "Sorting strategy for agenda items.
-Late deadlines first, then scheduled, then non-late deadlines"
+Late deadlines first, then scheduled, then non-late deadlines.
+See =org-agenda-sorting-strategy= and =user-defined-up= used in my agenda settings"
     (let (result num-a num-b)
       (cond
        ;; time specific items are already sorted first by org-agenda-sorting-strategy
@@ -10431,6 +10439,18 @@ down below.
       )
     )
 #+END_SRC
+
+**** changing the sort order
+
+See https://github.com/alphapapa/org-super-agenda/issues/256 where I
+was searching in the wrong place. In my case, the sort order is
+handled by org-agenda (and not org-super-agenda).
+
+For this, I need the value of =org-agenda-sorting-strategy= according to https://orgmode.org/manual/Sorting-of-agenda-items.html
+
+As of 2024-03-07, I failed to make any impact here. Don't know why.
+Probably need to migrate from org-agenda to an org-ql-based agenda
+anyway.
 
 *** DISABLED my-super-agenda-business()
 :PROPERTIES:
@@ -11012,7 +11032,7 @@ Show all agenda dates - even if they are empty
   (setq org-agenda-show-all-dates t)
 #+END_SRC
 
-Sorting order for tasks on the agenda
+Sorting order for tasks on the agenda: for =user-defined-up= see my =org-agenda-cmp-user-defined= below
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-sorting-strategy
         (quote ((agenda habit-down time-up user-defined-up priority-down category-keep)
@@ -11031,8 +11051,8 @@ Non-nil means skip timestamp line if same entry shows because of deadline.
   (setq org-agenda-skip-timestamp-if-deadline-is-shown t)
 #+END_SRC
 
-Agenda sorting functions
-#+BEGIN_SRC emacs-lisp
+Agenda sorting functions: if set to =bh/agenda-sort=, see its definition above!
+#+BEGIN_SRC emacs-lisp :results none
   (setq org-agenda-cmp-user-defined 'bh/agenda-sort)
 #+END_SRC
 
