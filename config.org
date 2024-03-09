@@ -2181,6 +2181,8 @@ unchained from constraints of backward compatibility.
 #+BEGIN_SRC emacs-lisp
 (use-package helm
   :ensure t
+  :config
+  (helm-mode 1)
 )
 #+END_SRC
 
