@@ -54,37 +54,37 @@ workflow, please do search for corresponding keywords. There are
 seldom multiple search hits except for separate key binding
 definitions or hydras.
 
-| *Workflow*                          | *Solution*                                         | *Notes*                          |
-|-------------------------------------+----------------------------------------------------+----------------------------------|
-| Installing software packages        | ~use-package~ with packages and git repositories   |                                  |
-| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature                      |
-| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ | top feature                      |
-| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                 |
-| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space |
-| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                  |
-| Filter Org files                    | sparse trees                                       |                                  |
-| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                  |
-| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                  |
-| Switching buffers                   | ~ibuffer~                                          |                                  |
-| Desktop notifications               | ~alert~                                            |                                  |
-| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                  |
-| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                                  |
-| Copying region to Org property      | ~my-org-region-to-property()~                      | very handy for org-contacts      |
-| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                                  |
-| Passwords                           | ~org-crypt~ on Org mode headings                   |                                  |
-| Coding python                       | ~elpy~, ~flycheck~                                 |                                  |
-| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                                  |
-| Coding: Folding/unfolding           | ~yafolding~                                        |                                  |
-| Versioning files                    | ~magit~                                            |                                  |
-| Snippet management                  | ~yankpad~ with ~yasnippet~                         | [[https://karl-voit.at/2016/12/18/org-depend/][advanced workflows]]               |
-| Spell checking                      | ~flyspell~ with ~aspell~                           |                                  |
-| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                  |
-| Formatting headings                 | ~my-title-capitalization()~                        |                                  |
-| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to        |
-| Quickly jumping to a directory      | ~my-dired-recent-dirs()~                           | top feature; based on [[https://en.wikipedia.org/wiki/Frecency][frecency]]   |
-| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to        |
-| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to        |
-| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                                  |
+| *Workflow*                          | *Solution*                                         | *Notes*                                                        |
+|-------------------------------------+----------------------------------------------------+----------------------------------------------------------------|
+| Switching to things                 | ~my-switch-to-thing~                               | buffers, recent-files, bookmarks, eyebrowse slots, directories |
+| Installing software packages        | ~use-package~ with packages and git repositories   |                                                                |
+| "Window management"                 | ~eyebrowse~ with a decent ~hydra-buffers~          | top feature                                                    |
+| Remembering bindings; cheatcheat    | a ~hydra~ on ~F1~ for each major mode; ~which-key~ | top feature                                                    |
+| Naked and full-screen Emacs         | ~my-toggle-naked-emacs()~                          | unclutter screen                                               |
+| Getting rid of scrollbar            | ~nyan-mode~                                        | Get more horizontal screen space                               |
+| Reducing clutter in mode line       | ~smart-mode-line~, ~mode-icons~                    |                                                                |
+| Filter Org files                    | sparse trees                                       |                                                                |
+| Focus on Org sub-hierarchy          | customized ~org-tree-to-indirect-buffer~           |                                                                |
+| Enhanced search/selection usability | ~swiper~, ~counsel~, ~helm~, ~helm-org-rifle~      |                                                                |
+| Switching buffers                   | ~ibuffer~                                          |                                                                |
+| Desktop notifications               | ~alert~                                            |                                                                |
+| Inserting date/time-stamps          | ~my-insert-timestamp()~, ~my-insert-datestamp()~,  |                                                                |
+| Inserting characters                | ~char-menu~, ~M-x insert-char~                     |                                                                |
+| Copying region to Org property      | ~my-org-region-to-property()~                      | very handy for org-contacts                                    |
+| Org to PDF export                   | normal Org mode export via LaTeX (not pandoc)      |                                                                |
+| Passwords                           | ~org-crypt~ on Org mode headings                   |                                                                |
+| Coding python                       | ~elpy~, ~flycheck~                                 |                                                                |
+| Coding: Highlighting lines/words    | ~bm~, ~highlight-symbol~                           |                                                                |
+| Coding: Folding/unfolding           | ~yafolding~                                        |                                                                |
+| Versioning files                    | ~magit~                                            |                                                                |
+| Snippet management                  | ~yankpad~ with ~yasnippet~                         | [[https://karl-voit.at/2016/12/18/org-depend/][advanced workflows]]                                             |
+| Spell checking                      | ~flyspell~ with ~aspell~                           |                                                                |
+| Formatting paragraphs               | ~my-fill-or-unfill()~                              |                                                                |
+| Formatting headings                 | ~my-title-capitalization()~                        |                                                                |
+| File management                     | ~dired~ with some very cool extensions             | I'm still getting used to                                      |
+| PDF reading                         | ~pdf-tools~                                        | I'm still getting used to                                      |
+| PDF annotating                      | ~pdf-tools~                                        | I'm still getting used to                                      |
+| Record screencasts                  | ~gif-screencast~ and non-emacs methods             |                                                                |
 
 What I'm not using at the moment:
 - projectile or other source code project management tools
@@ -2061,7 +2061,7 @@ but it's a less popular function.
 Using the [[https://github.com/jwiegley/dot-emacs/blob/master/init.el][bind-key package]]: (OLD method without use-package:)
 #+BEGIN_SRC emacs-lisp :tangle no
 (require 'bind-key);; https://github.com/emacsattic/bind-key
-
+ 
 ;;(org-defkey org-mode-map (kbd "C-c C-,") nil);; clear binding
 
 (bind-keys
@@ -16989,6 +16989,76 @@ Development heading: id:2023-02-05-Elisp-fuer-inbox-short-S2T
   (insert "# ")
 )
 #+END_SRC
+
+** my-switch-to-thing → C-c SPC
+
+| 2024-03-09 | adapted from blog article and instantly fell in love |
+
+Happily stolen from https://www.emacs.dyerdwelling.family/emacs/20240305160708-emacs--unified-interface-for-switching-contexts/
+
+I adapted it to my needs: 
+
+- disabled themes
+- added support for
+  - eyebrowse
+  - dired-recent-directories
+
+This actually replaces many things I used for jumping:
+
+- =my-dired-recent-dirs= (C-z)
+- switching to eyebrowse slots (F2 + numbers)
+- =helm-recentf= (my-map r)
+- =counsel-bookmark= (C-x r b)
+- =switch-to-buffer= (C-x b)
+
+#+BEGIN_SRC emacs-lisp
+(defun my-switch-to-thing ()
+  "Using an unified interface to Switch to:
+- a buffer, 
+- a recently visited file, 
+- a bookmark, 
+- a recently used dired directory,
+- an eyebrowser slot
+
+(disabled switching to themes)
+"
+  (interactive)
+  (let* ((buffers (mapcar #'buffer-name (buffer-list)))
+         (recent-files recentf-list)
+         (bookmarks (bookmark-all-names))
+         ;;(themes (custom-available-themes))
+         (directories dired-recent-directories)
+         (eyebrowse (--map (eyebrowse-format-slot it) (eyebrowse--get 'window-configs)))
+         (all-options (append 
+                          buffers 
+                          recent-files 
+                          bookmarks 
+                          eyebrowse
+                          directories
+                          ;; (mapcar (lambda (theme) (concat "Theme: " (symbol-name theme))) themes)
+         ))
+         (selection (completing-read "Switch to: "
+                                     (lambda (str pred action)
+                                       (if (eq action 'metadata)
+                                           '(metadata . ((category . file)))
+                                         (complete-with-action action all-options str pred)))
+                                     nil t nil 'file-name-history)))
+    (message (concat "DEBUG: selection =" selection))
+    (pcase selection
+      ((pred (lambda (sel) (member sel eyebrowse))) 
+             ;; may be a bit hacky but this trick converts the string selection that looks like "3:my config" to the number 3:
+             (eyebrowse-switch-to-window-config (number-or-float selection)))
+      ((pred (lambda (sel) (member sel buffers))) (switch-to-buffer selection))
+      ((pred (lambda (sel) (member sel bookmarks))) (bookmark-jump selection))
+      ((pred (lambda (sel) (member sel directories))) (dired selection))
+      ;;((pred (lambda (sel) (string-prefix-p "Theme: " sel)))
+      ;; (load-theme (intern (substring selection (length "Theme: "))) t))
+      (_ (find-file selection)))))
+
+(global-set-key (kbd "C-c SPC") 'my-switch-to-thing)
+#+END_SRC
+
+My internal notes on the development of this thing: id:2024-03-08-Unified-Interface-for-Switching-Contexts-Switch-to-Thing
 
 * hydra
 
