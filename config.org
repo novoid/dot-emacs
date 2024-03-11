@@ -12813,7 +12813,7 @@ Activate Babel languages:
    '(
 ;     (ipython . t)
      (python . t)
-     (ruby . t)
+;     (ruby . t)
      (gnuplot . t)
      (shell . t)
      (org . t)
@@ -12822,6 +12822,7 @@ Activate Babel languages:
      (ditaa . t)
      (dot . t)
      (plantuml . t)
+;     (perl . t)
      ))
   )
 #+END_SRC
@@ -17101,7 +17102,7 @@ This actually replaces many things I used for jumping:
 
 (global-set-key (kbd "C-c SPC") 'my-switch-to-thing)
 #+END_SRC
-
+ 
 My internal notes on the development of this thing: id:2024-03-08-Unified-Interface-for-Switching-Contexts-Switch-to-Thing
 
 * hydra
