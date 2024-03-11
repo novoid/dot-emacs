@@ -2682,6 +2682,25 @@ multi-buffer setup.
     ))
 #+END_SRC
 
+** my-number-or-float()
+
+| 2024-03-11 | added to my config for =my-switch-to-thing()= |
+
+According to my GPT4All LLM, =number-or-float= should be part of the
+default Emacs setup. However, on my host(s), it isn't. So I define
+this here.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-number-or-float (x)
+  "Return a number or float, or nil if no numeric value was found."
+  (if (numberp x)
+      x
+    (let ((num (string-to-number x)))
+      (if num
+          num
+        nil))))
+#+END_SRC
+
 * Spell checking
 
 «[[https://www.emacswiki.org/emacs/FlySpell][Flyspell]] enables on-the-fly spell checking in Emacs by the means of a
@@ -17049,7 +17068,7 @@ This actually replaces many things I used for jumping:
     (pcase selection
       ((pred (lambda (sel) (member sel eyebrowse))) 
              ;; may be a bit hacky but this trick converts the string selection that looks like "3:my config" to the number 3:
-             (eyebrowse-switch-to-window-config (number-or-float selection)))
+             (eyebrowse-switch-to-window-config (my-number-or-float selection)))
       ((pred (lambda (sel) (member sel buffers))) (switch-to-buffer selection))
       ((pred (lambda (sel) (member sel bookmarks))) (bookmark-jump selection))
       ((pred (lambda (sel) (member sel directories))) (dired selection))
