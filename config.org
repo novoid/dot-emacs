@@ -16157,10 +16157,33 @@ Integration for sting/jackson: see id:2023-11-18-System-whisper-in-Emacs-einbind
   :config
 
   (when (my-system-is-sting)
-      (setq whisper-install-directory (concat my-user-emacs-directory "bin/")
-            whisper-model "base"
+      ;; old?  (setq whisper-install-directory (concat my-user-emacs-directory "bin/")
+      ;; old?        whisper-model "base"
+      ;; old?        whisper-language "de"
+      ;; old?        whisper-translate nil)
+
+      (setq whisper-model "large"
+            ;whisper-model "small"
+            whisper-use-threads 6
             whisper-language "de"
-            whisper-translate nil)
+            whisper-translate nil
+            whisper-install-whispercpp nil
+            whisper--ffmpeg-input-device "default"
+            ;whisper-insert-text-at-point nil
+            )
+    
+      ;; adaptations from https://github.com/natrys/whisper.el/wiki/Setup-to-use-whisper%E2%80%90ctranslate2-instead-of-whisper.cpp
+      (defun whisper--ctranslate2-command (input-file)
+      `("/home/vk/src/external_compilations/openai-whisper/venv/bin/whisper"
+        ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
+        "--task" ,(if whisper-translate "translate" "transcribe")
+        "--model" ,whisper-model
+        "--language" ,whisper-language
+        "--fp16" "False"
+        "--output_dir" "/tmp/"
+        "--output_format" "txt"
+        ,input-file))
+
   )
 
   (when (my-system-is-jackson)
