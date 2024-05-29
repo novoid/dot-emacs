@@ -12995,12 +12995,13 @@ re-direct stderr to stdout and add an additional line:
       )
 #+END_SRC
 
-*** DISABLED ob-async: asynchronous babel execution
+*** ob-async: asynchronous babel execution
 
 https://github.com/astahlman/ob-async
 - not yet available as a package
-- [ ] re-check availability
+- [X] re-check availability
   - 2018-06-27 no package in my sources yet (again)
+  - 2024-04-12 package found; let's try again
 #+BEGIN_SRC emacs-lisp
 (use-package ob-async
   :ensure t
@@ -13008,6 +13009,9 @@ https://github.com/astahlman/ob-async
   (add-to-list 'org-ctrl-c-ctrl-c-hook 'ob-async-org-babel-execute-src-block)
   )
 #+END_SRC
+
+#+RESULTS:
+: t
 
 *** PlantUML
 :PROPERTIES:
