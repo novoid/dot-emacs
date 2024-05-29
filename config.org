@@ -4873,6 +4873,20 @@ it.
 )
 #+END_SRC
 
+** locate
+
+| 2024-05-29 | Maybe I like to use "locate" within Emacs from time to time |
+
+Make =locate= command case insensitive: https://www.emacswiki.org/emacs/locate
+#+BEGIN_SRC emacs-lisp
+(defun my-locate-make-command-line (search-string)
+  "Make an insensitive locate command line"
+  (list locate-command "-i" search-string))
+
+(when (my-system-type-is-gnu)
+  (setq locate-make-command-line 'my-locate-make-command-line))
+#+END_SRC
+
 * Email
 :PROPERTIES:
 :CREATED:  [2019-12-19 Thu 14:37]
