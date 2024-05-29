@@ -9813,13 +9813,13 @@ Definitions of non-work files: (only used in cron-job shell script)
               ,(concat my-org-files-path "finanzen_behoerden_versicherungen.org")
               ,(concat my-org-files-path "bwg.org")
               ,(concat my-org-files-path "contacts.org")
-              ;;,(concat my-org-files-path "foodandbeverages.org")
               ,(concat my-org-files-path "hardware.org")
               ,(concat my-org-files-path "tugraz.org")
               ,(concat my-org-files-path "fhsp.org")
               ,(concat my-org-files-path "notes.org")
               ,(concat my-org-files-path "public_voit.org")
               ,(concat my-org-files-path "errors.org")
+              ;;,(concat my-org-files-path "foodandbeverages.org")
               ;;,(concat my-org-files-path "movies.org")
               ;;,(concat my-org-files-path "references.org")
               ;;"c:/Users/karl.voit/src/lazyblorg/lazyblorg.org")
@@ -10085,11 +10085,36 @@ See =org-agenda-sorting-strategy= and =user-defined-up= used in my agenda settin
        ;; pending deadlines last
        ((bh/agenda-sort-test-num 'bh/is-pending-deadline '< a b))
 
+;; 2024-03-07 test ;;       ;; non-deadline and non-scheduled items next
+;; 2024-03-07 test ;;       ((bh/agenda-sort-test 'bh/is-not-scheduled-or-deadline a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; deadlines for today next
+;; 2024-03-07 test ;;       ((bh/agenda-sort-test 'bh/is-due-deadline a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; scheduled items for today next
+;; 2024-03-07 test ;;       ((bh/agenda-sort-test 'bh/is-scheduled-today a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; late scheduled items next
+;; 2024-03-07 test ;;       ;;   ((bh/agenda-sort-test-num 'bh/is-scheduled-late '> a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; late deadlines next
+;; 2024-03-07 test ;;       ;;   ((bh/agenda-sort-test-num 'bh/is-late-deadline '< a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; late deadlines next
+;; 2024-03-07 test ;;       ((bh/agenda-sort-test-num 'bh/is-late-deadline '< a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; late scheduled items next
+;; 2024-03-07 test ;;       ((bh/agenda-sort-test-num 'bh/is-scheduled-late '< a b))
+;; 2024-03-07 test ;;
+;; 2024-03-07 test ;;       ;; pending deadlines last
+;; 2024-03-07 test ;;       ((bh/agenda-sort-test-num 'bh/is-pending-deadline '< a b))
+
        ;; finally default to unsorted
        (t (setq result nil)))
       result))
 
 #+END_SRC
+
 
 Removes things tagged with "lp" or "reward" when typing "/ RET" in agenda
 : From: http://doc.norang.ca/org-mode.html#CustomAgendaViewFilteringContext
@@ -13767,7 +13792,7 @@ This seems to be a pre-requisite to pdf-tools.
 (use-package org-pdfview
   ;:if (my-system-type-is-gnu)
   :ensure t
-  :defer 110
+;  :defer 110
   :config
 )
 #+END_SRC
@@ -13789,7 +13814,7 @@ The package:
 (use-package pdf-tools
   ;:if (my-system-type-is-gnu)
   :ensure t
-  :defer 120
+;  :defer 120
   :pin manual ;; manually update (Source: http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/ )
   :config
   (pdf-tools-install)
