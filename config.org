@@ -12860,7 +12860,7 @@ Activate Babel languages:
      (ditaa . t)
      (dot . t)
      (plantuml . t)
-;     (perl . t)
+     (perl . t)
      ))
   )
 #+END_SRC
