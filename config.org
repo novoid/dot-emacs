@@ -3023,6 +3023,12 @@ interface of Magit.
 (bind-key "g" #'magit-status my-map)
 #+END_SRC
 
+[2024-05-18 Sat] [[https://irreal.org/blog/?p=12179][• Renaming Git Files With Emacs Dired | Irreal]]:
+#+BEGIN_SRC emacs-lisp
+  (setq dired-vc-rename-file t)
+#+END_SRC
+
+
 I got this code from [[https://stackoverflow.com/questions/48879892/magit-status-in-a-new-frame-and-delete-frame-on-exit][that stackoverflow page]] which basically puts
 =magit-status= in a separate Emacs frame (and closes it):
 
