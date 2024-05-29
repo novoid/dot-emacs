@@ -4016,6 +4016,7 @@ Dired+ has [[https://www.emacswiki.org/emacs/DiredPlus][lots of useful features]
   (diredp-toggle-find-file-reuse-dir 1) ;; https://www.emacswiki.org/emacs/DiredReuseDirectoryBuffer
   (remove-hook 'dired-after-readin-hook 'diredp-nb-marked-in-mode-name) ;; better performance on dired buffer start
   (remove-hook 'dired-mode-hook         'diredp-nb-marked-in-mode-name) ;; better performance on dired buffer start
+  (setq diredp-image-preview-in-tooltip 400) ;; 2024-03-23: somehow, it only shows a black rectangle without content although I've loaded dired-image+ below
 )
 #+END_SRC
 
