@@ -4852,6 +4852,23 @@ re-implementation of my [[https://github.com/novoid/date2name][date2name]]:
 )
 #+END_SRC
 
+** DISABLED casual-dired
+
+| 2024-05-11 | testing | 
+
+- I've read
+  http://yummymelon.com/devnull/announcing-casual-dired---an-opinionated-porcelain-for-the-emacs-file-manager.html
+  and found https://github.com/kickingvegas/casual-dired pretty cool. I'll add it to my hydra for now.
+- *requires Emacs 29.1* → re-try later
+  - [ ] add =casual-dired-tmenu= to my dired hydra 
+
+#+BEGIN_SRC emacs-lisp
+(use-package casual-dired
+  :ensure t
+  :defer 110
+)
+#+END_SRC
+
 ** DISABLED dired-show-readme
 :PROPERTIES:
 :CREATED:  [2020-04-11 Sat 10:43]
