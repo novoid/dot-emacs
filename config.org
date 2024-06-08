@@ -6842,7 +6842,7 @@ bind to my-map U
   (bind-key "U" 'my-insert-orgmode-url-from-clipboard my-map)
 #+END_SRC
 
-*** my-url-linkify() → my-map u
+*** my-add-description() → my-map u
 
 Replaces URL with Org-mode link including description
 - see id:2014-03-09-inbox-to-bookmarks
@@ -6850,6 +6850,8 @@ Replaces URL with Org-mode link including description
 - see also: http://orgmode.org/worg/org-hacks.html#orgheadline54 (not this method here!)
 
 A similar approach can be found in https://github.com/alphapapa/org-web-tools.
+
+- 2024-06-08: I've extended =my-url-linkify()= with =my-add-org-id-description()= to =my-add-description()=.
 
 #+BEGIN_SRC emacs-lisp
   (defun my-www-get-page-title (url)
@@ -6912,9 +6914,52 @@ Adapted code from: http://ergoemacs.org/emacs/elisp_html-linkify.html"
 
 #+END_SRC
 
+required for =my-add-description()=: adding descriptions to Org-mode id-links:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-get-heading-title-of-id-link-at-point ()
+"when point is on an id: link, it returns the heading title of that referred heading.
+ FIXXME: check if there is a link at point"
+  (save-excursion
+    (org-open-at-point);; visit id link under point
+    (nth 4 (org-heading-components));; retrieve heading title
+  );save-excursion
+)
+
+(defun my-add-org-id-description ()
+"If point is on an id: link without a description (no check included!), 
+ the description gets set to the heading title of that linked heading."
+;;  (interactive "r");; results in: funcall-interactively: Wrong number of arguments: (lambda nil "If point is on an id: link without a description (no check included!), the description gets set to the heading title of that linked heading." (interactive "r") (let ((myheadingtitle (my-get-heading-title-of-id-link-at-point))) (message (concat "Title: " myheadingtitle)) (setq current-prefix-arg '(4)) (org-insert-link nil nil myheadingtitle))), 2
+  (interactive )
+  (let (
+        (myheadingtitle (my-get-heading-title-of-id-link-at-point))
+        )
+    (message (concat "Title: " myheadingtitle));; debug output
+    (org-insert-link nil nil myheadingtitle);; add description
+  );let
+);defun
+#+END_SRC
+
+The central function that determines if we need to add a description
+to an URL or to an id-link:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-add-description ()
+"If point is on an URL, it adds the title of the web page as link description.
+Otherwise, an id: link is assumed and the description will be the title of the corresponding heading of that id-link."
+  (interactive)
+  (if (thing-at-point-url-at-point) 
+     (progn (message "at an URL.")
+      (my-url-linkify))
+     (progn (message "Not at an URL.")
+      (my-add-org-id-description)
+     ))
+)
+#+END_SRC
+
 Bind the key:
 #+BEGIN_SRC emacs-lisp
-  (bind-key "u" 'my-url-linkify my-map)
+  (bind-key "u" 'my-add-description my-map)
 #+END_SRC
 
 *** my-org-region-to-property() → my-map p
@@ -8852,6 +8897,8 @@ Preserve the hierarchy when archiving: [[https://fuco1.github.io/2017-04-20-Arch
 #+END_SRC
 
 ** Searching, querying
+
+- see also: id:2024-03-09-my-switch-to-thing
 
 *** helm-org
 
@@ -17103,6 +17150,9 @@ Development heading: id:2023-02-05-Elisp-fuer-inbox-short-S2T
 #+END_SRC
 
 ** my-switch-to-thing → C-c SPC
+:PROPERTIES:
+:ID:       2024-03-09-my-switch-to-thing
+:END:
 
 | 2024-03-09 | adapted from blog article and instantly fell in love |
 
