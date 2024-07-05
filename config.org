@@ -17436,7 +17436,7 @@ visualization is brilliant.
   ^^Rifle                   ^^Profiler          ^^Bookmarks                    ^^MISC                    Ex.:    #A TODO :foo:bar: !unwanted
   ^^────────────────────────^^──────────────────^^─────────────────────────────^^────────────────
   rifle _c_urrent buffer    _p_rofile CPU       _m_ark new bookmark  C-x r m   _d_ired-jump
-  rifle _o_pen buffers      _R_eport            jump _b_ookmark      C-x r b
+  rifle _o_pen buffers      profiler _R_eport   jump _b_ookmark      C-x r b
   rifle _a_genda files      profiler sto_P_     _l_ist bookmarks     C-x r l
   rifle whole _O_rg dir     ^^                  ^^
   ^^                        ^^                  dogears-_g_o
