@@ -8402,12 +8402,12 @@ My general templates:
            "* TODO %?        :blog:%^g\n:PROPERTIES:\n:CREATED: %U\n:ID: %^{prompt}\n:END:\n\n-----------------------\n- [ ] link on older/similar articles?\n- [ ] link on tag pages?\n\n" :empty-lines 2)
           ("a" "anzuschauen" entry (file+headline ,(concat my-org-files-path "misc.org") "Anzuschauen")
            "* TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n%x\n\n" :empty-lines 2)
-          ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
-           ,my-capture-template-next :empty-lines 2)
+;;          ("B" "Besorgung" entry (file+headline ,(concat my-org-files-path "hardware.org") "Besorgungen")
+;;           ,my-capture-template-next :empty-lines 2)
 #+END_SRC
 
 Hardware templates:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
           ("h" "hardware")
           ("hs" "sting" entry (file+olp ,(concat my-org-files-path "hardware.org") "Inventar" "intel NUC (<2015-07-25 Sat>, € 486.84, e-tec)" "shorts")
            ,my-capture-template-next :empty-lines 2)
@@ -8422,7 +8422,7 @@ Hardware templates:
 #+END_SRC
 
 Templates for my home:
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
           ("w" "Breitenweg")
           ("ws" "Breitenweg shorts" entry (file+headline ,(concat my-org-files-path "bwg.org") "shorts")
            ,my-capture-template-next :empty-lines 2)
@@ -8433,22 +8433,24 @@ Templates for my home:
 
 Company templates:
 #+BEGIN_SRC emacs-lisp
-          ("r" "RISE")
-    ("rs" "shorts" entry (file+headline ,(concat my-org-files-path "business.org") "shorts")
+          ("B" "Business")
+          ("Bs" "shorts" entry (file+headline ,(concat my-org-files-path "business.org") "shorts")
            ,my-capture-template-next :empty-lines 2)
-          ("re" "event" entry (file+headline ,(concat my-org-files-path "business.org") "Events")
+          ("Be" "event" entry (file+headline ,(concat my-org-files-path "business.org") "Events")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
-          ("rb" "RB")
-          ("rbs" "RB short" entry (id "2021-07-23-shorts")
+          ("Bo" "RB OpenPGP sammeln" entry (id "2021-07-16-OpenPGP-Keys-sammeln")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
-          ("rbm" "RB meeting" entry (id "2021-07-23-Meetings")
+          ("Bb" "RB")
+          ("Bbs" "RB short" entry (id "2021-07-23-shorts")
            "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
-          ("ro" "RB onboarding" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rbos-heading)
-           ,my-business-rbo-template :empty-lines 2)
-          ("rO" "RB offboarding" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rbos-heading)
+          ("Bbm" "RB meeting" entry (id "2021-07-23-Meetings")
+           "* %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n" :empty-lines 2)
+;;          ("Bo" "RB onboarding" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rbos-heading)
+;;           ,my-business-rbo-template :empty-lines 2)
+          ("BbO" "RB offboarding" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rbos-heading)
            ,my-business-rboff-template :empty-lines 2)
-          ("rs" "RB S/NOTIFY" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rs-heading)
-           ,my-business-rs-template :empty-lines 2)
+;;          ("Bs" "RB S/NOTIFY" entry (file+headline ,(concat my-org-files-path "business.org") ,my-business-rs-heading)
+;;           ,my-business-rs-template :empty-lines 2)
 #+END_SRC
 
 Template for my lecture:
