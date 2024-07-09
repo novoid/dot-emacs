@@ -143,6 +143,9 @@ Here are my function-key-mappings that are included in most hydra help screens:
 #+END_SRC
 
 * General settings
+:PROPERTIES:
+:CREATED:  [2024-06-12 Wed 18:51]
+:END:
 
 Here, I do set some very general settings for my GNU/Emacs.
 
@@ -313,6 +316,7 @@ Introduced with Emacs 28.1: id:2022-04-06-Emacs-28-dot-1
   
 )
 #+END_SRC
+
 
 ** DISABLED Guru mode
 
