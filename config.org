@@ -1655,11 +1655,16 @@ http://stackoverflow.com/questions/4506249/how-to-make-emacs-org-mode-open-links
 
 #+BEGIN_SRC emacs-lisp
 (setq firefox-path (my-eval-if-binary-or-warn "firefox"))
+(setq librewolf-path (my-eval-if-binary-or-warn "librewolf"))
 (setq chrome-path (my-eval-if-binary-or-warn "google-chrome"))
 
 (cond
  ((my-system-type-is-darwin)
   (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+  )
+ (librewolf-path
+  (setq browse-url-browser-function 'browse-url-generic
+	browse-url-generic-program librewolf-path)
   )
  (firefox-path
   (setq browse-url-browser-function 'browse-url-generic
