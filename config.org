@@ -2226,6 +2226,9 @@ FIXXME: identify crux commands that I added to my setup before and maybe replace
 - https://github.com/minad/marginalia
 
 #+BEGIN_SRC emacs-lisp
+;; 2024-07-27 this package has issues on host kva
+(when (or (my-system-is-jackson) (my-system-is-sting))
+
 (use-package marginalia
   :ensure t
  ; :defer 110
@@ -2238,6 +2241,7 @@ FIXXME: identify crux commands that I added to my setup before and maybe replace
   ;; the mode gets enabled right away. Note that this forces loading the
   ;; package.
   (marginalia-mode)
+)
 )
 #+END_SRC
 
