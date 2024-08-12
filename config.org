@@ -1975,9 +1975,10 @@ the same coding systems as Emacs."
     ad-do-it))
 #+END_SRC
 
-** Entering emojis
+** DISABLED Entering emojis
 
 | 2021-12-20 | Idea from [[http://www.masteringemacs.org/article/inserting-emoji-input-methods][Inserting Emoji with Input Methods - Mastering Emacs]] |
+| 2024-07-27 | disabled because I don't use it and host kva has an issue      |
 
 You need to type =C-u C-\=, enter "Emoji" (TAB-completion works) and
 then one of the defined emojis below such as =:P= or =:thumb:=.
