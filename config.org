@@ -8511,14 +8511,43 @@ END of the templates:
         )
 #+END_SRC
 
-*** DISABLED Moving web bookmarks from =inbox.org= to =notes.org= → my-map b
+*** Moving web bookmarks from =inbox.org= to =notes.org= → my-map b
 
-| 2021-07-06 | Not used for quite some time → disabled |
+| 2021-07-06 | Not used for quite some time because my input format changed → disabled    |
+| 2024-08-17 | Email from Serghei with much better code → let's add it here for reference |
 
 Smart moving bookmark headings from =inbox.org= to =notes.org=
 - see id:2014-03-09-inbox-to-bookmarks or read http://www.karl-voit.at/2014/08/10/bookmarks-with-orgmode/
 
-#+BEGIN_SRC emacs-lisp
+Somehow around 2019 or so, the format of the captured headings changed and so far, I did not update my code to embrace this change.
+#+BEGIN_EXAMPLE
+,* BOOKMARK [[https://karl-voit.at][my web page]] → example for old capture format
+:PROPERTIES:
+:CREATED:  [2024-08-17 Sat 11:34]
+:END:
+
+,* BOOKMARK my web page → example for my current (2024-08-17) capture format
+:PROPERTIES:
+:CREATED:  [2024-08-17 Sat 11:34]
+:END:
+
+https://karl-voit.at
+
+#+END_EXAMPLE
+
+The resulting format in my =notes.org= looks like:
+#+BEGIN_EXAMPLE
+,** my web page   :some:interactively:added:tags:
+:PROPERTIES:
+:CREATED:  [2024-08-17 Sat 11:34]
+:END:
+
+https://karl-voit.at
+
+#+END_EXAMPLE
+
+Here is my outdated original code:
+#+BEGIN_SRC emacs-lisp :tangle no
   (defun my-save-bookmark()
     "removes TODO/Bookmark, (NOT YET: FIXXME: retrieves title),
 move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging process"
@@ -8576,6 +8605,115 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
     )
 
   (bind-key "b" 'my-save-bookmark my-map)
+#+END_SRC
+
+Serghei's much better and more flexible code from https://github.com/sergeyklay/.emacs.d/blob/dae68d0ed60f8d5d9e0a7298c6f833eb24494242/init.el#L490-L578
+#+BEGIN_SRC emacs-lisp
+(defun my-org-switch-to-buffer (filename)
+  "Switch to the buffer associated with the given Org FILENAME.
+
+If a buffer visiting FILENAME is already open, switch to it.  If
+the buffer does not exist, open the FILENAME from the '~/org'
+directory and switch to the newly created buffer.
+
+FILENAME should be the name of the Org file without any directory
+path.  The file is expected to reside in the '~/org' directory.
+"
+  (switch-to-buffer
+   (or (get-buffer filename)
+       (find-file-noselect (concat my-org-dir filename)))))
+
+(defun my-org-move-bookmark-to-notes()
+  "Move and format mobile bookmark heading.
+
+This function is designed to integrate with workflows where you
+use a mobile app for capturing notes. These notes are
+synchronized into a file specified by `org-mobile-inbox-for-pull'
+using `org-mobile-pull'. The primary purpose of this function is
+to move bookmarks, which you add on your mobile device and which
+end up in the `org-mobile-inbox-for-pull' file, into 'notes.org'
+while formatting them according to my preferred style. I have
+accounted for the specific formats used by MobileOrg and Beorg in
+this implementation, but if you encounter issues, please let me
+know so I can address them.
+
+Steps performed by this function:
+
+1. Remove unwanted keywords from beggining of the heading:
+   - 'NEXT Bookmark'
+   - 'TODO Bookmark'
+   - 'NEXT'
+   - 'Bookmark'
+   - 'BOOKMARK'
+   - 'TODO'
+2. Convert the heading to a second-level heading if needed.
+3. Insert a creation date property under the heading.
+4. Move the cleaned and formatted bookmark to the end of 'notes.org'.
+5. Reapply tags to the previous heading in 'notes.org'.
+
+This function is adapted from an implementation by Karl Voit, and
+has been reworked to enhance its readability, maintainability,
+and alignment with my specific workflow. For origin see:
+https://karl-voit.at/2014/08/10/bookmarks-with-orgmode/"
+  (interactive)
+  (save-excursion
+    ;; Use `org-back-to-heading' instead `beginning-of-line' here
+    ;; just because the cursor may not be on the heading, but below it,
+    ;; in a block.
+    (org-back-to-heading t)
+    ;; Save the starting point and narrow to the current heading
+    (let ((start (point)))
+      (outline-next-visible-heading 1)
+      (save-restriction
+        (narrow-to-region start (point))
+
+        ;; Step 1: Clean up heading by removing unwanted keywords
+        (goto-char (point-min))
+        (when (re-search-forward
+               (concat "\\*\\s-+\\(\\(\\(NEXT\\|TODO\\)\\s-+\\)?"
+                       "Bookmark\\|BOOKMARK\\|NEXT\\|TODO\\)\\s-+")
+               nil t)
+          (replace-match "* " nil nil))
+
+        ;; Step 2: Ensure the heading is at the second level
+        (goto-char (point-min))
+        (when (looking-at "\\*+")
+          (let ((current-level (- (match-end 0) (match-beginning 0))))
+            (cond
+             ; if level 1, add one more "*"
+             ((= current-level 1) (insert "*"))
+             ; if level > 2, remove excess "*"
+             ((> current-level 2) (delete-char (- current-level 2))))))
+
+        ;; Step 3: Insert creation date property
+        (unless (org-entry-get nil "CREATED")
+          (goto-char (point-min))
+          ;; Check if the date already persist
+          (if (re-search-forward org-ts-regexp-inactive nil t)
+              (let ((timestamp (match-string-no-properties 0)))
+                (org-back-to-heading)
+                (org-entry-put nil "CREATED" timestamp)
+                ;; Move the cursor to the end of the metadata,
+                ;; including the end of the :PROPERTIES block and remove old
+                ;; date stamp
+                (org-end-of-meta-data t)
+                (when (re-search-forward (regexp-quote timestamp) nil t)
+                  (replace-match "")))
+            ;; Otherwise use current date
+            (org-entry-put nil "CREATED" (format-time-string "[%Y-%m-%d %a %H:%M]"))))
+
+        ;; Step 4: Cut the current heading and move it to the 'notes.org' file
+        (org-cut-subtree)
+        (my-org-switch-to-buffer "notes.org")
+        (end-of-buffer)
+        (newline)
+        (org-paste-subtree)  ; Paste the heading into the 'notes.org' file
+
+        ;; Step 5: Reapply tags to the previous heading in the 'notes.org' file
+        (org-back-to-heading t)
+        (org-set-tags-command)))))
+
+  (bind-key "b" 'my-org-move-bookmark-to-notes my-map)
 #+END_SRC
 
 ** Mobile capture
