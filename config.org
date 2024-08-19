@@ -8621,7 +8621,7 @@ path.  The file is expected to reside in the '~/org' directory.
 "
   (switch-to-buffer
    (or (get-buffer filename)
-       (find-file-noselect (concat my-org-dir filename)))))
+       (find-file-noselect (concat my-org-files-path filename)))))
 
 (defun my-org-move-bookmark-to-notes()
   "Move and format mobile bookmark heading.
