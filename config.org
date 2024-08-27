@@ -17825,7 +17825,7 @@ Not org related but might be candidates as well:
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   ^^C-c C-x b  org-tree-to-indirect-buffer (focus) _2_
     _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
-    ^^                               ^^                               _W_eather Graz                  S  my-synonym-current-word
+    remove _B_usiness from agenda    ^^                               _W_eather Graz                  S  my-synonym-current-word
     ^^                               ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
     ^^                               ^^                               org-_D_ecrypt-entry
     ^^                               ^^                               my-_t_oggle-checkbox-add-comment
@@ -17904,6 +17904,8 @@ Not org related but might be candidates as well:
     ("2" org-tree-to-indirect-buffer nil)
 
     ("D" org-decrypt-entry nil)
+
+    ("B" (lambda () (interactive) (setq org-agenda-files (delete "/home/vk/org/business.org" org-agenda-files))) nil)
 
     ("q" nil "quit")
 
