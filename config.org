@@ -7616,6 +7616,8 @@ property ignores the checkboxes.
 Following function makes sure that these things are set properly (and
 a bit more):
 
+2024-09-08: this function was improved by Sergey: https://github.com/sergeyklay/.emacs.d/blob/3da318bbc2e34a528fae941c42dfafc08177e514/init.el#L432-L479
+
 #+BEGIN_SRC emacs-lisp
 (defun my-mark-as-project ()
 "This function makes sure that the current heading has
@@ -7625,31 +7627,27 @@ a bit more):
 (4) a leading progress indicator
 (5) expand a yankpad/yasnippet element which is inserted at the top of the body of the heading"
     (interactive)
+    ; Try to move to a heading if not already there
+    (unless (org-at-heading-p)
+      (org-back-to-heading t)
+      (unless (org-at-heading-p)
+        (user-error
+         "No Org heading found. Please place the cursor at or near a heading.")))
+
     (org-toggle-tag "project" 'on)
     (org-set-property "COOKIE_DATA" "todo recursive")
     (my-id-get-or-generate)  ;; make sure it has an ID
-    (org-back-to-heading t)
+
     (let* ((title (nth 4 (org-heading-components)))
-           (keyword (nth 2 (org-heading-components))))
-       (when (and (bound-and-true-p keyword) (string-prefix-p "[" title))
-           (message "TODO keyword and progress indicator found")
-           )
-       (when (and (not (bound-and-true-p keyword)) (string-prefix-p "[" title))
-           (message "no TODO keyword but progress indicator found")
-           (forward-whitespace 1)
-           (insert "TODO ")
-           )
-       (when (and (not (bound-and-true-p keyword)) (not (string-prefix-p "[" title)))
-           (message "no TODO keyword and no progress indicator found")
-           (forward-whitespace 1)
-           (insert "TODO [/] ")
-           )
-       (when (and (bound-and-true-p keyword) (not (string-prefix-p "[" title)))
-           (message "TODO keyword but no progress indicator found")
-           (forward-whitespace 2)
-           (insert "[/] ")
-           )
-       )
+            (keyword (nth 2 (org-heading-components))))
+   
+       ;; Add 'TODO' keyword if missing
+       (unless keyword (org-todo "TODO"))
+   
+       ;; Ensure that the heading starts with a progress indicator '[/]'
+       (unless (string-match-p "\\[.*\\]" title)
+         (org-edit-headline (concat "[/] " title))))
+
      (search-forward "
 
 ");; goto the first paragraph of the body
@@ -7673,6 +7671,12 @@ I found following interesting elisp sources for implementing this function:
 You also might be interested to read [[https://karl-voit.at/2020/08/14/project-mgt-draft][A Draft Workflow for Advanced
 Project Management Using Org Mode and Org Edna]] where this is a part of
 the proposed project management workflow.
+
+---------------
+
+Serhey wrote a function that checks for missing COOKIE_DATA
+properties, if you need that:
+https://github.com/sergeyklay/dotfiles/commit/ac12f1b1916f07069879bda9269d51da56b2d935
 
 *** my-org-tree-to-indirect-buffer
 :PROPERTIES:
