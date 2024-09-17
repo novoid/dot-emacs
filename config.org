@@ -10048,9 +10048,31 @@ be able to refresh the super-agenda (which was not possible in my
 complex setup: refreshed agenda was not org-super-agenda but normal
 agenda).
 
-#+BEGIN_SRC emacs-lisp
+OUTDATED VERSION with 2024-09-17:
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
 #+END_SRC
+
+New version as of 2024-09-17: I maintain the list of (potential)
+org-agenda-files above. However, I may add some files that are not
+existing (on purpose!) on all of my hosts. My org-agenda-files list
+contains only the existing files from that manually curated list:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-get-existing-agenda-files (files)
+  "Return a list of existing Org-mode agenda file paths, omitting non-existing on that host and write a warning."
+  (let ((existing-files nil))
+    (dolist (file files)
+      (if (file-readable-p file)
+          (progn
+            (message "Found existing agenda file: %s" file)
+            (add-to-list 'existing-files file))
+        (message "Omitting non-existing agenda file: %s" file)))
+    existing-files))
+
+(setq org-agenda-files (my-org-get-existing-agenda-files (append my-work-agenda-files my-nonwork-agenda-files)))
+#+END_SRC
+
 
 OLD:
 
