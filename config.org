@@ -8750,6 +8750,7 @@ binding brings me the most current captured items into my =inbox.org=:
   (defun my-merge-mobileorg-inbox-files-to-mobileorg-file () 
     "Merges individual inbox files from different hosts and appends their content to the mobileorg.org file." 
     (let ((my-mobileorg-files `( ,(concat my-org-files-path "mobileorg-pixel4a.org") 
+                                 ,(concat my-org-files-path "mobileorg-pixel8.org") 
                                  ,(concat my-org-files-path "mobileorg-dylan.org")
                                  ,(concat my-org-files-path "mobileorg-whisper.org")
                                  )) 
