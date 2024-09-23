@@ -18236,6 +18236,15 @@ Not org related but might be candidates as well:
                   (call-interactively #'org-attach-dired-to-subtree)))
                   nil)
 
+  ("u" (lambda ()
+                (interactive)
+                ;; from https://emacs.dyerdwelling.family/emacs/20240918092253-emacs--adding-disk-usage-reporting-to-emacs-dired-mode/
+                (let ((current-dir (dired-get-file-for-visit)))
+                    (if (file-directory-p current-dir)
+                        (dired-do-async-shell-command "du -hc" nil (list current-dir))
+                        ;; 2024-09-18: duu command doesn't work here as intended: (dired-do-async-shell-command "du -sh * | sort -h" nil (list current-dir))
+                      (message "The current point is not a directory.")))) nil)
+
   ("q" nil "quit")
 
 ;  ("s" (setq dired-listing-switches "-alS --block-size=\'1") nil)
