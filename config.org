@@ -18176,7 +18176,7 @@ Not org related but might be candidates as well:
   _(_ toggle details    ^^                    ^^                 c  compress
   _p_review toggle      ^^                    ^^                 Z  dired-do-compress (=unp)
   ^^                    ^^                    ^^
-  ^^                    ^^                    ^^                 L  my-dired-insert-lfile-_l_ink-list-to-other-org-window
+  d_u_ -hc              ^^                    ^^                 _L_  my-dired-insert-lfile-link-list-to-other-org-window
   ^^                    ^^                    ^^                 attach to org: _3_ symlink  _4_ ln  _5_ cp  _6_ mv
   ")
 
