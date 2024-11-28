@@ -281,7 +281,8 @@ I'm not using abbrev mode and get annoyed by its questions:
 #+END_SRC
 
 2022-01-16: larger columns for profiler reports:
-#+BEGIN_SRC emacs-lisp
+2024-11-28: DISABLED because of: =profiler-report-header-line-format: Wrong type argument: listp, " "= on =profiler-report= → format may have changed. New format seems OK and does not truncate columns too much → leave it.
+#+BEGIN_SRC emacs-lisp :tangle no
  (setq profiler-report-cpu-line-format '((70 left)
 					  (14 right ((9 right) (5 right))))) 
 #+END_SRC
@@ -3014,6 +3015,7 @@ interface of Magit.
 
   :if (and (my-eval-if-binary-or-warn "git") (my-system-type-is-gnu))
   :ensure t ;; install package if not found OR: (setq use-package-always-ensure t)
+  :defer 20 ;;110
   ;;  :bind (:map magit-status-mode-map ("q" magit-quit-session))
   :config ;; executed after loading package
 
@@ -6079,6 +6081,7 @@ Here is a list of file extensions that should be openend outside of Emacs:
   ;;(add-to-list 'org-file-apps '("\\.odp" . system))
   ;;(add-to-list 'org-file-apps '("\\.odp" . mailcap))
   (add-to-list 'org-file-apps '("\\.odp" . "open %s"))
+  (add-to-list 'org-file-apps '("\\.pdf" . "okular %s")) ;; 2024-10-04: to prevent PDFs being opened as text buffers ;-)
   ;;(add-to-list 'org-file-apps '("\\.odp" . "/usr/bin/xdg-open %s"))
 #+END_SRC
 
@@ -7497,6 +7500,7 @@ found in the combined lists of:
    Some parts were copied and adapted from org-hugo-slug
    from https://github.com/kaushalmodi/ox-hugo (GPLv3)."
   (let* (;; Remove "<FOO>..</FOO>" HTML tags if present.
+         (case-fold-search nil) ;; see Message-ID: <CAPDoVkjwG9to4Tn7Nt48nDxuiW5JsTq4BfDMzkfXc1Dv1DtpJA@mail.gmail.com> + https://emacs.stackexchange.com/questions/23804/using-replace-regexp-in-string-without-case-folding
          (str (replace-regexp-in-string "<\\(?1:[a-z]+\\)[^>]*>.*</\\1>" "" str))
          ;; Remove URLs if present in the string.  The ")" in the
          ;; below regexp is the closing parenthesis of a Markdown
@@ -7545,6 +7549,10 @@ found in the combined lists of:
 
 History of this function: id:2019-11-14-Org-Project-Management-Workflow
 
+**** DISABLED Test for Ümlaute :noexport:
+:PROPERTIES:
+:ID:       2024-11-27-Test-for-Ümlaute
+:END:
 *** my-id-get-or-generate
 :PROPERTIES:
 :CREATED:  [2019-11-14 Thu 23:37]
@@ -7843,6 +7851,9 @@ updated when one of the following conditions occur:
 #+END_SRC
 
 *** my-mark-block
+:PROPERTIES:
+:CREATED:  [2024-11-20 Wed 15:56]
+:END:
 
 | 2021-07-06 | Marks the current block at point including BEGIN and END lines. |
 
@@ -8609,7 +8620,7 @@ move time-stamp to CREATED, re-file to bookmarks, invoke Org-mode tagging proces
       )
     )
 
-  (bind-key "b" 'my-save-bookmark my-map)
+  (bind-key "B" 'my-save-bookmark my-map)
 #+END_SRC
 
 Serghei's much better and more flexible code from https://github.com/sergeyklay/.emacs.d/blob/dae68d0ed60f8d5d9e0a7298c6f833eb24494242/init.el#L490-L578
@@ -9236,6 +9247,8 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("SEKIDP" . ,(concat my-business-jira-server "/browse/IDPSEK-%s"))
           ("IDPSEK" . ,(concat my-business-jira-server "/browse/IDPSEK-%s"))
           ("BC" . ,(concat my-business-jira-server "/browse/BC-%s"))
+          ("TIPMO" . ,(concat my-business-sp-customer-server "593/TIPMO-%s"))
+          ("TIGW" . ,(concat my-business-sd-server "/browse/TIGW-%s"))
           ))
 #+END_SRC
 
