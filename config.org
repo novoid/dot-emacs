@@ -2219,9 +2219,10 @@ FIXXME: identify crux commands that I added to my setup before and maybe replace
   (("C-c d" . crux-duplicate-current-line-or-region)))
 #+END_SRC
 
-** marginalia - additional info in the minibuffer
+** DISABLED marginalia - additional info in the minibuffer
 
-| 2024-02-20 | Tip from HVR |
+| 2024-02-20 | Tip from HVR                                                                                                                                |
+| 2024-11-22 | disabled because of =marginalia-classify-original-category: Symbol’s function definition is void: marginalia--orig-completion-metadata-get= |
 
 - https://github.com/minad/marginalia
 
