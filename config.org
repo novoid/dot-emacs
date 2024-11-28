@@ -3046,7 +3046,7 @@ interface of Magit.
 I got this code from [[https://stackoverflow.com/questions/48879892/magit-status-in-a-new-frame-and-delete-frame-on-exit][that stackoverflow page]] which basically puts
 =magit-status= in a separate Emacs frame (and closes it):
 
-#+BEGIN_SRC emacs-lisp :result none
+#+BEGIN_SRC emacs-lisp :results none
 
 (bind-key "g" (lambda ()
    """magit-status in a new frame and delete frame on exit"""
