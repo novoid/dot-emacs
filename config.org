@@ -11999,6 +11999,44 @@ item gets temporarily overwritten. You can use this to obfuscate or
           (replace-match new-heading 'fixedcase 'literal))))))
 #+END_SRC
 
+*** show repeater of recurring tasks in agenda
+
+| 2025-01-04| found via Mastodon and applied|
+
+Source: [[https://whhone.com/posts/org-agenda-repeated-tasks/][Repeated Tasks in Org Agenda - Wai Hon's Blog]]
+
+#+BEGIN_SRC emacs-lisp
+(defun my/org-agenda-entry-get-repeat ()
+  "Get the repeat of the current entry with 'org-get-repeat'."
+  (when-let ((marker (org-get-at-bol 'org-marker))
+             (buffer (marker-buffer marker))
+             (pos (marker-position marker)))
+    (with-current-buffer buffer
+      (goto-char pos)
+      (org-get-repeat))))
+
+(defun my/org-agenda-update-repeated-entry()
+  "Update the scheduled leader string to the repeated string.
+  e.g., from 'Scheduled:  to 'Rept .+1d: '."
+  (save-excursion
+    (when-let ((org-repeat (my/org-agenda-entry-get-repeat))
+               (rept-str (format "Rept %4s: " org-repeat))
+               (scheduled-leader (car org-agenda-scheduled-leaders)))
+      (search-backward scheduled-leader)
+      (delete-forward-char (length scheduled-leader))
+      (insert-and-inherit rept-str))))
+
+(defun my/org-agenda-update-repeated-entries ()
+  "Replace all scheduled leaders ('Scheduled:') with the repeaters
+in agenda, if any."
+  (save-excursion
+    (goto-char (point-min))
+    (while (text-property-search-forward 'type "scheduled" t)
+      (my/org-agenda-update-repeated-entry))))
+
+(add-hook 'org-agenda-finalize-hook #'my/org-agenda-update-repeated-entries)
+#+END_SRC
+
 ** iCal
 
 *** DISABLED iCal -> Org
