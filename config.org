@@ -8092,6 +8092,81 @@ simple macro:
    [?\C-c ?\C-n ?\C-c ?\C-p ?\C-e ?\M-x ?i ?s ?e ?a ?r ?c ?h ?- ?b ?a ?c ?k ?w ?a ?r ?d return ?> right ?\C-  ?\C-a escape ?w C-return tab ?\C-y ?  ?b ?l ?o ?c ?k ?e ?r ?: ?  ?p ?r ?i ?v ?a ?t ?e ?  ?a ?p ?p ?o ?i ?n ?t ?m ?e ?n ?t ?\M-x ?o ?r ?g ?- ?s ?e ?t ?- ?p ?r ?o ?p ?e ?r ?t ?y return ?c ?a ?t ?e ?g ?o ?r ?y return ?b ?u ?s ?i ?n ?e ?s ?s return])
 #+END_SRC
 
+*** test area 
+:PROPERTIES:
+:CATEGORY: business
+:END:
+
+- [2024-12-10 Tue] I've got a mismatch here: https://paste.debian.net/1339186/
+  - GNU Emacs 29.4 (build 1, x86_64-pc-linux-gnu, X toolkit, cairo version 1.18.2, Xaw3d scroll bars)
+  - Org mode version 9.7.12 (9.7.12-28c83e @ /etc/profiles/per-user/vk/share/emacs/site-lisp/elpa/org-9.7.12/)
+  - It works with =emacs -q=
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defalias 'foobar2
+   (kmacro "C-c C-n C-c C-p C-e M-x i s e a r c h - b a c k w a r d <return> > <return> <right> C-SPC C-a <escape> w C-<return> M-<right> C-y SPC b l o c k e r :  p r i v a t e   a p p o i n t m e n t M-x o r g - s e t - p r o p e r t y <return> C A T E G O R Y <return> b u s i n e s s <return>"
+(insert "(message \"finished\")")
+)
+)
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(defalias 'foobar
+   (lambda
+   (kmacro "C-c C-n C-c C-p C-e M-x i s e a r c h - b a c k w a r d <return> > <return> <right> C-SPC C-a <escape> w C-<return> M-<right> C-y SPC b l o c k e r :  p r i v a t e   a p p o i n t m e n t M-x o r g - s e t - p r o p e r t y <return> C A T E G O R Y <return> b u s i n e s s <return>")
+   (message "finished")
+)
+;;   (org-set-property "CATEGORY" "business")
+)
+#+END_SRC
+
+#+RESULTS:
+: foobar
+
+Naïve attempt of creating a function instead:
+
+#+BEGIN_SRC emacs-lisp
+(defun surr1 ()
+(interactive)
+
+;; place cursor at the start of the current heading:
+(org-next-visible-heading) ;; results in: Wrong number of arguments: (1 . 1), 0
+(org-previous-visible-heading)
+
+;; get the timestamp in the heading title:
+(search-forward "<")
+(set-mark-command)
+(search-forward ">")
+(set-mark-command)
+(kill-ring-save)
+
+;(let ((start (search-forward "<" nil t)))
+;    (when start
+;      (let ((end (search-forward ">" nil t)))
+;        (set-mark-command "region")
+;        (goto-char end))))
+
+;; create a new sub-heading
+(org-insert-heading-respect-content)
+
+;; paste the timestamp from above:
+(yank)
+
+;; add a title text after the timestamp:
+(insert " this is a surrogate heading")
+
+;; set a property
+(org-set-property "CATEGORY" "business")
+)
+#+END_SRC
+
+#+RESULTS:
+: surr1
+
+
+**** <2024-12-10 Tue> test
+
 ** org-mode-hook
 
 Set some modes when openening a file in Org-mode:
