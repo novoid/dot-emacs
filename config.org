@@ -9324,6 +9324,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("BC" . ,(concat my-business-jira-server "/browse/BC-%s"))
           ("TIPMO" . ,(concat my-business-sp-customer-server "593/TIPMO-%s"))
           ("TIGW" . ,(concat my-business-sd-server "/browse/TIGW-%s"))
+          ("gISMS" . ,(concat my-business-gjira-server "/browse/ISMS-%s"))
           ))
 #+END_SRC
 
