@@ -8225,7 +8225,7 @@ Define my default keywords:
 #+BEGIN_SRC emacs-lisp
   (setq org-todo-keywords (quote
                            (
-                            (sequence "STARTED(s)" "TODO(t)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
+                            (sequence "TODO(t)" "STARTED(s)" "WAITING(w@/!)" "SOMEDAY(S!)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
                             )
                            )
         )
