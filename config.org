@@ -8865,7 +8865,8 @@ binding brings me the most current captured items into my =inbox.org=:
 #+BEGIN_SRC emacs-lisp
   (defun my-mobile-org-import ()
     "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org"
-    (interactive "P")
+    (interactive)
+;    (interactive "P")
     (my-merge-mobileorg-inbox-files-to-mobileorg-file) ;; Merges individual inbox files from different hosts and appends their content to the mobileorg.org file.
     (org-mobile-pull)
     (find-file (concat my-org-files-path "inbox.org"))
@@ -8874,10 +8875,16 @@ binding brings me the most current captured items into my =inbox.org=:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "i" (lambda ()
-                         """foobar"""
-                         (interactive) (my-mobile-org-import)) my-map )
+(bind-key "i" #'my-mobile-org-import my-map)
 #+END_SRC
+
+<2025-03-10 Mon> I got the following error when applying the function via my-map binding:
+#+BEGIN_EXAMPLE
+funcall-interactively: Wrong number of arguments: #[nil 
+((my-merge-mobileorg-inbox-files-to-mobileorg-file) (org-mobile-pull) (find-file (concat my-org-files-path "inbox.org")) (delete-trailing-whitespace)) nil nil "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org" "P"], 1
+#+END_EXAMPLE
+: funcall-interactively: Wrong number of arguments: #[nil ((my-merge-mobileorg-inbox-files-to-mobileorg-file) (org-mobile-pull) (find-file (concat my-org-files-path "inbox.org")) (delete-trailing-whitespace)) nil nil "Imports mobile-org-data from mobile-org to inbox.org and openes inbox.org" "P"], 1
+Solution was: remove "P" from (interactive "P")
 
 Note that even though I use [[http://www.orgzly.com/][Orgzly]] to /view/ Org-mode data on my
 Android phone, I use MobileOrg to capture. This might change in
