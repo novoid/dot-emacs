@@ -15877,10 +15877,12 @@ PCRE regex!
 )
 #+END_SRC
 
-** dumb-jump
+** DISABLED dumb-jump
 :PROPERTIES:
 :CREATED:  [2018-01-22 Mon 13:39]
 :END:
+
+| 2025-03-10 | disabled after having issues when updating Emacs 29→30.1 |
 
 - an Emacs "jump to definition" package
 - From: [[http://irreal.org/blog/?p=6218][Irreal: Dumb-jump in Action]]
