@@ -10066,6 +10066,71 @@ Maybe I'm to stupid to use QUELPA. :-( I had to manually clone it and install vi
 )
 #+END_SRC
 
+*** my-org-link-to-headline
+
+| 2025-03-30 | initial version from https://mastodon.social/@laotang/114219403892605679 |
+
+- =helm-org-contacts= ([[https://github.com/tmalsburg/helm-org-contacts][which I used for linking contacts]]) [[https://github.com/tmalsburg/helm-org-contacts/issues/10#issuecomment-2728554111][is now unmaintained]]
+- [[https://graz.social/@publicvoit/114218152691342170][I asked Mastodon for help]].
+  - https://mastodon.social/@laotang/114219403892605679 was a working snippet
+
+... it works but:
+- takes long
+- doesn't cache hash table
+
+Potential improvements:
+- create a special function that pre-filles contact file (which is my most frequently used file for links)
+- use a hash-table per Orgdown file
+- re-use pre-built hash-table per file if already found/filled
+- add a function to refresh or delete all hash tables at once (if not current any more)
+
+For now, I use the basic version in order to be able to link again:
+
+#+BEGIN_SRC emacs-lisp
+(require 'org-element)
+(require 'org-id)
+
+;; Global cache variable
+(defvar my-org-link-cache (make-hash-table :test 'equal)
+  "Cache for storing parsed headlines by Org file.")
+
+(defun my-org-link-to-headline (&optional orgfile)
+  "Insert org-id link to a headline from a selected Org file, with caching."
+  (interactive)
+  (let* ((file (or orgfile (read-file-name "Select Org file: " default-directory nil t nil)))
+         (table)
+         (parsed-data)
+         (headline))
+    
+    ;; Check if the file has been parsed and cached already
+    (setq table (gethash file my-org-link-cache))
+    
+    (if (not table)
+        ;; If no cache, parse the file and store the result in the cache
+        (progn
+          (with-temp-buffer
+            (insert-file-contents file)
+            (setq parsed-data (org-element-parse-buffer)))
+          (setq table (make-hash-table :test 'equal))
+          (org-element-map parsed-data 'headline
+            (lambda (hl)
+              (let* ((title (org-element-property :raw-value hl))
+                     (id (org-element-property :ID hl)))
+                (when title
+                  (puthash title id table)))))
+          (puthash file table my-org-link-cache)))  ;; Cache the result for the file
+    
+    ;; Use the cached table
+    (setq headline (completing-read "Which headline: " (hash-table-keys table)))
+    (insert (org-make-link-string (concat "id:" (gethash headline table)) headline))))
+
+(defun my-invalidate-my-org-link-cache ()
+  "Invalidate the cache of Org files."
+  (interactive)
+  (setq my-org-link-cache (make-hash-table :test 'equal))
+  (message "Org file cache invalidated."))
+#+END_SRC
+
 ** Agenda
 
 Org-mode is my digital everything. And therefore, Org is also my
@@ -13189,6 +13254,9 @@ Loading [[https://github.com/novoid/helm-org-contacts][novoid/helm-org-contacts]
     caching included; my reason for forking) but it shows the same
     error.
   - I don't use =helm-org-contacts= that often and org-superlinks may replace it.
+- 2025-03-17: *helm-org-contacts is unmaintained*: https://github.com/tmalsburg/helm-org-contacts/issues/10#issuecomment-2728554111
+  - I was only using it for linking to contacts but that's broken at
+    the moment. Need to find a replacement.
 #+BEGIN_SRC emacs-lisp
 (use-package helm-org-contacts
    :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/helm-org-contacts/")))
@@ -18051,7 +18119,7 @@ Not org related but might be candidates as well:
     ("d" define-word-at-point nil)
     ("W" (lambda () (interactive) (wttrin-query "graz")) nil)
     ("n" org-add-note nil)
-    ("c" helm-org-contacts nil)
+    ("c" (lambda () (interactive) (my-org-link-to-headline "contacts.org")) nil)
     ("i" my-id-get-or-generate nil)
     ("e" org-linker-edna nil)
 
