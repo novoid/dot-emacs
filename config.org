@@ -8059,14 +8059,50 @@ properly, please do submit a pull request.
 #+END_SRC
 
 *** my-create-business-appointment-surrogate
+:PROPERTIES:
+:CREATED:  [2025-04-12 Sat 12:06]
+:END:
 
-| 2022-05-16 | created initial version                                                              |
-| 2023-01-13 | re-recording macro because it was ambiguous with fresh org functions after an update |
+| 2022-05-16 | created initial version                                                                       |
+| 2023-01-13 | re-recording macro because it was ambiguous with fresh org functions after an update          |
+| 2025-04-12 | re-did the whole thing as the macro did insert random IDs as heading IDs and I don't know why |
 
 When I'm having private appointments during office hours (e.g.,
 health-related appointments) I want to make sure that there is a
 blocker on my business calendar as well which I categorize with the
 company name.
+
+[2025-04-12 Sat] as the macro approach (see below) was fragile and
+error prone, I re-did the whole thing with the help of ChatGPT as a
+function:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-create-business-appointment-surrogate ()
+  "Insert a surrogate subheading under the current Org heading, 
+copying any timestamp and adding a blocker entry."
+  (interactive)
+  (save-excursion
+    ;; Go to the beginning of the current heading
+    (org-back-to-heading t)
+    (let ((timestamp nil))
+      ;; Look for a timestamp in the current heading or its contents
+      (save-excursion
+        (when (re-search-forward org-element--timestamp-regexp (save-excursion (org-end-of-subtree t)) t)
+          (setq timestamp (match-string 0))))
+      ;; Move to the end of the subtree to insert the subheading
+      (org-end-of-subtree t t)
+      ;; Insert a new subheading one level deeper
+      (let ((new-level (1+ (org-current-level))))
+        ;; Insert the timestamp if found
+        (insert (make-string new-level ?*) " ")
+        (when timestamp
+          (insert timestamp))
+        (insert " blocker: private appointment\n")
+        ;; Insert the property drawer
+        (insert ":PROPERTIES:\n"  (format-time-string ":CREATED: [%Y-%m-%d %a %H:%M]\n") ":CATEGORY: business\n:END:\n")))))
+#+END_SRC
+
+**** DISABLED Previous approach using keyboard macro (failed)
 
 Instead of manually creating those surrogate headings, I recorded a
 simple macro:
@@ -8075,22 +8111,27 @@ simple macro:
    - goto next heading
    - goto previous heading
 2. goto end of line
-3. isearch-backward for =>=
+3. isearch-backward for ">" to look for the time-stamp of the heading (assuming there is one)
 4. start region
 5. goto begin of line
 6. end region
 7. copy region
    - this covers mandatory date-stamps, time-stamps as well as durations.
-8. =C-RET= for new heading below
-9. indent one level to the right
-10. yank timestamp(s)
-11. enter dummy text
-12. set business property
+8. create a new heading, e.g., using =C-RET= for new heading below
+9. indent one level to the right so that the new heading is a sub-heading of the current one
+10. yank timestamp
+11. enter dummy text as heading title: "blocker: private appointment"
+12. set the org-mode property "category" to the value "business"
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :nexport
 (fset 'my-create-business-appointment-surrogate
-   [?\C-c ?\C-n ?\C-c ?\C-p ?\C-e ?\M-x ?i ?s ?e ?a ?r ?c ?h ?- ?b ?a ?c ?k ?w ?a ?r ?d return ?> right ?\C-  ?\C-a escape ?w C-return tab ?\C-y ?  ?b ?l ?o ?c ?k ?e ?r ?: ?  ?p ?r ?i ?v ?a ?t ?e ?  ?a ?p ?p ?o ?i ?n ?t ?m ?e ?n ?t ?\M-x ?o ?r ?g ?- ?s ?e ?t ?- ?p ?r ?o ?p ?e ?r ?t ?y return ?c ?a ?t ?e ?g ?o ?r ?y return ?b ?u ?s ?i ?n ?e ?s ?s return])
+   (kmacro-lambda-form [?\C-c ?\C-n ?\C-c ?\C-p ?\C-e ?\M-x ?i ?s ?e ?a ?r ?c ?h ?- ?b ?a ?c ?k ?w ?a ?r ?d return ?> ?\C-  ?\C-a escape ?w C-return M-right ?\C-y ?> ?  ?b ?l ?o ?c ?k ?e ?r ?: ?  ?p ?r ?i ?v ?a ?t ?e ?  ?a ?p ?p ?o ?i ?n ?t ?m ?e ?n ?t ?\M-x ?o ?r ?g ?- ?s ?e ?t ?- ?p ?r ?o ?p ?e ?r ?t ?y return ?c ?a ?t ?e ?g ?o ?r ?y return ?b ?u ?s ?i ?n ?e ?s ?s return] 0 "%d"))
+
 #+END_SRC
+
+
+
+
 
 *** test area 
 :PROPERTIES:
