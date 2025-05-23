@@ -11846,7 +11846,7 @@ cause desktop notifications via =notify-send=:
   (setq org-agenda-include-diary t)         ;; push Org agenda items to diary
   (setq calendar-mark-diary-entries-flag t) ;; mark dates with diary entries, in the calendar window
   (setq appt-time-msg-list nil)             ;; clear list of appointments for today.
-  (setq appt-message-warning-time 10        ;; warn 10 min in advance
+  (setq appt-message-warning-time 5         ;; warn 10 min in advance
         appt-display-interval 10            ;; repeat notification this amount of minutes; must not be 0 (arith-error)
         appt-display-diary nil              ;; do not display diary when (appt-activate) is called
         appt-display-mode-line t            ;; show in the modeline
