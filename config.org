@@ -16373,22 +16373,32 @@ from =1GiB= to =10GiB=.
 | =vimgolf-continue=   | =C-c C-v c=            | Start keystroke recording where you left off                         |
 | =vimgolf-quit=       | =C-c C-v q=            | Stop the challenge                                                   |
 
-** DISABLED ace-window
+** ace-window
 :PROPERTIES:
 :CREATED:  [2020-04-02 Thu 19:50]
 :END:
 
 | 2020-12-01 | disabled because of performance issue: with 3 buffers, it can take several seconds! |
+| 2025-05-23 | re-enabled                                                                          |
 
 After watching [[https://www.youtube.com/watch?v=nKCKuRuvAOw&feature=youtu.be][Sacha Chua's video on ace-window]], I decided to give it a try.
+
+- <2025-05-21 Wed> https://irreal.org/blog/?p=13003
+  - actually, this looks good and I'll give it another try.
+
+-----------
 
 It's a better way of jumping and managing multiple windows.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
   :ensure t
-  ;;:defer 110
-  :config (setq aw-keys '(?f ?j ?a ?l))
+  :defer 110
+  :config 
+    ;(setq aw-keys '(?f ?j ?a ?l))
+    (custom-set-faces
+     '(aw-leading-char-face
+       ((t (:inherit ace-jump-face-foreground :height 3.0)))))
   :bind ("C-x o" . ace-window)
 )
 #+END_SRC
