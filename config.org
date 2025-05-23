@@ -9376,6 +9376,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("gISMS" . ,(concat my-business-gjira-server "/browse/ISMS-%s"))
           ("CMP" . ,(concat my-business-sd-server "/browse/CMP-%s"))
           ("SMS" . ,(concat my-business-jira-server "/browse/SMS-%s"))
+          ("VTLOGMON" . ,(concat my-business-jira-server "/browse/VTLOGMON-%s"))
           ))
 #+END_SRC
 
