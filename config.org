@@ -717,6 +717,40 @@ started overwriting them here:
 (setq bookmark-default-file (concat my-user-emacs-directory "/var/bookmark-default.el")) ;; this was set somewhere else; I did not look how/why. I just set it here again to make it explicit.
 #+END_SRC
 
+** modify keyboard-quit
+
+| 2025-06-09 | initial setup |
+
+- from: [[https://irreal.org/blog/?p=13032][• Improving Keyboard-quit | Irreal]] → [[https://emacsredux.com/blog/2025/06/01/let-s-make-keyboard-quit-smarter/][Let’s make keyboard-quit smarter | Emacs Redux]]
+
+#+BEGIN_SRC emacs-lisp
+;; This executes C-g typed while Emacs is waiting for a command.
+;; Quitting out of a program does not go through here;
+;; that happens in the maybe_quit function at the C code level.
+(defun my-keyboard-quit ()
+  "Signal a `quit' condition.
+During execution of Lisp code, this character causes a quit directly.
+At top-level, as an editor command, this simply beeps."
+  (interactive)
+  ;; Avoid adding the region to the window selection.
+  (setq saved-region-selection nil)
+  (let (select-active-regions)
+    (deactivate-mark))
+  (if (fboundp 'kmacro-keyboard-quit)
+      (kmacro-keyboard-quit))
+  (when completion-in-region-mode
+    (completion-in-region-mode -1))
+  ;; Force the next redisplay cycle to remove the "Def" indicator from
+  ;; all the mode lines.
+  (if defining-kbd-macro
+      (force-mode-line-update t))
+  (setq defining-kbd-macro nil)
+  (let ((debug-on-quit nil))
+    (signal 'quit nil)))
+
+(global-set-key [remap keyboard-quit] #'my-keyboard-quit)
+#+END_SRC
+
 * use-package and quelpa
 :PROPERTIES:
 :CREATED:  [2018-07-02 Mon 11:09]
