@@ -127,6 +127,21 @@ Testing the noweb principle as shown on this page: https://www.hhyu.org/posts/li
 <<nowebtest>>
 #+END_SRC
 
+* mitigating CVE-2025-1244
+
+... for Emacs <30.1:
+
+https://emacsninja.com/posts/cve-2025-1244-from-emacs-url-handler-to-rce.html
+
+#+BEGIN_SRC emacs-lisp
+(defun my-man-interactive-check (_)
+  (when (not (called-interactively-p 'interactive))
+    (error "Called from URL handler, aborting...")))
+
+(with-eval-after-load 'man
+  (advice-add 'man :before #'my-man-interactive-check))
+#+END_SRC
+
 * Function keys
 
 Here are my function-key-mappings that are included in most hydra help screens:
@@ -3083,7 +3098,7 @@ interface of Magit.
 I got this code from [[https://stackoverflow.com/questions/48879892/magit-status-in-a-new-frame-and-delete-frame-on-exit][that stackoverflow page]] which basically puts
 =magit-status= in a separate Emacs frame (and closes it):
 
-#+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none :tangle no
 
 (bind-key "g" (lambda ()
    """magit-status in a new frame and delete frame on exit"""
@@ -3096,7 +3111,19 @@ I got this code from [[https://stackoverflow.com/questions/48879892/magit-status
 
 ;; close magit frame when done:
 (define-key magit-mode-map (kbd "q") 'delete-frame)
+#+END_SRC
 
+... disabled due to error in Emacs 3x: "Wrong type argument: commandp, #[nil..."
+
+#+BEGIN_SRC emacs-lisp
+(defun my-magit-status-in-new-frame ()
+  "Open `magit-status` in a new frame, and delete other windows."
+  (interactive)
+  (select-frame (make-frame-command))
+  (magit-status)
+  (delete-other-windows))
+
+(bind-key "g" #'my-magit-status-in-new-frame my-map)
 #+END_SRC
 
 *** DISABLED smeargle (highlighting)
