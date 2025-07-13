@@ -16472,7 +16472,6 @@ Using the prefix version =C-u C-c o= I may swap the current window
 with another one. A second prefix will delete the target window: =C-u
 C-u C-x o=.
 
-
 ** DISABLED explain-pause-mode
 
   | 2020-05-19 | [[https://github.com/lastquestion/explain-pause-mode][cloned from GitHub]] and start testing     |
@@ -17081,7 +17080,7 @@ setup to look like a default Emacs.
   ;; 2020-06-21 disabled because it causes more effort when errors are sparse:
   ;;(setq debug-on-quit t);; show debug information on canceling endless loops and so forth
 
-  (org-expiry-insinuate)
+  (org-expiry-insinuate) ;; 2025-06-27: I think I might have tracked down the first :CREATED: property to: id:2011-10-12-Jakob-Lienhart
   (setq org-log-into-drawer t)
   (org-bullets-mode 1)
 
