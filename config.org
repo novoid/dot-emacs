@@ -138,8 +138,13 @@ https://emacsninja.com/posts/cve-2025-1244-from-emacs-url-handler-to-rce.html
   (when (not (called-interactively-p 'interactive))
     (error "Called from URL handler, aborting...")))
 
-(with-eval-after-load 'man
-  (advice-add 'man :before #'my-man-interactive-check))
+(when (or (< emacs-major-version 30)
+          (and (= emacs-major-version 30)
+               (< emacs-minor-version 1)))
+  (with-eval-after-load 'man
+    (advice-add 'man :before #'my-man-interactive-check))
+  (message "Mitigating CVE-2025-1244 for Emacs < 30.1")
+)))
 #+END_SRC
 
 * Function keys
