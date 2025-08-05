@@ -134,17 +134,18 @@ Testing the noweb principle as shown on this page: https://www.hhyu.org/posts/li
 https://emacsninja.com/posts/cve-2025-1244-from-emacs-url-handler-to-rce.html
 
 #+BEGIN_SRC emacs-lisp
-(defun my-man-interactive-check (_)
-  (when (not (called-interactively-p 'interactive))
-    (error "Called from URL handler, aborting...")))
+  (defun my-man-interactive-check (_)
+    (when (not (called-interactively-p 'interactive))
+      (error "Called from URL handler, aborting...")))
 
-(when (or (< emacs-major-version 30)
-          (and (= emacs-major-version 30)
-               (< emacs-minor-version 1)))
-  (with-eval-after-load 'man
-    (advice-add 'man :before #'my-man-interactive-check))
-  (message "Mitigating CVE-2025-1244 for Emacs < 30.1")
-)))
+  (when (or (< emacs-major-version 30)
+            (and (= emacs-major-version 30)
+                 (< emacs-minor-version 1)
+  	       ))
+    (with-eval-after-load 'man
+      (advice-add 'man :before #'my-man-interactive-check))
+    (message "Mitigating CVE-2025-1244 for Emacs < 30.1")
+  )
 #+END_SRC
 
 * Function keys
@@ -7609,6 +7610,7 @@ found in the combined lists of:
          (str (replace-regexp-in-string " " "-" str))
          ;; Remove leading and trailing hyphens.
          (str (replace-regexp-in-string "\\(^[-]*\\|[-]*$\\)" "" str)))
+         (setq str (replace-regexp-in-string "-\\{2,\\}" "-" str)) ;; replace all multiple occurrences of dashes in a row with a single one
     str)
   )
 #+END_SRC
@@ -9072,8 +9074,8 @@ Targets include this file and any file contributing to the agenda - up to 5 leve
 #+BEGIN_SRC emacs-lisp
   (setq org-refile-targets (quote (
                                    ;; ignore my-org-memacs-files here
-                                   (my-work-agenda-files :maxlevel . 4)
-                                   (my-nonwork-agenda-files :maxlevel . 4)
+                                   (my-work-agenda-files :maxlevel . 8)
+                                   (my-nonwork-agenda-files :maxlevel . 8)
                                    ;;OLD: (nil :maxlevel . 3)
                                    ;;OLD: ("contacts.org" :maxlevel . 6)
                                    )))
@@ -17700,6 +17702,7 @@ This actually replaces many things I used for jumping:
   (let* ((buffers (mapcar #'buffer-name (buffer-list)))
          (recent-files recentf-list)
          (bookmarks (bookmark-all-names))
+         (file-at-point (list (ffap-guesser))) ;; as suggested in https://github.com/novoid/dot-emacs/issues/5
          ;;(themes (custom-available-themes))
          (directories dired-recent-directories)
          (eyebrowse (--map (eyebrowse-format-slot it) (eyebrowse--get 'window-configs)))
