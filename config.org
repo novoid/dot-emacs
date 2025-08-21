@@ -15851,7 +15851,9 @@ or =customize `scss-sass-command'= to point to your sass executable.
 )
 #+END_SRC
 
-** mode-icons - Show icons instead of mode names
+** DISABLED mode-icons - Show icons instead of mode names
+
+| 2025-08-21 | I got issues after update → disabled (and no time for proper bug report) |
 
 https://github.com/ryuslash/mode-icons
 
