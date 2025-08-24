@@ -1249,9 +1249,9 @@ Setting the system-specific path for my-webarchive-tsfile-dir-path
 
 #+BEGIN_SRC emacs-lisp
     ;; different hosts do have the dir at different locations:
-    (setq my-webarchive-tsfile-dir-path (cond ((my-system-is-sting) "/home/vk/archive/backup/sting/webarchive")
-                                ((my-system-is-jackson) "/home/vk/Downloads/webarchive")
-                                (t "/home/vk/Downloads/");; fallback path (should NOT be used)
+    (setq my-webarchive-tsfile-dir-path (cond ((my-system-is-sting) (concat (expand-file-name "~") "/archive/backup/sting/webarchive"))
+                                ((my-system-is-jackson) (concat (expand-file-name "~") "/Downloads/webarchive"))
+                                (t (concat (expand-file-name "~") "/Downloads/"));; fallback path (should NOT be used)
                                 ))
 #+END_SRC
 
@@ -4378,21 +4378,21 @@ search):
 (setq my-filetags-file (my-binary-found "filetags"))
 (when (and (not my-filetags-file) (my-system-type-is-gnu))
     (progn (message "using manual src path for \"filetags\"")
-           (setq my-filetags-file (my-binary-found "/home/vk/src/filetags/filetags/__init__.py"))
+           (setq my-filetags-file (my-binary-found (concat (expand-file-name "~") "/src/filetags/filetags/__init__.py")))
     )
 )
 
 (setq my-date2name-file (my-binary-found "date2name"))
 (when (and (not my-date2name-file) (my-system-type-is-gnu))
     (progn (message "using manual src path for \"date2name\"")
-           (setq my-date2name-file (my-binary-found "/home/vk/src/date2name/date2name/__init__.py"))
+           (setq my-date2name-file (my-binary-found (concat (expand-file-name "~") "/src/date2name/date2name/__init__.py")))
     )
 )
 
 (setq my-appendfilename-file (my-binary-found "appendfilename"))
 (when (and (not my-appendfilename-file) (my-system-type-is-gnu))
     (progn (message "using manual src path for \"appendfilename\"")
-           (setq my-appendfilename-file (my-binary-found "/home/vk/src/appendfilename/appendfilename/__init__.py"))
+           (setq my-appendfilename-file (my-binary-found (concat (expand-file-name "~") "/src/appendfilename/appendfilename/__init__.py")))
     )
 )
 #+END_SRC
@@ -5212,7 +5212,7 @@ Helper function to open any given message-id in Thunderbird:
 
 #+BEGIN_SRC emacs-lisp
   ;; modify this for your system
-  (setq thunderlink-program "/home/vk/cb_thunderlink/cb_thunderlink")
+  (setq thunderlink-program (concat (expand-file-name "~") "/cb_thunderlink/cb_thunderlink"))
 
   (defun my-open-message-id-in-thunderbird (message-id)
   "open an email with a given message-ID in Thunderbird"
@@ -12045,7 +12045,7 @@ workaround before I customized my agenda export to HTML.
     (message "Say cheese ...")
 
     (setq myoutput
-          (shell-command-to-string "/usr/bin/import -window root /home/vk/share/roy/from_sting/agenda.png"))
+          (shell-command-to-string (concat "/usr/bin/import -window root " (expand-file-name "~") "/share/roy/from_sting/agenda.png")))
     (message (concat "Screenshot done (" myoutput ")"))
     )
   )
@@ -13028,7 +13028,7 @@ https://github.com/yjwen/org-reveal
   ;;(setq org-reveal-root "file:///d:/reveal.js")
   (cond ((my-system-type-is-gnu)
          (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-         (setq org-reveal-extra-css "file:///home/vk/.emacs.d/bin/reveal_theme_night_local.css"))
+         (setq org-reveal-extra-css (concat "file://" (expand-file-name "~") "/.emacs.d/bin/reveal_theme_night_local.css")))
         ((string-equal system-name "GRZN17009")
          (setq org-reveal-root "file:///C:/Users/karl.voit/.emacs.d/bin/reveal.js/")
          (setq org-reveal-extra-css "file:///C:/Users/karl.voit/.emacs.d/bin/reveal_theme_night_local.css"))
@@ -13183,7 +13183,7 @@ of the blog article and shows it in the browser.
           (previous-line);;
           (org-cycle);; close org-mode heading and sub-headings
           ;; invoke lazyblorg:
-          (shell-command-to-string "/home/vk/src/lazyblorg/preview_blogentry.sh");; invoke shell script
+          (shell-command-to-string (concat (expand-file-name "~") "/src/lazyblorg/preview_blogentry.sh"));; invoke shell script
           )
         )
     )
@@ -13898,7 +13898,7 @@ This is out of curiosity and a possible scouting task for writing my PIM book on
 I've got ideas [[https://kristofferbalintona.me/posts/202206141852/][from this great blog article]].
 
 #+BEGIN_SRC emacs-lisp :results none
-(setq org-cite-global-bibliography '("/home/vk/org/org-ref.bib")) ;; Alternatively, you can use the org-mode #+BIBLIOGRAPHY: keyword to set this value per-file; it’s value should be a file path.
+(setq org-cite-global-bibliography '("~/org/org-ref.bib")) ;; Alternatively, you can use the org-mode #+BIBLIOGRAPHY: keyword to set this value per-file; it’s value should be a file path.
 #+END_SRC
 
 A minimal bib-file has the content:
@@ -15853,7 +15853,7 @@ or =customize `scss-sass-command'= to point to your sass executable.
 
 ** DISABLED mode-icons - Show icons instead of mode names
 
-| 2025-08-21 | I got issues after update → disabled (and no time for proper bug report) |
+| 2025-08-21 | I got issues after update → disabled (and no time for proper bug report); last commit 2023-09, last issue 2022-05 → *unmaintained* |
 
 https://github.com/ryuslash/mode-icons
 
@@ -16805,7 +16805,7 @@ Integration for sting/jackson: see id:2023-11-18-System-whisper-in-Emacs-einbind
     
       ;; adaptations from https://github.com/natrys/whisper.el/wiki/Setup-to-use-whisper%E2%80%90ctranslate2-instead-of-whisper.cpp
       (defun whisper--ctranslate2-command (input-file)
-      `("/home/vk/src/external_compilations/openai-whisper/venv/bin/whisper"
+      `("~/src/external_compilations/openai-whisper/venv/bin/whisper"
         ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
         "--task" ,(if whisper-translate "translate" "transcribe")
         "--model" ,whisper-model
@@ -16830,7 +16830,7 @@ Integration for sting/jackson: see id:2023-11-18-System-whisper-in-Emacs-einbind
     
       ;; adaptations from https://github.com/natrys/whisper.el/wiki/Setup-to-use-whisper%E2%80%90ctranslate2-instead-of-whisper.cpp
       (defun whisper--ctranslate2-command (input-file)
-      `("/etc/profiles/per-user/vk/bin/whisper"
+      `((concat "/etc/profiles/per-user/" (user-login-name) "/bin/whisper")
         ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
         "--task" ,(if whisper-translate "translate" "transcribe")
         "--model" ,whisper-model
@@ -18361,7 +18361,7 @@ Not org related but might be candidates as well:
 
     ("D" org-decrypt-entry nil)
 
-    ("B" (lambda () (interactive) (setq org-agenda-files (delete "/home/vk/org/business.org" org-agenda-files))) nil)
+    ("B" (lambda () (interactive) (setq org-agenda-files (delete (concat (expand-file-name "~") "/org/business.org") org-agenda-files))) nil)
 
     ("q" nil "quit")
 
