@@ -1915,7 +1915,7 @@ Host-specific font sizes: values are in 1/10pt → 100 are 10pt
   (set-face-attribute 'default (selected-frame) :height 110) ;; 2019-12-04: bigger font on native 30" resolution
   )
 (when (my-system-is-jackson)
-  (set-face-attribute 'default (selected-frame) :height 100)
+  (set-face-attribute 'default (selected-frame) :height 110)
 )
 #+END_SRC
 
