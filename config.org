@@ -1260,7 +1260,7 @@ therefore, this has to be defined early:
           (setq my-org-files-path "c:/Users/John/AppData/Roaming/org/")
        )
       (t
-          (setq my-org-files-path "~/org/"))
+          (setq my-org-files-path (concat (expand-file-name "~") "/org/")))
 )
 ;;(message (format "Set \"my-org-files-path\" to: %s" my-org-files-path))
 #+END_SRC
@@ -3008,7 +3008,7 @@ organization with many tasks and their dependencies).
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "TAB") nil)
   ;;disabled 2015-04-01 - issues did not vanish;; (define-key yas-minor-mode-map (kbd "<f4>") 'yas-expand)
 
-  (my-log-hostspecific "yas--version" yas--version)
+  ;;(my-log-hostspecific "yas--version" yas--version) ;; disabled 2025-10-23 because it generated an error on sting: Debugger entered--Lisp error: (void-variable yas--version)
 )
 #+END_SRC
 
@@ -10262,7 +10262,7 @@ For now, I use the basic version in order to be able to link again:
     (setq headline (completing-read "Which headline: " (hash-table-keys table)))
     (insert (org-make-link-string (concat "id:" (gethash headline table)) headline))))
 
-(defun my-invalidate-my-org-link-cache ()
+(defun my-invalidate-my-org-link-cache-clear ()
   "Invalidate the cache of Org files."
   (interactive)
   (setq my-org-link-cache (make-hash-table :test 'equal))
@@ -10311,6 +10311,9 @@ The following file is only accessible on my work computer:
   (add-to-list 'my-work-agenda-files my-business-siko-notes))
 #+END_SRC
 
+2025-10-18: I re-added references.org because I want more interlinks
+between references and rest.
+
 Definitions of non-work files: (only used in cron-job shell script)
 #+BEGIN_SRC emacs-lisp
   (setq my-nonwork-agenda-files (append ` (
@@ -10346,10 +10349,13 @@ be able to refresh the super-agenda (which was not possible in my
 complex setup: refreshed agenda was not org-super-agenda but normal
 agenda).
 
-OUTDATED VERSION with 2024-09-17:
+OUTDATED VERSION with 2024-09-17: FIXXMEagenda
 #+BEGIN_SRC emacs-lisp :tangle no
   (setq org-agenda-files (append my-work-agenda-files my-nonwork-agenda-files))
 #+END_SRC
+
+#+RESULTS:
+| /home/rise/org/business.org | /home/rise/org/misc.org | /home/rise/org/issues.org | /home/rise/org/projects.org | /home/rise/org/finanzen_behoerden_versicherungen.org | /home/rise/org/bwg.org | /home/rise/org/contacts.org | /home/rise/org/hardware.org | /home/rise/org/tugraz.org | /home/rise/org/fhsp.org | /home/rise/org/notes.org | /home/rise/org/public_voit.org | /home/rise/org/errors.org |
 
 New version as of 2024-09-17: I maintain the list of (potential)
 org-agenda-files above. However, I may add some files that are not
@@ -10370,7 +10376,6 @@ contains only the existing files from that manually curated list:
 
 (setq org-agenda-files (my-org-get-existing-agenda-files (append my-work-agenda-files my-nonwork-agenda-files)))
 #+END_SRC
-
 
 OLD:
 
@@ -11876,12 +11881,13 @@ I aliased it within =~/.zshrc.local= to =memacs=
     (save-some-buffers)
 
     ;; I don't want the error messages in my exported agenda:
-    (setq org-agenda-files (remove "~/org/errors.org" org-agenda-files))
+    (setq org-agenda-files (remove "/home/vk/org/errors.org" org-agenda-files))
 
     (setq max-specpdl-size 10000)
     (setq max-lisp-eval-depth 50000)
     (org-agenda-list nil nil 60)
     ;(org-agenda-list nil nil 7)
+
     (message "after org-agenda-list")
     ;;test;  (org-agenda-list nil nil 15)
   ;;  (org-agenda-write "~/org/agenda-export-raw2.ics")
@@ -14335,6 +14341,14 @@ This enables a method to edit arbitrary selected text in an Emacs buffer: https:
 #+BEGIN_SRC emacs-lisp
 (message "→★ orgmode finished in %.2fs" (float-time (time-subtract (current-time) my-org-config-start-time)))
 #+END_SRC
+
+* testheading
+
+no content
+#+BEGIN_SRC emacs-lisp
+(message "foo")
+#+END_SRC
+
 * PDF
 :PROPERTIES:
 :CREATED:  [2018-03-08 Thu 09:48]
