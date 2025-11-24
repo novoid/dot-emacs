@@ -8301,6 +8301,129 @@ replacing the original heading."
 (join-line -1) ;; workaround: merge URL-line with "(captured..." line
 )
 #+END_SRC
+
+
+*** my-rocketchat-insert-message-from-url
+
+| 2025-10-20 | initial version via Sonnet 4.5 |
+
+#+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: t; -*-
+
+;(require 'request)
+(require 'json)
+
+;; Following variables are defined in a private section of this configuration:
+
+;; (defvar rocketchat-server-url "https://example.com"
+;;   "URL of your Rocket.Chat server")
+;; 
+;; (defvar rocketchat-user-id "foo"
+;;   "Your Rocket.Chat user ID")
+;; 
+;; ;; Profile → Personal Access Tokens
+;; (defvar rocketchat-auth-token "bar"
+;;   "Your Rocket.Chat authentication token")
+
+(defun rocketchat-markdown-to-org (markdown-text)
+  "Convert MARKDOWN-TEXT to Org-mode format using pandoc."
+  (with-temp-buffer
+    (insert markdown-text)
+    (if (zerop (shell-command-on-region (point-min) (point-max)
+                                        "pandoc -f markdown -t org"
+                                        t t))
+        (buffer-string)
+      ;; If pandoc fails, return original text
+      (progn
+        (message "Warning: pandoc conversion failed, using original text")
+        markdown-text))))
+
+(defun rocketchat-markdown-to-org (markdown-text)
+  "Convert MARKDOWN-TEXT to Org-mode format using pandoc."
+  (with-temp-buffer
+    ;; Preprocess: ensure blank line before lists
+    (insert (replace-regexp-in-string 
+             "\\([^\n]\\)\n\\([ \t]*[-*+]\\) "
+             "\\1\n\n\\2 "
+             markdown-text))
+    (if (zerop (shell-command-on-region (point-min) (point-max)
+                                        "pandoc -f markdown -t org --wrap=preserve"
+                                        t t))
+        (buffer-string)
+      ;; If pandoc fails, return original text
+      (progn
+        (message "Warning: pandoc conversion failed, using original text")
+        markdown-text))))
+
+(defun rocketchat-message-to-org (message-data)
+  "Convert Rocket.Chat MESSAGE-DATA to Org-mode format."
+  (condition-case err
+      (let* ((message (cdr (assoc 'message message-data)))
+             (msg-text (cdr (assoc 'msg message)))
+             (username (cdr (assoc 'username (assoc 'u message))))
+             (timestamp (cdr (assoc 'ts message)))
+             (msg-id (cdr (assoc '_id message)))
+             (room-id (cdr (assoc 'rid message)))
+             ;; Construct the message URL
+             (msg-url (format "%s/direct/%s?msg=%s" 
+                             rocketchat-server-url 
+                             room-id 
+                             msg-id))
+             ;; Parse ISO timestamp and format for Org-mode
+             (parsed-time (parse-iso8601-time-string timestamp))
+             (org-timestamp (format-time-string "[%Y-%m-%d %a %H:%M]" parsed-time))
+             ;; Convert markdown to org-mode
+             (org-text (rocketchat-markdown-to-org msg-text)))
+        (format "- %s [[%s][Message from %s]]:\n  %s\n"
+                org-timestamp
+                msg-url
+                username
+                ;; Indent each line of the converted text by 2 spaces
+                (replace-regexp-in-string "\n" "\n  " (string-trim org-text))))
+    (error
+     (message "Error formatting message: %S" err)
+     (format "- Error formatting message\n  %S\n" message-data))))
+
+;; Fetch a specific message by ID and insert it
+(defun rocketchat-insert-message (message-id)
+  "Fetch Rocket.Chat message by MESSAGE-ID and insert as Org-mode content."
+;;  (interactive "sMessage ID: ")
+  (request
+    (concat rocketchat-server-url "/api/v1/chat.getMessage")
+    :type "GET"
+    :params (list (cons "msgId" message-id))
+    :headers (list (cons "X-Auth-Token" rocketchat-auth-token)
+                   (cons "X-User-Id" rocketchat-user-id))
+    :parser 'json-read
+    :success (cl-function
+              (lambda (&key data &allow-other-keys)
+                (condition-case err
+                    (let ((org-content (rocketchat-message-to-org data)))
+                      (insert org-content)
+                      (message "Message inserted!"))
+                  (error
+                   (message "Error processing message: %S" err)))))
+    :error (cl-function
+            (lambda (&key error-thrown &allow-other-keys)
+              (message "Error fetching message: %S" error-thrown)))))
+
+;; Helper to extract message ID from a Rocket.Chat URL
+(defun rocketchat-extract-message-id-from-url (url)
+  "Extract message ID from a Rocket.Chat URL."
+  (when (string-match "msg=\\([^&]+\\)" url)
+    (match-string 1 url)))
+
+;; Convenience function to insert from URL
+(defun my-rocketchat-insert-message-from-url (url)
+  "Extract message ID from URL and insert the message."
+  (interactive "sRocket.Chat Message URL: ")
+  (let ((message-id (rocketchat-extract-message-id-from-url url)))
+    (if message-id
+        (progn
+          (message "Fetching message ID: %s" message-id)
+          (rocketchat-insert-message message-id))
+      (message "Could not extract message ID from URL"))))
+#+END_SRC
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
@@ -18418,6 +18541,8 @@ Not org related but might be candidates as well:
     ) nil)
 
     ("P" my-mark-as-project nil)
+
+    ("R" my-rocketchat-insert-message-from-url nil)
 
     ("w" my-webarchive-tsfile nil)
 
