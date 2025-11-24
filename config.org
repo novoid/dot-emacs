@@ -19246,6 +19246,8 @@ Not org related but might be candidates as well:
 
 - [2022-03-09 Wed] =C-x SPC= for =rectangle-mark-mode= via https://irreal.org/blog/?p=10378
 
+my-rocketchat-insert-message-from-url
+
 #+BEGIN_SRC emacs-lisp :results none
   (defhydra hydra-org (:color blue)
     (concat my-f-key-settings
@@ -19262,14 +19264,16 @@ Not org related but might be candidates as well:
     ^^                               _w_ebarchive tsfile                ^^                       ^^
     ^^C-c C-a  attachment menu       indent-_r_igidly   C-x TAB         ^^                       ^^
     ^^                               org-_A_ttach-set-directory         ^^                       ^^
-    ^^                               my-org-attach-_I_nsert             ^^                       ^^
+    ^^                               _2_ my-org-attach-insert           ^^                       ^^
+    ^^                               my-dwim-_I_nsert-stuff             ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
+    ^^                               my-_R_ocketchat-insert-message-from-url  ^^                 ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
     ^^                               ^^                                 ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
     ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   ^^C-x SPC    rectangle-mark-mode
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   ^^C-c C-x b  org-tree-to-indirect-buffer (focus) _2_
-    _f_ocus agenda (prio A; sched .) _R_eddit/Wiki.js (region)        _x_  secret-mode                y  yankpad-expand
+    _f_ocus agenda (prio A; sched .) _3_ Reddit/Wiki.js (region)      _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
     remove _B_usiness from agenda    ^^                               _W_eather Graz                  S  my-synonym-current-word
-    ^^                               ^^                               _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
+    _<_ my-org-tree-to-indirect-buffer  ^^                            _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
     ^^                               ^^                               org-_D_ecrypt-entry
     ^^                               ^^                               my-_t_oggle-checkbox-add-comment
     ")
@@ -19315,10 +19319,11 @@ Not org related but might be candidates as well:
     ("u" my-insert-orgmode-url-from-clipboard nil)
     ("T" my-set-tags-including-inherited nil)
     ("1" my-org-split-block nil)
+    ("I" my-dwim-insert-stuff nil)
 
     ("t" my-toggle-checkbox-add-comment)
 
-    ("R" my-reddit-export-via-pandoc nil)
+    ("3" my-reddit-export-via-pandoc nil)
     ("d" define-word-at-point nil)
     ("W" (lambda () (interactive) (wttrin-query "graz")) nil)
     ("n" org-add-note nil)
@@ -19342,13 +19347,15 @@ Not org related but might be candidates as well:
     ("r" indent-rigidly nil)
     ("A" org-attach-set-directory nil)
     ("a" org-attach-reveal nil)
-    ("I" my-org-attach-insert nil)
+    ("2" my-org-attach-insert nil)
 
     ("x" secret-mode nil)
 
     ("2" org-tree-to-indirect-buffer nil)
 
     ("D" org-decrypt-entry nil)
+
+    ("<" my-org-tree-to-indirect-buffer nil)
 
     ("B" (lambda () (interactive) (setq org-agenda-files (delete (concat (expand-file-name "~") "/org/business.org") org-agenda-files))) nil)
 
