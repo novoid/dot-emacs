@@ -8896,6 +8896,148 @@ any missing properties at the end, preserving the template order."
 #+END_SRC
 
 
+*** my-bidirectional-link-to-parent-heading
+
+| 2025-20-22 | initial version by Opus 4.1 |
+
+I sometimes do have a heading structure like:
+
+- parent
+  - sub 1
+  - sub 2
+  - sub 3
+
+Then I want to refile the sub headings to other positions but I want
+to keep the relation to the original parent heading.
+
+Using bi-directional links, this is possible: create links for each
+sub-heading (at the current point) to its parent + back-link.
+
+After that, I may refile sub-headings as I please and still do have
+the links.
+
+- process for creating a bi-directional link pair:
+  1. go to any sub-heading
+  2. invoke this interactive function in order to create a link to its parent heading
+
+I asked Opus 4.1 to help me with that and after a few iterations, I
+got a working version.
+
+Please note that some functionality of
+=org-super-links-quick-insert-inline-link= got re-implemented because
+I could not find out how to re-use it properly. Furthermore, the
+sanitizing function might be implemented here somewhere else as well.
+FIXXME: This could be merged some day.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-bidirectional-link-to-parent-heading ()
+  "Create bidirectional links between current heading and its parent.
+The current heading gets a link to its parent at the original point position,
+and the parent gets a backlink in its LINKS drawer."
+  (interactive)
+  (let ((original-point (point-marker)))  ; Save the exact position where function was called
+    (save-excursion
+      (org-back-to-heading t)
+      (let* ((current-level (org-current-level))
+             (current-heading-marker (point-marker))
+             (current-title (org-get-heading t t t t))
+             (current-id nil)
+             (parent-id nil)
+             (parent-title nil))
+        
+        ;; Check if we're at a top-level heading
+        (when (= current-level 1)
+          (error "Cannot link to parent: already at top level"))
+        
+        ;; Generate or get ID for current heading
+        (goto-char current-heading-marker)
+        (setq current-id (my-id-get-or-generate))
+        
+        ;; Find parent heading
+        (goto-char current-heading-marker)
+        (org-up-heading-safe)
+        (setq parent-title (org-get-heading t t t t))
+        
+        ;; Generate or get ID for parent heading
+        (setq parent-id (my-id-get-or-generate))
+        
+        ;; Sanitize titles for link descriptions
+        (setq current-title (my-sanitize-heading-for-link current-title))
+        (setq parent-title (my-sanitize-heading-for-link parent-title))
+        
+        ;; Add backlink in parent's LINKS drawer
+        (my-add-backlink-to-links-drawer current-id current-title)
+        
+        ;; Now insert the parent link at the original point position
+        (goto-char original-point)
+        (insert (format "- [[id:%s][%s]]\n" parent-id parent-title))
+        
+        ;; Clean up markers
+        (set-marker current-heading-marker nil)
+        (set-marker original-point nil)))))
+
+(defun my-sanitize-heading-for-link (heading)
+  "Sanitize HEADING text for use as a link description.
+Remove progress indicators and replace links with their descriptions."
+  (let ((result heading))
+    ;; Remove progress indicators like [1/3] or [34%]
+    (setq result (replace-regexp-in-string "\\[\\([0-9]+/[0-9]+\\|[0-9]+%\\)\\]\\s-*" "" result))
+    ;; Replace links with their descriptions or remove them
+    ;; Handle [[link][description]] format
+    (setq result (replace-regexp-in-string "\\[\\[\\([^]]+\\)\\]\\[\\([^]]+\\)\\]\\]" "\\2" result))
+    ;; Handle [[link]] format (no description)
+    (setq result (replace-regexp-in-string "\\[\\[\\([^]]+\\)\\]\\]" "" result))
+    ;; Clean up extra spaces
+    (setq result (replace-regexp-in-string "\\s-+" " " result))
+    (string-trim result)))
+
+(defun my-add-backlink-to-links-drawer (child-id child-title)
+  "Add a backlink to child in the LINKS drawer of current heading."
+  (org-back-to-heading t)
+  (let* ((heading-end (save-excursion 
+                        (outline-next-heading)
+                        (if (eobp) (point) (1- (point)))))
+         (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]"))
+         (link-entry (format "%s <- [[id:%s][%s]]\n" timestamp child-id child-title)))
+    ;; Move past the heading line
+    (forward-line 1)
+    ;; Check if there's already a property drawer
+    (if (looking-at org-property-drawer-re)
+        (progn
+          ;; Property drawer exists
+          (let ((props-end (save-excursion 
+                            (re-search-forward "^:END:" heading-end t)
+                            (point))))
+            ;; Look for existing LINKS drawer AFTER the property drawer
+            (goto-char props-end)
+            (forward-line 1)
+            (if (looking-at "^:LINKS:$")
+                ;; LINKS drawer exists after property drawer, add to it
+                (progn
+                  (forward-line 1)
+                  (insert link-entry))
+              ;; No LINKS drawer, create it after the property drawer
+              (goto-char props-end)
+              (forward-line 1)
+              (insert ":LINKS:\n")
+              (insert link-entry)
+              (insert ":END:\n"))))
+        ;; No property drawer exists, check for LINKS drawer
+        (if (looking-at "^:LINKS:$")
+            ;; LINKS drawer exists without property drawer, add to it
+            (progn
+              (forward-line 1)
+              (insert link-entry))
+          ;; Neither drawer exists, create property drawer with LINKS
+          (insert ":PROPERTIES:\n")
+          (insert (format ":CREATED:  %s\n" (format-time-string "[%Y-%m-%d %a %H:%M]")))
+          (insert (format ":ID:       %s\n" (my-id-get-or-generate)))
+          (insert ":END:\n")
+          (insert ":LINKS:\n")
+          (insert link-entry)
+          (insert ":END:\n")))))
+#+END_SRC
+
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
