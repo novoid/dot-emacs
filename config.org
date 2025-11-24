@@ -9038,6 +9038,222 @@ Remove progress indicators and replace links with their descriptions."
           (insert ":END:\n")))))
 #+END_SRC
 
+*** my-visit-upcoming-meetings
+
+| 2025-11-24 | initial version by Sonnet 4.5 |
+
+My prompt for the LLM:
+
+#+BEGIN_QUOTE
+Hi, in my Emacs Org-mode, I've got a very large file with all of my knowledge base as well as appointments.
+
+I'd like to be able to quickly access weekly meetings that are already created with their time-stamp. Each meeting has its own sub-hierarchy:
+
+: *** Weekly Meetings about X 2025
+: :PROPERTIES:
+: :ID: 2025-03-17-weekly-meetings-x
+: :END:
+
+This heading has one sub-heading per meeting iteration that looks like:
+
+: **** [2025-11-24 Mon 14:30-15:00] Weekly Meeting about X
+: :PROPERTIES:
+: :ID: 2025-09-03-weekly-meeting-x
+: :END:
+: **** [2025-12-01 Mon 14:30-15:00] Weekly Meeting about X
+: :PROPERTIES:
+: :ID: 2025-10-27-weekly-meeting-x
+: :END:
+
+I've summarized my weekly meetings somewhere such as:
+
+: - My weekly meetings:
+:   - [[id:2025-03-17-weekly-meetings-x][Project X]]
+:   - [[id:2025-01-01-meetings-y][Customer Y]]
+:   - [[id:2025-06-11-stuff-z][The thing with Z]]
+:   - id:2024-07-15-weeklys about something else
+
+I can think of two methods of quickly being able to visit all upcoming weeklys (in order to add something to the next meeting each).
+
+The first approach would be:
+
+1. I mark the summary that contains the "My weekly meetings:" section
+2. I invoke some Elisp function you write: my-visit-upcoming-meetings()
+3. In that function: You extract all IDs of the entry sub-headings
+4. You collapse my Org-mode file
+5. You create a sparse tree such that only the next iterations of each meeting is expanded
+   - in the example above from 2025-03-17-weekly-meetings-x this would expand id:2025-10-27-weekly-meeting-x as it is the first iteration from now (which is [2025-11-24 Mon 14:53])
+6. I manually jump from one expanded heading to the other, quickly being able to identify them because the rest of the large Org-mode file is collapsed.
+
+The second approach would be:
+
+1. I mark the summary that contains the "My weekly meetings:" section
+2. I invoke some Elisp function you write: my-visit-upcoming-meetings()
+3. In that function: You extract all IDs of the entry sub-headings
+4. You create an org-mode list in the clipboard I might yank somewhere:
+   - This content contains a list of all IDs for the upcoming meeting iterations that I may use to manually jump to.
+
+In other words: I want to have a way to quickly jump to/visit headings that are sub-headings of a summarized list of IDs whose datestamp in the title (not in the drawers or bodies!) is the next one in future.
+
+Please do answer:
+
+(1) Is there another method I did not think of which would provide a decent user experience?
+(2) Which of the methods would you find easiest to implement?
+(3) Implement chosen method in Elisp.
+#+END_QUOTE
+
+Sonnet 4.5 (Claude.ai) decided to go for the method where a list of IDs is put into a jump-list I may yank anywhere:
+
+#+BEGIN_QUOTE
+Looking at your workflow, I can see you want quick access to upcoming meeting instances. Let me address your questions:
+
+*(1) Alternative Methods*
+
+Here are some other approaches to consider:
+
+- *Custom agenda view* : Create a specialized org-agenda view that shows only the next instance of each recurring meeting series. This would be a single keystroke away and display all upcoming meetings in one buffer.
+- *Indirect buffers* : Create indirect buffers for each upcoming meeting, allowing you to view/edit them in separate windows simultaneously without jumping around.
+- *Occur-based navigation*: Use =org-occur= with a date range to show only upcoming meetings, then use =next-error= / =previous-error=  to jump between them.
+
+The *custom agenda view*  would probably give you the best user experience—it's what org-mode is designed for, and you could invoke it with a single keystroke.
+
+*(2) Easiest to Implement*
+
+Your *second approach*  (generating a list of links) is definitely easiest to implement. It's more straightforward because:
+
+- No need to manipulate buffer visibility states
+- No complex sparse tree logic
+- Just parse, find dates, and format output
+
+Your first approach requires careful visibility management and sparse tree construction, which is more complex.
+
+*(3) Implementation*
+
+Here's the implementation of the second approach: [...]
+#+END_QUOTE
+
+And here's the generated code after the usual back and forth process
+with the LLM to fix edge-cases such as missing IDs:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-visit-upcoming-meetings ()
+  "Extract IDs from marked region and create a list of links to next meeting instances.
+The list is copied to the kill ring and can be yanked elsewhere."
+  (interactive)
+  (unless (use-region-p)
+    (user-error "No region selected. Please mark the 'My weekly meetings:' section"))
+  
+  (let* ((region-text (buffer-substring-no-properties (region-beginning) (region-end)))
+         (ids (my--extract-ids-from-text region-text))
+         (upcoming-meetings (my--find-upcoming-meetings ids))
+         (links-text (my--format-meeting-links upcoming-meetings)))
+    
+    (if upcoming-meetings
+        (progn
+          (kill-new links-text)
+          (message "Copied %d upcoming meeting link(s) to kill ring. Use C-y to yank."
+                   (length upcoming-meetings)))
+      (message "No upcoming meetings found"))))
+
+(defun my--extract-ids-from-text (text)
+  "Extract all org-mode IDs from TEXT.
+Handles both [[id:...][...]] link format and bare id:... format."
+  (let ((ids '()))
+    (with-temp-buffer
+      (insert text)
+      (goto-char (point-min))
+      ;; Find [[id:...][...]] format
+      (while (re-search-forward "\\[\\[id:\\([^]]+\\)\\]\\[" nil t)
+        (push (match-string 1) ids))
+      ;; Find bare id:... format
+      (goto-char (point-min))
+      (while (re-search-forward "^[[:space:]]*id:\\([^[:space:]]+\\)" nil t)
+        (push (match-string 1) ids)))
+    (nreverse ids)))
+
+(defun my--find-upcoming-meetings (ids)
+  "For each ID in IDS, find the next upcoming meeting instance.
+Returns a list of plists with :id, :title, :timestamp properties."
+  (let ((results '())
+        (now (current-time)))
+    (dolist (id ids)
+      (let* ((marker (org-id-find id t))
+             (next-meeting (when marker
+                            (my--find-next-meeting-in-subtree marker now))))
+        (when next-meeting
+          (push next-meeting results))))
+    (nreverse results)))
+
+(defun my--find-next-meeting-in-subtree (marker now)
+  "Find the next upcoming meeting under the heading at MARKER.
+Returns a plist with :id, :title, :timestamp or nil if none found."
+  (with-current-buffer (marker-buffer marker)
+    (save-excursion
+      (goto-char marker)
+      (let ((end (save-excursion (org-end-of-subtree t)))
+            (best-meeting nil)
+            (best-time nil))
+        
+        ;; Search through all subheadings
+        (while (and (outline-next-heading)
+                    (< (point) end))
+          (let* ((heading (org-get-heading t t t t))
+                 (timestamp (my--extract-timestamp-from-heading heading))
+                 (meeting-time (when timestamp 
+                                (org-time-string-to-time timestamp))))
+            
+            ;; If this meeting is in the future and earlier than our current best
+            (when (and meeting-time
+                      (time-less-p now meeting-time)
+                      (or (not best-time)
+                          (time-less-p meeting-time best-time)))
+              (setq best-time meeting-time)
+              ;; Ensure the heading has an ID
+              (setq best-meeting (list :id (my--ensure-heading-has-id)
+                                      :title heading
+                                      :timestamp timestamp)))))
+        best-meeting))))
+
+(defun my--ensure-heading-has-id ()
+  "Ensure current heading has an ID property.
+Uses my-id-get-or-generate to get or create an ID.
+Returns the ID string."
+  (save-excursion
+    ;; Make sure we're at the heading
+    (org-back-to-heading t)
+    
+    ;; Check if ID already exists
+    (let ((existing-id (org-id-get)))
+      (if existing-id
+          existing-id
+        ;; No ID exists, generate one using your function
+        (progn
+          ;; Call your custom function - it will put ID in kill ring
+          (call-interactively 'my-id-get-or-generate)
+          ;; Now retrieve the ID that was just created
+          (org-id-get))))))
+
+(defun my--extract-timestamp-from-heading (heading)
+  "Extract the first timestamp from HEADING text.
+Returns the timestamp string or nil if none found."
+  (when (string-match "<\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}[^>]*\\)>" heading)
+    (match-string 0 heading)))
+
+(defun my--format-meeting-links (meetings)
+  "Format MEETINGS list as org-mode links.
+Returns a string suitable for yanking into an org buffer."
+  (if (null meetings)
+      ""
+    (concat "Upcoming meetings:\n"
+            (mapconcat
+             (lambda (meeting)
+               (format "- [[id:%s][%s]]"
+                       (plist-get meeting :id)
+                       (plist-get meeting :title)))
+             meetings
+             "\n"))))
+#+END_SRC
+
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
