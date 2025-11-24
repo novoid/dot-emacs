@@ -8782,6 +8782,120 @@ This is useful for debugging."
 ;;; my-dwim-insert-stuff.el ends here
 #+END_SRC
 
+*** my-complete-contact-properties
+
+| 2025-10-22 | initial function from Opus 4.1 |
+
+- I want to add only missing contact drawer properties to the current heading
+
+#+BEGIN_SRC emacs-lisp
+(defun my-complete-contact-properties ()
+  "Add missing contact properties to the current Org heading.
+Compares the existing property drawer with a template and adds
+any missing properties at the end, preserving the template order."
+  (interactive)
+  (save-excursion
+    ;; Define the template properties in order
+    (let ((template-props '(("TYPE" . "person")
+                           ("TITLE" . "")
+                           ("EMAIL" . "")
+                           ("URL" . "")
+                           ("MOBILE" . "+43/")
+                           ("HOMEPHONE" . "")
+                           ("WORKPHONE" . "")
+                           ("PHONE" . "")
+                           ("COMPANY" . "")
+                           ("STREET" . "")
+                           ("POSTALCODE" . "")
+                           ("CITY" . "")
+                           ("COUNTRY" . "Österreich")
+                           ("PHOTOGRAPH" . "")
+                           ("BORN" . "")
+                           ("ITOLDTHEM_EMAIL" . "")
+                           ("ITOLDTHEM_ADDRESS" . "")
+                           ("ITOLDTHEM_PHONE" . "")
+                           ("ADDRESS_CHANGE_METHOD" . "")))
+          (existing-props '())
+          (props-to-add '()))
+      
+      ;; Move to the beginning of current heading
+      (org-back-to-heading t)
+      
+      ;; Check if we're at a heading
+      (unless (org-at-heading-p)
+        (error "Not at an Org heading"))
+      
+      ;; Store the current heading position and find its boundaries
+      (let ((heading-start (point))
+            (heading-end (save-excursion
+                          (org-end-of-subtree t t)
+                          (point))))
+        
+        ;; Narrow to just this heading (excluding subheadings)
+        (save-restriction
+          (narrow-to-region heading-start
+                           (save-excursion
+                             (outline-next-heading)
+                             (if (< (point) heading-end)
+                                 (point)
+                               heading-end)))
+          
+          ;; Check if property drawer exists
+          (goto-char heading-start)
+          (let ((has-drawer (re-search-forward "^:PROPERTIES:" nil t)))
+            
+            (if (not has-drawer)
+                ;; No drawer exists, create one with all properties
+                (progn
+                  (goto-char heading-start)
+                  (end-of-line)
+                  (insert "\n:PROPERTIES:")
+                  (dolist (prop-pair template-props)
+                    (insert (format "\n:%s: %s" 
+                                  (car prop-pair) 
+                                  (cdr prop-pair))))
+                  (insert "\n:END:")
+                  (message "Created new property drawer with all template properties"))
+              
+              ;; Drawer exists, check for missing properties
+              (goto-char heading-start)
+              
+              ;; Collect existing properties
+              (dolist (prop-pair template-props)
+                (let* ((prop-name (car prop-pair))
+                       (prop-value (org-entry-get nil prop-name 'selective)))
+                  (when prop-value
+                    (push prop-name existing-props))))
+              
+              ;; Determine which properties need to be added
+              (dolist (prop-pair template-props)
+                (let ((prop-name (car prop-pair))
+                      (default-value (cdr prop-pair)))
+                  (unless (member prop-name existing-props)
+                    (push (cons prop-name default-value) props-to-add))))
+              
+              ;; Add missing properties in reverse order (since we pushed them)
+              (setq props-to-add (nreverse props-to-add))
+              
+              ;; Add the missing properties
+              (if props-to-add
+                  (progn
+                    ;; Find the :END: tag of the properties drawer
+                    (goto-char heading-start)
+                    (when (re-search-forward "^:END:" nil t)
+                      (beginning-of-line)
+                      ;; Insert properties before :END:
+                      (dolist (prop-pair props-to-add)
+                        (insert (format ":%s: %s\n" 
+                                      (car prop-pair) 
+                                      (cdr prop-pair)))))
+                    (message "Added %d missing properties: %s" 
+                             (length props-to-add)
+                             (mapconcat #'car props-to-add ", ")))
+                (message "No missing properties found - drawer is complete")))))))))
+#+END_SRC
+
+
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
