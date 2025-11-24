@@ -8221,6 +8221,86 @@ simple macro:
 
 
 
+*** my-convert-toot-heading-to-list
+
+| 2025-04-17 | first successful function |
+
+On 2025-04-17, I gave ChatGPT a new try (after failing at least twice
+before). This time, it looks good and so I included the redult to my
+configuration.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-convert-toot-heading-to-list ()
+  "Convert the current Org heading and its content into a formatted Org list,
+replacing the original heading."
+  (interactive)
+  (save-excursion
+    ;; Go to beginning of current heading
+    (org-back-to-heading t)
+    (let* ((beg (point))
+           (end (save-excursion
+                  (or (outline-next-heading) (point-max))))
+           heading link created content-lines)
+
+      ;; Extract heading line
+      (setq heading (thing-at-point 'line t))
+
+      ;; Extract link from heading line
+      (when (string-match "\\(https?://[^ ]+\\)" heading)
+        (setq link (match-string 1 heading)))
+
+      ;; Narrow to the subtree
+      (narrow-to-region beg end)
+
+      ;; Find CREATED property
+      (goto-char (point-min))
+      (when (re-search-forward ":CREATED:[ \t]+\\(\\[.*?\\]\\)" nil t)
+        (setq created (match-string 1)))
+
+      ;; Gather content lines, ignoring empty ones and heading
+      (goto-char (point-min))
+      (let ((body-start (progn
+                          (re-search-forward "^\\*+ " nil t)
+                          (forward-line)
+                          (point)))
+            (props-end (if (re-search-forward "^:END:" nil t)
+                           (progn (forward-line) (point))
+                         (point))))
+        (goto-char (max body-start props-end))
+        (while (and (< (point) (point-max)))
+          (let ((line (string-trim (thing-at-point 'line t))))
+            (unless (string-empty-p line)
+              (push line content-lines)))
+          (forward-line)))
+
+      ;; Clean first body line: remove Mastodon username
+      (when content-lines
+        (let* ((first (pop content-lines))
+               (cleaned (if (string-match " - \\(.*\\)" first)
+                            (match-string 1 first)
+                          first)))
+          (setq content-lines (cons cleaned content-lines))))
+
+      ;; Prepare final list string
+      (let ((result (concat
+                     (format "- %s%s"
+                             (or link "No link found")
+                             (if created (format " (captured %s)" created) ""))
+                     "\n"
+                     (mapconcat (lambda (line) (format "  - %s" line))
+                                (nreverse content-lines)
+                                "\n")
+                     "\n")))
+
+        ;; Widen and replace the whole heading with the list
+        (widen)
+        (goto-char beg)
+        (delete-region beg end)
+        (insert result)
+)))
+(join-line -1) ;; workaround: merge URL-line with "(captured..." line
+)
+#+END_SRC
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
