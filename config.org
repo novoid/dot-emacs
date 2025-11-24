@@ -540,14 +540,22 @@ See: id:2014-03-04-M-l-subword
 (global-set-key [M-c] 'capitalize-word)
 #+END_SRC
 
-** yes-or-no-p: prefer y/n
+** yes-or-no-p: prefer short answers (y/n)
 
 «True #Emacs Knights are lazy and hate typing yes/no - they prefer y/n
 instead. Use this (fset 'yes-or-no-p 'y-or-n-p) in your config.»
 ... from: http://twitter.com/emacs_knight/status/128339316417101825
 
+<2025-11-13 Thu> [[https://irreal.org/blog/?p=13405][• Short Yes/No Answers | Irreal]]
+#+BEGIN_QUOTE
+Starting in Emacs 28, the variable =use-short-answers= was introduced.
+When non =nil= it causes =yes-or-no-p= to call =y-or-n-p= to ask the
+question instead of following its normal path.
+#+END_QUOTE
+
 #+BEGIN_SRC emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
+; (fset 'yes-or-no-p 'y-or-n-p)
+(setq use-short-answers t)
 #+END_SRC
 
 ** Deletes duplicate entries of the history of the minibuffer
