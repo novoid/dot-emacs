@@ -98,6 +98,8 @@ important generic hydras in contrast to the ~F1~-mapped mode hydras.
 * bug-hunter
 
 #+BEGIN_SRC emacs-lisp
+;;; -*- lexical-binding: t; -*-
+
 ;; remove comment characters when using but-hunter to bi-sect this file:
 ; -------------------------------------------------------------------------------------------
 ; (package-initialize)
@@ -235,7 +237,17 @@ English time-stamps in Org-mode (instead of localized German ones):
 - «system locale to use for formatting time values (e.g., timestamps in Org mode files)»
 - "en_US.utf8" did not work for the weekday in the agenda!
 #+BEGIN_SRC emacs-lisp
-(setq system-time-locale "C")
+;; (setq system-time-locale "C") ;; disabled 2025-10-14 because I got German weekday abbrevations in date/timestamps
+(setq system-time-locale "en_US.UTF-8")
+#+END_SRC
+
+On [2025-10-11 Sat] =(getenv "LC_TIME")= did result in "de_AT.UTF-8"
+which caused German style date/timestamps. In order to override any
+wrong system settings, I define it here:
+
+#+BEGIN_SRC emacs-lisp
+(setenv "LANG" "en_US.UTF-8")
+(setenv "LC_TIME" "en_US.UTF-8")
 #+END_SRC
 
 [[http://pragmaticemacs.com/emacs/adaptive-cursor-width/][Adaptive cursor width | Pragmatic Emacs]]: make cursor the width of the
