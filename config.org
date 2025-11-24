@@ -10499,6 +10499,8 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("SMS" . ,(concat my-business-jira-server "/browse/SMS-%s"))
           ("SDSIEMOC" . ,(concat my-business-jira-server "/browse/SDSIEMOC-%s"))
           ("VTLOGMON" . ,(concat my-business-jira-server "/browse/VTLOGMON-%s"))
+          ("TP" . ,(concat my-business-sd-server "/browse/TP-%s"))
+          ("PRZ" . ,(concat my-business-jira-server "/browse/PRZ-%s"))
           ))
 #+END_SRC
 
