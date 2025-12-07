@@ -20481,7 +20481,7 @@ not I should keep this here. Well, it does not hurt either.
 ;; Somehow, this variable got overwritten by something from the
 ;; email config section to here to 'message-send-mail-with-outlook
 ;; and therefore it's been set here as well:
-(setq message-send-mail-function 'message-smtpmail-send-it)
+; (setq message-send-mail-function 'message-smtpmail-send-it)
 #+END_SRC
 
 * Closing and end for profiling
