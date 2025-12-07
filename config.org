@@ -9254,6 +9254,23 @@ Returns a string suitable for yanking into an org buffer."
              "\n"))))
 #+END_SRC
 
+*** my-convert-region-from-markdown-to-orgdown
+
+| 2025-01-11 | added after reading [[http://yummymelon.com/devnull/converting-a-markdown-region-to-org-revisited.html][this article]] |
+
+See also my internal notes on that: id:2025-01-11-Converting-a-Markdown-Region-to-Org
+
+Alternative implementations: [[http://yummymelon.com/devnull/import-markdown-to-org-with-the-clipboard-in-emacs.html][Charles Choi: Import Markdown to Org with the Clipboard in Emacs]]
+
+I prefer wrapped long lines so I kept the original version:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-convert-region-from-markdown-to-orgdown (start end)
+  "Convert region from markdown to org"
+  (interactive "r")
+  (shell-command-on-region start end "pandoc -f markdown -t org" t t))
+#+END_SRC
+
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
@@ -18807,21 +18824,6 @@ This actually replaces many things I used for jumping:
 #+END_SRC
  
 My internal notes on the development of this thing: id:2024-03-08-Unified-Interface-for-Switching-Contexts-Switch-to-Thing
-
-** my-convert-region-from-markdown-to-orgdown
-
-| 2025-01-11 | added after reading [[http://yummymelon.com/devnull/converting-a-markdown-region-to-org-revisited.html][this article]] |
-
-See also my internal notes on that: id:2025-01-11-Converting-a-Markdown-Region-to-Org
-
-I prefer wrapped long lines so I kept the original version:
-
-#+BEGIN_SRC emacs-lisp
-(defun my-convert-region-from-markdown-to-orgdown (start end)
-  "Convert region from markdown to org"
-  (interactive "r")
-  (shell-command-on-region start end "pandoc -f markdown -t org" t t))
-#+END_SRC
 
 * hydra
 
