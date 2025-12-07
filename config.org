@@ -18289,6 +18289,10 @@ one in order to get a decent result for a projector or similar.
   (global-set-key [(shift f12)] 'my-toggle-dark-bright-theme)
 #+END_SRC
 
+Also read [[https://takeonrules.com/2025/12/05/managing-lightdark-scheme-in-macos-and-linux/][Managing Light/Dark Scheme in MacOS and Linux // Take on
+Rules]] if you want to toggle dark/light theme according to the OS
+theme.
+
 ** my-toggle-split-and-single-window() - Toggle between split windows and a single window
 
 http://thornydev.blogspot.co.at/2012/08/happiness-is-emacs-trifecta.html
