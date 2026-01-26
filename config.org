@@ -111,6 +111,50 @@ important generic hydras in contrast to the ~F1~-mapped mode hydras.
 ; -------------------------------------------------------------------------------------------
 #+END_SRC
 
+* DISABLED FIXXME: debug font size issue
+:PROPERTIES:
+:CREATED:  [2025-12-05 Fri 12:52]
+:END:
+
+#+BEGIN_SRC emacs-lisp
+;; Add this temporarily to debug
+(defun my/watch-face-changes ()
+  "Debug function to monitor face height changes."
+  (let ((current-height (face-attribute 'default :height)))
+    (message "Default face height is now: %s" current-height)))
+
+;; Check after various initialization stages
+(add-hook 'org-mode-hook #'my/watch-face-changes)
+(add-hook 'org-agenda-mode-hook #'my/watch-face-changes)
+(add-hook 'org-agenda-finalize-hook #'my/watch-face-changes)
+
+;; Also add a timer to check periodically during startup
+; (run-with-timer 1 1 #'my/watch-face-changes)  ; Remove this after debugging
+
+
+
+;; ;; Add this EARLY in your config.el, before theme loading:
+;; (defun debug-face-color-changes (orig-fun &rest args)
+;;   "Debug face color changes."
+;;   (when (and (listp args) 
+;;              (member "unspecified" (flatten-list args)))
+;;     (message "!!! Attempting to set 'unspecified' color !!!")
+;;     (message "Face function: %s" orig-fun)
+;;     (message "Arguments: %s" args)
+;;     (backtrace))
+;;   (condition-case err
+;;       (apply orig-fun args)
+;;     (error 
+;;      (message "Color error in %s: %s" orig-fun err)
+;;      nil)))
+;; 
+;; ;; Wrap the relevant functions
+;; (advice-add 'set-face-attribute :around #'debug-face-color-changes)
+;; (advice-add 'set-face-foreground :around #'debug-face-color-changes)
+;; (advice-add 'set-face-background :around #'debug-face-color-changes)
+
+#+END_SRC
+
 * DISABLED literate test 1
 
 Testing the noweb principle as shown on this page: https://www.hhyu.org/posts/literate_config/
@@ -1935,7 +1979,9 @@ Host-specific font sizes: values are in 1/10pt → 100 are 10pt
   (set-face-attribute 'default (selected-frame) :height 110) ;; 2019-12-04: bigger font on native 30" resolution
   )
 (when (my-system-is-jackson)
-  (set-face-attribute 'default (selected-frame) :height 110)
+  (set-face-attribute 'default (selected-frame) :height 140);; 110 for 24"; 140 for 27" 4K -> has no effect because something sets the size after 1st agenda finishes
+  ;(set-face-attribute 'default nil :height 170)
+
 )
 #+END_SRC
 
@@ -2319,6 +2365,20 @@ FIXXME: identify crux commands that I added to my setup before and maybe replace
   ;; package.
   (marginalia-mode)
 )
+)
+#+END_SRC
+
+** request
+
+| 2025-12-31 | some functions here do require "request" |
+
+I've had it installed on some Emacs setups somehow (manually?) and not it's official part of my config.
+
+#+BEGIN_SRC emacs-lisp
+(use-package request
+  :ensure t
+  :defer 110
+  :after org
 )
 #+END_SRC
 
@@ -9271,6 +9331,84 @@ I prefer wrapped long lines so I kept the original version:
   (shell-command-on-region start end "pandoc -f markdown -t org" t t))
 #+END_SRC
 
+*** my-org-block-interruption
+
+| 2026-01-26 | [[https://claude.ai/chat/6c2705d6-39bc-409f-ae90-611b6aeb43ea][Generated it via Opus 4.5 LLM]] | 
+
+Initial prompt for Opus 4.5:
+#+BEGIN_QUOTE
+Write me an Elisp function called "my-org-block-interruption" which checks, if it is invoked when the point is within a block (#+BEGIN_... and #+END_...).
+
+If not, issue a warning and don't modify anything in the buffer.
+
+If inside any block, it inserts END/BEGIN lines after the current line and an empty line in-between so that the current block is interrupted. 
+
+Add optional block parameters of the original block to the new BEGIN line.
+
+Make sure that the block type may be of any type as the user might develop his own block types.
+
+Place the point within the newly created empty line.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(defun my-org-block-interruption ()
+  "Interrupt the current Org block by inserting END/BEGIN lines.
+If point is within a block (#+BEGIN_... and #+END_...), insert the
+corresponding #+END_... line, an empty line, and a new #+BEGIN_... line
+after the current line. The new BEGIN line includes any optional parameters
+from the original block. Point is placed on the empty line between them.
+If not inside a block, issue a warning and do nothing."
+  (interactive)
+  (let ((case-fold-search t)
+        block-type
+        block-params
+        begin-found)
+    ;; Search backward for #+BEGIN_
+    (save-excursion
+      (when (re-search-backward
+             "^[ \t]*#\\+BEGIN_\\([^ \t\n]+\\)\\([ \t]+.*\\)?$"
+             nil t)
+        (setq block-type (match-string-no-properties 1))
+        (setq block-params (match-string-no-properties 2))
+        (setq begin-found (point))))
+    (if (not begin-found)
+        (message "Warning: Not inside a block. No modifications made.")
+      ;; Check if there's a matching #+END_ between BEGIN and point
+      (let ((current-pos (point))
+            end-before-point)
+        (save-excursion
+          (goto-char begin-found)
+          (when (re-search-forward
+                 (concat "^[ \t]*#\\+END_" (regexp-quote block-type) "[ \t]*$")
+                 current-pos t)
+            (setq end-before-point t)))
+        (if end-before-point
+            (message "Warning: Not inside a block. No modifications made.")
+          ;; Verify there's actually a closing END_ after point
+          (let (end-after-point)
+            (save-excursion
+              (when (re-search-forward
+                     (concat "^[ \t]*#\\+END_" (regexp-quote block-type) "[ \t]*$")
+                     nil t)
+                (setq end-after-point t)))
+            (if (not end-after-point)
+                (message "Warning: Block has no closing END. No modifications made.")
+              ;; We're inside a valid block - do the interruption
+              (end-of-line)
+              (newline)
+              (insert "#+END_" block-type)
+              (newline)
+              (let ((empty-line-pos (point)))
+                (newline)
+                (insert "#+BEGIN_" block-type)
+                (when (and block-params (not (string-blank-p block-params)))
+                  (insert block-params))
+                (goto-char empty-line-pos)))))))))
+#+END_SRC
+
+#+RESULTS:
+: my-org-block-interruption
+
 *** test area 
 :PROPERTIES:
 :CATEGORY: business
@@ -10518,6 +10656,8 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("VTLOGMON" . ,(concat my-business-jira-server "/browse/VTLOGMON-%s"))
           ("TP" . ,(concat my-business-sd-server "/browse/TP-%s"))
           ("PRZ" . ,(concat my-business-jira-server "/browse/PRZ-%s"))
+          ("POPP" . ,(concat my-business-jira-server "/browse/POPPANF-%s"))
+          ("POPPANF" . ,(concat my-business-jira-server "/browse/POPPANF-%s"))
           ))
 #+END_SRC
 
@@ -13280,16 +13420,30 @@ Source: [[https://whhone.com/posts/org-agenda-repeated-tasks/][Repeated Tasks in
       (goto-char pos)
       (org-get-repeat))))
 
-(defun my/org-agenda-update-repeated-entry()
-  "Update the scheduled leader string to the repeated string.
-  e.g., from 'Scheduled:  to 'Rept .+1d: '."
+;; 2025-12-07 vk: caused an error: https://claude.ai/chat/7b434253-d5bd-4756-9db5-dd7300de2f94
+;;(defun my/org-agenda-update-repeated-entry()
+;;  "Update the scheduled leader string to the repeated string.
+;;  e.g., from 'Scheduled:  to 'Rept .+1d: '."
+;;  (save-excursion
+;;    (when-let ((org-repeat (my/org-agenda-entry-get-repeat))
+;;               (rept-str (format "Rept %4s: " org-repeat))
+;;               (scheduled-leader (car org-agenda-scheduled-leaders)))
+;;      (search-backward scheduled-leader)
+;;      (delete-forward-char (length scheduled-leader))
+;;      (insert-and-inherit rept-str))))
+;; improved version:
+(defun my/org-agenda-update-repeated-entry ()
   (save-excursion
-    (when-let ((org-repeat (my/org-agenda-entry-get-repeat))
-               (rept-str (format "Rept %4s: " org-repeat))
-               (scheduled-leader (car org-agenda-scheduled-leaders)))
-      (search-backward scheduled-leader)
-      (delete-forward-char (length scheduled-leader))
-      (insert-and-inherit rept-str))))
+    (let* ((org-repeat (and t (my/org-agenda-entry-get-repeat)))
+           (rept-str (and org-repeat (format "Rept %4s: " org-repeat)))
+           (scheduled-leader (and rept-str (car org-agenda-scheduled-leaders))))
+      (when scheduled-leader
+        (condition-case nil
+            (progn
+              (search-backward scheduled-leader)
+              (delete-forward-char (length scheduled-leader))
+              (insert-and-inherit rept-str))
+          (search-failed nil))))))  ; Silently handle when text not found
 
 (defun my/org-agenda-update-repeated-entries ()
   "Replace all scheduled leaders ('Scheduled:') with the repeaters
@@ -14733,8 +14887,9 @@ my pgp4win/Kleopatra key management tool. =~/.gnupg/= or
 the key.
 
 #+BEGIN_SRC emacs-lisp :results none
-    (setq org-crypt-key "77B9E3C5")
-    (setq epa-file-encrypt-to "77B9E3C5")
+    ;; (setq org-crypt-key "77B9E3C5") ;; did NOT work since Org-crypt still used the "default-key" (or "encrypt-to" key) of ~/.gnupg/gpg.conf → see id:2026-01-03-fix-org-crypt
+    (setq org-crypt-key "orgcrypt")  ; Use the group name from ~/.gnupg/gpg.conf which links to the OpenPGP key that should be used with org-crypt
+    (setq epa-file-encrypt-to '("77B9E3C5"))
 #+END_SRC
 
 encrypting whole files:
@@ -19267,15 +19422,16 @@ my-rocketchat-insert-message-from-url
     ^^                               _c_ontact link                     ^^                       ^^                                    C-c }  toggle row/column overlay
     ^^                               mark as _P_roject                  ^^                       ^^                                    C-c '  edit formulas (S-<arrows> for changing references)
     ^^                               generate & copy _i_d               ^^                       ^^
-    ^^                               _w_ebarchive tsfile                ^^                       ^^
-    ^^C-c C-a  attachment menu       indent-_r_igidly   C-x TAB         ^^                       ^^
-    ^^                               org-_A_ttach-set-directory         ^^                       ^^
-    ^^                               _2_ my-org-attach-insert           ^^                       ^^
-    ^^                               my-dwim-_I_nsert-stuff             ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
-    ^^                               my-_R_ocketchat-insert-message-from-url  ^^                 ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
-    ^^                               ^^                                 ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
-    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   ^^C-x SPC    rectangle-mark-mode
-    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   ^^C-c C-x b  org-tree-to-indirect-buffer (focus) _2_
+    ^^                               _w_ebarchive tsfile                ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
+    ^^C-c C-a  attachment menu       indent-_r_igidly   C-x TAB         ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
+    ^^                               org-_A_ttach-set-directory         ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
+    ^^                               _2_ my-org-attach-insert           ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
+    ^^                               my-dwim-_I_nsert-stuff             ^^                       ^^                                    ^^C-x SPC    rectangle-mark-mode                                     
+    ^^                               my-_R_ocketchat-insert-message-from-url  ^^                 ^^                                    ^^C-c C-x b  org-tree-to-indirect-buffer (focus) _2_                 
+    ^^                               _4_ my-org-block-interruption      ^^                       ^^                                    
+    ^^                               ^^                                 ^^                       ^^                                    
+    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   
+    ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   
     _f_ocus agenda (prio A; sched .) _3_ Reddit/Wiki.js (region)      _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
     remove _B_usiness from agenda    ^^                               _W_eather Graz                  S  my-synonym-current-word
@@ -19358,6 +19514,8 @@ my-rocketchat-insert-message-from-url
     ("x" secret-mode nil)
 
     ("2" org-tree-to-indirect-buffer nil)
+
+    ("4" my-org-block-interruption nil)
 
     ("D" org-decrypt-entry nil)
 
@@ -20387,13 +20545,22 @@ approximately 25 seconds as of 2019-04-17.
     org-indent-mode
     org-table-sticky-header-mode
     smooth-scroll-mode))
-  (defun purge-minor-modes ()
-    (interactive)
-    (dolist (x hidden-minor-modes nil)
-      (let ((trg (cdr (assoc x minor-mode-alist))))
-        (when trg
-          (setcar trg "")))))
-  (add-hook 'after-change-major-mode-hook 'purge-minor-modes)
+
+  (if (>= emacs-major-version 31)
+      (;; for Emacs 31 and higher:
+       (setq mode-line-collapse-minor-modes hidden-minor-modes) ;; no need for diminish-mode or others: id:2025-12-25-Emacs-Redux-Hide-Minor-Modes-in-the-Modeline-in-Emacs-31
+       )
+    (progn ;; for Emacs before v31:
+        (defun purge-minor-modes ()
+          (interactive)
+          (dolist (x hidden-minor-modes nil)
+            (let ((trg (cdr (assoc x minor-mode-alist))))
+              (when trg
+                (setcar trg "")))))
+        (add-hook 'after-change-major-mode-hook 'purge-minor-modes)
+    )
+    )
+
 
   (global-set-key (kbd "M-x") 'counsel-M-x) ;; id:2017-03-02-cool-command-completion
 
@@ -20457,12 +20624,12 @@ Note: Removing =faststart-indicator-file= or running =my-recache-all=
 is done later-on. This is to make sure that Emacs bootup statistics stay
 comparable.
 
-* custom variables
+* DISABLED custom variables
 
 This somehow got written by Emacs. Honestly, I am not sure whether or
 not I should keep this here. Well, it does not hurt either.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -20476,7 +20643,10 @@ not I should keep this here. Well, it does not hurt either.
     ((eval ispell-change-dictionary "german8")
      (eval ispell-change-dictionary "american")
      (eval ispell-change-dictionary "en_US")
-     (flyspell-default-dictionary . "german8")))))
+     (flyspell-default-dictionary . "german8")
+     (auto-fill-mode . t)
+     (auto-revert-mode . t)
+     ))))
 
 ;; Somehow, this variable got overwritten by something from the
 ;; email config section to here to 'message-send-mail-with-outlook
@@ -20912,6 +21082,7 @@ New mapping for F-keys: id:2017-05-26-new-F-key-bindings
 ""| <S-f12> | nil
 "
 #+end_example
+
 
 * Local Variables
 
