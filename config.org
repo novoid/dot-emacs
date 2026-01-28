@@ -9335,6 +9335,12 @@ I prefer wrapped long lines so I kept the original version:
 
 | 2026-01-26 | [[https://claude.ai/chat/6c2705d6-39bc-409f-ae90-611b6aeb43ea][Generated it via Opus 4.5 LLM]] | 
 
+NOTE: [[https://mastodon.social/@rickardsundin/115969216088611213]]
+mentioned the built-in function =org-babel-demarcate-block= which does
+seem to accomplish the very same feature. However, it also re-formats
+"BEGIN_..." to lower case which I dislike for pure subjective reasons.
+So I guess I'll stick with my own function for now.
+
 Initial prompt for Opus 4.5:
 #+BEGIN_QUOTE
 Write me an Elisp function called "my-org-block-interruption" which checks, if it is invoked when the point is within a block (#+BEGIN_... and #+END_...).
