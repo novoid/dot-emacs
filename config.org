@@ -9341,6 +9341,13 @@ seem to accomplish the very same feature. However, it also re-formats
 "BEGIN_..." to lower case which I dislike for pure subjective reasons.
 So I guess I'll stick with my own function for now.
 
+Furthermore: [[https://social.sachachua.com/@sacha/statuses/01KFY41C69K19T7NTSW87K027W][Sacha wrote me]] the link to another blog article providing
+the same feature: https://scripter.co/splitting-an-org-block-into-two/
+This article also mentions a few downsides of
+=org-babel-demarcate-block=.
+
+-------
+
 Initial prompt for Opus 4.5:
 #+BEGIN_QUOTE
 Write me an Elisp function called "my-org-block-interruption" which checks, if it is invoked when the point is within a block (#+BEGIN_... and #+END_...).
@@ -9414,6 +9421,128 @@ If not inside a block, issue a warning and do nothing."
 
 #+RESULTS:
 : my-org-block-interruption
+
+*** my-orgheadingnetwork-current-file
+
+| 2026-02-16 | Made it [[https://claude.ai/chat/d3f94b5b-6f80-406e-8b39-98ff9b46720f][via Claude]] after I created the Python tool yesterday |
+
+I wrote https://codeberg.org/publicvoit/orgheadingnetwork (also with
+the help of Claude.ai) which visualizes the network of Orgdown
+(Org-mode) file nodes.
+
+This script is a convenience function that opens a visualization for
+the current Orgdown file (not buffer - you need to safe the buffer in
+order to see latest changes).
+
+Be aware that this script reuses my =my-id-get-or-generate= function
+from this file in order to generate human-readable ID properties.
+
+#+BEGIN_SRC emacs-lisp
+(defun my-orgheadingnetwork-current-file (&optional subtree)
+  "Generate and open network visualization for current org-mode file.
+With prefix argument (C-u), generate visualization for current heading only.
+Requires orgheadingnetwork to be installed at ~/src/orgheadingnetwork/."
+  (interactive "P")
+  
+  ;; ============================================================================
+  ;; CONFIGURATION - Adapt these paths to your local setup
+  ;; ============================================================================
+  (let* ((orgheadingnetwork-project-dir (expand-file-name "~/src/orgheadingnetwork"))
+         (orgheadingnetwork-script-name "orgheadingnetwork.py")
+         (temp-directory "/tmp/")
+         (installation-url "https://codeberg.org/publicvoit/orgheadingnetwork")
+         ;; ============================================================================
+         ;; End of configuration section
+         ;; ============================================================================
+         
+         ;; Derived paths (no need to edit these)
+         (pyproject-path (expand-file-name "pyproject.toml" orgheadingnetwork-project-dir))
+         (script-path (expand-file-name orgheadingnetwork-script-name orgheadingnetwork-project-dir)))
+    
+    ;; Check if we're in an org-mode buffer
+    (unless (derived-mode-p 'org-mode)
+      (user-error "Current buffer is not an Org-mode file. Please open an .org file first"))
+    
+    ;; Check if buffer is visiting a file
+    (unless (buffer-file-name)
+      (user-error "Current buffer is not visiting a file. Please save the buffer first"))
+    
+    ;; Check if orgheadingnetwork is installed
+    (unless (file-exists-p pyproject-path)
+      (user-error "orgheadingnetwork not found. Please install it from %s at %s\nExpected file: %s" 
+                  installation-url
+                  orgheadingnetwork-project-dir
+                  pyproject-path))
+    
+    ;; Handle ID for subtree mode
+    (when subtree
+      (let ((existing-id (org-entry-get nil "ID")))
+        (unless existing-id
+          ;; No ID found, ask user
+          (unless (y-or-n-p "ID property missing: do you want me to generate one and save the buffer before continuing? ")
+            (user-error "Cannot generate subtree visualization without an ID property"))
+          ;; Generate ID and save buffer
+          (my-id-get-or-generate)
+          (save-buffer)
+          (message "ID generated and buffer saved"))))
+    
+    ;; Get current org file path
+    (let* ((org-file (buffer-file-name))
+           (org-basename (file-name-nondirectory org-file))
+           (org-name-sans-ext (file-name-sans-extension org-basename))
+           ;; Get heading ID if subtree mode (now we know it exists)
+           (heading-id (when subtree
+                         (org-entry-get nil "ID")))
+           ;; Create temp file with org filename (and heading marker if subtree)
+           (temp-file (expand-file-name
+                      (make-temp-name
+                       (concat "orgheadingnetwork_" org-name-sans-ext 
+                               (if subtree "_subtree" "")
+                               "_"))
+                      temp-directory))
+           (temp-file-html (concat temp-file ".html")))
+      
+      ;; Ensure temp file has .html extension
+      (setq temp-file temp-file-html)
+      
+      (message "Generating network visualization for %s%s..." 
+               org-basename
+               (if subtree (format " (subtree: %s)" heading-id) ""))
+      
+      ;; Run the command
+      (let* ((default-directory orgheadingnetwork-project-dir)
+             ;; Build command arguments conditionally
+             (args (append (list "--project" orgheadingnetwork-project-dir
+                                "run" script-path
+                                "-o" temp-file)
+                          (when subtree
+                            (list "--subtree" (concat "id:" heading-id)))
+                          (list org-file)))
+             (exit-code (apply 'call-process "uv" nil "*orgheadingnetwork-output*" nil args)))
+        
+        ;; Check if command succeeded
+        (if (and (eq exit-code 0)
+                 (file-exists-p temp-file)
+                 (> (nth 7 (file-attributes temp-file)) 0)) ; Check file size > 0
+            (progn
+              (message "Opening network visualization: %s" temp-file)
+              (browse-url-of-file temp-file))
+          
+          ;; Handle errors
+          (progn
+            (when (file-exists-p temp-file)
+              (delete-file temp-file))
+            (with-current-buffer "*orgheadingnetwork-output*"
+              (display-buffer (current-buffer)))
+            (user-error "Failed to generate network visualization (exit code: %s). Check *orgheadingnetwork-output* buffer for details" 
+                        exit-code)))))))
+
+(defun my-orgheadingnetwork-current-heading ()
+  "Generate and open network visualization for current org-mode heading.
+This is a convenience wrapper around `my-orgheadingnetwork-current-file'."
+  (interactive)
+  (my-orgheadingnetwork-current-file t))
+#+END_SRC
 
 *** test area 
 :PROPERTIES:
@@ -11405,6 +11534,7 @@ Maybe I'm to stupid to use QUELPA. :-( I had to manually clone it and install vi
 *** my-org-link-to-headline
 
 | 2025-03-30 | initial version from https://mastodon.social/@laotang/114219403892605679 |
+| 2026-02-09 | [[id:2026-02-08-fix-broken-contact-link-F1-c-empty-dot-dot-dot][bugfix]] for =my-org-link-to-headline= (empty id: part of link)            |
 
 - =helm-org-contacts= ([[https://github.com/tmalsburg/helm-org-contacts][which I used for linking contacts]]) [[https://github.com/tmalsburg/helm-org-contacts/issues/10#issuecomment-2728554111][is now unmaintained]]
 - [[https://graz.social/@publicvoit/114218152691342170][I asked Mastodon for help]].
@@ -11430,6 +11560,16 @@ For now, I use the basic version in order to be able to link again:
 (defvar my-org-link-cache (make-hash-table :test 'equal)
   "Cache for storing parsed headlines by Org file.")
 
+(defvar my-org-link-cache-timestamps (make-hash-table :test 'equal)
+  "Stores the modification time of each cached Org file.")
+
+(defun my-org-link-cache-valid-p (file)
+  "Check if the cache for FILE is still valid by comparing modification times."
+  (let ((cached-time (gethash file my-org-link-cache-timestamps))
+        (current-time (nth 5 (file-attributes file))))
+    (and cached-time
+         (equal cached-time current-time))))
+
 (defun my-org-link-to-headline (&optional orgfile)
   "Insert org-id link to a headline from a selected Org file, with caching."
   (interactive)
@@ -11437,28 +11577,35 @@ For now, I use the basic version in order to be able to link again:
          (table)
          (parsed-data)
          (headline))
-    
-    ;; Check if the file has been parsed and cached already
+
+    ;; Check if the cache is still valid
+    (when (not (my-org-link-cache-valid-p file))
+      (remhash file my-org-link-cache)
+      (remhash file my-org-link-cache-timestamps))
+
     (setq table (gethash file my-org-link-cache))
-    
+
     (if (not table)
-        ;; If no cache, parse the file and store the result in the cache
         (progn
-          (with-temp-buffer
-            (insert-file-contents file)
-            (setq parsed-data (org-element-parse-buffer)))
           (setq table (make-hash-table :test 'equal))
-          (org-element-map parsed-data 'headline
-            (lambda (hl)
-              (let* ((title (org-element-property :raw-value hl))
-                     (id (org-element-property :ID hl)))
-                (when title
-                  (puthash title id table)))))
-          (puthash file table my-org-link-cache)))  ;; Cache the result for the file
-    
-    ;; Use the cached table
+          (with-current-buffer (find-file-noselect file)
+            (setq parsed-data (org-element-parse-buffer))
+            (org-element-map parsed-data 'headline
+              (lambda (hl)
+                (let ((title (org-element-property :raw-value hl))
+                      (begin (org-element-property :begin hl)))
+                  (when title
+                    (puthash title begin table))))))
+          (puthash file table my-org-link-cache)
+          (puthash file (nth 5 (file-attributes file)) my-org-link-cache-timestamps)))
+
     (setq headline (completing-read "Which headline: " (hash-table-keys table)))
-    (insert (org-make-link-string (concat "id:" (gethash headline table)) headline))))
+
+    (let ((id (with-current-buffer (find-file-noselect file)
+                (save-excursion
+                  (goto-char (gethash headline table))
+                  (my-id-get-or-generate)))))
+      (insert (org-make-link-string (concat "id:" id) headline)))))
 
 (defun my-invalidate-my-org-link-cache-clear ()
   "Invalidate the cache of Org files."
@@ -19440,8 +19587,8 @@ my-rocketchat-insert-message-from-url
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   
     _f_ocus agenda (prio A; sched .) _3_ Reddit/Wiki.js (region)      _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
-    remove _B_usiness from agenda    ^^                               _W_eather Graz                  S  my-synonym-current-word
-    _<_ my-org-tree-to-indirect-buffer  ^^                            _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
+    remove _B_usiness from agenda    _v_isualize current hierarchy    _W_eather Graz                  S  my-synonym-current-word
+    _<_ my-org-tree-to-indirect-buf  _V_isualize current file         _!_ save-buffers-kill-terminal  s  spray-mode (speed-reading)
     ^^                               ^^                               org-_D_ecrypt-entry
     ^^                               ^^                               my-_t_oggle-checkbox-add-comment
     ")
@@ -19528,6 +19675,9 @@ my-rocketchat-insert-message-from-url
     ("<" my-org-tree-to-indirect-buffer nil)
 
     ("B" (lambda () (interactive) (setq org-agenda-files (delete (concat (expand-file-name "~") "/org/business.org") org-agenda-files))) nil)
+
+    ("V" my-orgheadingnetwork-current-file nil)
+    ("v" my-orgheadingnetwork-current-heading nil)
 
     ("q" nil "quit")
 
