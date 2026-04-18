@@ -379,8 +379,8 @@ I'm not using abbrev mode and get annoyed by its questions:
 you would not need it for consistency warnings. Re-enable it if
 something is fishy and you want the self-check functionality again.
 
-#+BEGIN_SRC emacs-lisp
-(setq org-element--cache-self-verify nil) 
+#+BEGIN_SRC emacs-lisp :tangle no
+;; (setq org-element--cache-self-verify nil)  ;; 2026-04 something is fishy; Ihor session; it's nil by default
 #+END_SRC
 
 For issue, see id:2022-01-06-Emacs-Warning--emacs--Unrecognized-key-i-when-invoking-my-title-capitalization.
@@ -389,7 +389,7 @@ For issue, see id:2022-01-06-Emacs-Warning--emacs--Unrecognized-key-i-when-invok
   : Warning (emacs): org-element--cache: Unregistered buffer modifications detected. Resetting.
 
 #+BEGIN_SRC emacs-lisp
-(setq org-element--cache-diagnostics-modifications nil)
+;;(setq org-element--cache-diagnostics-modifications nil)   ;; 2026-04 Ihor session; I should not us ethat
 #+END_SRC
 
 -------
