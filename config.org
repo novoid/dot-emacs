@@ -11168,6 +11168,7 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("IDPSEK" . ,(concat my-business-jira-server "/browse/IDPSEK-%s"))
           ("BC" . ,(concat my-business-jira-server "/browse/BC-%s"))
           ("TIPMO" . ,(concat my-business-sp-customer-server "593/TIPMO-%s"))
+          ("ALM" . ,(concat my-business-sp-customer-server "388/ALM-%s"))
           ("TIGW" . ,(concat my-business-sd-server "/browse/TIGW-%s"))
           ("gISMS" . ,(concat my-business-gjira-server "/browse/ISMS-%s"))
           ("CMP" . ,(concat my-business-sd-server "/browse/CMP-%s"))
