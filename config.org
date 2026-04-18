@@ -109,6 +109,17 @@ important generic hydras in contrast to the ~F1~-mapped mode hydras.
 ; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
 ; (require 'org)
 ; -------------------------------------------------------------------------------------------
+
+;(debug-on-variable-change 'org-startup-with-inline-images)
+;; 2026-04-18 Ihor session;; (debug-on-entry 'org-indent-mode)
+;; 2026-04-18 Ihor session;; (debug-on-variable-change 'org-startup-indented)
+;; 2026-04-18 Ihor session;; 
+;; 2026-04-18 Ihor session;; (setq org-element--cache-self-verify 'backtrace
+;; 2026-04-18 Ihor session;;         ;; record logs, but only check critical crashes
+;; 2026-04-18 Ihor session;;         org-element--cache-self-verify-frequency 1.0
+;; 2026-04-18 Ihor session;;         org-element--cache-diagnostics-ring-size 50000) 
+;; 2026-04-18 Ihor session;; 
+;; 2026-04-18 Ihor session;; (setq org-element-cache-persistent nil) 
 #+END_SRC
 
 * DISABLED FIXXME: debug font size issue
