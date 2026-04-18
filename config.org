@@ -8377,6 +8377,153 @@ replacing the original heading."
 #+END_SRC
 
 
+*** my-convert-orgro-heading-to-list
+
+| 2026-02-18 | Created by Claude Opus 4.6 |
+
+My internal reference for creating the code: id:2026-02-18-fix-wrong-capture-format-with-Elisp
+
+Issue: [[https://github.com/amake/orgro/][Orgro]] does capture toots from [[https://github.com/pachli/pachli-android][Pachli]] in a particular wrong format:
+
+#+BEGIN_EXAMPLE
+,* [[url][content]]
+  Captured On: [2026-02-18 Wed 09:21]
+#+END_EXAMPLE
+
+So, url and content are mixed up. Furthermore, according to id:2026-02-18-my-convert-toot-heading-to-list I want a list instead.
+
+In order to post-process said captures, I generated a function to fix that to:
+
+#+BEGIN_EXAMPLE
+,* url (captured [2026-02-18 Wed 09:21])
+  - (content in form of a list item for each line)
+#+END_EXAMPLE
+
+This works with the current heading or - in case of there's a region
+that covers multiple headings - with multiple entries:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-convert-orgro-heading-to-list ()
+  "Convert Orgro-captured headings to formatted Org list items.
+Works on the current heading, or all headings in the active region."
+  (interactive)
+  (if (use-region-p)
+      (let ((rbeg (region-beginning))
+            (rend (region-end))
+            regions)
+        (deactivate-mark)
+        ;; Collect all (beg . end) marker pairs before any modifications
+        (save-excursion
+          (goto-char rbeg)
+          (org-back-to-heading t)
+          (let ((hbeg (point-marker)))
+            (while (and (< (marker-position hbeg) rend))
+              (let ((hend (copy-marker
+                           (save-excursion
+                             (goto-char hbeg)
+                             (if (outline-next-heading) (point) (point-max))))))
+                (push (cons hbeg hend) regions)
+                ;; Move to next heading
+                (goto-char (marker-position hend))
+                (if (and (< (point) rend) (looking-at "^\\*+ "))
+                    (setq hbeg (point-marker))
+                  ;; no more headings
+                  (setq hbeg (copy-marker rend)))))))
+        ;; regions is in reverse order (bottom-first) — process as-is
+        (dolist (pair regions)
+          (my--convert-single-orgro-heading (car pair) (cdr pair))
+          (set-marker (car pair) nil)
+          (set-marker (cdr pair) nil)))
+    (save-excursion
+      (org-back-to-heading t)
+      (let ((beg (point-marker))
+            (end (copy-marker
+                  (save-excursion
+                    (if (outline-next-heading) (point) (point-max))))))
+        (my--convert-single-orgro-heading beg end)
+        (set-marker beg nil)
+        (set-marker end nil)))))
+
+(defun my--convert-single-orgro-heading (beg-marker end-marker)
+  "Convert a single Orgro-captured heading between BEG-MARKER and END-MARKER."
+  (let* ((beg (marker-position beg-marker))
+         (end (marker-position end-marker))
+         (full-text (buffer-substring-no-properties beg end))
+         captured)
+
+    ;; Extract "Captured On:" timestamp
+    (unless (string-match "Captured On:[ \t]+\\(\\[.*?\\]\\)" full-text)
+      (user-error "No 'Captured On:' timestamp found in heading at line %d"
+                  (line-number-at-pos beg)))
+    (setq captured (match-string 1 full-text))
+
+    ;; Extract the Org link [[PART1][PART2]]
+    (unless (string-match "\\[\\[\\(\\(?:.\\|\n\\)*?\\)\\]\\[\\(\\(?:.\\|\n\\)*?\\)\\]\\]" full-text)
+      (user-error "Heading does not contain an Org link: %s"
+                  (string-trim (substring full-text 0 (min 80 (length full-text))))))
+
+    (let ((part1 (match-string 1 full-text))
+          (part2 (match-string 2 full-text)))
+
+      (cond
+       ;; Case 1: Normal browser capture — [[URL][title]]
+       ((string-match-p "\\`https?://" part1)
+        (when (string-match-p "\n" part2)
+          (user-error "Browser capture has multiline title, expected single line: %s"
+                      (substring part2 0 (min 80 (length part2)))))
+        (let ((result (format "- [[%s][%s]] (captured %s)\n" part1 part2 captured)))
+          (goto-char beg)
+          (delete-region beg end)
+          (insert result)))
+
+       ;; Case 2: Swapped Mastodon capture — [[content][URL]]
+       ((string-match-p "\\`https?://" part2)
+        (let* ((url part2)
+               (title-content part1)
+               (raw-lines (split-string title-content "\n"))
+               (lines (cl-remove-if #'string-empty-p
+                                    (mapcar #'string-trim raw-lines)))
+               content-lines)
+
+          (unless (and lines (string-match "\\`[^@]+@[^ ]+" (car lines)))
+            (user-error "Expected Mastodon username@instance in first line, got: %s"
+                        (or (car lines) "<empty>")))
+
+          (let* ((first-line (pop lines))
+                 (username (if (string-match "\\`\\([^@]+@[^ ]+\\)\\(?:[ \t]+-[ \t]+\\(.*\\)\\)?" first-line)
+                              (prog1 (match-string 1 first-line)
+                                (when (match-string 2 first-line)
+                                  (let ((rest (string-trim (match-string 2 first-line))))
+                                    (unless (string-empty-p rest)
+                                      (push rest content-lines)))))
+                            first-line)))
+
+            (dolist (line lines)
+              (push line content-lines))
+
+            (setq content-lines (cons username (nreverse content-lines)))
+
+            (let* ((main-item (format "- %s (captured %s)" url captured))
+                   (sub-items
+                    (mapconcat
+                     (lambda (line)
+                       (if (string-match "\\`\\([-+]\\)[ \t]+\\(.*\\)" line)
+                           (format "    %s %s" (match-string 1 line) (match-string 2 line))
+                         (format "  - %s" line)))
+                     content-lines
+                     "\n"))
+                   (result (concat main-item "\n" sub-items "\n")))
+
+              (goto-char beg)
+              (delete-region beg end)
+              (insert result)))))
+
+       (t
+        (user-error "Neither part of the Org link is a URL.\n  Part 1: %s\n  Part 2: %s"
+                    (substring part1 0 (min 80 (length part1)))
+                    (substring part2 0 (min 80 (length part2)))))))))
+#+END_SRC
+
 *** my-rocketchat-insert-message-from-url
 
 | 2025-10-20 | initial version via Sonnet 4.5 |
