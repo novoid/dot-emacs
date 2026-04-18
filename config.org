@@ -3554,9 +3554,10 @@ LSP server that supports it. In that case, you should disable the
 )
 #+END_SRC
 
-** Language Server Protocol (LSP) → C-c l
+** DISABLED Language Server Protocol (LSP) → C-c l
 
 | 2021-04-03 | initial setup for testing with Python/pyls |
+| 2026-04-18 | disabled for performance reasons           |
 
 Why? Python code completion was always a bit of a drag. I don't code
 that often. When there was a long break between my Python sessions,
