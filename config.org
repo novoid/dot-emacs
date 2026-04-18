@@ -97,6 +97,7 @@ important generic hydras in contrast to the ~F1~-mapped mode hydras.
 
 * bug-hunter
 
+
 #+BEGIN_SRC emacs-lisp
 ;;; -*- lexical-binding: t; -*-
 
@@ -5927,6 +5928,9 @@ Example: place the cursor within the table and evaluate
 #+END_SRC
 
 * Org mode
+:PROPERTIES:
+:ID:       2026-02-16-Org-mode
+:END:
 
 [[http://orgmode.org/][Org-mode]] is my digital life. I do almost anything within Org-mode:
 http://karl-voit.at/tags/emacs/
@@ -6128,6 +6132,9 @@ to define dependencies via Elisp functions instead of manually typing
 Internal project link: id:2019-11-14-Org-Project-Management-Workflow
 
 ** General Org-mode settings
+:PROPERTIES:
+:ID:       2026-02-16-General-Org-mode-settings
+:END:
 
 http://www.reddit.com/r/emacs/comments/2m4b7j/help_setting_orgmode_as_the_default_major_mode/ -
 «This will make it that any file without an auto-mode alist entry gets
@@ -8520,8 +8527,15 @@ simple macro:
 
 
 *** my-convert-toot-heading-to-list
+:PROPERTIES:
+:ID:       2026-02-18-my-convert-toot-heading-to-list
+:END:
 
 | 2025-04-17 | first successful function |
+
+[[https://github.com/orgzly-revived/orgzly-android-revived][Orgzly revived]] is capturing toots in a particular format. I want a
+list instead. This function does convert one single entry into the
+list format I want to get.
 
 On 2025-04-17, I gave ChatGPT a new try (after failing at least twice
 before). This time, it looks good and so I included the redult to my
@@ -9808,6 +9822,12 @@ If not inside a block, issue a warning and do nothing."
 : my-org-block-interruption
 
 *** my-orgheadingnetwork-current-file
+:PROPERTIES:
+:ID:       2026-02-16-my-orgheadingnetwork-current-file
+:END:
+:LINKS:
+[2026-02-16 Mon 19:10] <- [[id:2026-02-16-General-Org-mode-settings][General Org-mode settings]]
+:END:
 
 | 2026-02-16 | Made it [[https://claude.ai/chat/d3f94b5b-6f80-406e-8b39-98ff9b46720f][via Claude]] after I created the Python tool yesterday |
 
