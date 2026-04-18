@@ -5086,6 +5086,32 @@ Make =locate= command case insensitive: https://www.emacswiki.org/emacs/locate
   (setq locate-make-command-line 'my-locate-make-command-line))
 #+END_SRC
 
+** single mouse click = mark; double-click = open
+
+| 2026-04-09 | initial setup |
+
+From: [[http://yummymelon.com/devnull/calming-mouse-interaction-in-dired.html][Charles Choi: Calming Mouse Interaction in Dired]]
+
+#+BEGIN_SRC emacs-lisp
+(add-hook
+ 'dired-mode-hook
+ (lambda ()
+   (setq-local mouse-1-click-follows-link 'double)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(defun cc/dired-mouse-toggle-mark ()
+  "Toggle mark of a Dired item via mouse."
+  (interactive)
+  (unless (use-region-p)
+    (mouse-set-point last-input-event)
+    (if (char-equal (char-after (line-beginning-position)) dired-marker-char)
+        (call-interactively #'dired-unmark)
+      (call-interactively #'dired-mark))))
+
+(keymap-set dired-mode-map "M-<mouse-1>" #'cc/dired-mouse-toggle-mark)
+#+END_SRC
+
 * Email
 :PROPERTIES:
 :CREATED:  [2019-12-19 Thu 14:37]
