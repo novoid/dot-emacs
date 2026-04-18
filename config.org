@@ -615,7 +615,7 @@ installs its local copies of the packages:
 
     ;; 2019-12-07: severe issues with old package versions brings me to remove old config and start with this from docu:
     (setq package-archives '(
-                             ("melpa" . "https://melpa.org/packages/")
+  ;; 2026-04-18 don't use melpa;;   ("melpa" . "https://melpa.org/packages/")
                              ("gnu" . "https://elpa.gnu.org/packages/")
                              ))
 #+END_SRC
