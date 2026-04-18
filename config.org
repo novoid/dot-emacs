@@ -2,7 +2,7 @@
 # Source:     https://github.com/novoid/dot-emacs
 # License:    This file is licensed under the GPL v3.
 #+TODO: ACTIVE | DISABLED
-#+STARTUP: indent
+#+DISABLED STARTUP: indent
 
 This is the GNU/Emacs config file of Karl Voit.
 
@@ -5912,9 +5912,11 @@ associated with org-mode by default.»
 (add-to-list 'auto-mode-alist '("'" . org-mode) t)
 #+END_SRC
 
-Might cause performance issues; http://orgmode.org/manual/Clean-view.html
-#+BEGIN_SRC emacs-lisp
-  (setq org-startup-indented t)
+When "t", it causes performance issues; http://orgmode.org/manual/Clean-view.html
+2026-04-18: disabled due to performance issues: 
+
+#+BEGIN_SRC emacs-lisp :tangle no
+;;  (setq org-startup-indented t) ;; starting org-indent-mode !!!!
 #+END_SRC
 
 For a more fine-grained control on expanded headings when visiting a Org file, look at [[https://github.com/alphapapa/org-auto-expand][org-auto-expand]].
@@ -6166,6 +6168,7 @@ my large Org-mode setup?
 #+BEGIN_SRC emacs-lisp
 (setq org-src-preserve-indentation t)
 #+END_SRC
+
 
 *** DISABLED scimax/org-return
 
@@ -20709,7 +20712,7 @@ approximately 25 seconds as of 2019-04-17.
     yas-minor-mode
     counsel-mode
     pcre-mode
-    org-indent-mode
+    ;;org-indent-mode ;; 2026-04-01: disabled due to performance issues in large Org files
     org-table-sticky-header-mode
     smooth-scroll-mode))
 
