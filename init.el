@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Filename:      $HOME/.emacs.d/init.el
-;; Time-stamp:    <2023-01-08 19:32:03 vk>
+;; Time-stamp:    <2025-12-07 19:19:37 vk>
 ;; Source:        https://github.com/novoid/dot-emacs
 ;; Purpose:       configuration file for Emacs
 ;; Authors:       Karl Voit
@@ -139,13 +139,16 @@ Note the weekly scope of the command's precision.")
 ;; was not invoked when saving config.org which is the normal case:
 (let ((orgfile (concat my-user-emacs-directory "config.org"))
       (elfile (concat my-user-emacs-directory "config.el"))
-      (gc-cons-threshold most-positive-fixnum))
+      ;;(gc-cons-threshold most-positive-fixnum) 2026-04-18 Ihor session
+      )
   (when (or (not (file-exists-p elfile))
             (file-newer-than-file-p orgfile elfile))
     (my-tangle-config-org)
     ;;(save-buffers-kill-emacs);; TEST: kill Emacs when config has been re-generated due to many issues when loading newly generated config.el
     )
-  (load-file elfile))
+(load-file elfile)
+  )
+
 
 ;; when config.org is saved, re-generate config.el:
 (defun my-tangle-config-org-hook-func ()
