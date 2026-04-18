@@ -406,6 +406,173 @@ Introduced with Emacs 28.1: id:2022-04-06-Emacs-28-dot-1
 )
 #+END_SRC
 
+-------
+
+From https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/
+
+
+#+BEGIN_QUOTE
+*Disable Bidirectional Text Scanning* (Doom Emacs)
+
+If you don’t edit right-to-left languages (Arabic, Hebrew, etc.),
+Emacs is doing a bunch of work on every redisplay cycle for nothing.
+These settings tell Emacs to assume left-to-right text everywhere and
+skip the bidirectional parenthesis algorithm.
+
+The difference is hard to measure in small buffers, but in large files
+(think multi-thousand-line JSON or log files) it adds up. Doom enables
+this unconditionally and I’ve never seen anyone complain about it.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*Skip Fontification During Input* (Doom Emacs)
+
+Emacs normally fontifies (syntax-highlights) text even while you’re
+actively typing. This can cause micro-stutters, especially in
+tree-sitter modes or large buffers. One setting fixes it.
+
+Emacs will defer fontification until you stop typing. In practice you
+never notice the delay – the highlighting catches up instantly – but
+scrolling and typing may feel smoother.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq redisplay-skip-fontification-on-input t)
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*Increase Process Output Buffer for LSP* (Doom, Purcell, Centaur)
+
+The default =read-process-output-max= is 64KB, which is still quite
+conservative. Modern LSP servers like =rust-analyzer= or =clangd=
+routinely send multi-megabyte responses. Bumping this reduces the
+number of read calls Emacs has to make.
+
+If you use eglot (or lsp-mode), this is basically free performance.
+Three of the most popular configs out there all set it – that should
+tell you something.
+
+*Note:* I’m really surprised I didn’t discover this one sooner.
+Probably that’s because I rarely work on big projects these days.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*Don’t Render Cursors in Non-Focused Windows* (Doom Emacs)
+
+If you have several windows visible, Emacs draws a cursor in each of
+them – even the ones you’re not working in. It also highlights
+selections in non-focused windows. Two settings to stop that.
+
+This is mostly a visual preference (I don’t mind the phantom cursors
+but I know some people find them distracting), but it also reduces
+rendering work.
+
+All four of these performance settings are safe to add unconditionally
+– they have no downsides for the vast majority of users.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*Save the Clipboard Before Killing* (Purcell, Prot, Centaur)
+
+Here’s a scenario: you copy a URL from your browser, switch to Emacs,
+kill a line with =C-k=, and then try to yank the URL you copied
+earlier with =C-y= . Gone. The kill replaced it on the clipboard.
+
+This setting makes Emacs save the existing clipboard content into the
+kill ring /before/ overwriting it.
+
+Now =C-y= gets the kill, and =M-y= gets you back to the URL. Such a
+small thing, but it eliminates a genuinely annoying problem.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq save-interprogram-paste-before-kill t)
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*No Duplicates in the Kill Ring* (Doom, Prot)
+
+Kill the same line three times and you get three identical entries in
+the kill ring, wasting slots. This deduplicates them:
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq kill-do-not-save-duplicates t)
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*Proportional Window Resizing* (Purcell, Prot)
+
+When you split a window with =C-x 2= or =C-x 3=, Emacs halves the
+current window. If you already have a multi-window layout, this can
+produce one awkwardly tiny window while others stay large. With this
+setting, /all/ windows in the frame resize proportionally.
+
+The difference is subtle but makes multi-window layouts feel more balanced without manual resizing.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq window-combination-resize t)
+#+END_SRC
+
+
+#+BEGIN_QUOTE
+*Auto-Select Help Windows* (Prot)
+
+When you press =C-h f= or =C-h v=, Emacs opens the help buffer but
+leaves your cursor in the original window. You almost always want to
+read the help right away, so you end up pressing =C-x o= every single
+time. This fixes it:
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp
+(setq help-window-select t)
+#+END_SRC
+
+** Override default org-mode version
+
+| 2026-04-01 | initial setup |
+
+I'm switching from GNU Emacs 30.1 (Debian stable) built-in Org-mode
+9.7.11 to Elpa latest stable (currently 9.8) due to performance
+optimizations and fixed caching issues.
+
+This needs to be placed before the first =(require 'org)= in order to
+replace the Emacs built-in Org-mode version with the desired one from
+Elpa.
+
+#+BEGIN_SRC emacs-lisp
+;; 2026-04-01: forget built-in org-mode version as I want to switch to the latest stable via elpa:
+(assq-delete-all 'org package--builtins)
+(assq-delete-all 'org package--builtin-versions)
+
+(use-package org
+  :ensure t)
+#+END_SRC
+
+For historic reasons, the configurations happens later in my
+configuration.
 
 ** DISABLED Guru mode
 
