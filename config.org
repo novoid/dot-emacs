@@ -4096,7 +4096,7 @@ On Debian-based systems, you can install it via: =apt install jsbeautifier=
 ;;; js-beautify.el ends here
 #+END_SRC
 
-** Nix
+** DISABLED Nix
 
 | 2023-06-01 | initial setup for my Nix(OS) test |
 
