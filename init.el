@@ -30,9 +30,41 @@
 ;;2023-01-08 disabled to try out Emacs 28.2 org-mode;; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-mode/lisp"))
 ;;2023-01-08 disabled to try out Emacs 28.2 org-mode;; (add-to-list 'load-path (concat my-user-emacs-directory "contrib/org-contrib/lisp"))
 ;(setq load-path (delete "/usr/share/emacs/28.0.50/lisp/org" load-path));; disabling built-in org on floyd - didn't help
+;;(require 'org) 2026-04-15: see id:2026-04-13-fix-Org-on-jackson
+; Ensure ELPA org is installed and loaded BEFORE built-in org:
+ (unless (package-installed-p 'org)
+   (package-refresh-contents)
+   (package-install 'org))
+ ;; Put ELPA org at the front of load-path so require finds it first:
+ (let ((org-dir (car (directory-files (concat my-user-emacs-directory "elpa") t "^org-[0-9]"))))
+   (when org-dir
+     (add-to-list 'load-path org-dir)))
+
+; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t) 
+
 (require 'org)
+
 (require 'org-element)
 ;(require 'org-eldoc)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-contacts-address-property "CITY")
+ '(org-contacts-birthday-property "BORN")
+ '(org-contacts-icon-property "PHOTOGRAPH")
+ '(safe-local-variable-values
+   (quote
+    ((eval ispell-change-dictionary "german8")
+     (eval ispell-change-dictionary "american")
+     (eval ispell-change-dictionary "en_US")
+     (flyspell-default-dictionary . "german8")
+     (auto-fill-mode . t)
+     (auto-revert-mode . t)
+     ))))
+
 
 ;; =======================================================================================
 ;; The init.el file looks for "config.org" and tangles its elisp blocks (matching
@@ -130,3 +162,32 @@ Note the weekly scope of the command's precision.")
 
 (message "→★ loading init.el in %.2fs" (float-time (time-subtract (current-time) my-init-el-start-time)))
 
+; (custom-set-variables
+;  ;; custom-set-variables was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
+;  '(org-contacts-address-property "CITY" t)
+;  '(org-contacts-birthday-property "BORN" t)
+;  '(org-contacts-icon-property "PHOTOGRAPH" t)
+;  '(package-selected-packages nil)
+;  '(safe-local-variable-values
+;    '((eval remove-hook 'org-after-tags-change-hook
+;            'org-expiry-insert-created t)
+;      (eval make-local-variable 'org-after-tags-change-hook)
+;      (eval remove-hook 'org-after-todo-state-change-hook
+;            'org-expiry-insert-created t)
+;      (eval make-local-variable 'org-after-todo-state-change-hook)
+;      (eval remove-hook 'org-insert-heading-hook
+;            'org-expiry-insert-created t)
+;      (eval make-local-variable 'org-insert-heading-hook)
+;      (eval ispell-change-dictionary "german8")
+;      (eval ispell-change-dictionary "american")
+;      (eval ispell-change-dictionary "en_US")
+;      (flyspell-default-dictionary . "german8"))))
+; (custom-set-faces
+;  ;; custom-set-faces was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
+;  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0)))))
