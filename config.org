@@ -12519,7 +12519,8 @@ only see important business stuff.
         ` (
                 ("n" "no TODO events +180d"
                  ((agenda "no TODO events +180d"
-                          ((org-agenda-span 180)
+                          (;;(org-agenda-span 180) 2026-04-14: I need more than 6 months but kept all the 180d naming although it's wrong ;-)
+                           (org-agenda-span 240)
                            (org-agenda-time-grid nil)
                            (org-agenda-entry-types '(:timestamp :sexp))
                            (org-agenda-skip-function
