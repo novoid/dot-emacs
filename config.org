@@ -5803,7 +5803,7 @@ Enable misc org modules:
 (setq org-modules (quote
                    (org-crypt
                     org-id
-                    org-info
+                    ;;org-info
                     org-habit
                     org-inlinetask
                     org-protocol
