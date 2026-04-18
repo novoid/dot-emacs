@@ -11977,6 +11977,7 @@ For now, I use the basic version in order to be able to link again:
           (with-current-buffer (find-file-noselect file)
             (setq parsed-data (org-element-parse-buffer))
             (org-element-map parsed-data 'headline
+;; 2026-04-18 Ihor: FIXXME: different approach with org-map-entries would be faster
               (lambda (hl)
                 (let ((title (org-element-property :raw-value hl))
                       (begin (org-element-property :begin hl)))
