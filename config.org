@@ -6723,7 +6723,7 @@ function completely.
 
 For a more fine-grained control on expanded headings when visiting a Org file, look at [[https://github.com/alphapapa/org-auto-expand][org-auto-expand]].
 
-*** my-reset-org() - reset some Org-mode stuff
+*** DISABLED my-reset-org() - reset some Org-mode stuff
 
 This function summarizes some other functions that clear up the
 current Org-mode, re-building some caches and so fort.
