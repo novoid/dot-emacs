@@ -5783,22 +5783,22 @@ Loading contributed packages:
   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
 )
 
-;; 2021-11-23: to avoid "org-timestamp-change: Symbol’s function definition is void: org-clock-update-time-maybe"
-(use-package org-clock
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
-)
-
-(use-package org-attach
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
-)
-
-(use-package org-element
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
-)
-
-(use-package org-mobile
-  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
-)
+;; disabled 2026-04-18 ;; ;; 2021-11-23: to avoid "org-timestamp-change: Symbol’s function definition is void: org-clock-update-time-maybe"
+;; disabled 2026-04-18 ;; (use-package org-clock
+;; disabled 2026-04-18 ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
+;; disabled 2026-04-18 ;; )
+;; disabled 2026-04-18 ;; 
+;; disabled 2026-04-18 ;; (use-package org-attach
+;; disabled 2026-04-18 ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
+;; disabled 2026-04-18 ;; )
+;; disabled 2026-04-18 ;; 
+;; disabled 2026-04-18 ;; (use-package org-element
+;; disabled 2026-04-18 ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
+;; disabled 2026-04-18 ;; )
+;; disabled 2026-04-18 ;; 
+;; disabled 2026-04-18 ;; (use-package org-mobile
+;; disabled 2026-04-18 ;;   :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-contrib/lisp/")))
+;; disabled 2026-04-18 ;; )
 
   (when (my-system-is-jackson)
      (my-load-local-el "contrib/org-contrib/lisp/ox-confluence.el")
