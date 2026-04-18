@@ -1299,6 +1299,36 @@ from: http://www.zonix.de/html40/linux/emacsgnus.html
       (message (format "Loading %s (source)...failed" fullname)))))
 #+END_SRC
 
+* org-protocol 
+
+| 2026-02-16 | Claude.ai told me that the =require= command for org-protocol needs to be before =server-start= |
+
+[2026-02-16 Mon] I enabled org-protocol in order to play around with [[id:2026-02-16-my-orgheadingnetwork-current-file][my-orgheadingnetwork-current-file]] and back-links to Emacs:
+#+BEGIN_SRC emacs-lisp
+(require 'org-protocol)
+
+(defun org-protocol-open-file (info)
+  "Open a file at a specific line via org-protocol://open-file?file=FILE&line=LINE."                                                                                 
+  (let ((file (plist-get info :file))                                     
+        (line (plist-get info :line)))
+    (find-file file)
+    (when line
+      (goto-char (point-min))
+      (forward-line (1- (string-to-number line))))
+    (raise-frame)
+    nil))
+
+(defun org-protocol-open-id (info)
+  "Open an Org heading by its ID via org-protocol://open-id?id=ID."
+  (org-id-goto (plist-get info :id))
+  (raise-frame)
+  nil)
+
+(setq org-protocol-protocol-alist
+      '(("open-file" :protocol "open-file" :function org-protocol-open-file)
+        ("open-id"   :protocol "open-id"   :function org-protocol-open-id)))
+#+END_SRC
+
 * Server mode
 
 Start Emacs as a server process: new files can be visited via
