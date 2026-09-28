@@ -3296,20 +3296,21 @@ snippets with the basic yasnippet methods. Any snippet that is used
 within Org-mode only is defined in my yankpad file.
 
 - see also: [[id:2016-08-08-yankpad-test]]
+
 #+BEGIN_SRC emacs-lisp
 (use-package yankpad
   :ensure t
-  ;;:defer 110
+  :demand t                     ; load at startup, so the mode hook exists before files open
   :init
   (setq yankpad-file (concat my-org-files-path "yankpad.org"))
-  :bind (:map my-map ("SPC" . yankpad-insert)
-                     ("y" . yankpad-expand)
-        )
+  (setq yankpad-default-category "org-mode")   ; must be set BEFORE loading
+  :bind (:map my-map
+              ("SPC" . yankpad-insert)
+              ("y"   . yankpad-expand))
   :config
+  (setq-default yankpad-category "org-mode")   ; fallback for *scratch* and similar buffers
   (bind-key "<S-f5>" 'yankpad-expand)
-  (bind-key "<S-f6>" 'yankpad-map)
-  (setq yankpad-default-category "org-mode")
-)
+  (bind-key "<S-f6>" 'yankpad-map))
 #+END_SRC
 
 * Programming
@@ -12756,7 +12757,6 @@ down below.
 [[https://github.com/alphapapa/org-super-agenda][Supercharge your Org daily/weekly agenda by grouping items]]
 
 See also: id:2017-08-12-org-super-agenda
-
 
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-super-agenda
