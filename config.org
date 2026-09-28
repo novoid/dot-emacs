@@ -17311,11 +17311,13 @@ I love this visualization.
 )
 #+END_SRC
 
-** smart-mode-line - abbreviating paths, …
+** DISABLED smart-mode-line - abbreviating paths, …
 
 «[[https://github.com/Malabarba/smart-mode-line][Smart Mode Line]] is a sexy mode-line for Emacs. It aims to be easy to
 read from small to large monitors by using colors, a prefix feature,
 and smart truncation.»
+
+| 2026-05-22 | I disabled it because I found negative impact via profiler |
 
 #+BEGIN_SRC emacs-lisp
 (use-package smart-mode-line
