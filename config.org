@@ -11310,6 +11310,8 @@ Do *not* use =org-link-abbrev-alist= for defining links that are handled via fun
           ("POPP" . ,(concat my-business-jira-server "/browse/POPPANF-%s"))
           ("POPPANF" . ,(concat my-business-jira-server "/browse/POPPANF-%s"))
           ("SK" . ,(concat my-business-sd-server "/secure/insight/assets/SK-%s"))
+          ("OPSSEC" . ,(concat my-business-jira-server "/browse/OPSSEC-%s"))
+          ("RBO" . ,(concat my-business-sp-customer-server "732/RBO-%s"))
           ))
 #+END_SRC
 
