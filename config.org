@@ -13599,6 +13599,11 @@ Disabled 2020-01-03 because I usually see one single day only.
         (org-agenda-format-date-aligned date))))
 #+END_SRC
 
+From [[https://whhone.com/posts/refining-org-mode-deadlines/][Refining Org-mode Deadlines - Wai Hon's Blog]]
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-deadline-leaders '("🔴 0d" "🔴%2dd" "🔴-%1dd"))
+#+END_SRC
+
 *** Agenda category icons
 
 There is the possibility of adding icons to categories:
