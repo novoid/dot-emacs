@@ -19658,6 +19658,342 @@ This actually replaces many things I used for jumping:
  
 My internal notes on the development of this thing: id:2024-03-08-Unified-Interface-for-Switching-Contexts-Switch-to-Thing
 
+** my-org-jump-last-element
+
+| 2026-06-05 | initial idea implemented via Qwen3.6-35B-A3B-FP8 |
+
+Jump to the last element in various contexts.
+
+- If on a heading, jump to the last heading of the same level
+  in the current section.
+  - *This doesn't work yet* → needs debugging
+- If in a block (or on the block definition line), jump to the
+  end of the block.                                                           
+- If in a list, jump to the last list item of the same level
+  in the current list.         
+- If in a table, jump to the last line of the table.
+- Otherwise, jump to the end of the current subtree.
+
+#+BEGIN_SRC emacs-lisp
+;; ---------------------------------------------------------------------------
+;; Block helpers                                                                   
+;; ---------------------------------------------------------------------------
+                                                                                   
+(defun my-org--in-block-p ()                                                       
+  "Return non-nil if point is inside or at a block definition line.
+Checks both the element at point and its parent chain for block
+and src-block element types."                                                      
+  (let ((elem (org-element-context)))                                              
+    (or (memq (org-element-type elem) '(block src-block))
+        (let ((parent (org-element-property :parent elem)))
+          (and parent
+               (memq (org-element-type parent) '(block src-block)))))))            
+                                         
+(defun my-org--block-end ()                                                        
+  "Return the end position of the block at point."                                 
+  (let ((elem (org-element-context)))                                              
+    (let ((type (org-element-type elem)))                                          
+      (cond                            
+       ((memq type '(block src-block))  
+        (org-element-property :end elem))                                          
+       (t        
+        (let ((parent (org-element-property :parent elem)))                        
+          (when (memq (org-element-type parent) '(block src-block))
+            (org-element-property :end parent))))))))                              
+                                         
+;; ---------------------------------------------------------------------------
+;; Main entry point
+;; ---------------------------------------------------------------------------     
+
+(defun my-org-jump-last-element () 
+  "Jump to the last element depending on the context of point.
+                                                                                   
+- If on a heading, jump to the last heading of the same level
+  in the current section.
+- If in a list, jump to the last list item of the same level
+  in the current list.
+- If in a table, jump to the last line of the table.
+- Otherwise, jump to the end of the current subtree."
+  (interactive)
+  (cond
+   ;; Case 1: On a heading line
+   ((org-at-heading-p)
+    (let* ((level (org-current-level))
+           (section-end (save-excursion
+                          (org-end-of-subtree)))
+           (last-heading-pos nil))
+      ;; Search forward for headings at the same level within the
+      ;; current section.
+      (while (re-search-forward "^\\*+\\s-" section-end t)
+        (when (= level (org-current-level))
+          (setq last-heading-pos (point))))
+      (when last-heading-pos
+        (goto-char last-heading-pos))))
+
+   ;; Case 2: In a block (or on the block definition line)
+   ((my-org--in-block-p)
+    (goto-char (my-org--block-end)))
+
+   ;; Case 3: In a table
+   ((org-at-table-p)
+    (org-table-goto-line 999999))
+
+   ;; Case 4: In a list item
+   ((org-in-item-p)
+    (let* ((elem (org-element-context))
+           (item-begin (org-element-property :begin elem))
+           ;; Get the parent list element to find the list's end.
+           (list-elem (org-element-property :parent elem))
+           ;; Walk up the parent chain to find the plain-list element.
+           (list-elem (let ((cur list-elem))
+                        (while (and cur
+                                    (not (eq (org-element-type cur) 'plain-list))
+                                    (setq cur (org-element-property :parent cur))))
+                        cur))
+           (end-of-list (if list-elem
+                            (org-element-property :end list-elem)
+                          (save-excursion
+                            (org-end-of-line)
+                            (point))))
+           ;; Get the current item's prefix (leading whitespace) to
+           ;; determine nesting level.
+           (item-prefix (save-excursion
+                          (goto-char item-begin)
+                          (let ((line (buffer-substring-no-properties
+                                       (line-beginning-position)
+                                       (line-end-position))))
+                            (if (string-match "^\\s-*" line)
+                                (substring line 0 (match-end 0))
+                              ""))))
+           (item-prefix-len (length item-prefix))
+           (last-pos (point)))
+      ;; Search forward for list items at the same indentation level.
+      (while (re-search-forward "^\\s-*[-*+]\\s-" end-of-list t)
+        (let ((candidate-prefix (buffer-substring-no-properties
+                                 (line-beginning-position)
+                                 (line-end-position))))
+          (when (string-match "^\\s-*" candidate-prefix)
+            (let ((prefix-len (match-end 0)))
+              (when (= item-prefix-len prefix-len)
+                (setq last-pos (point)))))))
+      ;; Also search for numbered list items.
+      (while (re-search-forward "^\\s-*[0-9]+[.)]\\s-" end-of-list t)
+        (let ((candidate-prefix (buffer-substring-no-properties
+                                 (line-beginning-position)
+                                 (line-end-position))))
+          (when (string-match "^\\s-*" candidate-prefix)
+            (let ((prefix-len (match-end 0)))
+              (when (= item-prefix-len prefix-len)
+                (setq last-pos (point)))))))
+      (goto-char last-pos)))
+
+   ;; Case 5: Fallback — end of current subtree
+   (t
+    (org-end-of-subtree))))
+                                         
+#+END_SRC
+
+#+RESULTS:
+: my-org-jump-last-element
+
+** my-org-created-timestamp-to-heading-with-duration
+
+| 2026-08-25 | initial version |
+
+See id:2026-08-18-my-org-created-timestamp-to-heading-with-duration
+
+I created this code with help of Claude Code.
+
+`my-org-created-timestamp-to-heading-with-duration' turns
+
+  * TODO any heading title with optional todo status
+  :PROPERTIES:
+  :CREATED:  [2026-08-18 Tue 22:56]
+  :END:
+
+into
+
+  * <2026-08-18 Tue 20:56-22:56> any heading title with optional todo status
+  :PROPERTIES:
+  :CREATED:  [2026-08-18 Tue 22:56]
+  :END:
+
+The CREATED timestamp is the *end* of the event; the interactively
+queried duration is subtracted from it to get the start time.  With an
+empty duration a plain active timestamp is inserted instead:
+
+  * <2026-08-18 Tue 22:56> any heading title with optional todo status
+
+Only the heading *line* is touched: body, drawers and properties stay
+untouched, and point may be anywhere inside the entry (title, tags,
+drawer, body) when the command is called.
+
+About Org's built-in duration parser: `org-duration-to-minutes' (from
+org-duration.el) understands "1:30", "1h 30min", "90" etc.  It is NOT
+used as the primary parser here because in `org-duration-units' the
+unit "m" means *month* and minutes are spelled "min" -- so "30m" would
+silently become 30 months.  This file therefore parses the requested
+h/m syntax itself and only falls back to `org-duration-to-minutes' for
+input it does not understand (e.g. "1:30"), which gives you Org's
+syntax on top for free.
+
+
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+(require 'subr-x)
+(require 'org-duration nil t)
+
+(defcustom my-org-heading-keyword-regexp "[A-Z][A-Z0-9]+\\(?:[-_/][A-Z0-9]+\\)*"
+  "Regexp matching a leading heading keyword that should be removed.
+Matched anchored at the beginning of the heading title and only when
+followed by whitespace or the end of the title.  The default matches any
+all-uppercase word of at least two characters, i.e. TODO, NEXT, WAITING,
+DONE, CANCELLED, COMMENT, ... and not only the Org-defined ones.
+
+Caveat of that generality: a heading like \"* API redesign\" would lose
+its \"API\".  Tighten this regexp (or set it to
+`org-todo-regexp') if that bites you."
+  :type 'regexp
+  :group 'org)
+
+(defcustom my-org-duration-default "2h"
+  "Duration pre-filled into the prompt of
+`my-org-created-timestamp-to-heading-with-duration'.
+Hit RET to accept it, or erase it to get a point-in-time timestamp."
+  :type 'string
+  :group 'org)
+
+(defconst my-org--timestamp-prefix-regexp
+  "\\`<[^<>\n]+>\\(?:--<[^<>\n]+>\\)?[ \t]*"
+  "Regexp matching an active timestamp (or range) at the start of a title.")
+
+(defconst my-org--tags-suffix-regexp
+  "[ \t]+\\(:[[:alnum:]_@#%:]+:\\)[ \t]*\\'"
+  "Regexp matching the tag part at the end of a heading line.")
+
+(defun my-org-duration-string-to-minutes (string)
+  "Return the number of minutes encoded in STRING, or nil if STRING is empty.
+Understands \"2h\", \"30m\", \"1h30m\", \"1h 30m\", \"90min\" and a bare
+number of minutes.  Anything else is handed to `org-duration-to-minutes'
+so that Org syntax like \"1:30\" keeps working.  Signals a `user-error'
+for unparsable input."
+  (let ((s (string-trim (or string ""))))
+    (cond
+     ((string-empty-p s) nil)
+     ;; "2h", "30m", "45min", "1h30m", "1h 30 min", ...
+     ((and (string-match "\\`\\(?:\\([0-9]+\\)[ \t]*h\\)?[ \t]*\\(?:\\([0-9]+\\)[ \t]*m\\(?:in\\)?\\)?\\'" s)
+           (or (match-string 1 s) (match-string 2 s)))
+      (+ (* 60 (string-to-number (or (match-string 1 s) "0")))
+         (string-to-number (or (match-string 2 s) "0"))))
+     ;; bare number == minutes
+     ((string-match-p "\\`[0-9]+\\'" s) (string-to-number s))
+     ;; last resort: let Org try ("1:30", "1d", ...)
+     ((and (fboundp 'org-duration-p)
+           (org-duration-p s))
+      (round (org-duration-to-minutes s)))
+     (t (user-error "Cannot parse duration %S; use e.g. 2h, 30m or 1h30m" s)))))
+
+(defun my-org--read-duration ()
+  "Ask for a duration and return it in minutes, or nil for \"no duration\"."
+  (my-org-duration-string-to-minutes
+   (read-string
+    (format "Duration ending at CREATED [h/m, e.g. 2h, 30m, 1h30m; empty = no range] (default %s): "
+            my-org-duration-default)
+    ;; INITIAL-INPUT (not DEFAULT-VALUE) on purpose: it is pre-filled and
+    ;; therefore erasable, so RET yields the default and C-a C-k RET yields "".
+    my-org-duration-default)))
+
+(defun my-org--created-to-active-timestamp (created minutes)
+  "Return an active timestamp string built from the CREATED timestamp string.
+CREATED is an Org timestamp like \"[2026-08-18 Tue 22:56]\", which is the
+*end* of the event.  MINUTES, when non-nil and positive, is subtracted
+from it to form a range.  Same-day ranges use the compact
+<DATE START-END> form, ranges crossing midnight use <START>--<END>."
+  (unless (string-match "\\`[[<]\\(.*\\)[]>]\\'" created)
+    (user-error "CREATED property %S is not an Org timestamp" created))
+  (let* ((body (match-string 1 created))          ; "2026-08-18 Tue 22:56"
+         (has-time (string-match "[0-9]\\{1,2\\}:[0-9]\\{2\\}" body))
+         (time-beg (and has-time (match-beginning 0)))
+         (time-end (and has-time (match-end 0)))
+         (date (and (string-match "\\`[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}" body)
+                    (match-string 0 body))))
+    (cond
+     ((or (null minutes) (<= minutes 0) (not has-time))
+      (when (and minutes (> minutes 0) (not has-time))
+        (message "CREATED has no time of day -- ignoring the duration"))
+      (concat "<" body ">"))
+     (t
+      (let* ((start (time-subtract (org-time-string-to-time created) (* 60 minutes)))
+             (start-date (format-time-string "%Y-%m-%d" start))
+             (start-hm (format-time-string "%H:%M" start)))
+        (if (equal start-date date)
+            ;; <2026-08-18 Tue 20:56-22:56>
+            (concat "<" (substring body 0 time-beg)
+                    start-hm "-" (substring body time-beg time-end)
+                    (substring body time-end) ">")
+          ;; crosses midnight: <2026-08-17 Mon 23:56>--<2026-08-18 Tue 00:56>
+          (concat "<" (format-time-string "%Y-%m-%d %a %H:%M" start) ">"
+                  "--<" body ">")))))))
+
+(defun my-org--strip-heading-title (title)
+  "Return TITLE without a leading keyword and/or leading active timestamp.
+Makes the command idempotent: re-running it replaces the timestamp
+instead of stacking a second one in front of it."
+  (let ((case-fold-search nil)          ; an UPPERCASE keyword means UPPERCASE
+        (keyword-re (concat "\\`\\(?:" my-org-heading-keyword-regexp "\\)\\(?:[ \t]+\\|\\'\\)")))
+    (dolist (re (list my-org--timestamp-prefix-regexp keyword-re
+                      my-org--timestamp-prefix-regexp))
+      (when (string-match re title)
+        (setq title (substring title (match-end 0)))))
+    (string-trim title)))
+
+;;;###autoload
+(defun my-org-created-timestamp-to-heading-with-duration ()
+  "Prefix the current Org heading with an active timestamp from CREATED.
+
+Point may be anywhere inside the entry (title, tags, property drawer,
+body); only the heading line of that very entry is modified.  A leading
+keyword such as TODO is dropped, see `my-org-heading-keyword-regexp'.
+
+The CREATED timestamp is treated as the end of the event.  A duration is
+queried interactively (\"2h\", \"30m\", \"1h30m\", \"1h 30m\", ...,
+default `my-org-duration-default'); an empty answer inserts the plain
+CREATED time as an active timestamp instead of a range."
+  (interactive)
+  (unless (derived-mode-p 'org-mode)
+    (user-error "Not in an Org mode buffer"))
+  (save-excursion
+    (org-back-to-heading t)                ; the entry point is in -- not another one
+    (let ((created (org-entry-get nil "CREATED")))
+      (unless created
+        (user-error "Current heading has no CREATED property"))
+      (let* ((stamp (my-org--created-to-active-timestamp created (my-org--read-duration)))
+             (bol (line-beginning-position))
+             (eol (line-end-position))
+             (line (buffer-substring-no-properties bol eol))
+             stars tags title new-line)
+        (unless (string-match "\\`\\(\\*+\\)[ \t]*" line)
+          (user-error "Not looking at an Org heading"))
+        (setq stars (match-string 1 line)
+              title (substring line (match-end 0)))
+        (when (string-match my-org--tags-suffix-regexp title)
+          (setq tags (match-string 1 title)
+                title (substring title 0 (match-beginning 0))))
+        (setq title (my-org--strip-heading-title title))
+        (setq new-line (concat stars " " stamp
+                               (unless (string-empty-p title) (concat " " title))
+                               (when tags (concat " " tags))))
+        (unless (equal line new-line)
+          (goto-char bol)
+          (delete-region bol eol)
+          (insert new-line)
+          ;; keep the tag column tidy after the heading got longer
+          (when (and tags (fboundp 'org-align-tags))
+            (org-align-tags))))
+      created)))
+#+END_SRC
+
+
 * hydra
 
 [[https://github.com/abo-abo/hydra][Hydra]] is a method to customize personal and visual menus to summarize
@@ -20093,7 +20429,7 @@ my-rocketchat-insert-message-from-url
     _p_ersonal credentials           _T_ags include inherited           Insert C-c C-x _._       _N_oblocking (this is never blocked)  C-u C-u C-c =  edit cell formular
     _b_usiness credentials           _1_ split block (M-RET)            Pause  C-c C-x _,_       org-linker-_e_dna                     C-c ?  info on cell + reference
     org-_a_ttach-reveal              add _n_ote to logbook              Stop   C-c C-x ___       ^^                                    C-c {  debug formula mode
-    ^^                               _c_ontact link                     ^^                       ^^                                    C-c }  toggle row/column overlay
+    _>_ my-org-jump-last-element     _c_ontact link                     ^^                       ^^                                    C-c }  toggle row/column overlay
     ^^                               mark as _P_roject                  ^^                       ^^                                    C-c '  edit formulas (S-<arrows> for changing references)
     ^^                               generate & copy _i_d               ^^                       ^^
     ^^                               _w_ebarchive tsfile                ^^                       ^^                                    ^^M-0 C-x e  kmacro-end-and-call-macro → do macro until end of buffer
@@ -20113,6 +20449,8 @@ my-rocketchat-insert-message-from-url
     ^^                               ^^                               org-_D_ecrypt-entry
     ^^                               ^^                               my-_t_oggle-checkbox-add-comment
     ")
+
+    (">" my-org-jump-last-element nil)
 
     ("f" (lambda ()
             (interactive)
