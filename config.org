@@ -4410,13 +4410,17 @@ Bind backspace to visit higher level directory:
 (define-key dired-mode-map (kbd "<backspace>") 'diredp-up-directory-reuse-dir-buffer)
 #+END_SRC
 
-** helm-dired-history
+** helm-dired-history (OUTDATED!)
 
-- [ ] ivy-dired-history is an alternative to:
+OUTDATED!
 
+- [ ] ivy-dired-history is an alternative
+- [ ] https://github.com/karthink/consult-dir is an alternative according to https://github.com/jixiuf/helm-dired-history
+  
 #+BEGIN_SRC emacs-lisp
 (use-package helm-dired-history
-:ensure t
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/helm-dired-history-20170524.1046/"))) ;; archived an old version (maybe the newest nevertheless)
+;;:ensure t
 :config
 (require 'savehist)
 (add-to-list 'savehist-additional-variables 'helm-dired-history-variable)
