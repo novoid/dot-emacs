@@ -20453,7 +20453,7 @@ my-rocketchat-insert-message-from-url
     ^^                               my-_R_ocketchat-insert-message-from-url  ^^                 ^^                                    ^^C-c C-x b  org-tree-to-indirect-buffer (focus) _2_                 
     ^^                               _4_ my-org-block-interruption      ^^                       ^^                                    
     ^^                               ^^                                 ^^                       ^^                                    
-    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   
+    ^^Filter                         ^^Export                         ^^MISC                          my-map C-c C-,                   ^^C-c C-y (on timestamp) → org-evaluate-time-range
     ^────────^───────────────────────^──────^─────────────────────────^─────────^───────────────────────────────────────────────────   
     _f_ocus agenda (prio A; sched .) _3_ Reddit/Wiki.js (region)      _x_  secret-mode                y  yankpad-expand
     _F_ocus disabled for agenda      _d_efine word                    b  my-mark-block
