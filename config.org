@@ -5743,9 +5743,85 @@ BEGIN of LaTeX settings (only if "pdflatex" is found on the system):
 (when (my-eval-if-binary-or-warn "pdflatex")
 #+END_SRC
 
+AucTeX is installed from GNU ELPA (the Debian package is no longer used):
+#+BEGIN_SRC emacs-lisp
+;; 2026-09-28 replaced Debian auctex with ELPA auctex ;;(autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
+
+(use-package auctex
+  :ensure t
+  :defer t
+)
+#+END_SRC
+
+2026-09-28: info from Claude to the switch to use-package auctex:
+#+BEGIN_COMMENT
+  Why :defer t specifically
+
+  This is the one place AUCTeX differs from your other packages. (use-package foo :ensure t) makes use-package (require 'foo) — but AUCTeX's package is
+  named auctex while its actual features are tex, latex, tex-site. A bare (use-package auctex :ensure t) is the classic way to get a Cannot open load file:
+  auctex error at startup.
+
+  :defer t suppresses that require. Installation still happens via :ensure, and AUCTeX's own auctex-autoloads.el (written by package.el) wires up .tex →
+  LaTeX-mode, TeX-command-run-all, and the rest. So you get the package without an eager load — which also keeps your startup time where it is.
+
+  If you later want the settings inside the declaration rather than after it, the idiomatic form is:
+
+  elisp
+  (use-package tex
+    :ensure auctex
+    :defer t
+    :config
+    (setq TeX-PDF-mode t)
+    ;; … the rest of your LaTeX settings …
+  )
+
+  :ensure auctex installs the auctex package while use-package tex names the real feature. I'd not restructure it that way now unless you want to — the
+  minimal snippet above is less churn.
+
+  Two things to be aware of
+
+  Placement matters. That block sits inside (when (my-eval-if-binary-or-warn "pdflatex") …), which opens at config.org:5723 and wraps the whole LaTeX
+  section. So AUCTeX will only be installed on machines that have pdflatex. That's consistent with the intent already encoded there, but it does mean a
+  machine without a TeX installation silently won't get the package — worth knowing since ~/.emacs.d/elpa/ is Syncthing-synced and could arrive from another
+  host anyway.
+
+----------------
+
+  Startup is clean:
+
+  org-super-agenda-mode enabled
+  Creating agenda …
+  finished loading config.org (w/o autostart) in 4.31s
+  no debugger, no void-function, no "Cannot open load file"
+
+  4.31s vs 4.26s before AUCTeX — no measurable cost, which is what :defer t buys you.
+
+  Deferral confirmed. At startup, without opening a .tex file:
+
+  (featurep 'tex)      = nil          ← AUCTeX not loaded
+  LaTeX-mode           = autoload     ← the trigger is armed
+  auctex-autoloads     = present
+
+  So package.el installed auctex-autoloads.el, which defines LaTeX-mode as an autoload. Nothing loads until you actually open a TeX file. That's exactly the
+  mechanism the snippet relies on.
+
+  Functional test — opening a real .tex file:
+
+  major-mode                = LaTeX-mode          ← AUCTeX's, not built-in latex-mode
+  auctex loaded             = t
+  TeX-PDF-mode              = t                   ← your setting applied
+  TeX-parse-self            = t                   ← your setting applied
+  TeX-command-run-all bound = t                   ← AUCTeX commands available
+  locate-library "tex"      = ~/.emacs.d/elpa/auctex-14.2.0/tex.elc
+
+  That last line is the one that matters most: tex now resolves to the ELPA copy, not /usr/share/emacs/site-lisp. The /usr/local site-lisp gap I flagged
+  earlier is closed, and this will work identically after sudo make install.
+
+#+END_COMMENT
+
 General LaTeX settings:
 #+BEGIN_SRC emacs-lisp
-(autoload 'tex-site "tex-site.el")  ;; acticate AucTeX and set general preferences
+
 
 (setq TeX-PDF-mode t)  ;; compile to PDF using pdflatex (instead to DVI)
 
