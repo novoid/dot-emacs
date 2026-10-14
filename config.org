@@ -6839,7 +6839,7 @@ It's nice but I guess it's not something for my daily work. More for demo purpos
 )
 #+END_SRC
 
-*** org-bullets
+*** DISABLED org-bullets
 
 | 2023-01-08 | moved to its own heading |
 
@@ -6858,6 +6858,48 @@ so far. It also affects the simple lists which I do like as they are.
 
 Note to myself: if you include =org-superstar-mode= you also have to
 adapt the beginner mode setting.
+
+- org-bullets is no longer maintained: <2026-10-13 Tue> https://irreal.org/blog/?p=14148
+  - James Cherti has announced [[https://www.jamescherti.com/emacs-org-ibullets/][a simple package that trades Org mode’s
+    heading stars for UTF-8 bullets]]. If you’re like me, your first
+    thought is, “Doesn’t that already exist?” Sort of. What already
+    exists is the no longer maintained [[https://github.com/sabof/org-bullets][org-bullets]]. Cherti’s package
+    is called [[https://github.com/jamescherti/org-ibullets.el][org-ibullets]] (note the =i= ). [...]
+
+*** org-ibullets
+
+| 2026-10-14 | initially stubled over it as a replacement for org-bullets; not activated yet |
+
+- <2026-10-13 Tue> https://irreal.org/blog/?p=14148
+  - James Cherti has announced [[https://www.jamescherti.com/emacs-org-ibullets/][a simple package that trades Org mode’s
+    heading stars for UTF-8 bullets]]. If you’re like me, your first
+    thought is, “Doesn’t that already exist?” Sort of. What already
+    exists is the no longer maintained [[https://github.com/sabof/org-bullets][org-bullets]]. Cherti’s package
+    is called [[https://github.com/jamescherti/org-ibullets.el][org-ibullets]] (note the =i= ).
+  - Cherti explains the differences from org-bullets in his
+    announcement. The TL;DR is that he’s optimized org-ibullets by
+    eliminating redundant computations, eliminated spurious syntax
+    warnings that org-bullets could produce, and made some
+    improvements at the source level.
+  - As I said, the package is simple. It can be used right out of the
+    box but you can customize the list of bullets and their face if
+    you desire. This seems like a very nice package if you’d like to
+    make your Org buffers look a little nicer.
+
+- https://github.com/jamescherti/org-ibullets.el
+
+- Blog article by the author: https://www.jamescherti.com/emacs-org-ibullets/
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-ibullets
+  :load-path  (lambda () (expand-file-name (concat my-user-emacs-directory "contrib/org-ibullets.el/")))
+  :commands org-ibullets-mode
+  :hook (org-mode . org-ibullets-mode)
+  :config (setq inhibit-compacting-font-caches t) ;; improves speed
+)
+#+END_SRC
+
+#+RESULTS:
 
 *** nano-emacs
 
