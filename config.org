@@ -15363,7 +15363,7 @@ Activate Babel languages:
 ;     (ipython . t)
      (python . t)
 ;     (ruby . t)
-     (gnuplot . t)
+;;disabled 2026-09-28;;     (gnuplot . t)
      (shell . t)
      (org . t)
      (R . t)
