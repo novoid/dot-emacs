@@ -1075,7 +1075,7 @@ updated (if ever). With [[https://github.com/quelpa/quelpa][quelpa]], there seem
 The =quelpa-use-package= package offers a more or less transparent
 bridge between sites like GitHub and the =use-package= features.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package quelpa-use-package
   :ensure t
 )
