@@ -551,6 +551,24 @@ time. This fixes it:
 (setq help-window-select t)
 #+END_SRC
 
+Disabling version control handling of outdated standards in order to
+keep file operations faster.
+
+- Tip from: [2026-10-06 Tue 23:28] [[https://mastodon.social/@jamescherti/117396086816426771][Message from James Cherti]]: [[https://mastodon.social/tags/Emacs][#Emacs]]:
+  Remove obsolete version control systems to enhance file loading
+  performance, especially over TRAMP (SCCS and SRC are historical
+  tools, CVS and Bzr are obsolete; even Canonical migrated to Git. RCS
+  is similarly obsolete, so removing these backends prevents
+  unnecessary checks):
+  
+  (setq vc-handled-backends '(Git SVN Hg))
+
+- [2026-10-08 Thu] original value was: (RCS CVS SVN SCCS SRC Bzr Git Hg)
+
+#+BEGIN_SRC emacs-lisp
+(setq vc-handled-backends '(Git SVN Hg))
+#+END_SRC
+
 ** Override default org-mode version
 
 | 2026-04-01 | initial setup |
