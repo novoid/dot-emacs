@@ -21605,7 +21605,7 @@ approximately 25 seconds as of 2019-04-17.
     smooth-scroll-mode))
 
   (if (>= emacs-major-version 31)
-      (;; for Emacs 31 and higher:
+      (progn ;; for Emacs 31 and higher:
        (setq mode-line-collapse-minor-modes hidden-minor-modes) ;; no need for diminish-mode or others: id:2025-12-25-Emacs-Redux-Hide-Minor-Modes-in-the-Modeline-in-Emacs-31
        )
     (progn ;; for Emacs before v31:
