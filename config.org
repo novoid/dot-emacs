@@ -18658,10 +18658,11 @@ This looks like a cool method to jump back and forth between buffers. I need to 
 )
 #+END_SRC
 
-** repetition_error_finder (Beta)
+** DISABLED repetition_error_finder (Beta)
 
 | 2022-01-07 | Setup for test purposes. |
 | 2023-01-08 | still not on *elpa       |
+| 2026-09-28 | disabled because I don't want to deal with the warnings about non-standard characters in the docstrings |
 
 I found this nugget via [[https://irreal.org/blog/?p=10235][this irreal article]]. The project is [[https://github.com/ioah86/repetition_error_finder][hosted on
 GitHub]]. Its goal is to find repetition errors in written text. It
