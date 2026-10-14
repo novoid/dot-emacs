@@ -5944,7 +5944,11 @@ Example: place the cursor within the table and evaluate
 | [2016-11-23 Wed] |        4 |
 | [2016-12-10 Sat] |        1 |
 
-#+BEGIN_SRC emacs-lisp
+2026-09-28: disabled - this package came from MELPA, which is switched off
+since 2026-04-18. Its stale ELPA directory lost its autoloads and broke
+startup. Note: this also disables org-plot (=C-c " g=) and babel gnuplot.
+
+#+BEGIN_SRC emacs-lisp :tangle no
 ;; gnuplot
 (when (my-eval-if-binary-or-warn "gnuplot")
   (use-package gnuplot
