@@ -1063,7 +1063,9 @@ Until 2020-06-30, I only used =use-package= and manually cloned git
 repositories I included with hard-coded path. The latter were seldomly
 updated (if ever). With [[https://github.com/quelpa/quelpa][quelpa]], there seems to be a much better way.
 
-#+BEGIN_SRC emacs-lisp
+QUELPA was disabled before (because yantar recommendation) but this one was active until 2026-10. Now disabled as well:
+
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package quelpa
   :ensure t
   :config
