@@ -16505,7 +16505,7 @@ Recommended by [[https://www.reddit.com/r/orgmode/comments/e9p84n/scaling_org_be
 | 2023-12-13 | I disabled gcmh and switched to simple GC for a while |
 
 #+BEGIN_SRC emacs-lisp
-(setq garbage-collection-messages t) ;; let me know when GC is working
+;(setq garbage-collection-messages t) ;; let me know when GC is working
 (setq gc-cons-percentage 0.3) ;; id:2023-12-06-reset-gc-cons-threshold-and-increase-gc-cons-percentage
 
 ;; 2026-04-18 session with Ihor
